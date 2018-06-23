@@ -39,13 +39,19 @@ namespace RSDKv1
 
         public IEnumerable<string> HitboxTypes => null;
 
-        public Animation(BinaryReader reader)
+        public Animation(BinaryReader reader, bool RSDC)
         {
-            // Read number of image paths		
-
             reader.ReadByte(); //skip this byte, as it seems unused
             reader.ReadByte(); //Again, unused
-            int spriteSheetsCount = 3; 
+            int spriteSheetsCount = 3;
+            if (RSDC) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
+            {
+                spriteSheetsCount = 2;
+            }
+            else //But the PC demo has 3 spritesheets per animation! so we set that here!
+            {
+                spriteSheetsCount = 3;
+            }
             var animationsCount = reader.ReadByte();
 
             SpriteSheets = new List<string>(spriteSheetsCount);
