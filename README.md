@@ -2,7 +2,8 @@
 A collection of libraries for the RSDK (Retro Engine Software Development Kit) + A few basic tools 
 
 This repository contains a few libaries (and a few basic tools):
-- RSDK 1: A libary for the Retro-Sonic Development Kit (Retro Sonic).
+- RSDK 1: A libary for the Retro-Sonic Development Kit (Retro Sonic). 
+- NOTE: this was made for the PC Sage 2007 demo, it seems some of the dreamcast version's files may be different
 
 - RSDK 2: A libary for RSDKv1 (Sonic Nexus).
 
