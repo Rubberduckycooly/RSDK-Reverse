@@ -33,6 +33,8 @@
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.renderEachChunkAsAnImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.CurChunkChangePanel = new System.Windows.Forms.Panel();
@@ -53,8 +55,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.StageTilesList = new ChunkMappingsEditor.TileList();
             this.TilesLabel = new System.Windows.Forms.Label();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.renderEachChunkAsAnImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -73,7 +75,8 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.viewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(982, 28);
@@ -95,23 +98,35 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.saveAsToolStripMenuItem.Text = "Save As...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(291, 6);
+            // 
+            // renderEachChunkAsAnImageToolStripMenuItem
+            // 
+            this.renderEachChunkAsAnImageToolStripMenuItem.Name = "renderEachChunkAsAnImageToolStripMenuItem";
+            this.renderEachChunkAsAnImageToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
+            this.renderEachChunkAsAnImageToolStripMenuItem.Text = "Render Each Chunk as an Image";
+            this.renderEachChunkAsAnImageToolStripMenuItem.Click += new System.EventHandler(this.renderEachChunkAsAnImageToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -169,7 +184,7 @@
             this.ChunkNoLabel.Name = "ChunkNoLabel";
             this.ChunkNoLabel.Size = new System.Drawing.Size(95, 17);
             this.ChunkNoLabel.TabIndex = 2;
-            this.ChunkNoLabel.Text = "Chunk _ Of _:";
+            this.ChunkNoLabel.Text = "Chunk 0 Of 0:";
             // 
             // PrevChunkButton
             // 
@@ -310,6 +325,7 @@
             this.ChunkDisplay.Name = "ChunkDisplay";
             this.ChunkDisplay.Size = new System.Drawing.Size(426, 393);
             this.ChunkDisplay.TabIndex = 2;
+            this.ChunkDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
             // 
             // ChunkLabel
             // 
@@ -352,17 +368,22 @@
             this.TilesLabel.TabIndex = 0;
             this.TilesLabel.Text = "16x16Tiles";
             // 
-            // toolStripSeparator1
+            // viewToolStripMenuItem
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 6);
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.showGridToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.viewToolStripMenuItem.Text = "View";
             // 
-            // renderEachChunkAsAnImageToolStripMenuItem
+            // showGridToolStripMenuItem
             // 
-            this.renderEachChunkAsAnImageToolStripMenuItem.Name = "renderEachChunkAsAnImageToolStripMenuItem";
-            this.renderEachChunkAsAnImageToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
-            this.renderEachChunkAsAnImageToolStripMenuItem.Text = "Render Each Chunk as an Image";
-            this.renderEachChunkAsAnImageToolStripMenuItem.Click += new System.EventHandler(this.renderEachChunkAsAnImageToolStripMenuItem_Click);
+            this.showGridToolStripMenuItem.Checked = true;
+            this.showGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
+            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.showGridToolStripMenuItem.Text = "Show Grid";
+            this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -424,6 +445,8 @@
         private TileList StageTilesList;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem renderEachChunkAsAnImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showGridToolStripMenuItem;
     }
 }
 
