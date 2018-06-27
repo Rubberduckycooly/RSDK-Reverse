@@ -126,7 +126,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // textToolStripColorPickerButton
       // 
       this.textToolStripColorPickerButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.textToolStripColorPickerButton.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.text;
+      this.textToolStripColorPickerButton.Image = global::RSDKPaletteEditor.Properties.Resources.text;
       this.textToolStripColorPickerButton.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.textToolStripColorPickerButton.Name = "textToolStripColorPickerButton";
       this.textToolStripColorPickerButton.Size = new System.Drawing.Size(32, 22);
@@ -136,7 +136,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // backgroundToolStripColorPickerSplitButton
       // 
       this.backgroundToolStripColorPickerSplitButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.backgroundToolStripColorPickerSplitButton.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.fill;
+      this.backgroundToolStripColorPickerSplitButton.Image = global::RSDKPaletteEditor.Properties.Resources.fill;
       this.backgroundToolStripColorPickerSplitButton.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.backgroundToolStripColorPickerSplitButton.Name = "backgroundToolStripColorPickerSplitButton";
       this.backgroundToolStripColorPickerSplitButton.Size = new System.Drawing.Size(32, 22);
@@ -227,7 +227,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton1
       // 
       this.toolStripColorPickerSplitButton1.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton1.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.text;
+      this.toolStripColorPickerSplitButton1.Image = global::RSDKPaletteEditor.Properties.Resources.text;
       this.toolStripColorPickerSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton1.Name = "toolStripColorPickerSplitButton1";
       this.toolStripColorPickerSplitButton1.Size = new System.Drawing.Size(61, 35);
@@ -236,7 +236,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton2
       // 
       this.toolStripColorPickerSplitButton2.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton2.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.fill;
+      this.toolStripColorPickerSplitButton2.Image = global::RSDKPaletteEditor.Properties.Resources.fill;
       this.toolStripColorPickerSplitButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton2.Name = "toolStripColorPickerSplitButton2";
       this.toolStripColorPickerSplitButton2.Size = new System.Drawing.Size(54, 35);
@@ -251,7 +251,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton3
       // 
       this.toolStripColorPickerSplitButton3.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton3.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.text;
+      this.toolStripColorPickerSplitButton3.Image = global::RSDKPaletteEditor.Properties.Resources.text;
       this.toolStripColorPickerSplitButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton3.Name = "toolStripColorPickerSplitButton3";
       this.toolStripColorPickerSplitButton3.Size = new System.Drawing.Size(45, 35);
@@ -261,7 +261,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton4
       // 
       this.toolStripColorPickerSplitButton4.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton4.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.fill;
+      this.toolStripColorPickerSplitButton4.Image = global::RSDKPaletteEditor.Properties.Resources.fill;
       this.toolStripColorPickerSplitButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton4.Name = "toolStripColorPickerSplitButton4";
       this.toolStripColorPickerSplitButton4.Size = new System.Drawing.Size(38, 35);
@@ -271,7 +271,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton6
       // 
       this.toolStripColorPickerSplitButton6.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton6.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.text;
+      this.toolStripColorPickerSplitButton6.Image = global::RSDKPaletteEditor.Properties.Resources.text;
       this.toolStripColorPickerSplitButton6.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton6.Name = "toolStripColorPickerSplitButton6";
       this.toolStripColorPickerSplitButton6.Size = new System.Drawing.Size(61, 35);
@@ -280,7 +280,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton7
       // 
       this.toolStripColorPickerSplitButton7.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton7.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.fill;
+      this.toolStripColorPickerSplitButton7.Image = global::RSDKPaletteEditor.Properties.Resources.fill;
       this.toolStripColorPickerSplitButton7.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton7.Name = "toolStripColorPickerSplitButton7";
       this.toolStripColorPickerSplitButton7.Size = new System.Drawing.Size(54, 35);
@@ -290,7 +290,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
       // toolStripColorPickerSplitButton5
       // 
       this.toolStripColorPickerSplitButton5.Color = System.Drawing.Color.Red;
-      this.toolStripColorPickerSplitButton5.Image = global::Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.text;
+      this.toolStripColorPickerSplitButton5.Image = global::RSDKPaletteEditor.Properties.Resources.text;
       this.toolStripColorPickerSplitButton5.ImageTransparentColor = System.Drawing.Color.Magenta;
       this.toolStripColorPickerSplitButton5.Name = "toolStripColorPickerSplitButton5";
       this.toolStripColorPickerSplitButton5.Size = new System.Drawing.Size(45, 35);

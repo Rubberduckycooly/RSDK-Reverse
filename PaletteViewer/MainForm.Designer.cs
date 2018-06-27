@@ -93,27 +93,27 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(173, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.closeToolStripMenuItem.Text = "&Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -133,7 +133,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
             // 
             this.optionsSplitContainer.Panel2.Controls.Add(this.colorEditor);
             this.optionsSplitContainer.Size = new System.Drawing.Size(848, 289);
-            this.optionsSplitContainer.SplitterDistance = 454;
+            this.optionsSplitContainer.SplitterDistance = 451;
             this.optionsSplitContainer.SplitterWidth = 7;
             this.optionsSplitContainer.TabIndex = 0;
             // 
@@ -141,7 +141,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
             // 
             this.colorGrid.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.colorGrid.EditMode = Cyotek.Windows.Forms.ColorEditingMode.None;
-            this.colorGrid.Location = new System.Drawing.Point(78, 4);
+            this.colorGrid.Location = new System.Drawing.Point(76, 4);
             this.colorGrid.Margin = new System.Windows.Forms.Padding(4);
             this.colorGrid.Name = "colorGrid";
             this.colorGrid.Padding = new System.Windows.Forms.Padding(8, 7, 8, 7);
@@ -158,6 +158,7 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
             this.colorEditor.Name = "colorEditor";
             this.colorEditor.Size = new System.Drawing.Size(377, 399);
             this.colorEditor.TabIndex = 0;
+            this.colorEditor.ColorChanged += new System.EventHandler(this.colorEditor_ColorChanged);
             // 
             // propertiesSplitContainer
             // 

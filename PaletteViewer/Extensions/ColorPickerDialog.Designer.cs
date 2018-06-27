@@ -66,7 +66,7 @@ namespace Cyotek.Windows.Forms
       // loadPaletteButton
       // 
       this.loadPaletteButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-      this.loadPaletteButton.Image = Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.LoadPalette;
+      this.loadPaletteButton.Image = RSDKPaletteEditor.Properties.Resources.LoadPalette;
       this.loadPaletteButton.Location = new System.Drawing.Point(12, 147);
       this.loadPaletteButton.Name = "loadPaletteButton";
       this.loadPaletteButton.Size = new System.Drawing.Size(23, 23);
@@ -78,7 +78,7 @@ namespace Cyotek.Windows.Forms
       // savePaletteButton
       // 
       this.savePaletteButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-      this.savePaletteButton.Image = Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.SavePalette;
+      this.savePaletteButton.Image = RSDKPaletteEditor.Properties.Resources.SavePalette;
       this.savePaletteButton.Location = new System.Drawing.Point(34, 147);
       this.savePaletteButton.Name = "savePaletteButton";
       this.savePaletteButton.Size = new System.Drawing.Size(23, 23);
@@ -91,7 +91,7 @@ namespace Cyotek.Windows.Forms
       // 
       this.screenColorPicker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
       this.screenColorPicker.Color = System.Drawing.Color.Black;
-      this.screenColorPicker.Image = Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.eyedropper;
+      this.screenColorPicker.Image = RSDKPaletteEditor.Properties.Resources.eyedropper;
       this.screenColorPicker.Location = new System.Drawing.Point(453, 83);
       this.screenColorPicker.Name = "screenColorPicker";
       this.screenColorPicker.Size = new System.Drawing.Size(73, 85);

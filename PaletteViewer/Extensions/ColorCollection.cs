@@ -132,7 +132,7 @@ namespace Cyotek.Windows.Forms
         throw new FileNotFoundException(string.Format("Cannot find file '{0}'", fileName), fileName);
       }
 
-      serializer = PaletteSerializer.GetSerializer(fileName);
+      serializer = AdobeColorTablePaletteSerializer.GetSerializer(fileName);
       if (serializer == null)
       {
         throw new ArgumentException(string.Format("Cannot find a palette serializer for '{0}'", fileName), nameof(fileName));

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Cyotek.Windows.Forms.ColorPicker.Demo.Properties;
+using RSDKPaletteEditor.Properties;
 
 namespace Cyotek.Windows.Forms.ColorPicker.Demo
 {

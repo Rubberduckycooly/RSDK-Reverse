@@ -934,7 +934,7 @@ namespace Cyotek.Windows.Forms
 
       type = typeof(ColorGrid);
 
-      using (Bitmap background = new Bitmap(Cyotek.Windows.Forms.ColorPicker.Demo.Properties.Resources.cellbackground))
+      using (Bitmap background = new Bitmap(RSDKPaletteEditor.Properties.Resources.cellbackground))
       {
         return new TextureBrush(background, WrapMode.Tile);
       }

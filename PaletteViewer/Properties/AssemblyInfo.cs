@@ -10,12 +10,12 @@ using System.Runtime.InteropServices;
 
 // If you use this code in your applications, donations or attribution are welcome
 
-[assembly: AssemblyTitle("Cyotek Color Picker Controls Demonstration")]
+[assembly: AssemblyTitle("RSDK Palette Viewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Cyotek Color Picker Controls Library")]
-[assembly: AssemblyCopyright("Copyright © 2013-2017 Cyotek Ltd.")]
+[assembly: AssemblyProduct("")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

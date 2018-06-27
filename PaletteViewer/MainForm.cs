@@ -31,12 +31,16 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
     {
       get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "palettes"); }
     }
+        RSDKv1.zcf sc1;
+        RSDKv4.GameConfig gc4;
+        RSDKv5.GameConfig gc5;
+        RSDKv5.StageConfig sc5;
 
     #endregion
 
-    #region Methods
+        #region Methods
 
-    protected override void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
     {
       base.OnLoad(e);
                 colorGrid.Colors.Clear();
@@ -84,110 +88,75 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
             optionsSplitContainer.Panel2.BackColor = optionsSplitContainer.Panel1.BackColor;
         }
 
-    private void grayScaleButton_Click(object sender, EventArgs e)
-    {
-      colorGrid.Colors = new ColorCollection(Enumerable.Range(0, 254).Select(i => Color.FromArgb(i, i, i)));
-    }
-
-    private void hexagonPaletteButton_Click(object sender, EventArgs e)
-    {
-      // NOTE: Predefined palettes can now be set via the Palette property
-      colorGrid.Colors = ColorPalettes.HexagonPalette;
-    }
-
-    private void office2010Button_Click(object sender, EventArgs e)
-    {
-      // NOTE: Predefined palettes can now be set via the Palette property (this does not affect other properties such as Columns below though!)
-      colorGrid.Colors = ColorPalettes.Office2010Standard;
-      colorGrid.Columns = 10;
-    }
-
-    private void paintNetPaletteButton_Click(object sender, EventArgs e)
-    {
-      // NOTE: Predefined palettes can now be set via the Palette property
-      colorGrid.Colors = ColorPalettes.PaintPalette;
-    }
-
-    private void resetCustomColorsButton_Click(object sender, EventArgs e)
-    {
-      colorGrid.CustomColors = new ColorCollection(Enumerable.Repeat(Color.White, 32));
-    }
-
-    private void savePaletteButton_Click(object sender, EventArgs e)
-    {
-      using (FileDialog dialog = new SaveFileDialog
-                                 {
-                                   Filter = PaletteSerializer.DefaultSaveFilter,
-                                   Title = "Save Palette As"
-                                 })
-      {
-        if (dialog.ShowDialog(this) == DialogResult.OK)
-        {
-          IPaletteSerializer serializer;
-
-          serializer = PaletteSerializer.AllSerializers.Where(s => s.CanWrite).ElementAt(dialog.FilterIndex - 1);
-
-          using (Stream stream = File.Create(dialog.FileName))
-          {
-            serializer.Serialize(stream, colorGrid.Colors);
-          }
-        }
-      }
-    }
-
-    private void shadesOfBlueButton_Click(object sender, EventArgs e)
-    {
-      colorGrid.Colors = new ColorCollection(Enumerable.Range(0, 254).Select(i => Color.FromArgb(0, 0, i)));
-    }
-
-    private void shadesOfGreenButton_Click(object sender, EventArgs e)
-    {
-      colorGrid.Colors = new ColorCollection(Enumerable.Range(0, 254).Select(i => Color.FromArgb(0, i, 0)));
-    }
-
-    private void shadesOfRedButton_Click(object sender, EventArgs e)
-    {
-      colorGrid.Colors = new ColorCollection(Enumerable.Range(0, 254).Select(i => Color.FromArgb(i, 0, 0)));
-    }
-
-    private void standardColorsButton_Click(object sender, EventArgs e)
-    {
-      // NOTE: Predefined palettes can now be set via the Palette property
-      colorGrid.Colors = ColorPalettes.NamedColors;
-    }
 
         #endregion
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            colorGrid.Colors.Clear();
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Act Files|*.act|RSDKv4 GameConfig Files|GameConfig.bin";
+            dlg.Filter = "RSDKv1 ZoneConfig Files|Zone.zcf|RSDKv4 GameConfig Files|GameConfig.bin|Act Files|*.act";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 ColorCollection pal = new ColorCollection();
+                colorGrid.Colors.Clear();
                 switch (dlg.FilterIndex-1)
                 {
                     case 0:
+                        sc1 = new RSDKv1.zcf(dlg.FileName);
+
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, sc1.palette.Colors[h][w].R, sc1.palette.Colors[h][w].G, sc1.palette.Colors[h][w].B);
+                                pal.Add(c);
+                            }
+                        }
                         break;
                     case 1:
-                        RSDKv4.GameConfig gc = new RSDKv4.GameConfig(dlg.FileName);
+                        gc4 = new RSDKv4.GameConfig(dlg.FileName);
 
                         for (int h = 0; h < 6; h++)
                         {
-                            for (int w = 0; w < gc.Palettes[0].COLORS_PER_COLUMN; w++)
+                            for (int w = 0; w < gc4.Palette.COLORS_PER_COLUMN; w++)
                             {
-                                Color c = Color.FromArgb(255, gc.Palettes[0].Colors[h][w].R, gc.Palettes[0].Colors[h][w].G, gc.Palettes[0].Colors[h][w].B);
+                                Color c = Color.FromArgb(255, gc4.Palette.Colors[h][w].R, gc4.Palette.Colors[h][w].G, gc4.Palette.Colors[h][w].B);
                                 pal.Add(c);
                             }
-
                         }
+                        break;
+                    /*case 2:
+                        gc5 = new RSDKv5.GameConfig(dlg.FileName);
+
+                        for (int h = 0; h < 6; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, gc5.Palettes[0].Colors[h][w].R, gc5.Palettes[0].Colors[h][w].G, gc5.Palettes[0].Colors[h][w].B);
+                                pal.Add(c);
+                            }
+                        }
+                        break;
+                    case 3:
+                        sc5 = new RSDKv5.StageConfig(dlg.FileName);
+
+                        for (int h = 0; h < 6; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, sc5.Palettes[0].Colors[h][w].R, sc5.Palettes[0].Colors[h][w].G, sc5.Palettes[0].Colors[h][w].B);
+                                pal.Add(c);
+                            }
+                        }
+                        break;*/
+                    case 2:
+                        pal = ColorCollection.LoadPalette(dlg.FileName);
                         break;
                     default:
                         break;
                 }
-
+                Text = Path.GetFileName(dlg.FileName) + " - RSDK Palette Editor";
                 colorGrid.Colors = pal;
 
             }
@@ -195,7 +164,63 @@ namespace Cyotek.Windows.Forms.ColorPicker.Demo
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "RSDKv1 ZoneConfig Files|Zone*.zcf|RSDKv4 GameConfig Files|GameConfig*.bin|Act Files|*.act";
+
+            if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                switch (dlg.FilterIndex - 1)
+                {
+                    case 0:
+                        int i1 = 0;
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i1].R, colorGrid.Colors[i1].G, colorGrid.Colors[i1].B);
+                                i1++;
+                                sc1.palette.Colors[h][w].R = c.R;
+                                sc1.palette.Colors[h][w].G = c.G;
+                                sc1.palette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        sc1.Write(dlg.FileName);
+                        break;
+                    case 1:
+                        int i4 = 0;
+                        for (int h = 0; h < 6; h++)
+                        {
+                            for (int w = 0; w < gc4.Palette.COLORS_PER_COLUMN; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i4].R, colorGrid.Colors[i4].G, colorGrid.Colors[i4].B);
+                                i4++;
+                                gc4.Palette.Colors[h][w].R = c.R;
+                                gc4.Palette.Colors[h][w].G = c.G;
+                                gc4.Palette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        gc4.Write(dlg.FileName);
+                        break;
+                    case 2:
+                        IPaletteSerializer serializer;
+
+                        serializer = new AdobeColorTablePaletteSerializer();
+
+                        using (Stream stream = File.Create(dlg.FileName))
+                        {
+                            serializer.Serialize(stream, colorGrid.Colors);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+
+        private void colorEditor_ColorChanged(object sender, EventArgs e)
+        {
+            if (colorGrid.ColorIndex <= 255 && colorGrid.ColorIndex >= 0) { colorGrid.Colors[colorGrid.ColorIndex] = colorEditor.Color; }
         }
     }
 }
