@@ -12,46 +12,46 @@ namespace RSDKv5
         byte IgnoredByte;
         private string _name;
 
-        public byte IsScrollingVertical;
-        public byte UnknownByte2;
+        public byte Behaviour;
+        public byte DrawingOrder;
 
         private ushort _width;
         private ushort _height;
 
-        public ushort UnknownWord1;
-        public ushort UnknownWord2;
+        public ushort RelativeVSpeed;
+        public ushort ConstantVSpeed;
 
         public class ScrollInfo
         {
-            ushort UnknownWord1;
-            ushort UnknownWord2;
-            byte UnknownByte1;
+            ushort RelativeSpeed;
+            ushort ConstantSpeed;
+            byte Behaviour;
             byte UnknownByte2;
 
-            public ScrollInfo(ushort word1 = 0x100, ushort word2 = 0, byte byte1 = 0, byte byte2 = 0)
+            public ScrollInfo(ushort RSpeed = 0x100, ushort CSpeed = 0, byte behaviour = 0, byte byte2 = 0)
             {
-                this.UnknownWord1 = word1;
-                this.UnknownWord2 = word2;
+                this.RelativeSpeed = RSpeed;
+                this.ConstantSpeed = CSpeed;
 
-                this.UnknownByte1 = byte1;
+                this.Behaviour = behaviour;
                 this.UnknownByte2 = byte2;
             }
 
             internal ScrollInfo(Reader reader)
             {
-                UnknownWord1 = reader.ReadUInt16();
-                UnknownWord2 = reader.ReadUInt16();
+                RelativeSpeed = reader.ReadUInt16();
+                ConstantSpeed = reader.ReadUInt16();
 
-                UnknownByte1 = reader.ReadByte();
+                Behaviour = reader.ReadByte();
                 UnknownByte2 = reader.ReadByte();
             }
 
             internal void Write(Writer writer)
             {
-                writer.Write(UnknownWord1);
-                writer.Write(UnknownWord2);
+                writer.Write(RelativeSpeed);
+                writer.Write(ConstantSpeed);
 
-                writer.Write(UnknownByte1);
+                writer.Write(Behaviour);
                 writer.Write(UnknownByte2);
             }
         }
@@ -90,14 +90,14 @@ namespace RSDKv5
 
             Name = reader.ReadRSDKString();
 
-            IsScrollingVertical = reader.ReadByte();
-            UnknownByte2 = reader.ReadByte();
+            Behaviour = reader.ReadByte();
+            DrawingOrder = reader.ReadByte();
 
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
 
-            UnknownWord1 = reader.ReadUInt16();
-            UnknownWord2 = reader.ReadUInt16();
+            RelativeVSpeed = reader.ReadUInt16();
+            ConstantVSpeed = reader.ReadUInt16();
 
             ushort scrolling_info_count = reader.ReadUInt16();
             for (int i = 0; i < scrolling_info_count; ++i)
@@ -112,7 +112,7 @@ namespace RSDKv5
                 {
                     Tiles[i] = new ushort[Width];
                     for (int j = 0; j < Width; ++j)
-                    { Tiles[i][j] = creader.ReadUInt16(); Console.WriteLine("Hex: {0:X}", Tiles[i][j]); }
+                    { Tiles[i][j] = creader.ReadUInt16();}
                 }
             }
         }
@@ -123,14 +123,14 @@ namespace RSDKv5
 
             writer.WriteRSDKString(Name);
 
-            writer.Write(IsScrollingVertical);
-            writer.Write(UnknownByte2);
+            writer.Write(Behaviour);
+            writer.Write(DrawingOrder);
 
             writer.Write(Width);
             writer.Write(Height);
 
-            writer.Write(UnknownWord1);
-            writer.Write(UnknownWord2);
+            writer.Write(RelativeVSpeed);
+            writer.Write(ConstantVSpeed);
 
             writer.Write((ushort)ScrollingInfo.Count);
             foreach (ScrollInfo info in ScrollingInfo)
@@ -143,7 +143,7 @@ namespace RSDKv5
             {
                     for (int i = 0; i < Height; ++i)
                         for (int j = 0; j < Width; ++j)
-                        { cwriter.Write(Tiles[i][j]); Console.WriteLine(Tiles[i][j]); }
+                        { cwriter.Write(Tiles[i][j]);}
                 cwriter.Close();
                 writer.WriteCompressed(cmem.ToArray());
             }
