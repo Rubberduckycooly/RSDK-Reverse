@@ -1,9 +1,8 @@
 # RSDK-Reverse
 A collection of libraries for the RSDK (Retro Engine Software Development Kit) + A few basic tools 
 
-This repository contains a few libaries (and a few basic tools):
+This repository contains libaries for all versions of the RSDK (and a few tools for editing certain file formats):
 - RSDK 1: A libary for the Retro-Sonic Development Kit (Retro Sonic). 
-- NOTE: This was made for the PC Sage 2007 demo, it seems some of the dreamcast version's files may be different
 
 - RSDK 2: A libary for RSDKv1 (Sonic Nexus).
 
@@ -13,9 +12,11 @@ This repository contains a few libaries (and a few basic tools):
 
 - RSDK 5: A libary for RSDKv5 (Sonic Mania). This was made by koolkdev/EyeKey, with a few minor tweaks by me. original download here: https://github.com/koolkdev/ManiacEditor
 
-- GFX2IMG: Convert those pesky .gfx files used by Retro Sonic into usable image files (.png, .gif and .bmp)
+- GFX TOOL (GFX2IMG): Export .gfx Images to a standard image format (.png, .gif, etc) AND create a .gfx file from an indexed gif in one simple program!
 
-- Palette Viewer: A Viewer for palettes used by RSDKv4's GameConfig.bin files and .act files
+- Palette Editor: An Editor for palettes used by RSDKv4's GameConfig.bin files, Retro-Sonic's .zcf Files and .act files!
+
+- RSDK Chunk Mappings Editor: An Editor for the 128x128Tiles.bin (Zone.til for Retro-Sonic) that the RSDK uses!
 
 - Test: Just A program i used to test various functions, nothin' to see here!
 
@@ -42,4 +43,4 @@ Dreamcast Retro-Sonic filetypes that DO work with the RSDK 1 Lib:
 Misc.
 - Music doesnt play with any audio player that i've tried (VLC, windows movie player and groove music)
 - SFX files are stored in standard .wav for both versions
-- There are some .mdf files located in DATA\TITLESCR in the both versions, i don't know what they are for...
+- There are some .mdf files located in Data\TitleScr in the both versions, i don't know what they are for...
