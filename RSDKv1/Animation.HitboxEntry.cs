@@ -20,9 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using RSDK;
 using System.IO;
 
-namespace RSDKv1
+namespace RSDK1
 {
     public class HitboxEntry : IHitboxEntry
     {

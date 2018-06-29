@@ -14,9 +14,13 @@ namespace RSDKv1
         public string Title { get; set; }
         public ushort[][] MapLayout { get; set; }
 
-        byte[] SixBytes_RS; //These Bytes' functions are unknown, so we just save them here so we can write them back
+        public byte[] ThreeBytes_RS; //These Bytes' functions are unknown, so we just save them here so we can write them back
+        //byte[0] may be a value that tells the engine what music track to play...
 
-        List<Object> objects = new List<Object>();
+        public byte PlayerXpos;
+        public ushort PlayerYPos;
+
+        public List<Object> objects = new List<Object>();
 
         public int width, height;
 
@@ -44,7 +48,6 @@ namespace RSDKv1
 
             width = reader.ReadByte();
             height = reader.ReadByte();
-            Console.WriteLine("Width " + width + " Height " + height);
             MapLayout = new ushort[height][];
             for (int i = 0; i < height; i++)
             {
@@ -57,12 +60,14 @@ namespace RSDKv1
                 for (int x = 0; x < width; x++)
                 {
                     MapLayout[y][x] = reader.ReadByte();
-                    Console.WriteLine(MapLayout[y][x]);
                 }
             }
 
-            SixBytes_RS = new byte[6];
-            ITMreader.Read(SixBytes_RS,0, 6);
+            ThreeBytes_RS = new byte[3];
+            ITMreader.Read(ThreeBytes_RS, 0, 3);
+            PlayerXpos = ITMreader.ReadByte();
+            PlayerYPos = (ushort)(ITMreader.ReadByte() << 8);
+            PlayerYPos |= ITMreader.ReadByte();
 
             // Read objects from the item file
             int ObjCount = ITMreader.ReadByte() << 8;
@@ -84,7 +89,6 @@ namespace RSDKv1
                 obj_yPos |= ITMreader.ReadByte();
 
                 // Add object
-                Console.WriteLine(i + " Obj Values: Type: " + obj_type + ", Subtype: " + obj_subtype + ", Xpos = " + obj_xPos + ", Ypos = " + obj_yPos);
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
 
@@ -146,7 +150,7 @@ namespace RSDKv1
             String basename = "\\" + Path.GetFileNameWithoutExtension(writer.GetFilename());
 
             String itmPath = dirname + basename + ".itm";
-            
+
             // Create item file
             Writer ITMwriter = new Writer(itmPath);
 
@@ -165,8 +169,11 @@ namespace RSDKv1
             // Save zone name
             ITMwriter.WriteRSDKString(Title);
 
-            // Write the six bytes we kept
-            ITMwriter.Write(SixBytes_RS);
+            // Write the 3 bytes we kept
+            ITMwriter.Write(ThreeBytes_RS);
+            ITMwriter.Write(PlayerXpos);
+            ITMwriter.Write((byte)(PlayerYPos >> 8));
+            ITMwriter.Write((byte)(PlayerYPos & 0xFF));
 
             // Write number of objects
             ITMwriter.Write((byte)(num_of_objects >> 8));
@@ -218,7 +225,6 @@ namespace RSDKv1
 
             width = reader.ReadByte();
             height = reader.ReadByte();
-            Console.WriteLine("Width " + width + " Height " + height);
             MapLayout = new ushort[height][];
             for (int i = 0; i < height; i++)
             {
@@ -231,7 +237,6 @@ namespace RSDKv1
                 for (int x = 0; x < width; x++)
                 {
                     MapLayout[y][x] = reader.ReadByte();
-                    Console.WriteLine(MapLayout[y][x]);
                 }
             }
 
@@ -269,7 +274,11 @@ namespace RSDKv1
 
         string Title;
 
-        byte[] SixBytes_RS;
+        byte[] ThreeBytes_RS; //These Bytes' functions are unknown, so we just save them here so we can write them back
+        //byte[0] may be a value that tells the engine what music track to play...
+
+        byte PlayerXpos;
+        ushort PlayerYPos;
 
         List<Object> objects = new List<Object>();
 
@@ -288,13 +297,15 @@ namespace RSDKv1
 
             Title = reader.ReadRSDKString();
 
-            SixBytes_RS = new byte[6];
-            reader.Read(SixBytes_RS, 0, 6);
+            ThreeBytes_RS = new byte[3];
+            reader.Read(ThreeBytes_RS, 0, 3);
+            PlayerXpos = reader.ReadByte();
+            PlayerYPos = (ushort)(reader.ReadByte() << 8);
+            PlayerYPos |= reader.ReadByte();
 
             // Read objects from the item file
             int ObjCount = reader.ReadByte() << 8;
             ObjCount |= reader.ReadByte();
-            Console.WriteLine("Object Count = " + ObjCount + " Also the reader pos = " + reader.Pos);
             for (int i = 0; i < ObjCount; i++)
             {
                 // Object type, 1 byte, unsigned
@@ -311,7 +322,6 @@ namespace RSDKv1
                 obj_yPos |= reader.ReadByte();
 
                 // Add object
-                Console.WriteLine(i + " Obj Values: Type: " + obj_type + ", Subtype: " + obj_subtype + ", Xpos = " + obj_xPos + ", Ypos = " + obj_yPos);
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
         }
@@ -345,18 +355,20 @@ namespace RSDKv1
         List<LineLayer> LineLayers = new List<LineLayer>();
 
         byte layerCount;
+        byte LinesPerLayer;
 
         List<byte> Unknown = new List<byte>();
 
         //NOTES:
         //Byte 1 are the number of layers
         //byte 2 is the amount of lines
-        //then there seem to be line values
+        //then there are the line values
         //then IDK
+        //
 
         public BGLayout(string filename) : this(new Reader(filename))
         {
-            
+
         }
 
         public BGLayout(System.IO.Stream stream) : this(new Reader(stream))
@@ -367,16 +379,13 @@ namespace RSDKv1
         public BGLayout(Reader reader)
         {
             layerCount = reader.ReadByte();
+            //LinesPerLayer = reader.ReadByte();
 
+            //First up is definatly the Parallax vallues
             for (int lc = 0; lc < layerCount + 1; lc++)
             {
                 LineLayer l = new LineLayer(reader);
                 LineLayers.Add(l);
-            }
-
-            while(!reader.IsEof)
-            {
-                Unknown.Add(reader.ReadByte());
             }
 
         }
@@ -395,26 +404,12 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
-            // Save width and height
-            //writer.Write(layerCount);
-            //writer.Write((byte)Lines.Count);
-
-            //for (int i = 0; i < Lines.Count; i++)
-            //{
-                //Lines[i].Write(writer);
-            //}
-
-            for (int i = 0; i < Unknown.Count; i++)
-            {
-                writer.Write(Unknown[i]);
-            }
-
         }
 
         public class LineLayer
         {
 
-        public List<ParallaxValues> Lines = new List<ParallaxValues>();
+            public List<ParallaxValues> Lines = new List<ParallaxValues>();
 
             public LineLayer(Reader reader)
             {
@@ -426,28 +421,28 @@ namespace RSDKv1
                 }
             }
 
-        public class ParallaxValues
-        {
-            byte LineNo;
-            byte OverallSpeed;
-            byte Value2;
-
-            public ParallaxValues(Reader reader)
+            public class ParallaxValues
             {
-                LineNo = reader.ReadByte();
-                OverallSpeed = reader.ReadByte();
-                Value2 = reader.ReadByte();
-                Console.WriteLine(LineNo + " " + OverallSpeed + " " + Value2);
-            }
+                byte LineNo;
+                byte OverallSpeed;
+                byte Deform;
 
-            public void Write(Writer writer)
-            {
-                writer.Write(LineNo);
-                writer.Write(OverallSpeed);
-                writer.Write(Value2);
-            }
+                public ParallaxValues(Reader reader)
+                {
+                    LineNo = reader.ReadByte();
+                    OverallSpeed = reader.ReadByte();
+                    Deform = reader.ReadByte();
+                    Console.WriteLine(LineNo + " " + OverallSpeed + " " + Deform);
+                }
 
-        }
+                public void Write(Writer writer)
+                {
+                    writer.Write(LineNo);
+                    writer.Write(OverallSpeed);
+                    writer.Write(Deform);
+                }
+
+            }
         }
 
 
@@ -520,13 +515,13 @@ namespace RSDKv1
                     BlockList.Add(currentBlock);
                     currentBlock = new Tile128();
                 }
-                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6)); 
-                currentBlock.Mapping[tileIndex].VisualPlane = (byte)(mappingEntry[0] >> 4); 
+                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
+                currentBlock.Mapping[tileIndex].VisualPlane = (byte)(mappingEntry[0] >> 4);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
-                currentBlock.Mapping[tileIndex].Orientation = (byte)(mappingEntry[0] >> 2); 
+                currentBlock.Mapping[tileIndex].Orientation = (byte)(mappingEntry[0] >> 2);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
                 currentBlock.Mapping[tileIndex].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
-                currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4); 
+                currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
                 currentBlock.Mapping[tileIndex].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
                 tileIndex++;
             }
@@ -539,7 +534,7 @@ namespace RSDKv1
 
             //for (int i = 0; i < BlockList.Count; i++)
             //{
-                //BlockList[i].Render(new Bitmap("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\Zone.png"), "C:\\Users\\owner\\Downloads\\RS-EHZ Chunks\\" + i + ".png");
+            //BlockList[i].Render(new Bitmap("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\Zone.png"), "C:\\Users\\owner\\Downloads\\RS-EHZ Chunks\\" + i + ".png");
             //}
 
         }
@@ -561,58 +556,65 @@ namespace RSDKv1
 
         }
 
-    public class Tile128
-    {
-        public Tile16[] Mapping;
-        public Tile128()
+        public Bitmap RenderChunk(int ChunkID, Bitmap Tiles)
         {
-            Mapping = new Tile16[8 * 8];
-            for (int i = 0; i < Mapping.Length; i++)
-            {
-                Mapping[i] = new Tile16();
-            }
+            Bitmap chunk = new Bitmap(128, 128);
+            chunk = BlockList[ChunkID].Render(Tiles);
+            return chunk;
         }
 
-        public Bitmap Render(Image tiles)
+        public class Tile128
         {
-            Bitmap retval = new Bitmap(128, 128);
-            using (Graphics rg = Graphics.FromImage(retval))
+            public Tile16[] Mapping;
+            public Tile128()
             {
-                int i = 0;
-                for (int y = 0; y < 8; y++)
+                Mapping = new Tile16[8 * 8];
+                for (int i = 0; i < Mapping.Length; i++)
                 {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        Rectangle destRect = new Rectangle(x * 16, y * 16, 16, 16);
-                        Rectangle srcRect = new Rectangle(0, Mapping[i].Tile16x16 * 16, 16, 16);
-                        using (Bitmap tile = new Bitmap(16, 16))
-                        {
-                            using (Graphics tg = Graphics.FromImage(tile))
-                            {
-                                tg.DrawImage(tiles, 0, 0, srcRect, GraphicsUnit.Pixel);
-                            }
-                            if (Mapping[i].Orientation == 1)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                            }
-                            else if (Mapping[i].Orientation == 2)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                            }
-                            else if (Mapping[i].Orientation == 3)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                            }
-                            rg.DrawImage(tile, destRect);
-                        }
-                        i++;
-                    }
+                    Mapping[i] = new Tile16();
                 }
             }
-            return retval;
-        }
 
-        public Bitmap Render(Image tiles, string outpath)
+            public Bitmap Render(Image tiles)
+            {
+                Bitmap retval = new Bitmap(128, 128);
+                using (Graphics rg = Graphics.FromImage(retval))
+                {
+                    int i = 0;
+                    for (int y = 0; y < 8; y++)
+                    {
+                        for (int x = 0; x < 8; x++)
+                        {
+                            Rectangle destRect = new Rectangle(x * 16, y * 16, 16, 16);
+                            Rectangle srcRect = new Rectangle(0, Mapping[i].Tile16x16 * 16, 16, 16);
+                            using (Bitmap tile = new Bitmap(16, 16))
+                            {
+                                using (Graphics tg = Graphics.FromImage(tile))
+                                {
+                                    tg.DrawImage(tiles, 0, 0, srcRect, GraphicsUnit.Pixel);
+                                }
+                                if (Mapping[i].Orientation == 1)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                                }
+                                else if (Mapping[i].Orientation == 2)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                                }
+                                else if (Mapping[i].Orientation == 3)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                                }
+                                rg.DrawImage(tile, destRect);
+                            }
+                            i++;
+                        }
+                    }
+                }
+                return retval;
+            }
+
+            public Bitmap Render(Image tiles, string outpath)
             {
                 Bitmap retval = new Bitmap(128, 128);
                 using (Graphics rg = Graphics.FromImage(retval))
@@ -653,18 +655,18 @@ namespace RSDKv1
             }
         }
 
-    public class Tile16
-    {
-        public byte VisualPlane { get; set; }
-        public byte Orientation { get; set; }
-        public ushort Tile16x16 { get; set; }
-        public byte CollisionFlag0 { get; set; }
-        public byte CollisionFlag1 { get; set; }
+        public class Tile16
+        {
+            public byte VisualPlane { get; set; }
+            public byte Orientation { get; set; }
+            public ushort Tile16x16 { get; set; }
+            public byte CollisionFlag0 { get; set; }
+            public byte CollisionFlag1 { get; set; }
+        }
     }
-}
 
     /* StageConfig Equivelent */
-    public class zcf 
+    public class zcf
     {
 
         public byte[] Unknown = new byte[26];
@@ -693,7 +695,7 @@ namespace RSDKv1
         {
             palette.Read(reader, 2);
 
-            this.ReadObjectsSpriteSheets(reader); 
+            this.ReadObjectsSpriteSheets(reader);
 
             this.ReadObjectsNames(reader);
 
@@ -719,35 +721,35 @@ namespace RSDKv1
                 writer.WriteRSDKString(name);
         }
 
-            internal void ReadObjectsNames(Reader reader)
-            {
-                byte objects_count = reader.ReadByte();
+        internal void ReadObjectsNames(Reader reader)
+        {
+            byte objects_count = reader.ReadByte();
 
-                for (int i = 0; i < objects_count; ++i)
-                { ObjectsNames.Add(reader.ReadRSDKString()); }
-            }
+            for (int i = 0; i < objects_count; ++i)
+            { ObjectsNames.Add(reader.ReadRSDKString()); }
+        }
 
-            internal void WriteObjectsNames(Writer writer)
-            {
-                writer.Write((byte)ObjectsNames.Count);
-                foreach (string name in ObjectsNames)
-                    writer.WriteRSDKString(name);
-            }
+        internal void WriteObjectsNames(Writer writer)
+        {
+            writer.Write((byte)ObjectsNames.Count);
+            foreach (string name in ObjectsNames)
+                writer.WriteRSDKString(name);
+        }
 
-            internal void ReadWAVConfiguration(Reader reader)
-            {
-                byte wavs_count = reader.ReadByte();
+        internal void ReadWAVConfiguration(Reader reader)
+        {
+            byte wavs_count = reader.ReadByte();
 
-                for (int i = 0; i < wavs_count; ++i)
-                { WAVs.Add(new WAVConfiguration(reader)); }
-            }
+            for (int i = 0; i < wavs_count; ++i)
+            { WAVs.Add(new WAVConfiguration(reader)); }
+        }
 
-            internal void WriteWAVConfiguration(Writer writer)
-            {
-                writer.Write((byte)WAVs.Count);
-                foreach (WAVConfiguration wav in WAVs)
-                    wav.Write(writer);
-            }
+        internal void WriteWAVConfiguration(Writer writer)
+        {
+            writer.Write((byte)WAVs.Count);
+            foreach (WAVConfiguration wav in WAVs)
+                wav.Write(writer);
+        }
 
         internal void ReadOGGConfiguration(Reader reader)
         {
@@ -765,19 +767,19 @@ namespace RSDKv1
         }
 
         public void Write(string filename)
-            {
-                using (Writer writer = new Writer(filename))
-                    this.Write(writer);
-            }
+        {
+            using (Writer writer = new Writer(filename))
+                this.Write(writer);
+        }
 
-            public void Write(System.IO.Stream stream)
-            {
-                using (Writer writer = new Writer(stream))
-                    this.Write(writer);
-            }
+        public void Write(System.IO.Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                this.Write(writer);
+        }
 
-            internal void Write(Writer writer)
-            {
+        internal void Write(Writer writer)
+        {
 
             palette.Write(writer);
 
@@ -785,18 +787,12 @@ namespace RSDKv1
 
             WriteObjectsNames(writer);
 
-            writer.Write(Unknown); //unknown values
+            writer.Write(Unknown);
 
             WriteWAVConfiguration(writer);
 
             WriteOGGConfiguration(writer);
-
-            //writer.Write(Unknown);
-
-                //WriteObjectsNames(writer);
-
-                //WriteWAVConfiguration(writer);
-            }
+        }
 
     }
 }

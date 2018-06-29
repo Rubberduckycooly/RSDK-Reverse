@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using RSDK;
+using System.IO;
 
-namespace RSDKv1
+namespace RSDK1
 {
     public class Hitbox : IHitbox
     {

@@ -21,8 +21,9 @@
 // SOFTWARE.
 
 using System.IO;
+using RSDK;
 
-namespace RSDKv1
+namespace RSDK1
 {
     public class Frame : IFrame
     {
@@ -32,9 +33,9 @@ namespace RSDKv1
 
         public int Id { get => 0; set { } }
 
-        public bool flag1 { get => false; set { } }
+        public int flag1 { get; set; }
 
-        public bool flag2 { get => false; set { } }
+        public int flag2 { get; set; }
 
         public int Duration
         {
@@ -54,6 +55,10 @@ namespace RSDKv1
 
         public int CenterY { get; set; }
 
+        public int[] Hitbox;
+
+        public int[] PivotVals;
+
         public IHitbox GetHitbox(int index)
         {
             return new Hitbox();
@@ -70,26 +75,32 @@ namespace RSDKv1
             // byte 2 - Image's Y Position		
             // byte 3 - Width
             // byte 4 - Height
-            // byte 5 - Image Number			
+            // byte 5 - Image Number
+            // byte 6 - Hitbox Left
+            // byte 7 - Hitbox Top
+            // byte 8 - Hitbox Right
+            // byte 9 - Hitbox Bottom
+            // byte 10 - Center X
+            // byte 11 - Center Y
             X = reader.ReadByte();
             Y = reader.ReadByte();
             Width = reader.ReadByte();
             Height = reader.ReadByte();
             SpriteSheet = reader.ReadByte();
-            flag1 = false; // UNKNOWN
-            flag2 = false; // UNKNOWN
             Id = 0;
 
-            int[] v = new int[6];
+            Hitbox = new int[4];
+            PivotVals = new int[2];
 
-            // the meaning of v[0] and v[1] is currently unknown
+            for (int k = 0; k < 4; k++)
+            { Hitbox[k] = reader.ReadByte(); }
 
-            for (int k = 0; k < 6; k++)
-            { v[k] = reader.ReadByte(); }
+            for (int k = 0; k < 2; k++)
+            { PivotVals[k] = reader.ReadByte(); }
 
             // Compute hotspot displacements
-            CenterX = v[2] - v[4];
-            CenterY = v[3] - v[5];
+            CenterX = Hitbox[2] - PivotVals[0]; //PivotVal[0] is the true Value, this calculation is just done so the animation looks right upon playback
+            CenterY = Hitbox[3] - PivotVals[1]; //PivotVal[1] is the true Value, this calculation is just done so the animation looks right upon playback
         }
 
         public void Write(BinaryWriter writer)
@@ -99,14 +110,12 @@ namespace RSDKv1
             writer.Write((byte)Width);
             writer.Write((byte)Height);
             writer.Write((byte)SpriteSheet);
-            writer.Write((byte)0); //Unknown
-            writer.Write((byte)0); //Unknown
-            //I have no idea how to save the "Pivot" since it is read as a group of 4 values that are 
-            //subtracted from each other... and i have no idea what that calculation is...
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
+            writer.Write((byte)Hitbox[0]); //Hitbox values, Left
+            writer.Write((byte)Hitbox[1]); //Hitbox values, Top
+            writer.Write((byte)Hitbox[2]); //Hitbox values, Right
+            writer.Write((byte)Hitbox[3]); //Hitbox values, Bottom
+            writer.Write((byte)PivotVals[0]); 
+            writer.Write((byte)PivotVals[1]);
         }
 
         public object Clone()

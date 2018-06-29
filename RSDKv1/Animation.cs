@@ -20,18 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using RSDK;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace RSDKv1
+namespace RSDK1
 {
     public class Animation : IAnimation
     {
         public int Version => 1;
 
         public List<string> SpriteSheets { get; }
+
+        public byte PlayerType = 0;
 
         public List<AnimationEntry> Animations { get; }
 
@@ -42,7 +45,7 @@ namespace RSDKv1
         public Animation(BinaryReader reader, bool RSDC)
         {
             reader.ReadByte(); //skip this byte, as it seems unused
-            reader.ReadByte(); //Again, unused
+            PlayerType = reader.ReadByte(); //Tells the engine what player is selected; It is 0 for sonic, 1 for tails & 2 for Knux, so maybe it specifies a player value?
             int spriteSheetsCount = 3;
             if (RSDC) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
             {
@@ -84,7 +87,6 @@ namespace RSDKv1
 
                 // read frame count	
                 int frameCount = reader.ReadByte();
-                Console.WriteLine(frameCount);
                 //read Animation Speed
                 int animationSpeed = reader.ReadByte() * 4;
                 //read Loop Index
@@ -131,7 +133,7 @@ namespace RSDKv1
 
         public void SaveChanges(BinaryWriter writer)
         {
-            writer.Write((byte)0); //TODO: Use this for spriteSheetsCount later...
+            writer.Write((byte)0);
             writer.Write((byte)0);
             var animationsCount = (byte)Math.Min(Animations.Count, byte.MaxValue);
             writer.Write(animationsCount);
