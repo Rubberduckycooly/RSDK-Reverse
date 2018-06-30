@@ -44,7 +44,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Backgrounds.cs" />
+    <Compile Include="BackgroundLayout.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="CollisionMask.cs" />

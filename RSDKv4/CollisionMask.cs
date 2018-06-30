@@ -6,27 +6,53 @@ using System.Threading.Tasks;
 
 namespace RSDKv4
 {
-    class CollisionMask
+    public class CollisionMask
     {
 
+        const int TILES_COUNT = 1024;
 
+        TileConfig[] CollisionPath1 = new TileConfig[TILES_COUNT];
+        TileConfig[] CollisionPath2 = new TileConfig[TILES_COUNT];
 
-        public void Write(string filename)
+        public class TileConfig
         {
-            using (Writer writer = new Writer(filename))
-                this.Write(writer);
+            // Collision position for each pixel
+            public byte[] Collision;
+
+            // If has collision
+            public bool[] HasCollision;
+
+            // If is celing, the collision is from below
+            public bool IsCeiling;
+
+            // Unknown 5 bytes config
+            public byte[] Config;
+
+            public TileConfig(System.IO.Stream stream) : this(new Reader(stream)) { }
+
+            internal TileConfig(Reader reader)
+            {
+                Collision = reader.ReadBytes(10);
+                Config = reader.ReadBytes(5);
+            }
         }
 
-        public void Write(System.IO.Stream stream)
-        {
-            using (Writer writer = new Writer(stream))
-                this.Write(writer);
-        }
-
-        internal void Write(Writer writer)
+        public CollisionMask(string filename) : this(new Reader(filename))
         {
 
         }
 
+        public CollisionMask(System.IO.Stream stream) : this(new Reader(stream))
+        {
+
+        }
+
+        private CollisionMask(Reader reader)
+        {
+                for (int i = 0; i < TILES_COUNT; ++i)
+                    CollisionPath1[i] = new TileConfig(reader);
+                for (int i = 0; i < TILES_COUNT; ++i)
+                    CollisionPath2[i] = new TileConfig(reader);
+        }
     }
 }
