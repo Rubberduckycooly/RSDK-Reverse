@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -47,8 +48,8 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Animation.Frame.cs" />
     <Compile Include="Animation.HitboxEntry.cs" />
-    <Compile Include="Backgrounds.cs" />
-    <Compile Include="CollisionMasks.cs" />
+    <Compile Include="BackgroundLayout.cs" />
+    <Compile Include="CollisionMask.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="IAnimation.cs" />

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 /*
-This Loader uses code from the programs: "Retro Engine Map Viewer" and TaxEd by -- and Nextvolume respectivley 
+This Loader uses code heavily based off of programs: "Retro Engine Map Viewer" and TaxEd by -- and Nextvolume respectivley 
 */
 
 namespace RSDKv2
@@ -15,10 +15,10 @@ namespace RSDKv2
         public string Title { get; set; }
         public ushort[][] MapLayout { get; set; }
 
-        byte[] displayBytes = {1,9,0,0,3};
+        public byte[] displayBytes = {1,9,0,0,3};
 
-        List<Object> objects = new List<Object>();
-        List<string> objectTypeNames = new List<string>();
+        public List<Object> objects = new List<Object>();
+        public List<string> objectTypeNames = new List<string>();
 
         public int width, height;
 

@@ -11,7 +11,8 @@ namespace RSDKv2
     public class StageConfig
     {
 
-        byte[] Unknown = new byte[97];
+        public Palette palette = new Palette();
+        public byte[] Unknown = new byte[97];
 
         public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
 
@@ -29,13 +30,13 @@ namespace RSDKv2
 
         public StageConfig(Reader reader)
         {
+            palette.Read(reader, 2);
 
-            Unknown = reader.ReadBytes(97); // there are 97 bytes here, they have values in RSDKv3 but we'll ignore them for now
+            reader.ReadByte(); //A byte comes just after the palette but it's use is unknown
 
             this.ReadObjectsNames(reader);
 
             this.ReadWAVConfiguration(reader);
-
 
         }
 
@@ -83,7 +84,9 @@ namespace RSDKv2
 
         internal void Write(Writer writer)
         {
-            writer.Write(Unknown);
+            palette.Write(writer);
+
+            writer.Write(0);
 
             WriteObjectsNames(writer);
 

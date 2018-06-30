@@ -48,7 +48,7 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Animation.Frame.cs" />
     <Compile Include="Animation.HitboxEntry.cs" />
-    <Compile Include="Backgrounds.cs" />
+    <Compile Include="BackgroundLayout.cs" />
     <Compile Include="CollisionMask.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Hitbox.cs" />

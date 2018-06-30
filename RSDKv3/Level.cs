@@ -15,12 +15,23 @@ namespace RSDKv3
         public string Title { get; set; }
         public ushort[][] MapLayout { get; set; }
 
-        byte[] displayBytes = {1,9,0,0,3};
+        public byte[] displayBytes = {1,9,0,0,3};
 
-        List<Object> objects = new List<Object>();
-        List<string> objectTypeNames = new List<string>();
+        //Byte 5: tLayerMidPoint
+        //if it's 0 then nothing but the objects are drawn
+        //if its 1 or 2 the tiles on high layer are drawn on the low layer
+        // 3 is default
+        // 4 or above draws tiles on the low layer on the high layer
+
+        public List<Object> objects = new List<Object>();
+        public List<string> objectTypeNames = new List<string>();
 
         public int width, height;
+
+        public Level()
+        {
+
+        }
 
         public Level(string filename) : this(new Reader(filename))
         {

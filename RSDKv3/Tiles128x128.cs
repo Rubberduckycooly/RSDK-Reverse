@@ -6,11 +6,21 @@ using System.Drawing;
 
 namespace RSDKv3
 {
-    class Tiles128x128
+    public class Tiles128x128
     {
         //The file is always 96kb in size
 
         public List<Tile128> BlockList { get; set; }
+
+        public Tiles128x128(string filepath) : this(new Reader(filepath))
+        {
+
+        }
+
+        public Tiles128x128(System.IO.Stream stream) : this(new Reader(stream))
+        {
+
+        }
 
         public Tiles128x128(Reader strm)
         {
@@ -18,6 +28,7 @@ namespace RSDKv3
             byte[] mappingEntry = new byte[3];
             Tile128 currentBlock = new Tile128();
             int tileIndex = 0;
+
             while (strm.Read(mappingEntry, 0, mappingEntry.Length) > 0)
             {
                 if (tileIndex >= currentBlock.Mapping.Length)
@@ -27,13 +38,25 @@ namespace RSDKv3
                     currentBlock = new Tile128();
                 }
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
+                //Console.WriteLine("RAWME[0] = " + Convert.ToString(mappingEntry[0], 2));
                 currentBlock.Mapping[tileIndex].VisualPlane = (byte)(mappingEntry[0] >> 4);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
+                //Console.WriteLine("Buffer0 = " + Convert.ToString(mappingEntry[0], 2));
                 currentBlock.Mapping[tileIndex].Direction = (byte)(mappingEntry[0] >> 2);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
+                //Console.WriteLine("Buffer0 = " + Convert.ToString(mappingEntry[0], 2));
                 currentBlock.Mapping[tileIndex].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
                 currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
                 currentBlock.Mapping[tileIndex].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
+
+                //Console.WriteLine("DecimalBuffer = " + mappingEntry[0] + " " + mappingEntry[1] + " " + mappingEntry[2]);
+                //Console.WriteLine("RawBuffer = " + Convert.ToString(mappingEntry[0], 2) + " " + Convert.ToString(mappingEntry[1], 2) + " " + Convert.ToString(mappingEntry[2], 2));Console.WriteLine("RawBuffer = " + Convert.ToString(mappingEntry[0], 2) + " " + Convert.ToString(mappingEntry[1], 2) + " " + Convert.ToString(mappingEntry[2], 2));
+                //Console.WriteLine("Data = " + currentBlock.Mapping[tileIndex].VisualPlane + " " + currentBlock.Mapping[tileIndex].Direction + " " + currentBlock.Mapping[tileIndex].Tile16x16 + " " + currentBlock.Mapping[tileIndex].CollisionFlag0 + " " + currentBlock.Mapping[tileIndex].CollisionFlag1);
+                /*Console.WriteLine("Visual Plane = " + Convert.ToString(currentBlock.Mapping[tileIndex].VisualPlane, 2));
+                Console.WriteLine("Orientation = " + Convert.ToString(currentBlock.Mapping[tileIndex].Direction, 2));
+                Console.WriteLine("Tile = " + Convert.ToString(currentBlock.Mapping[tileIndex].Tile16x16, 2));
+                Console.WriteLine("Collision A = " + Convert.ToString(currentBlock.Mapping[tileIndex].CollisionFlag0, 2));
+                Console.WriteLine("Collision B = " + Convert.ToString(currentBlock.Mapping[tileIndex].CollisionFlag1, 2));*/
                 tileIndex++;
             }
             if (tileIndex >= currentBlock.Mapping.Length)
@@ -58,7 +81,51 @@ namespace RSDKv3
 
         internal void Write(Writer writer)
         {
+            int[] mappingEntry = new int[3];
+            int tileIndex = 0;
+            int chunkIndex = 0;
 
+            while (chunkIndex < 512)
+            {
+                if (tileIndex >= BlockList[chunkIndex].Mapping.Length)
+                {
+                    tileIndex = 0;
+                    chunkIndex++;
+                }
+                if (chunkIndex > 511) break;
+                Console.WriteLine("Data = " + BlockList[chunkIndex].Mapping[tileIndex].VisualPlane + " " + BlockList[chunkIndex].Mapping[tileIndex].Direction + " " + BlockList[chunkIndex].Mapping[tileIndex].Tile16x16 + " " + BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag0 + " " + BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag1);
+                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
+                mappingEntry[0] = mappingEntry[0] | BlockList[chunkIndex].Mapping[tileIndex].Direction << 2; //Put the Flip of the tile two bits in
+                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
+                mappingEntry[0] |= BlockList[chunkIndex].Mapping[tileIndex].VisualPlane << 4; //Put the Layer of the tile four bits in
+                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
+                mappingEntry[0] = mappingEntry[0] | BlockList[chunkIndex].Mapping[tileIndex].Tile16x16 >> 8; //Put the first bit onto buffer[0]
+
+                mappingEntry[1] = (byte)(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16); //Put the rest of the Tile16x16 Value into this buffer
+
+                mappingEntry[2] = BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag1; //CF1 is all bytes before bit 5
+                mappingEntry[2] = mappingEntry[2] | BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag0 << 4; //CF0 is all bytes after bit 4
+
+                writer.Write((byte)mappingEntry[0]);
+                writer.Write((byte)mappingEntry[1]);
+                writer.Write((byte)mappingEntry[2]);
+                Console.WriteLine("Output = " + mappingEntry[0] + " " + mappingEntry[1] + " " + mappingEntry[2]);
+                Console.WriteLine("RawOutput = " + Convert.ToString(mappingEntry[0], 2) + " " + Convert.ToString(mappingEntry[1], 2) + " " + Convert.ToString(mappingEntry[2], 2));
+                tileIndex++;
+            }
+            
+            if (chunkIndex < 512 && tileIndex >= BlockList[chunkIndex].Mapping.Length)
+            {
+                tileIndex = 0;
+                chunkIndex++;
+            }
+        }
+
+        public Bitmap RenderChunk(int ChunkID, Bitmap Tiles)
+        {
+            Bitmap chunk = new Bitmap(128, 128);
+            chunk = BlockList[ChunkID].Render(Tiles);
+            return chunk;
         }
 
     }

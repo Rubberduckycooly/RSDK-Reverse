@@ -14,10 +14,10 @@ namespace RSDKv1
         public string Title { get; set; }
         public ushort[][] MapLayout { get; set; }
 
-        public byte[] ThreeBytes_RS; //These Bytes' functions are unknown, so we just save them here so we can write them back
-        //byte[0] may be a value that tells the engine what music track to play...
+        public byte Music; //This is usually Set to 0
+        public byte Background; //This is usually Set to 1 in PC, 0 in DC
 
-        public byte PlayerXpos;
+        public ushort PlayerXpos;
         public ushort PlayerYPos;
 
         public List<Object> objects = new List<Object>();
@@ -63,9 +63,10 @@ namespace RSDKv1
                 }
             }
 
-            ThreeBytes_RS = new byte[3];
-            ITMreader.Read(ThreeBytes_RS, 0, 3);
-            PlayerXpos = ITMreader.ReadByte();
+            Music = ITMreader.ReadByte();
+            Background = ITMreader.ReadByte();
+            PlayerXpos = (ushort)(ITMreader.ReadByte() << 8);
+            PlayerXpos |= ITMreader.ReadByte();
             PlayerYPos = (ushort)(ITMreader.ReadByte() << 8);
             PlayerYPos |= ITMreader.ReadByte();
 
@@ -91,8 +92,6 @@ namespace RSDKv1
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
-
-
         }
 
         public void Write(string filename)
@@ -169,9 +168,11 @@ namespace RSDKv1
             // Save zone name
             ITMwriter.WriteRSDKString(Title);
 
-            // Write the 3 bytes we kept
-            ITMwriter.Write(ThreeBytes_RS);
-            ITMwriter.Write(PlayerXpos);
+            // Write the Stage Init Data
+            ITMwriter.Write(Music);
+            ITMwriter.Write(Background);
+            ITMwriter.Write((byte)(PlayerXpos >> 8));
+            ITMwriter.Write((byte)(PlayerXpos & 0xFF));
             ITMwriter.Write((byte)(PlayerYPos >> 8));
             ITMwriter.Write((byte)(PlayerYPos & 0xFF));
 
@@ -274,11 +275,11 @@ namespace RSDKv1
 
         string Title;
 
-        byte[] ThreeBytes_RS; //These Bytes' functions are unknown, so we just save them here so we can write them back
-        //byte[0] may be a value that tells the engine what music track to play...
+        public byte Music; //This is usually Set to 0
+        public byte Background; //This is usually Set to 1 in PC, 0 in DC
 
-        byte PlayerXpos;
-        ushort PlayerYPos;
+        public ushort PlayerXpos;
+        public ushort PlayerYPos;
 
         List<Object> objects = new List<Object>();
 
@@ -297,9 +298,10 @@ namespace RSDKv1
 
             Title = reader.ReadRSDKString();
 
-            ThreeBytes_RS = new byte[3];
-            reader.Read(ThreeBytes_RS, 0, 3);
-            PlayerXpos = reader.ReadByte();
+            Music = reader.ReadByte();
+            Background = reader.ReadByte();
+            PlayerXpos = (ushort)(reader.ReadByte() << 8);
+            PlayerXpos |= reader.ReadByte();
             PlayerYPos = (ushort)(reader.ReadByte() << 8);
             PlayerYPos |= reader.ReadByte();
 
@@ -340,7 +342,69 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
+            //Checks To make sure that the file can be saved correctly
 
+            int num_of_objects = objects.Count;
+
+            if (num_of_objects > 65535)
+                throw new Exception("Cannot save as Retro-Sonic map. Number of objects > 65535");
+
+            for (int n = 0; n < num_of_objects; n++)
+            {
+                Object obj = objects[n];
+
+                int obj_type = obj.getType();
+                int obj_subtype = obj.getSubtype();
+                int obj_xPos = obj.getXPos();
+                int obj_yPos = obj.getYPos();
+
+                if (obj_type > 255)
+                    throw new Exception("Cannot save as Retro-Sonic map. Object type > 255");
+
+                if (obj_subtype > 255)
+                    throw new Exception("Cannot save as Retro-Sonic map. Object subtype > 255");
+
+                if (obj_xPos < -32768 || obj_xPos > 32767)
+                    throw new Exception("Cannot save as Retro-Sonic. Object X Position can't fit in 16-bits");
+
+                if (obj_yPos < -32768 || obj_yPos > 32767)
+                    throw new Exception("Cannot save as Retro-Sonic. Object Y Position can't fit in 16-bits");
+            }
+
+            // Save zone name
+            writer.WriteRSDKString(Title);
+
+            // Write the Stage Init Data
+            writer.Write(Music);
+            writer.Write(Background);
+            writer.Write((byte)(PlayerXpos >> 8));
+            writer.Write((byte)(PlayerXpos & 0xFF));
+            writer.Write((byte)(PlayerYPos >> 8));
+            writer.Write((byte)(PlayerYPos & 0xFF));
+
+            // Write number of objects
+            writer.Write((byte)(num_of_objects >> 8));
+            writer.Write((byte)(num_of_objects & 0xFF));
+
+            // Write object data
+            for (int n = 0; n < num_of_objects; n++)
+            {
+                Object obj = objects[n];
+
+                int obj_type = obj.type;
+                int obj_subtype = obj.subtype;
+                int obj_xPos = obj.xPos;
+                int obj_yPos = obj.yPos;
+
+                writer.Write((byte)obj_type);
+                writer.Write((byte)obj_subtype);
+
+                writer.Write((byte)(obj_xPos >> 8));
+                writer.Write((byte)(obj_xPos & 0xFF));
+
+                writer.Write((byte)(obj_yPos >> 8));
+                writer.Write((byte)(obj_yPos & 0xFF));
+            }
         }
     }
 
@@ -452,6 +516,10 @@ namespace RSDKv1
     /* TileConfig Equivelent */
     public class tcf
     {
+        const int TILES_COUNT = 0x400;
+
+        TileConfig[] Collision = new TileConfig[TILES_COUNT];
+
         public tcf(string filename) : this(new Reader(filename))
         {
 
@@ -464,7 +532,10 @@ namespace RSDKv1
 
         public tcf(Reader reader)
         {
-
+            for (int i = 0; i < TILES_COUNT; ++i)
+            {
+                Collision[i] = new TileConfig(reader);
+            }
         }
 
         public void Write(string filename)
@@ -481,8 +552,67 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
-
+            for (int i = 0; i < TILES_COUNT; ++i)
+            {
+                Collision[i].Write(writer);
+            }
         }
+
+        class TileConfig
+        {
+            byte unknown;
+            byte[] tileCollisiondataP1 = new byte[32];
+            bool[] tileSolidityDataP1 = new bool[32];
+            byte[] tileCollisiondataP2 = new byte[32];
+            bool[] tileSolidityDataP2 = new bool[32];
+            //bool IsCeiling;
+            //byte[] Config = new byte[5];
+
+            public TileConfig(string filename) : this(new Reader(filename))
+            {
+            }
+
+            public TileConfig(System.IO.Stream stream) : this(new Reader(stream))
+            {
+            }
+
+            public TileConfig(Reader reader)
+            {
+                unknown = reader.ReadByte();
+                tileCollisiondataP1 = reader.ReadBytes(16);
+                tileSolidityDataP1 = reader.ReadBytes(16).Select(x => x != 0).ToArray();
+                tileCollisiondataP2 = reader.ReadBytes(16);
+                tileSolidityDataP2 = reader.ReadBytes(16).Select(x => x != 0).ToArray();
+            }
+
+            public void Write(string filename)
+            {
+                using (Writer writer = new Writer(filename))
+                    this.Write(writer);
+            }
+
+            public void Write(System.IO.Stream stream)
+            {
+                using (Writer writer = new Writer(stream))
+                    this.Write(writer);
+            }
+
+            internal void Write(Writer writer)
+            {
+                writer.Write(unknown);
+                writer.Write(tileCollisiondataP1);
+                for (int i = 0; i < 16;i++)
+                {
+                    writer.Write(tileSolidityDataP1[i]);
+                }
+                writer.Write(tileCollisiondataP2);
+                for (int i = 0; i < 16; i++)
+                {
+                    writer.Write(tileSolidityDataP2[i]);
+                }
+            }
+        }
+
     }
 
     /* 128x128Tiles Equivelent */
