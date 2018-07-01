@@ -12,11 +12,7 @@ This repository contains libaries for all versions of the RSDK (and a few tools 
 
 - RSDK 5: A libary for RSDKv5 (Sonic Mania). This was made by koolkdev/EyeKey, with a few minor tweaks by me. original download here: https://github.com/koolkdev/ManiacEditor
 
-- GFX TOOL (GFX2IMG): Export .gfx Images to a standard image format (.png, .gif, etc) AND create a .gfx file from an indexed gif in one simple program!
-
-- Palette Editor: An Editor for palettes used by RSDKv4's GameConfig.bin files, Retro-Sonic's .zcf Files and .act files!
-
-- RSDK Chunk Mappings Editor: An Editor for the 128x128Tiles.bin (Zone.til for Retro-Sonic) that the RSDK uses!
+- RetroED: A set of tools designed to modify the filetypes used by Retro Engine versions below version 5
 
 - Test: Just A program i used to test various functions, nothin' to see here!
 
