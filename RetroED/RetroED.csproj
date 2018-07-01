@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{3E81A985-99EE-4B8B-B90E-A8208DE152AB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>RetroED</RootNamespace>
+    <AssemblyName>RetroED</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>Tools\MapEditor\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\ChunkEditor\Extensions.cs" />
+    <Compile Include="Tools\ChunkEditor\Form1.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ChunkEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\ChunkEditor\TileList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\ChunkEditor\TileList.Designer.cs">
+      <DependentUpon>TileList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ChunkEditor\TileSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\GFXTool\Form1.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\GFXTool\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\MapEditor\Extensions.cs" />
+    <Compile Include="Tools\MapEditor\MainView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\MainView.Designer.cs">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\MapEditor\StageChunksView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\StageChunksView.Designer.cs">
+      <DependentUpon>StageChunksView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\MapEditor\StageMapView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\StageMapView.Designer.cs">
+      <DependentUpon>StageMapView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\MapEditor\TileList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\MapEditor\TileList.Designer.cs">
+      <DependentUpon>TileList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\MapEditor\TileSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\NexusDecrypt\Form1.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\NexusDecrypt\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\ColorPreviewBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\EventsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\AdobeColorTablePaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\AdobePhotoshopColorSwatchColorSpace.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\AdobePhotoshopColorSwatchFileVersion.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\AdobePhotoShopColorSwatchSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorBarStyle.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorCellBorderStyle.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorCollection.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorCollectionEventArgs.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorCollectionSortOrder.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorComparer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorEditingMode.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorEditor.Designer.cs">
+      <DependentUpon>ColorEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorEditorManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorGridSelectedCellStyle.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorHitTestInfo.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorPalette.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorPalettes.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorPickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorPickerDialog.Designer.cs">
+      <DependentUpon>ColorPickerDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorSliderNubStyle.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorSource.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\ColorWheel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\EditColorCancelEventArgs.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\EditColorEventArgs.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\GimpPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\HslColor.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\HsvColor.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\HueColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\IColorEditor.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\InterleavedBitmapPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\IPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\JascPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\LightnessColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\NativeMethods.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\NavigationOrigin.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\PaintNetPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\PaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\RawPaletteSerializer.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\RgbaChannel.cs" />
+    <Compile Include="Tools\PaletteEditor\Extensions\RgbaColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\SaturationColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\Extensions\ScreenColorPicker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\GroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\ToolStripControllerHosts\ToolStripColorPickerDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\ToolStripControllerHosts\ToolStripColorPickerSplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\ToolStripHostDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\PaletteEditor\ToolStripHostDemoForm.Designer.cs">
+      <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDK Unpacker\Form1.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDK Unpacker\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <EmbeddedResource Include="AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="Tools\ChunkEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GFXTool\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\MapEditor\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\MapEditor\MainView.resx">
+      <DependentUpon>MainView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\MapEditor\StageChunksView.resx">
+      <DependentUpon>StageChunksView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\MapEditor\StageMapView.resx">
+      <DependentUpon>StageMapView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\NexusDecrypt\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PaletteEditor\Extensions\ColorEditor.resx">
+      <DependentUpon>ColorEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PaletteEditor\Extensions\ColorPickerDialog.resx">
+      <DependentUpon>ColorPickerDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PaletteEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PaletteEditor\ToolStripControllerHosts\ToolStripColorPickerDropDown.resx">
+      <DependentUpon>ToolStripColorPickerDropDown.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\PaletteEditor\ToolStripHostDemoForm.resx">
+      <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\RSDK Unpacker\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Tools\PaletteEditor\app.config" />
+    <None Include="Tools\PaletteEditor\app.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RSDKv1\RSDKv1.csproj">
+      <Project>{aae1bacd-fe6b-4cc6-ad2d-073315f45eaf}</Project>
+      <Name>RSDKv1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv2\RSDKv2.csproj">
+      <Project>{e089db56-f8d4-434e-a9a8-c7efcc3278d8}</Project>
+      <Name>RSDKv2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv3\RSDKv3.csproj">
+      <Project>{b41a3858-7e66-4755-9f50-94ea021155b6}</Project>
+      <Name>RSDKv3</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv4\RSDKv4.csproj">
+      <Project>{1a58ba31-c9e1-4d18-876e-ec73799e7a9f}</Project>
+      <Name>RSDKv4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv5\RSDKv5.csproj">
+      <Project>{cf5496f8-002b-408f-9b3d-67c88f610283}</Project>
+      <Name>RSDKv5</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Tools\MapEditor\Resources.ico" />
+    <Content Include="Tools\PaletteEditor\icon.ico" />
+    <Content Include="Tools\PaletteEditor\Resources\markdownpad-github.css" />
+    <None Include="Tools\PaletteEditor\Resources\text.png" />
+    <None Include="Tools\PaletteEditor\Resources\palette-save.png" />
+    <None Include="Tools\PaletteEditor\Resources\palette-load.png" />
+    <None Include="Tools\PaletteEditor\Resources\icon.png" />
+    <None Include="Tools\PaletteEditor\Resources\fill.png" />
+    <None Include="Tools\PaletteEditor\Resources\eyedropper.png" />
+    <None Include="Tools\PaletteEditor\Resources\cellbackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tools\AnimationEditor\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
