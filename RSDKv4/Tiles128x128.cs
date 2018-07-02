@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace RSDKv3
+namespace RSDKv4
 {
     public class Tiles128x128
     {
-        //The file is always 96kb in size
+        //The file is always 96kb in size, with 512 chunks in every file
 
         public List<Tile128> BlockList { get; set; }
 
@@ -28,7 +28,6 @@ namespace RSDKv3
             byte[] mappingEntry = new byte[3];
             Tile128 currentBlock = new Tile128();
             int tileIndex = 0;
-
             while (strm.Read(mappingEntry, 0, mappingEntry.Length) > 0)
             {
                 if (tileIndex >= currentBlock.Mapping.Length)
@@ -43,10 +42,8 @@ namespace RSDKv3
                 currentBlock.Mapping[tileIndex].Direction = (byte)(mappingEntry[0] >> 2);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
                 currentBlock.Mapping[tileIndex].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
-
                 currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
                 currentBlock.Mapping[tileIndex].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
-
                 tileIndex++;
             }
             if (tileIndex >= currentBlock.Mapping.Length)
@@ -55,6 +52,7 @@ namespace RSDKv3
                 BlockList.Add(currentBlock);
                 currentBlock = new Tile128();
             }
+
         }
 
         public void Write(string filename)
@@ -102,7 +100,7 @@ namespace RSDKv3
                 writer.Write((byte)mappingEntry[2]);
                 tileIndex++;
             }
-            
+
             if (chunkIndex < 512 && tileIndex >= BlockList[chunkIndex].Mapping.Length)
             {
                 tileIndex = 0;
