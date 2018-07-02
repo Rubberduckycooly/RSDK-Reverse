@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace RSDKv4
+namespace RSDKv3
 {
     public class Tiles128x128
     {
-        //The file is always 96kb in size, with 512 chunks in every file
+        //The file is always 96kb in size
 
         public List<Tile128> BlockList { get; set; }
 
@@ -28,6 +28,7 @@ namespace RSDKv4
             byte[] mappingEntry = new byte[3];
             Tile128 currentBlock = new Tile128();
             int tileIndex = 0;
+
             while (strm.Read(mappingEntry, 0, mappingEntry.Length) > 0)
             {
                 if (tileIndex >= currentBlock.Mapping.Length)
@@ -42,9 +43,10 @@ namespace RSDKv4
                 currentBlock.Mapping[tileIndex].Direction = (byte)(mappingEntry[0] >> 2);
                 mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
                 currentBlock.Mapping[tileIndex].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
+
                 currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
                 currentBlock.Mapping[tileIndex].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
-                Console.WriteLine(mappingEntry[0] + " " + mappingEntry[1] + " " + mappingEntry[2]);
+
                 tileIndex++;
             }
             if (tileIndex >= currentBlock.Mapping.Length)
@@ -53,12 +55,6 @@ namespace RSDKv4
                 BlockList.Add(currentBlock);
                 currentBlock = new Tile128();
             }
-
-            /*for (int i = 0; i < BlockList.Count; i++)
-            {
-                //BlockList[i].Render(new Bitmap("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Stages\\Zone01\\16x16Tiles.gif"), "C:\\Users\\owner\\Downloads\\tiles" + i + ".png");
-            }*/
-
         }
 
         public void Write(string filename)
@@ -75,8 +71,10 @@ namespace RSDKv4
 
         internal void Write(Writer writer)
         {
+            int[] mappingEntry = new int[3];
             int tileIndex = 0;
             int chunkIndex = 0;
+
             while (chunkIndex < 512)
             {
                 if (tileIndex >= BlockList[chunkIndex].Mapping.Length)
@@ -84,19 +82,32 @@ namespace RSDKv4
                     tileIndex = 0;
                     chunkIndex++;
                 }
+                mappingEntry = new int[3];
                 if (chunkIndex > 511) break;
-                writer.Write(BlockList[chunkIndex].Mapping[tileIndex].VisualPlane);
-                writer.Write(BlockList[chunkIndex].Mapping[tileIndex].Direction);
-                writer.Write(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16);
-                writer.Write(BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag0);
-                writer.Write(BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag1);
+
+                mappingEntry[0] |= (byte)(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16 >> 8); //Put the first bit onto buffer[0]
+                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 2 << 2));
+                mappingEntry[0] |= (BlockList[chunkIndex].Mapping[tileIndex].Direction) << 2; //Put the Flip of the tile two bits in
+                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 4 << 4));
+                mappingEntry[0] |= (BlockList[chunkIndex].Mapping[tileIndex].VisualPlane) << 4; //Put the Layer of the tile four bits in
+                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 6 << 6));
+
+                mappingEntry[1] = (byte)(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16); //Put the rest of the Tile16x16 Value into this buffer
+
+                mappingEntry[2] = BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag1; //Colision Flag 1 is all bytes before bit 5
+                mappingEntry[2] = mappingEntry[2] | BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag0 << 4; //Colision Flag 0 is all bytes after bit 4
+
+                writer.Write((byte)mappingEntry[0]);
+                writer.Write((byte)mappingEntry[1]);
+                writer.Write((byte)mappingEntry[2]);
                 tileIndex++;
             }
-            //if (tileIndex >= BlockList[chunkIndex].Mapping.Length)
-            //{
-            //    tileIndex = 0;
-            //    chunkIndex++;
-            //}
+            
+            if (chunkIndex < 512 && tileIndex >= BlockList[chunkIndex].Mapping.Length)
+            {
+                tileIndex = 0;
+                chunkIndex++;
+            }
         }
 
         public Bitmap RenderChunk(int ChunkID, Bitmap Tiles)
