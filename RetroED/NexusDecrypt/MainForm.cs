@@ -27,6 +27,7 @@ namespace RetroED.Tools.NexusDecrypt
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 filename = dlg.FileName;
+                SourceFileLocation.Text = filename;
             }
         }
 

@@ -30,7 +30,7 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.SwapFileButton = new System.Windows.Forms.Button();
-            this.SourceIMGLocation = new System.Windows.Forms.TextBox();
+            this.SourceFileLocation = new System.Windows.Forms.TextBox();
             this.FileButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -38,7 +38,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.SwapFileButton);
-            this.panel1.Controls.Add(this.SourceIMGLocation);
+            this.panel1.Controls.Add(this.SourceFileLocation);
             this.panel1.Controls.Add(this.FileButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -56,13 +56,13 @@
             this.SwapFileButton.UseVisualStyleBackColor = true;
             this.SwapFileButton.Click += new System.EventHandler(this.Flip_Click);
             // 
-            // SourceIMGLocation
+            // SourceFileLocation
             // 
-            this.SourceIMGLocation.Location = new System.Drawing.Point(167, 17);
-            this.SourceIMGLocation.Name = "SourceIMGLocation";
-            this.SourceIMGLocation.ReadOnly = true;
-            this.SourceIMGLocation.Size = new System.Drawing.Size(265, 22);
-            this.SourceIMGLocation.TabIndex = 4;
+            this.SourceFileLocation.Location = new System.Drawing.Point(167, 17);
+            this.SourceFileLocation.Name = "SourceFileLocation";
+            this.SourceFileLocation.ReadOnly = true;
+            this.SourceFileLocation.Size = new System.Drawing.Size(265, 22);
+            this.SourceFileLocation.TabIndex = 4;
             // 
             // FileButton
             // 
@@ -92,7 +92,7 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button SwapFileButton;
-        private System.Windows.Forms.TextBox SourceIMGLocation;
+        private System.Windows.Forms.TextBox SourceFileLocation;
         private System.Windows.Forms.Button FileButton;
     }
 }
