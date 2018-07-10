@@ -117,6 +117,20 @@ namespace RSDKv3
             return chunk;
         }
 
+        public Tile128 Clone(int ChunkID)
+        {
+            Tile128 Copy = new Tile128();
+            for (int i = 0; i < 64; i++)
+            {
+                Copy.Mapping[i].VisualPlane = BlockList[ChunkID].Mapping[i].VisualPlane;
+                Copy.Mapping[i].Direction = BlockList[ChunkID].Mapping[i].Direction;
+                Copy.Mapping[i].Tile16x16 = BlockList[ChunkID].Mapping[i].Tile16x16;
+                Copy.Mapping[i].CollisionFlag0 = BlockList[ChunkID].Mapping[i].CollisionFlag0;
+                Copy.Mapping[i].CollisionFlag1 = BlockList[ChunkID].Mapping[i].CollisionFlag1;
+            }
+            return Copy;
+        }
+
     }
 
     public class Tile128

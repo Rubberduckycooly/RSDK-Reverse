@@ -62,7 +62,7 @@ namespace RSDKv3
             internal SceneGroup(Reader reader)
             {
                 SceneCount = reader.ReadByte();
-
+                Console.WriteLine(SceneCount);
                 for (int i = 0; i < SceneCount; i++)
                 {
                     Scenes.Add(new SceneInfo(reader));

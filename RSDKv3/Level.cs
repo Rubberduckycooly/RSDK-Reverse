@@ -60,7 +60,7 @@ namespace RSDKv3
             // In RSDKv3, it's one byte long
             width = buffer[0];
             height = buffer[1];
-            Console.WriteLine("Width " + width + " Height " + height);
+            //Console.WriteLine("Width " + width + " Height " + height);
 
             MapLayout = new ushort[height][];
             for (int i = 0; i < height; i++)
@@ -76,7 +76,7 @@ namespace RSDKv3
                     // Big-Endian in RSDKv2 and RSDKv3
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
-                    Console.WriteLine(MapLayout[y][x]);
+                    //Console.WriteLine(MapLayout[y][x]);
                 }
             }
 
@@ -89,7 +89,7 @@ namespace RSDKv3
                 string name = reader.ReadRSDKString();
 
                 objectTypeNames.Add(name);
-                Console.WriteLine(name);
+                //Console.WriteLine(name);
             }
             // Read object data
 
@@ -99,7 +99,7 @@ namespace RSDKv3
             ObjCount = reader.ReadByte() << 8;
             ObjCount |= reader.ReadByte();
 
-            Console.WriteLine("Object Count = " + ObjCount + " Also the reader pos =" + reader.Pos);
+            //Console.WriteLine("Object Count = " + ObjCount + " Also the reader pos =" + reader.Pos);
 
             int obj_type = 0;
             int obj_subtype = 0;
@@ -123,9 +123,8 @@ namespace RSDKv3
 
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
-                Console.WriteLine(n + " Obj Values: Type: " + obj_type + ", Subtype: " + obj_subtype + ", Xpos = " + obj_xPos + ", Ypos = " + obj_yPos);
+                //Console.WriteLine(n + " Obj Values: Type: " + obj_type + ", Subtype: " + obj_subtype + ", Xpos = " + obj_xPos + ", Ypos = " + obj_yPos);
             }
-            Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length);
 
         }
 

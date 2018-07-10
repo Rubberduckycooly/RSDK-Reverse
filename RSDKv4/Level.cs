@@ -17,7 +17,7 @@ namespace RSDKv4
 
         byte[] displayBytes = {1,9,0,0,3};
 
-        List<Object> objects = new List<Object>(); 
+        public List<Object> objects = new List<Object>(); 
 
         public int width, height;
 
@@ -65,7 +65,7 @@ namespace RSDKv4
                     //Little-Endian in RSDKv4	
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[0] + (buffer[1] << 8));
-                    Console.WriteLine(MapLayout[y][x]);
+                    //Console.WriteLine(MapLayout[y][x]);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace RSDKv4
 
             ObjCount = ObjCount - 1;
 
-            Console.WriteLine("Object Count = " + ObjCount + ", Also the reader pos =" + reader.Pos);
+            //Console.WriteLine("Object Count = " + ObjCount + ", Also the reader pos =" + reader.Pos);
 
             int obj_type = 0;
             int obj_subtype = 0;
@@ -116,9 +116,9 @@ namespace RSDKv4
 
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
-                Console.WriteLine(reader.BaseStream.Position + " Object "+ n + " Obj Values: Type: " + obj_type + " Subtype: " + obj_subtype + " Xpos = " + obj_xPos + " Ypos = " + obj_yPos);
+                //Console.WriteLine(reader.BaseStream.Position + " Object "+ n + " Obj Values: Type: " + obj_type + " Subtype: " + obj_subtype + " Xpos = " + obj_xPos + " Ypos = " + obj_yPos);
             }
-            Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length);
+            //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length);
             }
             catch(Exception ex)
             {

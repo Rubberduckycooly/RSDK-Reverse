@@ -61,6 +61,7 @@
     <Compile Include="PaletteColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
+    <Compile Include="SaveFiles.cs" />
     <Compile Include="StageConfig.cs" />
     <Compile Include="StringEncoding.cs" />
     <Compile Include="Tiles128x128.cs" />

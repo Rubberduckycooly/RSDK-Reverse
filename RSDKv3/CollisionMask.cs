@@ -11,7 +11,7 @@ namespace RSDKv3
 
         const int TILES_COUNT = 1024;
 
-        TileConfig[] Collision = new TileConfig[TILES_COUNT];
+        public TileConfig[] Collision = new TileConfig[TILES_COUNT];
 
         public class TileConfig
         {
@@ -19,13 +19,13 @@ namespace RSDKv3
             public byte[] Collision;
 
             // If has collision
-            public bool[] HasCollision;
-
-            // If is celing, the collision is from below
-            public bool IsCeiling;
+            //public bool[] HasCollision;
 
             // Unknown 5 bytes config
-            public byte[] Config;
+            public byte[] Config; //Some of these affect collision
+
+            //Slope is one value
+            //Momentum is another
 
             //Unknown Byte Values
             public byte[] Unknown;
@@ -34,11 +34,21 @@ namespace RSDKv3
 
             internal TileConfig(Reader reader)
             {
-                //IsCeiling = reader.ReadBoolean();
                 Config = reader.ReadBytes(5);
-                Collision = reader.ReadBytes(16);
-                Unknown = reader.ReadBytes(9);
-                //HasCollision = Collision.Select(x => x != 0).ToArray();
+                //Byte 1: Unknown
+                //Byte 2: Slope
+                //Byte 3: Physics
+                //Byte 4: Unknown (may be momentum)
+                //Byte 5: Unknown
+                Collision = reader.ReadBytes(10); //Seems to be only for path A, IDK about path B
+                Unknown = reader.ReadBytes(15); // No Idea Right now
+            }
+
+            public void Write(Writer writer)
+            {
+                writer.Write(Config);
+                writer.Write(Collision);
+                writer.Write(Unknown);
             }
         }
 
@@ -72,7 +82,8 @@ namespace RSDKv3
 
         internal void Write(Writer writer)
         {
-
+            for (int i = 0; i < TILES_COUNT; ++i)
+                Collision[i].Write(writer);
         }
 
     }

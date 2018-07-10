@@ -32,8 +32,8 @@ namespace RSDKv4
 
             internal TileConfig(Reader reader)
             {
-                Collision = reader.ReadBytes(10);
-                Config = reader.ReadBytes(5);
+                Collision = reader.ReadBytes(10); // Collision, I think
+                Config = reader.ReadBytes(5); // ???
             }
         }
 

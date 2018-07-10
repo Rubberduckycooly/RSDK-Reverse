@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="BackgroundLayout.cs" />
     <Compile Include="Object.cs" />
+    <Compile Include="SaveFiles.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="CollisionMask.cs" />
     <Compile Include="GameConfig.cs" />
