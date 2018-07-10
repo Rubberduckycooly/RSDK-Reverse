@@ -33,18 +33,18 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rSDKUnpackerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.animationEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.paletteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.chunkEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.GFXToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nexusDecryptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nexusDecryptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpAboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rSDKUnpackerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,60 +103,73 @@
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
             // 
+            // rSDKUnpackerToolStripMenuItem
+            // 
+            this.rSDKUnpackerToolStripMenuItem.Enabled = false;
+            this.rSDKUnpackerToolStripMenuItem.Name = "rSDKUnpackerToolStripMenuItem";
+            this.rSDKUnpackerToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            this.rSDKUnpackerToolStripMenuItem.Text = "RSDK Unpacker";
+            this.rSDKUnpackerToolStripMenuItem.Click += new System.EventHandler(this.rSDKUnpackerToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(194, 6);
+            // 
             // animationEditorToolStripMenuItem
             // 
             this.animationEditorToolStripMenuItem.Enabled = false;
             this.animationEditorToolStripMenuItem.Name = "animationEditorToolStripMenuItem";
-            this.animationEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.animationEditorToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.animationEditorToolStripMenuItem.Text = "Animation Editor";
             this.animationEditorToolStripMenuItem.Click += new System.EventHandler(this.animationEditorToolStripMenuItem_Click);
             // 
             // mapEditorToolStripMenuItem
             // 
             this.mapEditorToolStripMenuItem.Name = "mapEditorToolStripMenuItem";
-            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.mapEditorToolStripMenuItem.Text = "Map Editor";
             this.mapEditorToolStripMenuItem.Click += new System.EventHandler(this.mapEditorToolStripMenuItem_Click);
             // 
             // paletteEditorToolStripMenuItem
             // 
             this.paletteEditorToolStripMenuItem.Name = "paletteEditorToolStripMenuItem";
-            this.paletteEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.paletteEditorToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.paletteEditorToolStripMenuItem.Text = "Palette Editor";
             this.paletteEditorToolStripMenuItem.Click += new System.EventHandler(this.paletteEditorToolStripMenuItem_Click);
             // 
             // chunkEditorToolStripMenuItem
             // 
             this.chunkEditorToolStripMenuItem.Name = "chunkEditorToolStripMenuItem";
-            this.chunkEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.chunkEditorToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.chunkEditorToolStripMenuItem.Text = "Chunk Editor";
             this.chunkEditorToolStripMenuItem.Click += new System.EventHandler(this.chunkEditorToolStripMenuItem_Click);
             // 
             // GFXToolToolStripMenuItem
             // 
             this.GFXToolToolStripMenuItem.Name = "GFXToolToolStripMenuItem";
-            this.GFXToolToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.GFXToolToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.GFXToolToolStripMenuItem.Text = "GFX Tool";
             this.GFXToolToolStripMenuItem.Click += new System.EventHandler(this.GFXToolToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
-            // 
-            // closeTabToolStripMenuItem
-            // 
-            this.closeTabToolStripMenuItem.Name = "closeTabToolStripMenuItem";
-            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.closeTabToolStripMenuItem.Text = "Close Tab";
-            this.closeTabToolStripMenuItem.Click += new System.EventHandler(this.closeTabToolStripMenuItem_Click);
             // 
             // nexusDecryptToolStripMenuItem
             // 
             this.nexusDecryptToolStripMenuItem.Name = "nexusDecryptToolStripMenuItem";
-            this.nexusDecryptToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.nexusDecryptToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
             this.nexusDecryptToolStripMenuItem.Text = "Nexus Decrypter";
             this.nexusDecryptToolStripMenuItem.Click += new System.EventHandler(this.NexusDecryptToolToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(194, 6);
+            // 
+            // closeTabToolStripMenuItem
+            // 
+            this.closeTabToolStripMenuItem.Name = "closeTabToolStripMenuItem";
+            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(197, 26);
+            this.closeTabToolStripMenuItem.Text = "Close Tab";
+            this.closeTabToolStripMenuItem.Click += new System.EventHandler(this.closeTabToolStripMenuItem_Click);
             // 
             // helpAboutToolStripMenuItem
             // 
@@ -169,22 +182,9 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // rSDKUnpackerToolStripMenuItem
-            // 
-            this.rSDKUnpackerToolStripMenuItem.Enabled = false;
-            this.rSDKUnpackerToolStripMenuItem.Name = "rSDKUnpackerToolStripMenuItem";
-            this.rSDKUnpackerToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.rSDKUnpackerToolStripMenuItem.Text = "RSDK Unpacker";
-            this.rSDKUnpackerToolStripMenuItem.Click += new System.EventHandler(this.rSDKUnpackerToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(213, 6);
             // 
             // MainForm
             // 
@@ -193,6 +193,7 @@
             this.ClientSize = new System.Drawing.Size(1262, 673);
             this.Controls.Add(this.TabControl);
             this.Controls.Add(this.menuStrip1);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "RetroED";
