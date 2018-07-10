@@ -27,6 +27,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         int curChunk = 0;
         int selectedTile = 0;
+        int gotoChunk = 0;
 
         Point tilepoint;
         Bitmap DisplayedChunk = new Bitmap(128, 128);
@@ -41,6 +42,19 @@ namespace RetroED.Tools.ChunkMappingsEditor
         RSDKv4.Tiles128x128 Chunksv4;
 
         Bitmap Tiles;
+
+        //Auto-Set Values
+        bool AutoSetDirectionBool = false;
+        bool AutoSetVisualPlaneBool = false;
+        bool AutoSetCollisionABool = false;
+        bool AutoSetCollisionBBool = false;
+        bool AutoSet16x16TileBool = false;
+
+        byte AutoDirection;
+        byte AutoVisualPlane;
+        byte AutoCollisionA;
+        byte AutoCollisionB;
+        ushort AutoTile;
 
         private float ZoomLevel = 1; //TODO: Add Zoom Options!
 
@@ -148,6 +162,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif"));
                         LoadedChunkVer = (int)RSDKver.RSDK4;
                         LoadTileSet(Tiles);
+                        GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
                     case 1:
@@ -158,6 +173,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK3;
                         LoadTileSet(Tiles);
+                        GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
                     case 2:
@@ -168,6 +184,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK2;
                         LoadTileSet(Tiles);
+                        GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
                     default:
@@ -176,8 +193,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Chunksv3 = null;
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK1;
-                        Tiles = new Bitmap(dlg.FileName.Replace("Zone.til", "Zone.gif"));
+                        RSDKv1.gfx gfx = new RSDKv1.gfx(dlg.FileName.Replace("Zone.til", "Zone.gfx"), false);
+                        Tiles = new Bitmap(gfx.gfxImage);
                         LoadTileSet(Tiles);
+                        GotoNUD.Maximum = 256;
                         RedrawChunk();
                         break;
                 }
@@ -353,6 +372,98 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         default:
                             break;
                     }
+                    if (LoadedChunkVer == 1)
+                    {
+                        if (AutoSetDirectionBool)
+                        {
+                            Chunksv1.BlockList[curChunk].Mapping[selectedTile].Orientation = AutoDirection;
+                        }
+                        if (AutoSetVisualPlaneBool)
+                        {
+                            Chunksv1.BlockList[curChunk].Mapping[selectedTile].VisualPlane = AutoVisualPlane;
+                        }
+                        if (AutoSetCollisionABool)
+                        {
+                            Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0 = AutoCollisionA;
+                        }
+                        if (AutoSetCollisionBBool)
+                        {
+                            Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1 = AutoCollisionB;
+                        }
+                        if (AutoSet16x16TileBool)
+                        {
+                            Chunksv1.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
+                        }
+                    }
+                    if (LoadedChunkVer == 2)
+                    {
+                        if (AutoSetDirectionBool)
+                        {
+                            Chunksv2.BlockList[curChunk].Mapping[selectedTile].Direction = AutoDirection;
+                        }
+                        if (AutoSetVisualPlaneBool)
+                        {
+                            Chunksv2.BlockList[curChunk].Mapping[selectedTile].VisualPlane = AutoVisualPlane;
+                        }
+                        if (AutoSetCollisionABool)
+                        {
+                            Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0 = AutoCollisionA;
+                        }
+                        if (AutoSetCollisionBBool)
+                        {
+                            Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1 = AutoCollisionB;
+                        }
+                        if (AutoSet16x16TileBool)
+                        {
+                            Chunksv2.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
+                        }
+                    }
+                    if (LoadedChunkVer == 3)
+                    {
+                        if (AutoSetDirectionBool)
+                        {
+                            Chunksv3.BlockList[curChunk].Mapping[selectedTile].Direction = AutoDirection;
+                        }
+                        if (AutoSetVisualPlaneBool)
+                        {
+                            Chunksv3.BlockList[curChunk].Mapping[selectedTile].VisualPlane = AutoVisualPlane;
+                        }
+                        if (AutoSetCollisionABool)
+                        {
+                            Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0 = AutoCollisionA;
+                        }
+                        if (AutoSetCollisionBBool)
+                        {
+                            Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1 = AutoCollisionB;
+                        }
+                        if (AutoSet16x16TileBool)
+                        {
+                            Chunksv3.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
+                        }
+                    }
+                    if (LoadedChunkVer == 4)
+                    {
+                        if (AutoSetDirectionBool)
+                        {
+                            Chunksv4.BlockList[curChunk].Mapping[selectedTile].Direction = AutoDirection;
+                        }
+                        if (AutoSetVisualPlaneBool)
+                        {
+                            Chunksv4.BlockList[curChunk].Mapping[selectedTile].VisualPlane = AutoVisualPlane;
+                        }
+                        if (AutoSetCollisionABool)
+                        {
+                            Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0 = AutoCollisionA;
+                        }
+                        if (AutoSetCollisionBBool)
+                        {
+                            Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1 = AutoCollisionB;
+                        }
+                        if (AutoSet16x16TileBool)
+                        {
+                            Chunksv4.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
+                        }
+                    }
                     RedrawChunk();
               break;
             }
@@ -498,6 +609,170 @@ namespace RetroED.Tools.ChunkMappingsEditor
             showGridToolStripMenuItem.Checked = !showGridToolStripMenuItem.Checked;
             showGrid = showGridToolStripMenuItem.Checked;
             RedrawChunk();
+        }
+
+        private void GotoNUD_ValueChanged(object sender, EventArgs e)
+        {
+            if (LoadedChunkVer == 1)
+            {
+                if (GotoNUD.Value <= 256)
+                {
+                    gotoChunk = (int)GotoNUD.Value - 1;
+                }
+                else
+                {
+                    GotoNUD.Value = 256;
+                    gotoChunk = (int)GotoNUD.Value - 1;
+                }
+            }
+            if (LoadedChunkVer >= 1)
+            {
+                if (GotoNUD.Value <= 512)
+                {
+                    gotoChunk = (int)GotoNUD.Value - 1;
+                }
+                else
+                {
+                    GotoNUD.Value = 512;
+                    gotoChunk = (int)GotoNUD.Value - 1;
+                }
+            }
+        }
+
+        private void GotoButton_Click(object sender, EventArgs e)
+        {
+            curChunk = gotoChunk;
+            RedrawChunk();
+        }
+
+        private void orientationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AutoSetDirectionBool)
+            {
+                AutoSetDirectionBool = false;
+                orientationToolStripMenuItem.Checked = false;
+            }
+            else if (!AutoSetDirectionBool)
+            {
+                AutoSetDirectionBool = true;
+                orientationToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void visualPlaneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AutoSetVisualPlaneBool)
+            {
+                AutoSetVisualPlaneBool = false;
+                visualPlaneToolStripMenuItem.Checked = false;
+            }
+            else if (!AutoSetVisualPlaneBool)
+            {
+                AutoSetVisualPlaneBool = true;
+                visualPlaneToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void collisionAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AutoSetCollisionABool)
+            {
+                AutoSetCollisionABool = false;
+                collisionAToolStripMenuItem.Checked = false;
+            }
+            else if (!AutoSetCollisionABool)
+            {
+                AutoSetCollisionABool = true;
+                collisionAToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void collisionBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AutoSetCollisionBBool)
+            {
+                AutoSetCollisionBBool = false;
+                collisionBToolStripMenuItem.Checked = false;
+            }
+            else if (!AutoSetCollisionBBool)
+            {
+                AutoSetCollisionBBool = true;
+                collisionBToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void tile16x16ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (AutoSet16x16TileBool)
+            {
+                AutoSet16x16TileBool = false;
+                tile16x16ToolStripMenuItem.Checked = false;
+            }
+            else if (!AutoSet16x16TileBool)
+            {
+                AutoSet16x16TileBool = true;
+                tile16x16ToolStripMenuItem.Checked = true;
+            }
+        }
+
+        private void setAutoOrientationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.AutoSetOrientation frm = new ChunkEditor.AutoSetOrientation();
+            frm.ShowDialog();
+            AutoDirection = frm.Value;
+        }
+
+        private void setAutoVisualPlaneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.AutoSetVisualPlane frm = new ChunkEditor.AutoSetVisualPlane();
+            frm.ShowDialog();
+            AutoVisualPlane = frm.Value;
+        }
+
+        private void setAutoCollisionAToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.AutoSetCollisionA frm = new ChunkEditor.AutoSetCollisionA();
+            frm.ShowDialog();
+            AutoCollisionA = frm.Value;
+        }
+
+        private void setAutoCollisionBToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.AutoSetCollisionB frm = new ChunkEditor.AutoSetCollisionB();
+            frm.ShowDialog();
+            AutoCollisionB = frm.Value;
+        }
+
+        private void setAutoTile16x16ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.AutoSetTiles frm = new ChunkEditor.AutoSetTiles(StageTilesList);
+            frm.ShowDialog();
+            AutoTile = frm.Value;
+        }
+
+        private void copyChunkToToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ChunkEditor.CopyChunkForm frm = new ChunkEditor.CopyChunkForm();
+            frm.numericUpDown1.Value = curChunk + 1;
+            if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                if (LoadedChunkVer == (int)RSDKver.RSDK4)
+                {
+                    Chunksv4.BlockList[frm.DestinationChunk] = Chunksv4.Clone(frm.SourceChunk);
+                }
+                if (LoadedChunkVer == (int)RSDKver.RSDK3)
+                {
+                    Chunksv3.BlockList[frm.DestinationChunk] = Chunksv3.Clone(frm.SourceChunk);
+                }
+                if (LoadedChunkVer == (int)RSDKver.RSDK2)
+                {
+                    Chunksv2.BlockList[frm.DestinationChunk] = Chunksv2.Clone(frm.SourceChunk);
+                }
+                if (LoadedChunkVer == (int)RSDKver.RSDK1)
+                {
+                    Chunksv1.BlockList[frm.DestinationChunk] = Chunksv1.Clone(frm.SourceChunk);
+                }
+            }
         }
     }
 }

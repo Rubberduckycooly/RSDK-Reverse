@@ -37,9 +37,25 @@
             this.renderEachChunkAsAnImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.autoSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.orientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.visualPlaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.collisionAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.collisionBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tile16x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.setAutoOrientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setAutoVisualPlaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setAutoCollisionAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setAutoCollisionBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setAutoTile16x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.CurChunkChangePanel = new System.Windows.Forms.Panel();
+            this.GotoButton = new System.Windows.Forms.Button();
+            this.GotoNUD = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             this.ChunkNoLabel = new System.Windows.Forms.Label();
             this.PrevChunkButton = new System.Windows.Forms.Button();
             this.NextChunkButton = new System.Windows.Forms.Button();
@@ -55,8 +71,10 @@
             this.ChunkDisplay = new System.Windows.Forms.Panel();
             this.ChunkLabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.TilesLabel = new System.Windows.Forms.Label();
+            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.copyChunkToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -67,6 +85,7 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.CurChunkChangePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GotoNUD)).BeginInit();
             this.OptionsPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -77,7 +96,8 @@
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem});
+            this.viewToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(982, 28);
@@ -142,9 +162,112 @@
             this.showGridToolStripMenuItem.Checked = true;
             this.showGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(152, 26);
+            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.showGridToolStripMenuItem.Text = "Show Grid";
             this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.autoSetToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.copyChunkToToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // autoSetToolStripMenuItem
+            // 
+            this.autoSetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.orientationToolStripMenuItem,
+            this.visualPlaneToolStripMenuItem,
+            this.collisionAToolStripMenuItem,
+            this.collisionBToolStripMenuItem,
+            this.tile16x16ToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.setAutoOrientationToolStripMenuItem,
+            this.setAutoVisualPlaneToolStripMenuItem,
+            this.setAutoCollisionAToolStripMenuItem,
+            this.setAutoCollisionBToolStripMenuItem,
+            this.setAutoTile16x16ToolStripMenuItem});
+            this.autoSetToolStripMenuItem.Name = "autoSetToolStripMenuItem";
+            this.autoSetToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.autoSetToolStripMenuItem.Text = "\"Auto-Set\"";
+            // 
+            // orientationToolStripMenuItem
+            // 
+            this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
+            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.orientationToolStripMenuItem.Text = "Orientation";
+            this.orientationToolStripMenuItem.Click += new System.EventHandler(this.orientationToolStripMenuItem_Click);
+            // 
+            // visualPlaneToolStripMenuItem
+            // 
+            this.visualPlaneToolStripMenuItem.Name = "visualPlaneToolStripMenuItem";
+            this.visualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.visualPlaneToolStripMenuItem.Text = "Visual Plane";
+            this.visualPlaneToolStripMenuItem.Click += new System.EventHandler(this.visualPlaneToolStripMenuItem_Click);
+            // 
+            // collisionAToolStripMenuItem
+            // 
+            this.collisionAToolStripMenuItem.Name = "collisionAToolStripMenuItem";
+            this.collisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.collisionAToolStripMenuItem.Text = "Collision A";
+            this.collisionAToolStripMenuItem.Click += new System.EventHandler(this.collisionAToolStripMenuItem_Click);
+            // 
+            // collisionBToolStripMenuItem
+            // 
+            this.collisionBToolStripMenuItem.Name = "collisionBToolStripMenuItem";
+            this.collisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.collisionBToolStripMenuItem.Text = "Collision B";
+            this.collisionBToolStripMenuItem.Click += new System.EventHandler(this.collisionBToolStripMenuItem_Click);
+            // 
+            // tile16x16ToolStripMenuItem
+            // 
+            this.tile16x16ToolStripMenuItem.Name = "tile16x16ToolStripMenuItem";
+            this.tile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.tile16x16ToolStripMenuItem.Text = "Tile16x16";
+            this.tile16x16ToolStripMenuItem.Click += new System.EventHandler(this.tile16x16ToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(223, 6);
+            // 
+            // setAutoOrientationToolStripMenuItem
+            // 
+            this.setAutoOrientationToolStripMenuItem.Name = "setAutoOrientationToolStripMenuItem";
+            this.setAutoOrientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.setAutoOrientationToolStripMenuItem.Text = "Set Auto-Orientation";
+            this.setAutoOrientationToolStripMenuItem.Click += new System.EventHandler(this.setAutoOrientationToolStripMenuItem_Click);
+            // 
+            // setAutoVisualPlaneToolStripMenuItem
+            // 
+            this.setAutoVisualPlaneToolStripMenuItem.Name = "setAutoVisualPlaneToolStripMenuItem";
+            this.setAutoVisualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.setAutoVisualPlaneToolStripMenuItem.Text = "Set Auto-Visual Plane";
+            this.setAutoVisualPlaneToolStripMenuItem.Click += new System.EventHandler(this.setAutoVisualPlaneToolStripMenuItem_Click);
+            // 
+            // setAutoCollisionAToolStripMenuItem
+            // 
+            this.setAutoCollisionAToolStripMenuItem.Name = "setAutoCollisionAToolStripMenuItem";
+            this.setAutoCollisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.setAutoCollisionAToolStripMenuItem.Text = "Set Auto-Collision A";
+            this.setAutoCollisionAToolStripMenuItem.Click += new System.EventHandler(this.setAutoCollisionAToolStripMenuItem_Click);
+            // 
+            // setAutoCollisionBToolStripMenuItem
+            // 
+            this.setAutoCollisionBToolStripMenuItem.Name = "setAutoCollisionBToolStripMenuItem";
+            this.setAutoCollisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.setAutoCollisionBToolStripMenuItem.Text = "Set Auto-Collision B";
+            this.setAutoCollisionBToolStripMenuItem.Click += new System.EventHandler(this.setAutoCollisionBToolStripMenuItem_Click);
+            // 
+            // setAutoTile16x16ToolStripMenuItem
+            // 
+            this.setAutoTile16x16ToolStripMenuItem.Name = "setAutoTile16x16ToolStripMenuItem";
+            this.setAutoTile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
+            this.setAutoTile16x16ToolStripMenuItem.Text = "Set Auto-Tile16x16";
+            this.setAutoTile16x16ToolStripMenuItem.Click += new System.EventHandler(this.setAutoTile16x16ToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -186,6 +309,9 @@
             // CurChunkChangePanel
             // 
             this.CurChunkChangePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CurChunkChangePanel.Controls.Add(this.GotoButton);
+            this.CurChunkChangePanel.Controls.Add(this.GotoNUD);
+            this.CurChunkChangePanel.Controls.Add(this.label4);
             this.CurChunkChangePanel.Controls.Add(this.ChunkNoLabel);
             this.CurChunkChangePanel.Controls.Add(this.PrevChunkButton);
             this.CurChunkChangePanel.Controls.Add(this.NextChunkButton);
@@ -194,6 +320,38 @@
             this.CurChunkChangePanel.Name = "CurChunkChangePanel";
             this.CurChunkChangePanel.Size = new System.Drawing.Size(306, 53);
             this.CurChunkChangePanel.TabIndex = 1;
+            // 
+            // GotoButton
+            // 
+            this.GotoButton.Location = new System.Drawing.Point(194, 28);
+            this.GotoButton.Name = "GotoButton";
+            this.GotoButton.Size = new System.Drawing.Size(107, 23);
+            this.GotoButton.TabIndex = 5;
+            this.GotoButton.Text = "GO!";
+            this.GotoButton.UseVisualStyleBackColor = true;
+            this.GotoButton.Click += new System.EventHandler(this.GotoButton_Click);
+            // 
+            // GotoNUD
+            // 
+            this.GotoNUD.Location = new System.Drawing.Point(247, 6);
+            this.GotoNUD.Maximum = new decimal(new int[] {
+            512,
+            0,
+            0,
+            0});
+            this.GotoNUD.Name = "GotoNUD";
+            this.GotoNUD.Size = new System.Drawing.Size(54, 22);
+            this.GotoNUD.TabIndex = 4;
+            this.GotoNUD.ValueChanged += new System.EventHandler(this.GotoNUD_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(155, 6);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 17);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Go to chunk";
             // 
             // ChunkNoLabel
             // 
@@ -206,7 +364,7 @@
             // 
             // PrevChunkButton
             // 
-            this.PrevChunkButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.PrevChunkButton.BackColor = System.Drawing.SystemColors.Control;
             this.PrevChunkButton.Location = new System.Drawing.Point(3, 28);
             this.PrevChunkButton.Name = "PrevChunkButton";
             this.PrevChunkButton.Size = new System.Drawing.Size(89, 23);
@@ -217,7 +375,7 @@
             // 
             // NextChunkButton
             // 
-            this.NextChunkButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.NextChunkButton.BackColor = System.Drawing.SystemColors.Control;
             this.NextChunkButton.Location = new System.Drawing.Point(98, 28);
             this.NextChunkButton.Name = "NextChunkButton";
             this.NextChunkButton.Size = new System.Drawing.Size(89, 23);
@@ -370,6 +528,15 @@
             this.panel2.Size = new System.Drawing.Size(242, 393);
             this.panel2.TabIndex = 1;
             // 
+            // TilesLabel
+            // 
+            this.TilesLabel.AutoSize = true;
+            this.TilesLabel.Location = new System.Drawing.Point(58, 9);
+            this.TilesLabel.Name = "TilesLabel";
+            this.TilesLabel.Size = new System.Drawing.Size(76, 17);
+            this.TilesLabel.TabIndex = 0;
+            this.TilesLabel.Text = "16x16Tiles";
+            // 
             // StageTilesList
             // 
             this.StageTilesList.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -383,14 +550,17 @@
             this.StageTilesList.TabIndex = 0;
             this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageTilesList_SelectedIndexChanged);
             // 
-            // TilesLabel
+            // toolStripSeparator3
             // 
-            this.TilesLabel.AutoSize = true;
-            this.TilesLabel.Location = new System.Drawing.Point(58, 9);
-            this.TilesLabel.Name = "TilesLabel";
-            this.TilesLabel.Size = new System.Drawing.Size(76, 17);
-            this.TilesLabel.TabIndex = 0;
-            this.TilesLabel.Text = "16x16Tiles";
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(213, 6);
+            // 
+            // copyChunkToToolStripMenuItem
+            // 
+            this.copyChunkToToolStripMenuItem.Name = "copyChunkToToolStripMenuItem";
+            this.copyChunkToToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.copyChunkToToolStripMenuItem.Text = "Copy Chunk to...";
+            this.copyChunkToToolStripMenuItem.Click += new System.EventHandler(this.copyChunkToToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -416,6 +586,7 @@
             this.splitContainer2.ResumeLayout(false);
             this.CurChunkChangePanel.ResumeLayout(false);
             this.CurChunkChangePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GotoNUD)).EndInit();
             this.OptionsPanel.ResumeLayout(false);
             this.OptionsPanel.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -455,6 +626,24 @@
         private System.Windows.Forms.ToolStripMenuItem renderEachChunkAsAnImageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showGridToolStripMenuItem;
+        private System.Windows.Forms.Button GotoButton;
+        private System.Windows.Forms.NumericUpDown GotoNUD;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem autoSetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem orientationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem visualPlaneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem collisionAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem collisionBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tile16x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem setAutoOrientationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setAutoVisualPlaneToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setAutoCollisionAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setAutoCollisionBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem setAutoTile16x16ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem copyChunkToToolStripMenuItem;
     }
 }
 

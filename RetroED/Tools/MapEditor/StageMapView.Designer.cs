@@ -38,14 +38,16 @@
             this.pnlMap.Name = "pnlMap";
             this.pnlMap.Size = new System.Drawing.Size(284, 262);
             this.pnlMap.TabIndex = 0;
-            this.pnlMap.MouseDown += new System.Windows.Forms.MouseEventHandler(pnlMap_MouseDown);
+            this.pnlMap.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMap_MouseDown);
+            this.pnlMap.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMap_MouseMove);
             // 
             // StageMapView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
             this.Controls.Add(this.pnlMap);
+            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "StageMapView";
             this.Text = "Stage Map";
