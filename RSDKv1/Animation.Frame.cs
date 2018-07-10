@@ -21,9 +21,8 @@
 // SOFTWARE.
 
 using System.IO;
-using RSDKv1;
 
-namespace RSDK1
+namespace RSDKv1
 {
     public class Frame : IFrame
     {

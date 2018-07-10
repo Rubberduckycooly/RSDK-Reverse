@@ -55,12 +55,14 @@
     <Compile Include="IBinarySerializable.cs" />
     <Compile Include="IHitbox.cs" />
     <Compile Include="Level.cs" />
+    <Compile Include="mdf.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="PaletteColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="rsf.cs" />
+    <Compile Include="SaveFiles.cs" />
     <Compile Include="StringEncoding.cs" />
     <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />

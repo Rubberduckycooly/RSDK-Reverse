@@ -199,6 +199,7 @@ namespace RSDKv1
                 ITMwriter.Write((byte)(obj_yPos >> 8));
                 ITMwriter.Write((byte)(obj_yPos & 0xFF));
             }
+            ITMwriter.Close();
         }
 
     }
@@ -412,11 +413,11 @@ namespace RSDKv1
     public class BGLayout
     {
 
-        int width, height = 0;
+        int Width, Height = 0;
 
-        public ushort[][] MapLayout { get; set; }
+        public ushort[][] Layout { get; set; }
 
-        List<LineLayer> LineLayers = new List<LineLayer>();
+        public List<ParallaxValues> Lines = new List<ParallaxValues>();
 
         byte layerCount;
         byte LinesPerLayer;
@@ -443,13 +444,47 @@ namespace RSDKv1
         public BGLayout(Reader reader)
         {
             layerCount = reader.ReadByte();
-            //LinesPerLayer = reader.ReadByte();
+            LinesPerLayer = reader.ReadByte();
 
-            //First up is definatly the Parallax vallues
-            for (int lc = 0; lc < layerCount + 1; lc++)
+            //First up is certainly the Parallax vallues
+            for (int lc = 0; lc <= LinesPerLayer; lc++)
             {
-                LineLayer l = new LineLayer(reader);
-                LineLayers.Add(l);
+                Lines.Add(new ParallaxValues(reader));
+            }
+
+            byte Unknown1;
+            byte Unknown4;
+            byte Unknown5;
+            byte Unknown6;
+
+            Unknown1 = reader.ReadByte();
+            Width = reader.ReadByte();
+            Height = reader.ReadByte();
+            Unknown4 = reader.ReadByte();
+            Unknown5 = reader.ReadByte();
+            Unknown6 = reader.ReadByte();
+
+            Console.WriteLine(Unknown1); //Unknown
+            Console.WriteLine(Width);
+            Console.WriteLine(Height);
+            Console.WriteLine(Unknown4); //1 for parallax, 2 for no parallax, anything else for nothing
+            Console.WriteLine(Unknown5); //Unknown, but is different for different levels, so it does something...
+            Console.WriteLine(Unknown6); //Unknown
+
+            Layout = new ushort[Height][];
+            for (int i = 0; i < Height; i++)
+            {
+                Layout[i] = new ushort[Width];
+            }
+
+            for (int y = 0; y < Height; y++)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    //Layout[y][x] = reader.ReadByte();
+                    //Console.WriteLine(Layout[y][x]);
+                    Console.WriteLine(reader.ReadByte());
+                }
             }
 
         }
@@ -468,22 +503,8 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
+
         }
-
-        public class LineLayer
-        {
-
-            public List<ParallaxValues> Lines = new List<ParallaxValues>();
-
-            public LineLayer(Reader reader)
-            {
-                byte LineCount = reader.ReadByte();
-                for (int i = 0; i < LineCount; i++)
-                {
-                    ParallaxValues p = new ParallaxValues(reader);
-                    Lines.Add(p);
-                }
-            }
 
             public class ParallaxValues
             {
@@ -507,108 +528,123 @@ namespace RSDKv1
                 }
 
             }
-        }
-
-
-
     }
 
     /* TileConfig Equivelent */
     public class tcf
     {
-        const int TILES_COUNT = 0x400;
+        public const int TILES_COUNT = 0x400; //1024
 
-        TileConfig[] Collision = new TileConfig[TILES_COUNT];
+        public TileConfig[] Collision = new TileConfig[TILES_COUNT];
 
-        public tcf(string filename) : this(new Reader(filename))
+        public tcf(string filename, bool DCver) : this(new Reader(filename), DCver)
         {
 
         }
 
-        public tcf(System.IO.Stream stream) : this(new Reader(stream))
+        public tcf(System.IO.Stream stream, bool DCver) : this(new Reader(stream), DCver)
         {
 
         }
 
-        public tcf(Reader reader)
+        public tcf(Reader reader, bool DCver)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
-                Collision[i] = new TileConfig(reader);
+                Collision[i] = new TileConfig(reader, DCver);
             }
         }
 
-        public void Write(string filename)
+        public void Write(string filename, bool DCver)
         {
             using (Writer writer = new Writer(filename))
-                this.Write(writer);
+                this.Write(writer, DCver);
         }
 
-        public void Write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream, bool DCver)
         {
             using (Writer writer = new Writer(stream))
-                this.Write(writer);
+                this.Write(writer, DCver);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(Writer writer, bool DCver)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
-                Collision[i].Write(writer);
+                Collision[i].Write(writer, DCver);
             }
         }
 
-        class TileConfig
+        public class TileConfig
         {
-            byte unknown;
-            byte[] tileCollisiondataP1 = new byte[32];
-            bool[] tileSolidityDataP1 = new bool[32];
-            byte[] tileCollisiondataP2 = new byte[32];
-            bool[] tileSolidityDataP2 = new bool[32];
-            //bool IsCeiling;
-            //byte[] Config = new byte[5];
 
-            public TileConfig(string filename) : this(new Reader(filename))
+            //DC version doesnt have this unknown value
+            public byte PCunknown; //if it's Value is FF it causes the player's collision & gravity to be disabled until jumping, 00 causes the player to be unstuck from the tile
+            //May be a "Tile Stickiness Value"
+            public byte[] tileCollisiondataP1 = new byte[32]; //Collision Values for Path A
+            public byte[] unknownP1 = new byte[32]; 
+            public byte[] tileCollisiondataP2 = new byte[32]; //Collision Values for Path B
+            public byte[] unknownP2 = new byte[32]; 
+
+            public TileConfig(string filename, bool DCver) : this(new Reader(filename), DCver)
             {
             }
 
-            public TileConfig(System.IO.Stream stream) : this(new Reader(stream))
+            public TileConfig(System.IO.Stream stream, bool DCver) : this(new Reader(stream), DCver)
             {
             }
 
-            public TileConfig(Reader reader)
+            public TileConfig(Reader reader, bool DCver)
             {
-                unknown = reader.ReadByte();
-                tileCollisiondataP1 = reader.ReadBytes(16);
-                tileSolidityDataP1 = reader.ReadBytes(16).Select(x => x != 0).ToArray();
-                tileCollisiondataP2 = reader.ReadBytes(16);
-                tileSolidityDataP2 = reader.ReadBytes(16).Select(x => x != 0).ToArray();
+                if (DCver)
+                {
+                    unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
+                    tileCollisiondataP1 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                    unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
+                    tileCollisiondataP2 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                    //unknownP1 = reader.ReadBytes(32);
+                    //unknownP2 = reader.ReadBytes(32);
+                    //tileCollisiondataP1 = reader.ReadBytes(32);
+                    //tileCollisiondataP2 = reader.ReadBytes(32);
+                }
+                else if (!DCver)
+                {
+                    PCunknown = reader.ReadByte(); // Single Byte
+                    unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
+                    tileCollisiondataP1 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                    unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
+                    tileCollisiondataP2 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                }
             }
 
-            public void Write(string filename)
+            public void Write(string filename, bool DCver)
             {
                 using (Writer writer = new Writer(filename))
-                    this.Write(writer);
+                    this.Write(writer,DCver);
             }
 
-            public void Write(System.IO.Stream stream)
+            public void Write(System.IO.Stream stream, bool DCver)
             {
                 using (Writer writer = new Writer(stream))
-                    this.Write(writer);
+                    this.Write(writer, DCver);
             }
 
-            internal void Write(Writer writer)
+            internal void Write(Writer writer, bool DCver)
             {
-                writer.Write(unknown);
-                writer.Write(tileCollisiondataP1);
-                for (int i = 0; i < 16;i++)
+                if (DCver)
                 {
-                    writer.Write(tileSolidityDataP1[i]);
+                    writer.Write(unknownP1);
+                    writer.Write(unknownP2);
+                    writer.Write(tileCollisiondataP1);
+                    writer.Write(tileCollisiondataP2);
                 }
-                writer.Write(tileCollisiondataP2);
-                for (int i = 0; i < 16; i++)
+                else if (!DCver)
                 {
-                    writer.Write(tileSolidityDataP2[i]);
+                    writer.Write(PCunknown);
+                    writer.Write(unknownP1);
+                    writer.Write(tileCollisiondataP1);
+                    writer.Write(unknownP2);
+                    writer.Write(tileCollisiondataP2);
                 }
             }
         }
@@ -715,6 +751,20 @@ namespace RSDKv1
                 tileIndex = 0;
                 chunkIndex++;
             }
+        }
+
+        public Tile128 Clone(int ChunkID)
+        {
+            Tile128 Copy = new Tile128();
+            for (int i = 0; i < 64; i++)
+            {
+                Copy.Mapping[i].VisualPlane = BlockList[ChunkID].Mapping[i].VisualPlane;
+                Copy.Mapping[i].Orientation = BlockList[ChunkID].Mapping[i].Orientation;
+                Copy.Mapping[i].Tile16x16 = BlockList[ChunkID].Mapping[i].Tile16x16;
+                Copy.Mapping[i].CollisionFlag0 = BlockList[ChunkID].Mapping[i].CollisionFlag0;
+                Copy.Mapping[i].CollisionFlag1 = BlockList[ChunkID].Mapping[i].CollisionFlag1;
+            }
+            return Copy;
         }
 
         public Bitmap RenderChunk(int ChunkID, Bitmap Tiles)

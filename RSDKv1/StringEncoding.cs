@@ -27,7 +27,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RSDK1
+namespace RSDKv1
 {
     public static class StringEncoding
     {

@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using RSDKv1;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace RSDK1
+namespace RSDKv1
 {
     public class AnimationEntry : IAnimationEntry
     {
