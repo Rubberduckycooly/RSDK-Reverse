@@ -155,14 +155,25 @@ namespace RetroED
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (TabControl.SelectedTab.Text != null)
+            if (TabControl.SelectedTab != null)
+            {
                 Text = $"RetroED - {TabControl.SelectedTab.Text}";
+                MenuItem_CloseTab.Enabled = true;
+            }
             else
+            {
                 Text = $"RetroED";
+                MenuItem_CloseTab.Enabled = false;
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+        }
+
+        private void TabControl_ControlAdded(object sender, ControlEventArgs e)
+        {
+            TabControl_SelectedIndexChanged(sender, e);
         }
     }
 }

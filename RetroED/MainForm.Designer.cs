@@ -57,6 +57,7 @@
             this.TabControl.Size = new System.Drawing.Size(946, 547);
             this.TabControl.TabIndex = 0;
             this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
+            this.TabControl.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.TabControl_ControlAdded);
             // 
             // mainMenu1
             // 
@@ -148,6 +149,7 @@
             // 
             // MenuItem_CloseTab
             // 
+            this.MenuItem_CloseTab.Enabled = false;
             this.MenuItem_CloseTab.Index = 9;
             this.MenuItem_CloseTab.Shortcut = System.Windows.Forms.Shortcut.CtrlW;
             this.MenuItem_CloseTab.Text = "Close Tab";
