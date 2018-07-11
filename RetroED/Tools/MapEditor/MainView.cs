@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
+/* TODO: Remove All references to the background! It has it's own editor now!*/
+
 namespace RetroED.Tools.MapEditor
 {
     public partial class MainView : Form
@@ -31,7 +33,6 @@ namespace RetroED.Tools.MapEditor
         string tiles;
         string mappings;
         string Map;
-        string Background;
         string CollisionMasks;
 
         bool showgrid = false;
@@ -88,15 +89,14 @@ namespace RetroED.Tools.MapEditor
                     tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.gfx");
                     mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.til");
                     Map = ofd.FileName;
-                    Background = Path.Combine(Path.GetDirectoryName(ofd.FileName), "ZoneBG.map");
                     CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.tcf");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background) && File.Exists(CollisionMasks))
+                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
                     {
                         LoadLevel(ofd.FileName, LoadedRSDKver);
                     }
                     else
                     {
-                        MessageBox.Show("Tiles, Mappings, Backgrounds and Collision Masks need to exist in the same folder as act data, just like the game.");
+                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
                     }
                 }
 
@@ -105,15 +105,14 @@ namespace RetroED.Tools.MapEditor
                     tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "16x16Tiles.gif");
                     mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "128x128Tiles.bin");
                     Map = ofd.FileName;
-                    Background = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Backgrounds.bin");
                     CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "CollisionMasks.bin");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background) && File.Exists(CollisionMasks))
+                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
                     {
                         LoadLevel(ofd.FileName, LoadedRSDKver);
                     }
                     else
                     {
-                        MessageBox.Show("Tiles, Mappings, Backgrounds and Collision Masks need to exist in the same folder as act data, just like the game.");
+                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
                     }
                 }
             }

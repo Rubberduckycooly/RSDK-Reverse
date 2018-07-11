@@ -72,7 +72,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 VisualBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
                 CollisionABox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " of " + Chunksv4.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv4.BlockList.Count + ":";
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK3)
             {
@@ -81,7 +81,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 VisualBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
                 CollisionABox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " of " + Chunksv3.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv3.BlockList.Count + ":";
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK2)
             {
@@ -90,7 +90,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 VisualBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
                 CollisionABox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " of " + Chunksv2.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv2.BlockList.Count + ":";
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK1)
             {
@@ -99,16 +99,16 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 VisualBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
                 CollisionABox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " of " + Chunksv1.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv1.BlockList.Count + ":";
             }
 
             using (Graphics g = Graphics.FromImage(DisplayedChunk))
             {
 
-                if (showGrid)
-                {
-                    Size gridCellSize = new Size(16, 16);
-                    Bitmap mapLine = new Bitmap(128, 128);
+            if (showGrid)
+            {
+                Size gridCellSize = new Size(16, 16);
+                Bitmap mapLine = new Bitmap(128, 128);
 
                     Pen pen = new Pen(Color.DarkGray);
 
@@ -136,11 +136,11 @@ namespace RetroED.Tools.ChunkMappingsEditor
                     mapLine.Dispose();
                 }
            
-                Pen Recpen = new Pen(Color.Yellow);
-                g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16));
-            }
+            Pen Recpen = new Pen(Color.Yellow);
+            g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16));
+        }
 
-            ChunkDisplay.BackgroundImage = DisplayedChunk;
+        ChunkDisplay.BackgroundImage = DisplayedChunk;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -260,7 +260,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var dlg = new SaveFileDialog();
+            SaveFileDialog dlg = new SaveFileDialog();
             dlg.DefaultExt = ".bin";
             dlg.Filter = "RSDKvB (Sonic 1 & 2 Remakes) Chunk Mappings|128x128Tiles.bin|RSDKv2 (Sonic CD) Chunk Mappings|128x128Tiles.bin|RSDKv1 (Sonic Nexus) Chunk Mappings|128x128Tiles.bin|Retro-Sonic Chunk Mappings|Zone.til";
 
@@ -289,7 +289,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void renderEachChunkAsAnImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            using (var dlg = new FolderBrowserDialog())
+            using (System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog())
             {
                 dlg.Description = "Select A Folder To Place The Chunks In";
                 if (dlg.ShowDialog(this) == DialogResult.OK)

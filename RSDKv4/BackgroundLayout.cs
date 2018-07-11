@@ -9,14 +9,12 @@ namespace RSDKv4
     /* Background Layout */
     public class BGLayout
     {
-
+        public int width, height = 0;
         public ushort[][] MapLayout { get; set; }
 
         public List<ParallaxValues> Lines = new List<ParallaxValues>();
 
         byte layerCount;
-
-        int width, height = 0;
 
         List<byte> Unknown = new List<byte>();
         List<PaletteColor> pal = new List<PaletteColor>();

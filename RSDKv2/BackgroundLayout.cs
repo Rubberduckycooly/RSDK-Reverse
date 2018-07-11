@@ -10,6 +10,8 @@ namespace RSDKv2
     public class BGLayout
     {
 
+        public int width, height = 0;
+
         public ushort[][] MapLayout { get; set; }
 
         public List<ParallaxValues> Lines = new List<ParallaxValues>();

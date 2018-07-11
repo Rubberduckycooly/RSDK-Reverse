@@ -413,7 +413,7 @@ namespace RSDKv1
     public class BGLayout
     {
 
-        int Width, Height = 0;
+        public int Width, Height = 0;
 
         public ushort[][] Layout { get; set; }
 
@@ -508,9 +508,9 @@ namespace RSDKv1
 
             public class ParallaxValues
             {
-                byte LineNo;
-                byte OverallSpeed;
-                byte Deform;
+                public byte LineNo;
+                public byte OverallSpeed;
+                public byte Deform;
 
                 public ParallaxValues(Reader reader)
                 {

@@ -1,0 +1,9 @@
+(Path To Data Folder)
+Layout:
+Object Name, Object ID, Object SubType, Object SpriteSheet, Sprite X, Sprite Y, Sprite Width, Sprite Height
+
+
+
+Examples
+
+Player,1,0,Sprites/Players/Sonic1.gif,1,1,28,40

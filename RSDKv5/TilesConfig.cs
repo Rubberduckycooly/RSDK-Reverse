@@ -29,6 +29,11 @@ namespace RSDKv5
 
             // Unknown 5 bytes config
             public byte[] Config;
+            byte slopeAngle;
+            byte somethingThatChangesPhysics;
+            byte probablyMomentumGain;
+            byte unknown;
+            byte someBool;
 
             public TileConfig(Stream stream) : this(new Reader(stream)) { }
 
@@ -63,6 +68,7 @@ namespace RSDKv5
                 for (int i = 0; i < TILES_COUNT; ++i)
                     CollisionPath2[i] = new TileConfig(creader);
             }
+            reader.ReadByte();
         }
     }
 }

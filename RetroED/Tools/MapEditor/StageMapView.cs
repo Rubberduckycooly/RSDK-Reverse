@@ -108,14 +108,6 @@ namespace RetroED.Tools.MapEditor
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
-                                    if (ShowBG)
-                                    {
-                                        if (_RSDK4Level.MapLayout[y][x] > 0)
-                                        {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK4Level.MapLayout[y][x]], x * 128, y * 128);
-                                        }
-                                        else { }
-                                    }
                                     if (ShowMap)
                                     {
                                         if (_RSDK4Level.MapLayout[y][x] > 0)
@@ -180,14 +172,6 @@ namespace RetroED.Tools.MapEditor
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
-                                    /*if (ShowBG)
-                                    {
-                                        if (_RSDK3Level.MapLayout[y][x] > 0)
-                                        {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK3Level.MapLayout[y][x]], x * 128, y * 128);
-                                        }
-                                        else { }
-                                    }*/
                                     if (ShowMap)
                                     {
                                         if (_RSDK3Level.MapLayout[y][x] > 0)
@@ -227,10 +211,6 @@ namespace RetroED.Tools.MapEditor
                                 e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK3Level.width * 128, top + j * gridCellSize.Height);
                             }
                         }
-
-                        //e.Graphics.TranslateTransform(e.ClipRectangle.X, e.ClipRectangle.Y);
-                        //e.Graphics.DrawEllipse(pen, -4, -4, 8, 8);
-                        //e.Graphics.ResetTransform();
                     }
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128));
                     break;
@@ -252,14 +232,6 @@ namespace RetroED.Tools.MapEditor
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
-                                    if (ShowBG)
-                                    {
-                                        if (_RSDK2Level.MapLayout[y][x] > 0)
-                                        {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK2Level.MapLayout[y][x]], x * 128, y * 128);
-                                        }
-                                        else { }
-                                    }
                                     if (ShowMap)
                                     {
                                         if (_RSDK2Level.MapLayout[y][x] > 0)
@@ -299,9 +271,6 @@ namespace RetroED.Tools.MapEditor
                                 e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK2Level.width * 128, top + j * gridCellSize.Height);
                             }
                         }
-
-                        //e.Graphics.TranslateTransform(e.ClipRectangle.X, e.ClipRectangle.Y);
-                        //e.Graphics.ResetTransform();
                     }
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128));
                     break;
@@ -325,14 +294,6 @@ namespace RetroED.Tools.MapEditor
                                 //if (e.ClipRectangle.IntersectsWith(new Rectangle(0, 0, viewport1.Width, viewport1.Height)))
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
-                                    if (ShowBG)
-                                    {
-                                        if (_RSDK1Level.MapLayout[y][x] > 0)
-                                        {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK1Level.MapLayout[y][x]], x * 128, y * 128);
-                                        }
-                                        else { }
-                                    }
                                     if (ShowMap)
                                     {
                                         if (_RSDK1Level.MapLayout[y][x] > 0)
@@ -351,7 +312,7 @@ namespace RetroED.Tools.MapEditor
 
                         if (ShowObjects)
                         {
-                            Console.WriteLine(_RSDK1Level.objects.Count);
+                            //Console.WriteLine(_RSDK1Level.objects.Count);
                             /*for (int o = 0; o < _RSDK1Level.objects.Count; o++)
                             {
                                 Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK1Level.objects[o].type, _RSDK1Level.objects[o].subtype);
@@ -451,7 +412,7 @@ namespace RetroED.Tools.MapEditor
                 for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
                 {
                     Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles);
-                    b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
                     Chunks.Add(b);
                 }
             }
@@ -460,7 +421,7 @@ namespace RetroED.Tools.MapEditor
                 for (int i = 0; i < _RSDK3Chunks.BlockList.Count; i++)
                 {
                     Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles);
-                    b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
                     Chunks.Add(b);
                 }
             }
@@ -469,7 +430,7 @@ namespace RetroED.Tools.MapEditor
                 for (int i = 0; i < _RSDK2Chunks.BlockList.Count; i++)
                 {
                     Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles);
-                    b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
                     Chunks.Add(b);
                 }
             }
