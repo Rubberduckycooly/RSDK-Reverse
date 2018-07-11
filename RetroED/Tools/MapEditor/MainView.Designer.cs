@@ -67,14 +67,6 @@
             this.menuItem10 = new System.Windows.Forms.MenuItem();
             this.MenuItem_Exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
-            this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_ClearChunks = new System.Windows.Forms.MenuItem();
-            this.MenuItem_ClearObjects = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_AddObject = new System.Windows.Forms.MenuItem();
-            this.menuItem11 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapLayer = new System.Windows.Forms.MenuItem();
             this.MenuItem_Background = new System.Windows.Forms.MenuItem();
             this.MenuItem_Objects = new System.Windows.Forms.MenuItem();
@@ -83,6 +75,14 @@
             this.MenuItem_RefreshChunks = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.MenuItem_ShowGrid = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ClearChunks = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ClearObjects = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_AddObject = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.MenuItem_About = new System.Windows.Forms.MenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,8 +92,9 @@
             this.dpMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dpMain.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dpMain.Location = new System.Drawing.Point(0, 0);
+            this.dpMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dpMain.Name = "dpMain";
-            this.dpMain.Size = new System.Drawing.Size(488, 362);
+            this.dpMain.Size = new System.Drawing.Size(651, 446);
             dockPanelGradient4.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
@@ -158,7 +159,7 @@
             this.PlaceObjectButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(488, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(651, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -179,7 +180,7 @@
             this.openToolStripButton.Name = "openToolStripButton";
             this.openToolStripButton.Size = new System.Drawing.Size(24, 24);
             this.openToolStripButton.Text = "&Open";
-            this.openToolStripButton.Click += new System.EventHandler(this.tsmiFileOpen_Click);
+            this.openToolStripButton.Click += new System.EventHandler(this.MenuItem_Open_Click);
             // 
             // saveToolStripButton
             // 
@@ -189,7 +190,7 @@
             this.saveToolStripButton.Name = "saveToolStripButton";
             this.saveToolStripButton.Size = new System.Drawing.Size(24, 24);
             this.saveToolStripButton.Text = "&Save";
-            this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.saveToolStripButton.Click += new System.EventHandler(this.MenuItem_Save_Click);
             // 
             // toolStripSeparator
             // 
@@ -330,6 +331,55 @@
             this.MenuItem_ShowGrid});
             this.menuItem2.Text = "View";
             // 
+            // MenuItem_MapLayer
+            // 
+            this.MenuItem_MapLayer.Checked = true;
+            this.MenuItem_MapLayer.Index = 0;
+            this.MenuItem_MapLayer.Text = "Map (Foreground)";
+            this.MenuItem_MapLayer.Click += new System.EventHandler(this.MenuItem_MapLayer_Click);
+            // 
+            // MenuItem_Background
+            // 
+            this.MenuItem_Background.Enabled = false;
+            this.MenuItem_Background.Index = 1;
+            this.MenuItem_Background.Text = "Background";
+            this.MenuItem_Background.Click += new System.EventHandler(this.MenuItem_Background_Click);
+            // 
+            // MenuItem_Objects
+            // 
+            this.MenuItem_Objects.Index = 2;
+            this.MenuItem_Objects.Text = "Objects";
+            this.MenuItem_Objects.Click += new System.EventHandler(this.MenuItem_Objects_Click);
+            // 
+            // MenuItem_CollisionMasks
+            // 
+            this.MenuItem_CollisionMasks.Enabled = false;
+            this.MenuItem_CollisionMasks.Index = 3;
+            this.MenuItem_CollisionMasks.Text = "Collision Masks";
+            this.MenuItem_CollisionMasks.Click += new System.EventHandler(this.MenuItem_CollisionMasks_Click);
+            // 
+            // menuItem13
+            // 
+            this.menuItem13.Index = 4;
+            this.menuItem13.Text = "-";
+            // 
+            // MenuItem_RefreshChunks
+            // 
+            this.MenuItem_RefreshChunks.Index = 5;
+            this.MenuItem_RefreshChunks.Text = "Refresh Chunks";
+            this.MenuItem_RefreshChunks.Click += new System.EventHandler(this.MenuItem_RefreshChunks_Click);
+            // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 6;
+            this.menuItem15.Text = "-";
+            // 
+            // MenuItem_ShowGrid
+            // 
+            this.MenuItem_ShowGrid.Index = 7;
+            this.MenuItem_ShowGrid.Text = "Show Grid";
+            this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
+            // 
             // menuItem3
             // 
             this.menuItem3.Index = 2;
@@ -383,55 +433,6 @@
             this.MenuItem_About});
             this.menuItem4.Text = "About";
             // 
-            // MenuItem_MapLayer
-            // 
-            this.MenuItem_MapLayer.Checked = true;
-            this.MenuItem_MapLayer.Index = 0;
-            this.MenuItem_MapLayer.Text = "Map (Foreground)";
-            this.MenuItem_MapLayer.Click += new System.EventHandler(this.MenuItem_MapLayer_Click);
-            // 
-            // MenuItem_Background
-            // 
-            this.MenuItem_Background.Enabled = false;
-            this.MenuItem_Background.Index = 1;
-            this.MenuItem_Background.Text = "Background";
-            this.MenuItem_Background.Click += new System.EventHandler(this.MenuItem_Background_Click);
-            // 
-            // MenuItem_Objects
-            // 
-            this.MenuItem_Objects.Index = 2;
-            this.MenuItem_Objects.Text = "Objects";
-            this.MenuItem_Objects.Click += new System.EventHandler(this.MenuItem_Objects_Click);
-            // 
-            // MenuItem_CollisionMasks
-            // 
-            this.MenuItem_CollisionMasks.Enabled = false;
-            this.MenuItem_CollisionMasks.Index = 3;
-            this.MenuItem_CollisionMasks.Text = "Collision Masks";
-            this.MenuItem_CollisionMasks.Click += new System.EventHandler(this.MenuItem_CollisionMasks_Click);
-            // 
-            // menuItem13
-            // 
-            this.menuItem13.Index = 4;
-            this.menuItem13.Text = "-";
-            // 
-            // MenuItem_RefreshChunks
-            // 
-            this.MenuItem_RefreshChunks.Index = 5;
-            this.MenuItem_RefreshChunks.Text = "Refresh Chunks";
-            this.MenuItem_RefreshChunks.Click += new System.EventHandler(this.MenuItem_RefreshChunks_Click);
-            // 
-            // menuItem15
-            // 
-            this.menuItem15.Index = 6;
-            this.menuItem15.Text = "-";
-            // 
-            // MenuItem_ShowGrid
-            // 
-            this.MenuItem_ShowGrid.Index = 7;
-            this.MenuItem_ShowGrid.Text = "Show Grid";
-            this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
-            // 
             // MenuItem_About
             // 
             this.MenuItem_About.Index = 0;
@@ -440,13 +441,14 @@
             // 
             // MainView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(488, 362);
+            this.ClientSize = new System.Drawing.Size(651, 446);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dpMain);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Menu = this.mainMenu1;
             this.Name = "MainView";
             this.Text = "Retro Engine Map Editor";

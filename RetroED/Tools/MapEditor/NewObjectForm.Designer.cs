@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.ObjTypeLabel = new System.Windows.Forms.Label();
-            this.SubTypeLabel = new System.Windows.Forms.Label();
-            this.XposLabel = new System.Windows.Forms.Label();
-            this.YPosLabel = new System.Windows.Forms.Label();
-            this.TypeNUD = new System.Windows.Forms.NumericUpDown();
-            this.SubtypeNUD = new System.Windows.Forms.NumericUpDown();
-            this.XposNUD = new System.Windows.Forms.NumericUpDown();
-            this.YposNUD = new System.Windows.Forms.NumericUpDown();
-            this.OKButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.YposNUD = new System.Windows.Forms.NumericUpDown();
+            this.XposNUD = new System.Windows.Forms.NumericUpDown();
+            this.SubtypeNUD = new System.Windows.Forms.NumericUpDown();
+            this.TypeNUD = new System.Windows.Forms.NumericUpDown();
+            this.YPosLabel = new System.Windows.Forms.Label();
+            this.XposLabel = new System.Windows.Forms.Label();
+            this.SubTypeLabel = new System.Windows.Forms.Label();
+            this.ObjTypeLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TypeNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SubtypeNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.YposNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SubtypeNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TypeNUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -64,80 +64,26 @@
             this.panel1.Size = new System.Drawing.Size(347, 227);
             this.panel1.TabIndex = 0;
             // 
-            // ObjTypeLabel
+            // CancelButton
             // 
-            this.ObjTypeLabel.AutoSize = true;
-            this.ObjTypeLabel.Location = new System.Drawing.Point(13, 13);
-            this.ObjTypeLabel.Name = "ObjTypeLabel";
-            this.ObjTypeLabel.Size = new System.Drawing.Size(89, 17);
-            this.ObjTypeLabel.TabIndex = 0;
-            this.ObjTypeLabel.Text = "Object Type:";
+            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.CancelButton.Location = new System.Drawing.Point(165, 201);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(73, 23);
+            this.CancelButton.TabIndex = 9;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // SubTypeLabel
+            // OKButton
             // 
-            this.SubTypeLabel.AutoSize = true;
-            this.SubTypeLabel.Location = new System.Drawing.Point(13, 44);
-            this.SubTypeLabel.Name = "SubTypeLabel";
-            this.SubTypeLabel.Size = new System.Drawing.Size(109, 17);
-            this.SubTypeLabel.TabIndex = 1;
-            this.SubTypeLabel.Text = "Object Subtype:";
-            // 
-            // XposLabel
-            // 
-            this.XposLabel.AutoSize = true;
-            this.XposLabel.Location = new System.Drawing.Point(16, 74);
-            this.XposLabel.Name = "XposLabel";
-            this.XposLabel.Size = new System.Drawing.Size(120, 17);
-            this.XposLabel.TabIndex = 2;
-            this.XposLabel.Text = "Object X Position:";
-            // 
-            // YPosLabel
-            // 
-            this.YPosLabel.AutoSize = true;
-            this.YPosLabel.Location = new System.Drawing.Point(16, 103);
-            this.YPosLabel.Name = "YPosLabel";
-            this.YPosLabel.Size = new System.Drawing.Size(120, 17);
-            this.YPosLabel.TabIndex = 3;
-            this.YPosLabel.Text = "Object Y Position:";
-            // 
-            // TypeNUD
-            // 
-            this.TypeNUD.Location = new System.Drawing.Point(109, 13);
-            this.TypeNUD.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.TypeNUD.Name = "TypeNUD";
-            this.TypeNUD.Size = new System.Drawing.Size(80, 22);
-            this.TypeNUD.TabIndex = 4;
-            this.TypeNUD.ValueChanged += new System.EventHandler(this.TypeNUD_ValueChanged);
-            // 
-            // SubtypeNUD
-            // 
-            this.SubtypeNUD.Location = new System.Drawing.Point(128, 42);
-            this.SubtypeNUD.Maximum = new decimal(new int[] {
-            10000,
-            0,
-            0,
-            0});
-            this.SubtypeNUD.Name = "SubtypeNUD";
-            this.SubtypeNUD.Size = new System.Drawing.Size(80, 22);
-            this.SubtypeNUD.TabIndex = 5;
-            this.SubtypeNUD.ValueChanged += new System.EventHandler(this.SubtypeNUD_ValueChanged);
-            // 
-            // XposNUD
-            // 
-            this.XposNUD.Location = new System.Drawing.Point(142, 74);
-            this.XposNUD.Maximum = new decimal(new int[] {
-            65500,
-            0,
-            0,
-            0});
-            this.XposNUD.Name = "XposNUD";
-            this.XposNUD.Size = new System.Drawing.Size(80, 22);
-            this.XposNUD.TabIndex = 6;
-            this.XposNUD.ValueChanged += new System.EventHandler(this.XposNUD_ValueChanged);
+            this.OKButton.Location = new System.Drawing.Point(244, 201);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(91, 23);
+            this.OKButton.TabIndex = 8;
+            this.OKButton.Text = "Add Object!";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
             // YposNUD
             // 
@@ -152,43 +98,96 @@
             this.YposNUD.TabIndex = 7;
             this.YposNUD.ValueChanged += new System.EventHandler(this.YposNUD_ValueChanged);
             // 
-            // OKButton
+            // XposNUD
             // 
-            this.OKButton.Location = new System.Drawing.Point(244, 201);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(91, 23);
-            this.OKButton.TabIndex = 8;
-            this.OKButton.Text = "Add Object!";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            this.XposNUD.Location = new System.Drawing.Point(142, 74);
+            this.XposNUD.Maximum = new decimal(new int[] {
+            65500,
+            0,
+            0,
+            0});
+            this.XposNUD.Name = "XposNUD";
+            this.XposNUD.Size = new System.Drawing.Size(80, 22);
+            this.XposNUD.TabIndex = 6;
+            this.XposNUD.ValueChanged += new System.EventHandler(this.XposNUD_ValueChanged);
             // 
-            // CancelButton
+            // SubtypeNUD
             // 
-            this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(165, 201);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(73, 23);
-            this.CancelButton.TabIndex = 9;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            this.SubtypeNUD.Location = new System.Drawing.Point(128, 42);
+            this.SubtypeNUD.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.SubtypeNUD.Name = "SubtypeNUD";
+            this.SubtypeNUD.Size = new System.Drawing.Size(80, 22);
+            this.SubtypeNUD.TabIndex = 5;
+            this.SubtypeNUD.ValueChanged += new System.EventHandler(this.SubtypeNUD_ValueChanged);
+            // 
+            // TypeNUD
+            // 
+            this.TypeNUD.Location = new System.Drawing.Point(109, 13);
+            this.TypeNUD.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.TypeNUD.Name = "TypeNUD";
+            this.TypeNUD.Size = new System.Drawing.Size(80, 22);
+            this.TypeNUD.TabIndex = 4;
+            this.TypeNUD.ValueChanged += new System.EventHandler(this.TypeNUD_ValueChanged);
+            // 
+            // YPosLabel
+            // 
+            this.YPosLabel.AutoSize = true;
+            this.YPosLabel.Location = new System.Drawing.Point(16, 103);
+            this.YPosLabel.Name = "YPosLabel";
+            this.YPosLabel.Size = new System.Drawing.Size(120, 17);
+            this.YPosLabel.TabIndex = 3;
+            this.YPosLabel.Text = "Object Y Position:";
+            // 
+            // XposLabel
+            // 
+            this.XposLabel.AutoSize = true;
+            this.XposLabel.Location = new System.Drawing.Point(16, 74);
+            this.XposLabel.Name = "XposLabel";
+            this.XposLabel.Size = new System.Drawing.Size(120, 17);
+            this.XposLabel.TabIndex = 2;
+            this.XposLabel.Text = "Object X Position:";
+            // 
+            // SubTypeLabel
+            // 
+            this.SubTypeLabel.AutoSize = true;
+            this.SubTypeLabel.Location = new System.Drawing.Point(13, 44);
+            this.SubTypeLabel.Name = "SubTypeLabel";
+            this.SubTypeLabel.Size = new System.Drawing.Size(109, 17);
+            this.SubTypeLabel.TabIndex = 1;
+            this.SubTypeLabel.Text = "Object Subtype:";
+            // 
+            // ObjTypeLabel
+            // 
+            this.ObjTypeLabel.AutoSize = true;
+            this.ObjTypeLabel.Location = new System.Drawing.Point(13, 13);
+            this.ObjTypeLabel.Name = "ObjTypeLabel";
+            this.ObjTypeLabel.Size = new System.Drawing.Size(89, 17);
+            this.ObjTypeLabel.TabIndex = 0;
+            this.ObjTypeLabel.Text = "Object Type:";
             // 
             // NewObjectForm
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
             this.ClientSize = new System.Drawing.Size(347, 227);
             this.Controls.Add(this.panel1);
             this.Name = "NewObjectForm";
             this.Text = "Create New Object!";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TypeNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.SubtypeNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.YposNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.SubtypeNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TypeNUD)).EndInit();
             this.ResumeLayout(false);
 
         }

@@ -46,16 +46,17 @@
             this.MenuItem_CloseTab = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // TabControl
             // 
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TabControl.Location = new System.Drawing.Point(0, 0);
-            this.TabControl.Margin = new System.Windows.Forms.Padding(2);
+            this.TabControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(946, 547);
+            this.TabControl.Size = new System.Drawing.Size(1261, 673);
             this.TabControl.TabIndex = 0;
             this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
             this.TabControl.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.TabControl_ControlAdded);
@@ -88,6 +89,7 @@
             this.menuItem14,
             this.MenuItem_AnimationEditor,
             this.MenuItem_MapEditor,
+            this.menuItem6,
             this.MenuItem_PaletteEditor,
             this.MenuItem_ChunkEditor,
             this.MenuItem_GFXTool,
@@ -121,37 +123,37 @@
             // 
             // MenuItem_PaletteEditor
             // 
-            this.MenuItem_PaletteEditor.Index = 4;
+            this.MenuItem_PaletteEditor.Index = 5;
             this.MenuItem_PaletteEditor.Text = "Palette Editor";
             this.MenuItem_PaletteEditor.Click += new System.EventHandler(this.MenuItem_PaletteEditor_Click);
             // 
             // MenuItem_ChunkEditor
             // 
-            this.MenuItem_ChunkEditor.Index = 5;
+            this.MenuItem_ChunkEditor.Index = 6;
             this.MenuItem_ChunkEditor.Text = "Chunk Editor";
             this.MenuItem_ChunkEditor.Click += new System.EventHandler(this.MenuItem_ChunkEditor_Click);
             // 
             // MenuItem_GFXTool
             // 
-            this.MenuItem_GFXTool.Index = 6;
+            this.MenuItem_GFXTool.Index = 7;
             this.MenuItem_GFXTool.Text = "GFX Tool";
             this.MenuItem_GFXTool.Click += new System.EventHandler(this.MenuItem_GFXTool_Click);
             // 
             // MenuItem_NexusDecrypter
             // 
-            this.MenuItem_NexusDecrypter.Index = 7;
+            this.MenuItem_NexusDecrypter.Index = 8;
             this.MenuItem_NexusDecrypter.Text = "Nexus Decrypter";
             this.MenuItem_NexusDecrypter.Click += new System.EventHandler(this.MenuItem_NexusDecrypter_Click);
             // 
             // menuItem12
             // 
-            this.menuItem12.Index = 8;
+            this.menuItem12.Index = 9;
             this.menuItem12.Text = "-";
             // 
             // MenuItem_CloseTab
             // 
             this.MenuItem_CloseTab.Enabled = false;
-            this.MenuItem_CloseTab.Index = 9;
+            this.MenuItem_CloseTab.Index = 10;
             this.MenuItem_CloseTab.Shortcut = System.Windows.Forms.Shortcut.CtrlW;
             this.MenuItem_CloseTab.Text = "Close Tab";
             this.MenuItem_CloseTab.Click += new System.EventHandler(this.MenuItem_CloseTab_Click);
@@ -166,17 +168,23 @@
             // menuItem5
             // 
             this.menuItem5.Index = 0;
-            this.menuItem5.Text = "About RetroEd";
+            this.menuItem5.Text = "About RetroED";
             this.menuItem5.Click += new System.EventHandler(this.MenuItem_About_Click);
+            // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 4;
+            this.menuItem6.Text = "Background Editor";
+            this.menuItem6.Click += new System.EventHandler(this.backgroundEditorToolStripMenuItem_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(946, 547);
+            this.ClientSize = new System.Drawing.Size(1261, 673);
             this.Controls.Add(this.TabControl);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Menu = this.mainMenu1;
             this.Name = "MainForm";
             this.Text = "RetroED";
@@ -204,6 +212,7 @@
         private System.Windows.Forms.MenuItem MenuItem_CloseTab;
         private System.Windows.Forms.MenuItem menuItem14;
         private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItem6;
     }
 }
 

@@ -75,10 +75,6 @@ namespace RetroED.Tools.MapEditor
             _mapViewer._ChunkView = _blocksViewer;
         }
 
-        private void tsmiFileOpen_Click(object sender, EventArgs e)
-        {
-        }
-
         void LoadLevel(string level, int RSDKver)
         {
             //Clears the map
@@ -203,10 +199,6 @@ namespace RetroED.Tools.MapEditor
 
         
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
         }
 

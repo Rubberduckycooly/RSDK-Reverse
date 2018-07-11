@@ -119,6 +119,22 @@ namespace RetroED
             return frm;
         }
 
+        Tools.BackgroundEditor.MainView OpenBackgroundEditor()
+        {
+            Tools.BackgroundEditor.MainView frm = new Tools.BackgroundEditor.MainView();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage();
+            newTab.Controls.Add(frm);
+            this.TabControl.TabPages.Add(newTab);
+            this.TabControl.SelectedTab = newTab;
+            this.TabControl.SelectedTab.Text = frm.Text;
+            frm.Show();
+            return frm;
+        }
+
         Tools.PaletteEditor.MainForm OpenPaletteEditor()
         {
             var frm = new Tools.PaletteEditor.MainForm();
@@ -212,6 +228,11 @@ namespace RetroED
         private void MenuItem_NexusDecrypter_Click(object sender, EventArgs e)
         {
             OpenNexusDecryptTool();
+        }
+
+        private void backgroundEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenBackgroundEditor();
         }
 
         private void MenuItem_CloseTab_Click(object sender, EventArgs e)
