@@ -20,6 +20,8 @@ namespace RetroED.Tools.MapEditor
         public int PlacementMode = 0;
         private Bitmap PanelMap;
 
+        
+
         public bool ShowMap = true;
         public bool ShowBG = false;
         public bool ShowObjects = false;
@@ -575,6 +577,7 @@ namespace RetroED.Tools.MapEditor
         void pnlMap_MouseMove(object sender, MouseEventArgs e)
         {
             Point tilePointNew = new Point(e.X / 128, e.Y / 128);
+            _ChunkView.MousePosStatusLabel.Text = "Mouse Position = " + e.X + " X, " + e.Y + " Y";
             switch (e.Button)
             {
                 case MouseButtons.Left:
