@@ -8,8 +8,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 
-/* TODO: Remove All references to the background! It has it's own editor now!*/
-
 namespace RetroED.Tools.MapEditor
 {
     public partial class MainView : Form
@@ -33,6 +31,7 @@ namespace RetroED.Tools.MapEditor
         string tiles;
         string mappings;
         string Map;
+        string Background;
         string CollisionMasks;
 
         bool showgrid = false;
@@ -78,44 +77,6 @@ namespace RetroED.Tools.MapEditor
 
         private void tsmiFileOpen_Click(object sender, EventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                LoadedRSDKver = ofd.FilterIndex - 1;
-
-                if (LoadedRSDKver == 3)
-                {
-                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.gfx");
-                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.til");
-                    Map = ofd.FileName;
-                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.tcf");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
-                    {
-                        LoadLevel(ofd.FileName, LoadedRSDKver);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
-                    }
-                }
-
-                if (LoadedRSDKver != 3)
-                {
-                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "16x16Tiles.gif");
-                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "128x128Tiles.bin");
-                    Map = ofd.FileName;
-                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "CollisionMasks.bin");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
-                    {
-                        LoadLevel(ofd.FileName, LoadedRSDKver);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
-                    }
-                }
-            }
         }
 
         void LoadLevel(string level, int RSDKver)
@@ -234,6 +195,279 @@ namespace RetroED.Tools.MapEditor
 
         private void exportImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void PlaceTileButton_Click(object sender, EventArgs e)
+        {
+            if (PlacementMode != 1)
+            {
+                PlacementMode = (int)Placementmode.PlaceTiles;
+                PlaceTileButton.Checked = true;
+                _mapViewer.PlacementMode = PlacementMode;
+                PlaceTileButton.BackColor = SystemColors.ControlDarkDark;
+                PlaceObjectButton.BackColor = SystemColors.Control;
+                PlaceObjectButton.Checked = false;
+            }
+            else if (PlacementMode == 1)
+            {
+                PlacementMode = (int)Placementmode.NONE;
+                PlaceTileButton.Checked = false;
+                _mapViewer.PlacementMode = PlacementMode;
+                PlaceTileButton.BackColor = SystemColors.Control;
+                PlaceObjectButton.BackColor = SystemColors.Control;
+                PlaceObjectButton.Checked = false;
+            }
+        }
+
+        private void PlaceObject_Click(object sender, EventArgs e)
+        {
+            if (PlacementMode != 2)
+            {
+                PlacementMode = (int)Placementmode.PlaceObjects;
+                PlaceObjectButton.Checked = true;
+                _mapViewer.PlacementMode = PlacementMode;
+                PlaceObjectButton.BackColor = SystemColors.ControlDarkDark;
+                PlaceTileButton.BackColor = SystemColors.Control;
+                PlaceTileButton.Checked = false;
+            }
+            else if (PlacementMode == 2)
+            {
+                PlacementMode = (int)Placementmode.NONE;
+                PlaceObjectButton.Checked = false;
+                _mapViewer.PlacementMode = PlacementMode;
+                PlaceObjectButton.BackColor = SystemColors.Control;
+                PlaceTileButton.BackColor = SystemColors.Control;
+                PlaceTileButton.Checked = false;
+            }
+        }
+
+        private void mapPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        void CheckDimensions(int RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight)
+        {
+
+            if (RSDKver == 3)
+            {
+                if (_RSDK1Level.width != OLDwidth || _RSDK1Level.height != OLDheight)
+                {
+                    Console.WriteLine("Different");
+                    _RSDK1Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK1Level.width, (ushort)_RSDK1Level.height, RSDKver);
+                    _mapViewer.DrawLevel();
+                }
+            }
+            if (RSDKver == 2)
+            {
+                if (_RSDK2Level.width != OLDwidth || _RSDK2Level.height != OLDheight)
+                {
+                    Console.WriteLine("Different");
+                    _RSDK2Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK2Level.width, (ushort)_RSDK2Level.height, RSDKver);
+                    _mapViewer.DrawLevel();
+                }
+
+            }
+            if (RSDKver == 1)
+            {
+                if (_RSDK3Level.width != OLDwidth || _RSDK3Level.height != OLDheight)
+                {
+                    Console.WriteLine("Different");
+                    _RSDK3Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK3Level.width, (ushort)_RSDK3Level.height, RSDKver);
+                    _mapViewer.DrawLevel();
+                }
+            }
+            if (RSDKver == 0)
+            {
+                if (_RSDK4Level.width != OLDwidth || _RSDK4Level.height != OLDheight)
+                {
+                    Console.WriteLine("Different");
+                    _RSDK4Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK4Level.width, (ushort)_RSDK4Level.height, RSDKver);
+                    _mapViewer.DrawLevel();
+                }
+            }
+        }
+
+        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
+        {
+            // fill the extended tile arrays with "empty" values
+
+            // if we're actaully getting shorter, do nothing!
+            for (ushort i = oldHeight; i < NewHeight; i++)
+            {
+                // first create arrays child arrays to the old width
+                // a little inefficient, but at least they'll all be equal sized
+                NewTiles[i] = new ushort[oldWidth];
+                for (int j = 0; j < oldWidth; ++j)
+                    NewTiles[i][j] = 0xffff; // fill the new ones with blanks
+            }
+
+            for (ushort i = 0; i < NewHeight; i++)
+            {
+                // now resize all child arrays to the new width
+                Array.Resize(ref NewTiles[i], NewWidth);
+                for (ushort j = oldWidth; j < NewWidth; j++)
+                    NewTiles[i][j] = 0xffff; // and fill with blanks if wider
+            }
+            return NewTiles;
+        }
+
+        private void showGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void refreshChunksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void clearChunksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void clearObjectsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            switch(LoadedRSDKver)
+            {
+                case 3:
+                    _mapViewer._RSDK1Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 2:
+                    _mapViewer._RSDK2Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 1:
+                    _mapViewer._RSDK3Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 0:
+                    _mapViewer._RSDK4Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+            }
+        }
+
+        private void addObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void MenuItem_Open_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                LoadedRSDKver = ofd.FilterIndex - 1;
+
+                if (LoadedRSDKver == 3)
+                {
+                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.gfx");
+                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.til");
+                    Map = ofd.FileName;
+                    Background = Path.Combine(Path.GetDirectoryName(ofd.FileName), "ZoneBG.map");
+                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.tcf");
+                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background) && File.Exists(CollisionMasks))
+                    {
+                        LoadLevel(ofd.FileName, LoadedRSDKver);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tiles, Mappings, Backgrounds and Collision Masks need to exist in the same folder as act data, just like the game.");
+                    }
+                }
+
+                if (LoadedRSDKver != 3)
+                {
+                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "16x16Tiles.gif");
+                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "128x128Tiles.bin");
+                    Map = ofd.FileName;
+                    Background = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Backgrounds.bin");
+                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "CollisionMasks.bin");
+                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background) && File.Exists(CollisionMasks))
+                    {
+                        LoadLevel(ofd.FileName, LoadedRSDKver);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Tiles, Mappings, Backgrounds and Collision Masks need to exist in the same folder as act data, just like the game.");
+                    }
+                }
+            }
+        }
+
+        private void MenuItem_Save_Click(object sender, EventArgs e)
+        {
+            if (Map == null)
+            {
+                saveAsToolStripMenuItem_Click(this, e);
+            }
+            else
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 0:
+                        _mapViewer._RSDK4Level.Write(Map);
+                        break;
+                    case 1:
+                        _mapViewer._RSDK3Level.Write(Map);
+                        break;
+                    case 2:
+                        _mapViewer._RSDK2Level.Write(Map);
+                        break;
+                    case 3:
+                        _mapViewer._RSDK1Level.Write(Map);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void MenuItem_SaveAs_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
+
+            if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 0:
+                        _mapViewer._RSDK4Level.Write(dlg.FileName);
+                        break;
+                    case 1:
+                        _mapViewer._RSDK3Level.Write(dlg.FileName);
+                        break;
+                    case 2:
+                        _mapViewer._RSDK2Level.Write(dlg.FileName);
+                        break;
+                    case 3:
+                        _mapViewer._RSDK1Level.Write(dlg.FileName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void MenuItem_ExportImage_Click(object sender, EventArgs e)
+        {
             switch (LoadedRSDKver)
             {
                 case 0:
@@ -333,150 +567,122 @@ namespace RetroED.Tools.MapEditor
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_Exit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Close();
         }
 
-        private void mapLayersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ClearChunks_Click(object sender, EventArgs e)
         {
-            if (mapLayersToolStripMenuItem.Checked)
+            switch (LoadedRSDKver)
             {
-                mapLayersToolStripMenuItem.Checked = false;
-                _mapViewer.ShowMap = false;
-            }
-            else if (!mapLayersToolStripMenuItem.Checked)
-            {
-                mapLayersToolStripMenuItem.Checked = true;
-                _mapViewer.ShowMap = true;
+                case 3:
+                    ushort[][] NewTiles1 = new ushort[_RSDK1Level.height][];
+                    for (ushort i = 0; i < _RSDK1Level.height; i++)
+                    {
+                        // first create arrays child arrays to the width
+                        // a little inefficient, but at least they'll all be equal sized
+                        NewTiles1[i] = new ushort[_RSDK1Level.width];
+                        for (int j = 0; j < _RSDK1Level.width; ++j)
+                            NewTiles1[i][j] = 0xffff; // fill the tiles with blanks
+                    }
+                    _mapViewer._RSDK1Level.MapLayout = NewTiles1;
+                    _mapViewer.DrawLevel();
+                    break;
+                case 2:
+                    ushort[][] NewTiles2 = new ushort[_RSDK2Level.height][];
+                    for (ushort i = 0; i < _RSDK2Level.height; i++)
+                    {
+                        // first create arrays child arrays to the width
+                        // a little inefficient, but at least they'll all be equal sized
+                        NewTiles2[i] = new ushort[_RSDK2Level.width];
+                        for (int j = 0; j < _RSDK2Level.width; ++j)
+                            NewTiles2[i][j] = 0xffff; // fill the tiles with blanks
+                    }
+                    _mapViewer._RSDK2Level.MapLayout = NewTiles2;
+                    _mapViewer.DrawLevel();
+                    break;
+                case 1:
+                    ushort[][] NewTiles3 = new ushort[_RSDK3Level.height][];
+                    for (ushort i = 0; i < _RSDK3Level.height; i++)
+                    {
+                        // first create arrays child arrays to the width
+                        // a little inefficient, but at least they'll all be equal sized
+                        NewTiles3[i] = new ushort[_RSDK3Level.width];
+                        for (int j = 0; j < _RSDK3Level.width; ++j)
+                            NewTiles3[i][j] = 0xffff; // fill the tiles with blanks
+                    }
+                    _mapViewer._RSDK3Level.MapLayout = NewTiles3;
+                    _mapViewer.DrawLevel();
+                    break;
+                case 0:
+                    ushort[][] NewTiles4 = new ushort[_RSDK4Level.height][];
+                    for (ushort i = 0; i < _RSDK4Level.height; i++)
+                    {
+                        // first create arrays child arrays to the width
+                        // a little inefficient, but at least they'll all be equal sized
+                        NewTiles4[i] = new ushort[_RSDK4Level.width];
+                        for (int j = 0; j < _RSDK4Level.width; ++j)
+                            NewTiles4[i][j] = 0xffff; // fill the tiles with blanks
+                    }
+                    _mapViewer._RSDK4Level.MapLayout = NewTiles4;
+                    _mapViewer.DrawLevel();
+                    break;
             }
         }
 
-        private void objectsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ClearObjects_Click(object sender, EventArgs e)
         {
-            if (objectsToolStripMenuItem.Checked)
+            switch (LoadedRSDKver)
             {
-                objectsToolStripMenuItem.Checked = false;
-                _mapViewer.ShowObjects = false;
-            }
-            else if (!objectsToolStripMenuItem.Checked)
-            {
-                objectsToolStripMenuItem.Checked = true;
-                _mapViewer.ShowObjects = true;
+                case 3:
+                    _mapViewer._RSDK1Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 2:
+                    _mapViewer._RSDK2Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 1:
+                    _mapViewer._RSDK3Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
+                case 0:
+                    _mapViewer._RSDK4Level.objects.Clear();
+                    _mapViewer.DrawLevel();
+                    break;
             }
         }
 
-        private void backgroundToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_AddObject_Click(object sender, EventArgs e)
         {
+            NewObjectForm frm = new NewObjectForm();
 
-        }
-
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            AboutForm frm = new AboutForm();
-            frm.ShowDialog();
-        }
-
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (Map == null)
-            {
-                saveAsToolStripMenuItem_Click(this, e);
-            }
-            else
+            if (frm.ShowDialog(this) == DialogResult.OK)
             {
                 switch (LoadedRSDKver)
                 {
-                    case 0:
-                        _mapViewer._RSDK4Level.Write(Map);
-                        break;
-                    case 1:
-                        _mapViewer._RSDK3Level.Write(Map);
+                    case 3:
+                        RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                        _mapViewer._RSDK1Level.objects.Add(Obj1);
                         break;
                     case 2:
-                        _mapViewer._RSDK2Level.Write(Map);
+                        RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                        _mapViewer._RSDK2Level.objects.Add(Obj2);
                         break;
-                    case 3:
-                        _mapViewer._RSDK1Level.Write(Map);
+                    case 1:
+                        RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                        _mapViewer._RSDK3Level.objects.Add(Obj3);
                         break;
-                    default:
+                    case 0:
+                        RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                        _mapViewer._RSDK4Level.objects.Add(Obj4);
                         break;
                 }
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
-
-            if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-            {
-                switch (LoadedRSDKver)
-                {
-                    case 0:
-                        _mapViewer._RSDK4Level.Write(dlg.FileName);
-                        break;
-                    case 1:
-                        _mapViewer._RSDK3Level.Write(dlg.FileName);
-                        break;
-                    case 2:
-                        _mapViewer._RSDK2Level.Write(dlg.FileName);
-                        break;
-                    case 3:
-                        _mapViewer._RSDK1Level.Write(dlg.FileName);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        private void PlaceTileButton_Click(object sender, EventArgs e)
-        {
-            if (PlacementMode != 1)
-            {
-                PlacementMode = (int)Placementmode.PlaceTiles;
-                PlaceTileButton.Checked = true;
-                _mapViewer.PlacementMode = PlacementMode;
-                PlaceTileButton.BackColor = SystemColors.ControlDarkDark;
-                PlaceObjectButton.BackColor = SystemColors.Control;
-                PlaceObjectButton.Checked = false;
-            }
-            else if (PlacementMode == 1)
-            {
-                PlacementMode = (int)Placementmode.NONE;
-                PlaceTileButton.Checked = false;
-                _mapViewer.PlacementMode = PlacementMode;
-                PlaceTileButton.BackColor = SystemColors.Control;
-                PlaceObjectButton.BackColor = SystemColors.Control;
-                PlaceObjectButton.Checked = false;
-            }
-        }
-
-        private void PlaceObject_Click(object sender, EventArgs e)
-        {
-            if (PlacementMode != 2)
-            {
-                PlacementMode = (int)Placementmode.PlaceObjects;
-                PlaceObjectButton.Checked = true;
-                _mapViewer.PlacementMode = PlacementMode;
-                PlaceObjectButton.BackColor = SystemColors.ControlDarkDark;
-                PlaceTileButton.BackColor = SystemColors.Control;
-                PlaceTileButton.Checked = false;
-            }
-            else if (PlacementMode == 2)
-            {
-                PlacementMode = (int)Placementmode.NONE;
-                PlaceObjectButton.Checked = false;
-                _mapViewer.PlacementMode = PlacementMode;
-                PlaceObjectButton.BackColor = SystemColors.Control;
-                PlaceTileButton.BackColor = SystemColors.Control;
-                PlaceTileButton.Checked = false;
-            }
-        }
-
-        private void mapPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_MapProp_Click(object sender, EventArgs e)
         {
             PropertiesForm frm = new PropertiesForm(LoadedRSDKver);
 
@@ -556,104 +762,41 @@ namespace RetroED.Tools.MapEditor
             }
         }
 
-        void CheckDimensions(int RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight)
+        private void MenuItem_MapLayer_Click(object sender, EventArgs e)
         {
+            _mapViewer.ShowMap = MenuItem_MapLayer.Checked = !_mapViewer.ShowMap;
 
-            if (RSDKver == 3)
-            {
-                if (_RSDK1Level.width != OLDwidth || _RSDK1Level.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK1Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK1Level.width, (ushort)_RSDK1Level.height, RSDKver);
-                    _mapViewer.DrawLevel();
-                }
-            }
-            if (RSDKver == 2)
-            {
-                if (_RSDK2Level.width != OLDwidth || _RSDK2Level.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK2Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK2Level.width, (ushort)_RSDK2Level.height, RSDKver);
-                    _mapViewer.DrawLevel();
-                }
-
-            }
-            if (RSDKver == 1)
-            {
-                if (_RSDK3Level.width != OLDwidth || _RSDK3Level.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK3Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK3Level.width, (ushort)_RSDK3Level.height, RSDKver);
-                    _mapViewer.DrawLevel();
-                }
-            }
-            if (RSDKver == 0)
-            {
-                if (_RSDK4Level.width != OLDwidth || _RSDK4Level.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK4Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK4Level.width, (ushort)_RSDK4Level.height, RSDKver);
-                    _mapViewer.DrawLevel();
-                }
-            }
         }
 
-        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
+        private void MenuItem_Background_Click(object sender, EventArgs e)
         {
-            // fill the extended tile arrays with "empty" values
 
-            // if we're actaully getting shorter, do nothing!
-            for (ushort i = oldHeight; i < NewHeight; i++)
-            {
-                // first create arrays child arrays to the old width
-                // a little inefficient, but at least they'll all be equal sized
-                NewTiles[i] = new ushort[oldWidth];
-                for (int j = 0; j < oldWidth; ++j)
-                    NewTiles[i][j] = 0xffff; // fill the new ones with blanks
-            }
-
-            for (ushort i = 0; i < NewHeight; i++)
-            {
-                // now resize all child arrays to the new width
-                Array.Resize(ref NewTiles[i], NewWidth);
-                for (ushort j = oldWidth; j < NewWidth; j++)
-                    NewTiles[i][j] = 0xffff; // and fill with blanks if wider
-            }
-            return NewTiles;
         }
 
-        private void showGridToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_Objects_Click(object sender, EventArgs e)
         {
-            if (!showgrid)
-            {
-                showGridToolStripMenuItem.Checked = true;
-                showgrid = true;
-                _mapViewer.ShowGrid = true;
-                _mapViewer.DrawLevel();
-            }
-            else if (showgrid)
-            {
-                showGridToolStripMenuItem.Checked = false;
-                showgrid = false;
-                _mapViewer.ShowGrid = false;
-                _mapViewer.DrawLevel();
-            }
+            _mapViewer.ShowObjects = MenuItem_Objects.Checked = !_mapViewer.ShowObjects;
         }
 
-        private void refreshChunksToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_CollisionMasks_Click(object sender, EventArgs e)
         {
-                switch (LoadedRSDKver)
-                {
-                    case 0:
-                        using (Stream strm = File.OpenRead(mappings))
-                        {
-                            _RSDK4Chunks = new RSDKv4.Tiles128x128(strm);
-                        }
-                        _loadedTiles = Bitmap.FromFile(tiles);
-                        _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
-                        _blocksViewer._tiles = _loadedTiles;
-                        _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                        _blocksViewer.SetChunks();
+
+        }
+
+        private void MenuItem_RefreshChunks_Click(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    using (Stream strm = File.OpenRead(mappings))
+                    {
+                        _RSDK4Chunks = new RSDKv4.Tiles128x128(strm);
+                    }
+                    _loadedTiles = Bitmap.FromFile(tiles);
+                    _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
+                    _blocksViewer._tiles = _loadedTiles;
+                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
+                    _blocksViewer.SetChunks();
 
                     _mapViewer._tiles = _loadedTiles;
                     _mapViewer._RSDK4Level = _RSDK4Level;
@@ -663,16 +806,16 @@ namespace RetroED.Tools.MapEditor
                     _mapViewer.loadedRSDKver = LoadedRSDKver;
                     _mapViewer.SetLevel();
                     break;
-                    case 1:
-                        using (Stream strm = File.OpenRead(mappings))
-                        {
-                            _RSDK3Chunks = new RSDKv3.Tiles128x128(strm);
-                        }
-                        _loadedTiles = Bitmap.FromFile(tiles);
-                        _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
-                        _blocksViewer._tiles = _loadedTiles;
-                        _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                        _blocksViewer.SetChunks();
+                case 1:
+                    using (Stream strm = File.OpenRead(mappings))
+                    {
+                        _RSDK3Chunks = new RSDKv3.Tiles128x128(strm);
+                    }
+                    _loadedTiles = Bitmap.FromFile(tiles);
+                    _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
+                    _blocksViewer._tiles = _loadedTiles;
+                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
+                    _blocksViewer.SetChunks();
 
                     _mapViewer._tiles = _loadedTiles;
                     _mapViewer._RSDK3Level = _RSDK3Level;
@@ -682,16 +825,16 @@ namespace RetroED.Tools.MapEditor
                     _mapViewer.loadedRSDKver = LoadedRSDKver;
                     _mapViewer.SetLevel();
                     break;
-                    case 2:
-                        using (Stream strm = File.OpenRead(mappings))
-                        {
-                            _RSDK2Chunks = new RSDKv2.Tiles128x128(strm);
-                        }
-                        _loadedTiles = Bitmap.FromFile(tiles);
-                        _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
-                        _blocksViewer._tiles = _loadedTiles;
-                        _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                        _blocksViewer.SetChunks();
+                case 2:
+                    using (Stream strm = File.OpenRead(mappings))
+                    {
+                        _RSDK2Chunks = new RSDKv2.Tiles128x128(strm);
+                    }
+                    _loadedTiles = Bitmap.FromFile(tiles);
+                    _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
+                    _blocksViewer._tiles = _loadedTiles;
+                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
+                    _blocksViewer.SetChunks();
 
                     _mapViewer._tiles = _loadedTiles;
                     _mapViewer._RSDK2Level = _RSDK2Level;
@@ -701,19 +844,19 @@ namespace RetroED.Tools.MapEditor
                     _mapViewer.loadedRSDKver = LoadedRSDKver;
                     _mapViewer.SetLevel();
                     break;
-                    case 3:
-                        using (Stream strm = File.OpenRead(mappings))
-                        {
-                            _RSDK1Chunks = new RSDKv1.til(strm);
-                        }
-                        RSDKv1.gfx gfx = new RSDKv1.gfx(tiles, false);
+                case 3:
+                    using (Stream strm = File.OpenRead(mappings))
+                    {
+                        _RSDK1Chunks = new RSDKv1.til(strm);
+                    }
+                    RSDKv1.gfx gfx = new RSDKv1.gfx(tiles, false);
 
-                        _loadedTiles = gfx.gfxImage;
+                    _loadedTiles = gfx.gfxImage;
 
-                        _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                        _blocksViewer._tiles = gfx.gfxImage;
-                        _blocksViewer._RSDK1Chunks = _RSDK1Chunks;
-                        _blocksViewer.SetChunks();
+                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
+                    _blocksViewer._tiles = gfx.gfxImage;
+                    _blocksViewer._RSDK1Chunks = _RSDK1Chunks;
+                    _blocksViewer.SetChunks();
 
                     _mapViewer._tiles = _loadedTiles;
                     _mapViewer._RSDK1Level = _RSDK1Level;
@@ -723,119 +866,25 @@ namespace RetroED.Tools.MapEditor
                     _mapViewer.loadedRSDKver = LoadedRSDKver;
                     _mapViewer.SetLevel();
                     break;
-                    default:
-                        break;
-                }
-        }
-
-        private void clearChunksToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            switch(LoadedRSDKver)
-            {
-                case 3:
-                    ushort[][] NewTiles1 = new ushort[_RSDK1Level.height][];
-                    for (ushort i = 0; i < _RSDK1Level.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles1[i] = new ushort[_RSDK1Level.width];
-                        for (int j = 0; j < _RSDK1Level.width; ++j)
-                            NewTiles1[i][j] = 0xffff; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK1Level.MapLayout = NewTiles1;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 2:
-                    ushort[][] NewTiles2 = new ushort[_RSDK2Level.height][];
-                    for (ushort i = 0; i < _RSDK2Level.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles2[i] = new ushort[_RSDK2Level.width];
-                        for (int j = 0; j < _RSDK2Level.width; ++j)
-                            NewTiles2[i][j] = 0xffff; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK2Level.MapLayout = NewTiles2;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 1:
-                    ushort[][] NewTiles3 = new ushort[_RSDK3Level.height][];
-                    for (ushort i = 0; i < _RSDK3Level.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles3[i] = new ushort[_RSDK3Level.width];
-                        for (int j = 0; j < _RSDK3Level.width; ++j)
-                            NewTiles3[i][j] = 0xffff; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK3Level.MapLayout = NewTiles3;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 0:
-                    ushort[][] NewTiles4 = new ushort[_RSDK4Level.height][];
-                    for (ushort i = 0; i < _RSDK4Level.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles4[i] = new ushort[_RSDK4Level.width];
-                        for (int j = 0; j < _RSDK4Level.width; ++j)
-                            NewTiles4[i][j] = 0xffff; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK4Level.MapLayout = NewTiles4;
-                    _mapViewer.DrawLevel();
+                default:
                     break;
             }
         }
 
-        private void clearObjectsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ShowGrid_Click(object sender, EventArgs e)
         {
-            switch(LoadedRSDKver)
-            {
-                case 3:
-                    _mapViewer._RSDK1Level.objects.Clear();
-                    _mapViewer.DrawLevel();
-                    break;
-                case 2:
-                    _mapViewer._RSDK2Level.objects.Clear();
-                    _mapViewer.DrawLevel();
-                    break;
-                case 1:
-                    _mapViewer._RSDK3Level.objects.Clear();
-                    _mapViewer.DrawLevel();
-                    break;
-                case 0:
-                    _mapViewer._RSDK4Level.objects.Clear();
-                    _mapViewer.DrawLevel();
-                    break;
-            }
+            showgrid = _mapViewer.ShowGrid = MenuItem_ShowGrid.Checked = !showgrid;
+            _mapViewer.DrawLevel();
         }
 
-        private void addObjectToolStripMenuItem_Click(object sender, EventArgs e)
+        private void collisionMasksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            NewObjectForm frm = new NewObjectForm();
 
-            if (frm.ShowDialog(this) == DialogResult.OK)
-            {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        _mapViewer._RSDK1Level.objects.Add(Obj1);
-                        break;
-                    case 2:
-                        RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        _mapViewer._RSDK2Level.objects.Add(Obj2);
-                        break;
-                    case 1:
-                        RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        _mapViewer._RSDK3Level.objects.Add(Obj3);
-                        break;
-                    case 0:
-                        RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        _mapViewer._RSDK4Level.objects.Add(Obj4);
-                        break;
-                }
-            }
+        }
+
+        private void MenuItem_About_Click(object sender, EventArgs e)
+        {
+            new AboutForm().ShowDialog();
         }
     }
 

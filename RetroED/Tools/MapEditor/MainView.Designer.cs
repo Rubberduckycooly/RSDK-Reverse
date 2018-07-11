@@ -28,47 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            this.components = new System.ComponentModel.Container();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainView));
-            this.msMenus = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmiFileOpen = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exportImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.objectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collisionMasksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshChunksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearChunksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearObjectsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.addObjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.mapPropertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dpMain = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
@@ -81,260 +57,89 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.PlaceTileButton = new System.Windows.Forms.ToolStripButton();
             this.PlaceObjectButton = new System.Windows.Forms.ToolStripButton();
-            this.msMenus.SuspendLayout();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Open = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Save = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SaveAs = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ExportImage = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Exit = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ClearChunks = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ClearObjects = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_AddObject = new System.Windows.Forms.MenuItem();
+            this.menuItem11 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_MapLayer = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Background = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Objects = new System.Windows.Forms.MenuItem();
+            this.MenuItem_CollisionMasks = new System.Windows.Forms.MenuItem();
+            this.menuItem13 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_RefreshChunks = new System.Windows.Forms.MenuItem();
+            this.menuItem15 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ShowGrid = new System.Windows.Forms.MenuItem();
+            this.MenuItem_About = new System.Windows.Forms.MenuItem();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // msMenus
-            // 
-            this.msMenus.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.msMenus.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.ViewToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.aboutToolStripMenuItem});
-            this.msMenus.Location = new System.Drawing.Point(0, 0);
-            this.msMenus.Name = "msMenus";
-            this.msMenus.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
-            this.msMenus.Size = new System.Drawing.Size(651, 28);
-            this.msMenus.TabIndex = 0;
-            this.msMenus.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiFileOpen,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exportImageToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.exitToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // tsmiFileOpen
-            // 
-            this.tsmiFileOpen.Name = "tsmiFileOpen";
-            this.tsmiFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.tsmiFileOpen.Size = new System.Drawing.Size(232, 26);
-            this.tsmiFileOpen.Text = "Open...";
-            this.tsmiFileOpen.Click += new System.EventHandler(this.tsmiFileOpen_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.saveAsToolStripMenuItem.Text = "Save As...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(229, 6);
-            // 
-            // exportImageToolStripMenuItem
-            // 
-            this.exportImageToolStripMenuItem.Name = "exportImageToolStripMenuItem";
-            this.exportImageToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
-            this.exportImageToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.exportImageToolStripMenuItem.Text = "Export Image...";
-            this.exportImageToolStripMenuItem.Click += new System.EventHandler(this.exportImageToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(229, 6);
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(232, 26);
-            this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // ViewToolStripMenuItem
-            // 
-            this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mapLayersToolStripMenuItem,
-            this.objectsToolStripMenuItem,
-            this.collisionMasksToolStripMenuItem,
-            this.toolStripSeparator5,
-            this.refreshChunksToolStripMenuItem,
-            this.toolStripSeparator6,
-            this.showGridToolStripMenuItem});
-            this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
-            this.ViewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.ViewToolStripMenuItem.Text = "View";
-            // 
-            // mapLayersToolStripMenuItem
-            // 
-            this.mapLayersToolStripMenuItem.Checked = true;
-            this.mapLayersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.mapLayersToolStripMenuItem.Name = "mapLayersToolStripMenuItem";
-            this.mapLayersToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.mapLayersToolStripMenuItem.Text = "Map (Foreground)";
-            this.mapLayersToolStripMenuItem.Click += new System.EventHandler(this.mapLayersToolStripMenuItem_Click);
-            // 
-            // objectsToolStripMenuItem
-            // 
-            this.objectsToolStripMenuItem.Name = "objectsToolStripMenuItem";
-            this.objectsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.objectsToolStripMenuItem.Text = "Objects";
-            this.objectsToolStripMenuItem.Click += new System.EventHandler(this.objectsToolStripMenuItem_Click);
-            // 
-            // collisionMasksToolStripMenuItem
-            // 
-            this.collisionMasksToolStripMenuItem.Enabled = false;
-            this.collisionMasksToolStripMenuItem.Name = "collisionMasksToolStripMenuItem";
-            this.collisionMasksToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.collisionMasksToolStripMenuItem.Text = "Collision Masks";
-            // 
-            // toolStripSeparator5
-            // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(213, 6);
-            // 
-            // refreshChunksToolStripMenuItem
-            // 
-            this.refreshChunksToolStripMenuItem.Name = "refreshChunksToolStripMenuItem";
-            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.refreshChunksToolStripMenuItem.Text = "Refresh Chunks";
-            this.refreshChunksToolStripMenuItem.Click += new System.EventHandler(this.refreshChunksToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(213, 6);
-            // 
-            // showGridToolStripMenuItem
-            // 
-            this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.showGridToolStripMenuItem.Text = "Show Grid";
-            this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearChunksToolStripMenuItem,
-            this.clearObjectsToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.addObjectToolStripMenuItem,
-            this.toolStripSeparator7,
-            this.mapPropertiesToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // clearChunksToolStripMenuItem
-            // 
-            this.clearChunksToolStripMenuItem.Name = "clearChunksToolStripMenuItem";
-            this.clearChunksToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.clearChunksToolStripMenuItem.Text = "Clear Chunks";
-            this.clearChunksToolStripMenuItem.Click += new System.EventHandler(this.clearChunksToolStripMenuItem_Click);
-            // 
-            // clearObjectsToolStripMenuItem
-            // 
-            this.clearObjectsToolStripMenuItem.Name = "clearObjectsToolStripMenuItem";
-            this.clearObjectsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.clearObjectsToolStripMenuItem.Text = "Clear Objects";
-            this.clearObjectsToolStripMenuItem.Click += new System.EventHandler(this.clearObjectsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(213, 6);
-            // 
-            // addObjectToolStripMenuItem
-            // 
-            this.addObjectToolStripMenuItem.Name = "addObjectToolStripMenuItem";
-            this.addObjectToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.addObjectToolStripMenuItem.Text = "Add Object";
-            this.addObjectToolStripMenuItem.Click += new System.EventHandler(this.addObjectToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator7
-            // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(213, 6);
-            // 
-            // mapPropertiesToolStripMenuItem
-            // 
-            this.mapPropertiesToolStripMenuItem.Name = "mapPropertiesToolStripMenuItem";
-            this.mapPropertiesToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.mapPropertiesToolStripMenuItem.Text = "Map Properties";
-            this.mapPropertiesToolStripMenuItem.Click += new System.EventHandler(this.mapPropertiesToolStripMenuItem_Click);
-            // 
-            // aboutToolStripMenuItem
-            // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(62, 24);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // dpMain
             // 
             this.dpMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dpMain.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
-            this.dpMain.Location = new System.Drawing.Point(0, 28);
-            this.dpMain.Margin = new System.Windows.Forms.Padding(4);
+            this.dpMain.Location = new System.Drawing.Point(0, 0);
             this.dpMain.Name = "dpMain";
-            this.dpMain.Size = new System.Drawing.Size(651, 418);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
-            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            autoHideStripSkin1.TabGradient = tabGradient1;
-            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
-            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
-            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
-            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
-            tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
-            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
-            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
-            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
-            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
-            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
-            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
-            tabGradient7.EndColor = System.Drawing.Color.Transparent;
-            tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
-            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
-            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
-            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
-            this.dpMain.Skin = dockPanelSkin1;
+            this.dpMain.Size = new System.Drawing.Size(488, 362);
+            dockPanelGradient4.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient4.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient8.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient8.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            autoHideStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient9.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient5.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient10.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            dockPaneStripSkin2.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient11.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient11.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient12.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient12.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient6.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient13.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dpMain.Skin = dockPanelSkin2;
             this.dpMain.TabIndex = 1;
             // 
             // toolStrip1
@@ -351,9 +156,9 @@
             this.toolStripSeparator3,
             this.PlaceTileButton,
             this.PlaceObjectButton});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 28);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(651, 27);
+            this.toolStrip1.Size = new System.Drawing.Size(488, 27);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -445,22 +250,206 @@
             this.PlaceObjectButton.Text = "PlaceObj";
             this.PlaceObjectButton.Click += new System.EventHandler(this.PlaceObject_Click);
             // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2,
+            this.menuItem3,
+            this.menuItem4});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_Open,
+            this.MenuItem_Save,
+            this.MenuItem_SaveAs,
+            this.menuItem8,
+            this.MenuItem_ExportImage,
+            this.menuItem10,
+            this.MenuItem_Exit});
+            this.menuItem1.Text = "File";
+            // 
+            // MenuItem_Open
+            // 
+            this.MenuItem_Open.Index = 0;
+            this.MenuItem_Open.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
+            this.MenuItem_Open.Text = "&Open";
+            this.MenuItem_Open.Click += new System.EventHandler(this.MenuItem_Open_Click);
+            // 
+            // MenuItem_Save
+            // 
+            this.MenuItem_Save.Index = 1;
+            this.MenuItem_Save.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
+            this.MenuItem_Save.Text = "&Save";
+            this.MenuItem_Save.Click += new System.EventHandler(this.MenuItem_Save_Click);
+            // 
+            // MenuItem_SaveAs
+            // 
+            this.MenuItem_SaveAs.Index = 2;
+            this.MenuItem_SaveAs.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftS;
+            this.MenuItem_SaveAs.Text = "Save &As";
+            this.MenuItem_SaveAs.Click += new System.EventHandler(this.MenuItem_SaveAs_Click);
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 3;
+            this.menuItem8.Text = "-";
+            // 
+            // MenuItem_ExportImage
+            // 
+            this.MenuItem_ExportImage.Index = 4;
+            this.MenuItem_ExportImage.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
+            this.MenuItem_ExportImage.Text = "Export &Image";
+            this.MenuItem_ExportImage.Click += new System.EventHandler(this.MenuItem_ExportImage_Click);
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 5;
+            this.menuItem10.Text = "-";
+            // 
+            // MenuItem_Exit
+            // 
+            this.MenuItem_Exit.Index = 6;
+            this.MenuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
+            this.MenuItem_Exit.Text = "Exit";
+            this.MenuItem_Exit.Click += new System.EventHandler(this.MenuItem_Exit_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 1;
+            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_MapLayer,
+            this.MenuItem_Background,
+            this.MenuItem_Objects,
+            this.MenuItem_CollisionMasks,
+            this.menuItem13,
+            this.MenuItem_RefreshChunks,
+            this.menuItem15,
+            this.MenuItem_ShowGrid});
+            this.menuItem2.Text = "View";
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 2;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_ClearChunks,
+            this.MenuItem_ClearObjects,
+            this.menuItem7,
+            this.MenuItem_AddObject,
+            this.menuItem11,
+            this.MenuItem_MapProp});
+            this.menuItem3.Text = "Tools";
+            // 
+            // MenuItem_ClearChunks
+            // 
+            this.MenuItem_ClearChunks.Index = 0;
+            this.MenuItem_ClearChunks.Text = "Clear &Chunks";
+            this.MenuItem_ClearChunks.Click += new System.EventHandler(this.MenuItem_ClearChunks_Click);
+            // 
+            // MenuItem_ClearObjects
+            // 
+            this.MenuItem_ClearObjects.Index = 1;
+            this.MenuItem_ClearObjects.Text = "Clear &Objects";
+            this.MenuItem_ClearObjects.Click += new System.EventHandler(this.MenuItem_ClearObjects_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 2;
+            this.menuItem7.Text = "-";
+            // 
+            // MenuItem_AddObject
+            // 
+            this.MenuItem_AddObject.Index = 3;
+            this.MenuItem_AddObject.Text = "&Add Object";
+            this.MenuItem_AddObject.Click += new System.EventHandler(this.MenuItem_AddObject_Click);
+            // 
+            // menuItem11
+            // 
+            this.menuItem11.Index = 4;
+            this.menuItem11.Text = "-";
+            // 
+            // MenuItem_MapProp
+            // 
+            this.MenuItem_MapProp.Index = 5;
+            this.MenuItem_MapProp.Text = "Map &Properties";
+            this.MenuItem_MapProp.Click += new System.EventHandler(this.MenuItem_MapProp_Click);
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 3;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_About});
+            this.menuItem4.Text = "About";
+            // 
+            // MenuItem_MapLayer
+            // 
+            this.MenuItem_MapLayer.Checked = true;
+            this.MenuItem_MapLayer.Index = 0;
+            this.MenuItem_MapLayer.Text = "Map (Foreground)";
+            this.MenuItem_MapLayer.Click += new System.EventHandler(this.MenuItem_MapLayer_Click);
+            // 
+            // MenuItem_Background
+            // 
+            this.MenuItem_Background.Enabled = false;
+            this.MenuItem_Background.Index = 1;
+            this.MenuItem_Background.Text = "Background";
+            this.MenuItem_Background.Click += new System.EventHandler(this.MenuItem_Background_Click);
+            // 
+            // MenuItem_Objects
+            // 
+            this.MenuItem_Objects.Index = 2;
+            this.MenuItem_Objects.Text = "Objects";
+            this.MenuItem_Objects.Click += new System.EventHandler(this.MenuItem_Objects_Click);
+            // 
+            // MenuItem_CollisionMasks
+            // 
+            this.MenuItem_CollisionMasks.Enabled = false;
+            this.MenuItem_CollisionMasks.Index = 3;
+            this.MenuItem_CollisionMasks.Text = "Collision Masks";
+            this.MenuItem_CollisionMasks.Click += new System.EventHandler(this.MenuItem_CollisionMasks_Click);
+            // 
+            // menuItem13
+            // 
+            this.menuItem13.Index = 4;
+            this.menuItem13.Text = "-";
+            // 
+            // MenuItem_RefreshChunks
+            // 
+            this.MenuItem_RefreshChunks.Index = 5;
+            this.MenuItem_RefreshChunks.Text = "Refresh Chunks";
+            this.MenuItem_RefreshChunks.Click += new System.EventHandler(this.MenuItem_RefreshChunks_Click);
+            // 
+            // menuItem15
+            // 
+            this.menuItem15.Index = 6;
+            this.menuItem15.Text = "-";
+            // 
+            // MenuItem_ShowGrid
+            // 
+            this.MenuItem_ShowGrid.Index = 7;
+            this.MenuItem_ShowGrid.Text = "Show Grid";
+            this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
+            // 
+            // MenuItem_About
+            // 
+            this.MenuItem_About.Index = 0;
+            this.MenuItem_About.Text = "About Retro Engine Map Editor";
+            this.MenuItem_About.Click += new System.EventHandler(this.MenuItem_About_Click);
+            // 
             // MainView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 446);
+            this.ClientSize = new System.Drawing.Size(488, 362);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dpMain);
-            this.Controls.Add(this.msMenus);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MainMenuStrip = this.msMenus;
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Menu = this.mainMenu1;
             this.Name = "MainView";
             this.Text = "Retro Engine Map Editor";
-            this.msMenus.ResumeLayout(false);
-            this.msMenus.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -469,21 +458,7 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip msMenus;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tsmiFileOpen;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private WeifenLuo.WinFormsUI.Docking.DockPanel dpMain;
-        private System.Windows.Forms.ToolStripMenuItem ViewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mapLayersToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem objectsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem exportImageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem collisionMasksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton newToolStripButton;
         private System.Windows.Forms.ToolStripButton openToolStripButton;
@@ -495,18 +470,33 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton PlaceTileButton;
         private System.Windows.Forms.ToolStripButton PlaceObjectButton;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem mapPropertiesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripMenuItem showGridToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem refreshChunksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearChunksToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearObjectsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem addObjectToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem MenuItem_Open;
+        private System.Windows.Forms.MenuItem MenuItem_Save;
+        private System.Windows.Forms.MenuItem MenuItem_SaveAs;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem MenuItem_ExportImage;
+        private System.Windows.Forms.MenuItem menuItem10;
+        private System.Windows.Forms.MenuItem MenuItem_Exit;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem MenuItem_ClearChunks;
+        private System.Windows.Forms.MenuItem MenuItem_ClearObjects;
+        private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem MenuItem_AddObject;
+        private System.Windows.Forms.MenuItem menuItem11;
+        private System.Windows.Forms.MenuItem MenuItem_MapProp;
+        private System.Windows.Forms.MenuItem MenuItem_MapLayer;
+        private System.Windows.Forms.MenuItem MenuItem_Background;
+        private System.Windows.Forms.MenuItem MenuItem_Objects;
+        private System.Windows.Forms.MenuItem MenuItem_CollisionMasks;
+        private System.Windows.Forms.MenuItem menuItem13;
+        private System.Windows.Forms.MenuItem MenuItem_RefreshChunks;
+        private System.Windows.Forms.MenuItem menuItem15;
+        private System.Windows.Forms.MenuItem MenuItem_ShowGrid;
+        private System.Windows.Forms.MenuItem MenuItem_About;
     }
 }
 

@@ -28,211 +28,182 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.TabControl = new System.Windows.Forms.TabControl();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.rSDKUnpackerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.animationEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mapEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.paletteEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chunkEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.GFXToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.nexusDecryptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.closeTabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.helpAboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStrip1.SuspendLayout();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_RSDKUnpacker = new System.Windows.Forms.MenuItem();
+            this.menuItem14 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_AnimationEditor = new System.Windows.Forms.MenuItem();
+            this.MenuItem_MapEditor = new System.Windows.Forms.MenuItem();
+            this.MenuItem_PaletteEditor = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ChunkEditor = new System.Windows.Forms.MenuItem();
+            this.MenuItem_GFXTool = new System.Windows.Forms.MenuItem();
+            this.MenuItem_NexusDecrypter = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_CloseTab = new System.Windows.Forms.MenuItem();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // TabControl
             // 
             this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabControl.Location = new System.Drawing.Point(0, 28);
+            this.TabControl.Location = new System.Drawing.Point(0, 0);
+            this.TabControl.Margin = new System.Windows.Forms.Padding(2);
             this.TabControl.Name = "TabControl";
             this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(1262, 645);
+            this.TabControl.Size = new System.Drawing.Size(946, 547);
             this.TabControl.TabIndex = 0;
+            this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
+            this.TabControl.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.TabControl_ControlAdded);
             // 
-            // menuStrip1
+            // mainMenu1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpAboutToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1262, 28);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem2,
+            this.menuItem3,
+            this.menuItem4});
             // 
-            // fileToolStripMenuItem
+            // menuItem1
             // 
-            this.fileToolStripMenuItem.Enabled = false;
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
+            this.menuItem1.Enabled = false;
+            this.menuItem1.Index = 0;
+            this.menuItem1.Text = "File";
             // 
-            // viewToolStripMenuItem
+            // menuItem2
             // 
-            this.viewToolStripMenuItem.Enabled = false;
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.viewToolStripMenuItem.Text = "View";
+            this.menuItem2.Enabled = false;
+            this.menuItem2.Index = 1;
+            this.menuItem2.Text = "View";
             // 
-            // toolsToolStripMenuItem
+            // menuItem3
             // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rSDKUnpackerToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.animationEditorToolStripMenuItem,
-            this.mapEditorToolStripMenuItem,
-            this.backgroundEditorToolStripMenuItem,
-            this.paletteEditorToolStripMenuItem,
-            this.chunkEditorToolStripMenuItem,
-            this.GFXToolToolStripMenuItem,
-            this.nexusDecryptToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.closeTabToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
-            this.toolsToolStripMenuItem.Text = "Tools";
+            this.menuItem3.Index = 2;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_RSDKUnpacker,
+            this.menuItem14,
+            this.MenuItem_AnimationEditor,
+            this.MenuItem_MapEditor,
+            this.MenuItem_PaletteEditor,
+            this.MenuItem_ChunkEditor,
+            this.MenuItem_GFXTool,
+            this.MenuItem_NexusDecrypter,
+            this.menuItem12,
+            this.MenuItem_CloseTab});
+            this.menuItem3.Text = "Engine";
             // 
-            // rSDKUnpackerToolStripMenuItem
+            // MenuItem_RSDKUnpacker
             // 
-            this.rSDKUnpackerToolStripMenuItem.Enabled = false;
-            this.rSDKUnpackerToolStripMenuItem.Name = "rSDKUnpackerToolStripMenuItem";
-            this.rSDKUnpackerToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.rSDKUnpackerToolStripMenuItem.Text = "RSDK Unpacker";
-            this.rSDKUnpackerToolStripMenuItem.Click += new System.EventHandler(this.rSDKUnpackerToolStripMenuItem_Click);
+            this.MenuItem_RSDKUnpacker.Index = 0;
+            this.MenuItem_RSDKUnpacker.Text = "RSDK Unpacker";
+            this.MenuItem_RSDKUnpacker.Click += new System.EventHandler(this.MenuItem_RSDKUnpacker_Click);
             // 
-            // toolStripSeparator2
+            // menuItem14
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(213, 6);
+            this.menuItem14.Index = 1;
+            this.menuItem14.Text = "-";
             // 
-            // animationEditorToolStripMenuItem
+            // MenuItem_AnimationEditor
             // 
-            this.animationEditorToolStripMenuItem.Enabled = false;
-            this.animationEditorToolStripMenuItem.Name = "animationEditorToolStripMenuItem";
-            this.animationEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.animationEditorToolStripMenuItem.Text = "Animation Editor";
-            this.animationEditorToolStripMenuItem.Click += new System.EventHandler(this.animationEditorToolStripMenuItem_Click);
+            this.MenuItem_AnimationEditor.Index = 2;
+            this.MenuItem_AnimationEditor.Text = "Animation Editor";
+            this.MenuItem_AnimationEditor.Click += new System.EventHandler(this.MenuItem_AnimationEditor_Click);
             // 
-            // mapEditorToolStripMenuItem
+            // MenuItem_MapEditor
             // 
-            this.mapEditorToolStripMenuItem.Name = "mapEditorToolStripMenuItem";
-            this.mapEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.mapEditorToolStripMenuItem.Text = "Map Editor";
-            this.mapEditorToolStripMenuItem.Click += new System.EventHandler(this.mapEditorToolStripMenuItem_Click);
+            this.MenuItem_MapEditor.Index = 3;
+            this.MenuItem_MapEditor.Text = "Map Editor";
+            this.MenuItem_MapEditor.Click += new System.EventHandler(this.MenuItem_MapEditor_Click);
             // 
-            // paletteEditorToolStripMenuItem
+            // MenuItem_PaletteEditor
             // 
-            this.paletteEditorToolStripMenuItem.Name = "paletteEditorToolStripMenuItem";
-            this.paletteEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.paletteEditorToolStripMenuItem.Text = "Palette Editor";
-            this.paletteEditorToolStripMenuItem.Click += new System.EventHandler(this.paletteEditorToolStripMenuItem_Click);
+            this.MenuItem_PaletteEditor.Index = 4;
+            this.MenuItem_PaletteEditor.Text = "Palette Editor";
+            this.MenuItem_PaletteEditor.Click += new System.EventHandler(this.MenuItem_PaletteEditor_Click);
             // 
-            // chunkEditorToolStripMenuItem
+            // MenuItem_ChunkEditor
             // 
-            this.chunkEditorToolStripMenuItem.Name = "chunkEditorToolStripMenuItem";
-            this.chunkEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.chunkEditorToolStripMenuItem.Text = "Chunk Editor";
-            this.chunkEditorToolStripMenuItem.Click += new System.EventHandler(this.chunkEditorToolStripMenuItem_Click);
+            this.MenuItem_ChunkEditor.Index = 5;
+            this.MenuItem_ChunkEditor.Text = "Chunk Editor";
+            this.MenuItem_ChunkEditor.Click += new System.EventHandler(this.MenuItem_ChunkEditor_Click);
             // 
-            // GFXToolToolStripMenuItem
+            // MenuItem_GFXTool
             // 
-            this.GFXToolToolStripMenuItem.Name = "GFXToolToolStripMenuItem";
-            this.GFXToolToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.GFXToolToolStripMenuItem.Text = "GFX Tool";
-            this.GFXToolToolStripMenuItem.Click += new System.EventHandler(this.GFXToolToolStripMenuItem_Click);
+            this.MenuItem_GFXTool.Index = 6;
+            this.MenuItem_GFXTool.Text = "GFX Tool";
+            this.MenuItem_GFXTool.Click += new System.EventHandler(this.MenuItem_GFXTool_Click);
             // 
-            // nexusDecryptToolStripMenuItem
+            // MenuItem_NexusDecrypter
             // 
-            this.nexusDecryptToolStripMenuItem.Name = "nexusDecryptToolStripMenuItem";
-            this.nexusDecryptToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.nexusDecryptToolStripMenuItem.Text = "Nexus Decrypter";
-            this.nexusDecryptToolStripMenuItem.Click += new System.EventHandler(this.NexusDecryptToolToolStripMenuItem_Click);
+            this.MenuItem_NexusDecrypter.Index = 7;
+            this.MenuItem_NexusDecrypter.Text = "Nexus Decrypter";
+            this.MenuItem_NexusDecrypter.Click += new System.EventHandler(this.MenuItem_NexusDecrypter_Click);
             // 
-            // toolStripSeparator1
+            // menuItem12
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            this.menuItem12.Index = 8;
+            this.menuItem12.Text = "-";
             // 
-            // closeTabToolStripMenuItem
+            // MenuItem_CloseTab
             // 
-            this.closeTabToolStripMenuItem.Name = "closeTabToolStripMenuItem";
-            this.closeTabToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.closeTabToolStripMenuItem.Text = "Close Tab";
-            this.closeTabToolStripMenuItem.Click += new System.EventHandler(this.closeTabToolStripMenuItem_Click);
+            this.MenuItem_CloseTab.Enabled = false;
+            this.MenuItem_CloseTab.Index = 9;
+            this.MenuItem_CloseTab.Shortcut = System.Windows.Forms.Shortcut.CtrlW;
+            this.MenuItem_CloseTab.Text = "Close Tab";
+            this.MenuItem_CloseTab.Click += new System.EventHandler(this.MenuItem_CloseTab_Click);
             // 
-            // helpAboutToolStripMenuItem
+            // menuItem4
             // 
-            this.helpAboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem});
-            this.helpAboutToolStripMenuItem.Name = "helpAboutToolStripMenuItem";
-            this.helpAboutToolStripMenuItem.Size = new System.Drawing.Size(62, 24);
-            this.helpAboutToolStripMenuItem.Text = "About";
+            this.menuItem4.Index = 3;
+            this.menuItem4.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem5});
+            this.menuItem4.Text = "About";
             // 
-            // aboutToolStripMenuItem
+            // menuItem5
             // 
-            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(125, 26);
-            this.aboutToolStripMenuItem.Text = "About";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
-            // 
-            // backgroundEditorToolStripMenuItem
-            // 
-            this.backgroundEditorToolStripMenuItem.Name = "backgroundEditorToolStripMenuItem";
-            this.backgroundEditorToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.backgroundEditorToolStripMenuItem.Text = "Background Editor";
-            this.backgroundEditorToolStripMenuItem.Click += new System.EventHandler(this.backgroundEditorToolStripMenuItem_Click);
+            this.menuItem5.Index = 0;
+            this.menuItem5.Text = "About RetroEd";
+            this.menuItem5.Click += new System.EventHandler(this.MenuItem_About_Click);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1262, 673);
+            this.ClientSize = new System.Drawing.Size(946, 547);
             this.Controls.Add(this.TabControl);
-            this.Controls.Add(this.menuStrip1);
             this.DoubleBuffered = true;
-            this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Menu = this.mainMenu1;
             this.Name = "MainForm";
             this.Text = "RetroED";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.TabControl TabControl;
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem animationEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem mapEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem paletteEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem chunkEditorToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem GFXToolToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem closeTabToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem nexusDecryptToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem helpAboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem rSDKUnpackerToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem backgroundEditorToolStripMenuItem;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem menuItem4;
+        private System.Windows.Forms.MenuItem MenuItem_RSDKUnpacker;
+        private System.Windows.Forms.MenuItem MenuItem_AnimationEditor;
+        private System.Windows.Forms.MenuItem MenuItem_MapEditor;
+        private System.Windows.Forms.MenuItem MenuItem_PaletteEditor;
+        private System.Windows.Forms.MenuItem MenuItem_ChunkEditor;
+        private System.Windows.Forms.MenuItem MenuItem_GFXTool;
+        private System.Windows.Forms.MenuItem MenuItem_NexusDecrypter;
+        private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.MenuItem MenuItem_CloseTab;
+        private System.Windows.Forms.MenuItem menuItem14;
+        private System.Windows.Forms.MenuItem menuItem5;
     }
 }
 
