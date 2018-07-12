@@ -17,11 +17,11 @@ namespace RSDKv3
 
         public byte[] displayBytes = {1,9,0,0,3};
 
-        //Byte 5: tLayerMidPoint
+        //Byte 5: Stage.MidPoint
         //if it's 0 then nothing but the objects are drawn
         //if its 1 or 2 the tiles on high layer are drawn on the low layer
         // 3 is default
-        // 4 or above draws tiles on the low layer on the high layer
+        // 4 or above draws tiles that are on the low layer on the high layer
 
         public List<Object> objects = new List<Object>();
         public List<string> objectTypeNames = new List<string>();
@@ -49,7 +49,7 @@ namespace RSDKv3
             Console.WriteLine(Title);
             byte[] buffer = new byte[5];
             reader.Read(buffer, 0, 5); //Waste 5 bytes, I don't care about them right now.
-            //The first 4 bytes are loaded into StageSystem.ActiveTileLayers. 5th byte is tLayerMidPoint.
+            //The first 4 bytes are loaded into Stage.ActiveLayer. 5th byte is Stage.MidPoint.
             //If you want to know the values then look at the values for "DisplayBytes"
             reader.Read(buffer, 0, 2); //Read size
 

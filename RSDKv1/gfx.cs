@@ -111,7 +111,6 @@ namespace RSDKv1
             {
                 for (int w = 0; w < width; w++)
                 {
-
                     BitmapData ImgData = gfxImage.LockBits(new Rectangle(new Point(w, h), new Size(1, 1)), System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
                     byte b = System.Runtime.InteropServices.Marshal.ReadByte(ImgData.Scan0);
                     System.Runtime.InteropServices.Marshal.WriteByte(ImgData.Scan0, (byte)(data[pixel]));
@@ -119,6 +118,7 @@ namespace RSDKv1
                     pixel++;
                 }
             }
+            reader.Close();
         }
 
         public void export(string exportLocation, System.Drawing.Imaging.ImageFormat format)
@@ -267,7 +267,6 @@ namespace RSDKv1
 			}
 		}
 	}
-
 
     }
 

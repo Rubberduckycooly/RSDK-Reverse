@@ -149,6 +149,6 @@
         private System.Windows.Forms.TabPage ChunksPage;
         public ChunkMappingsEditor.TileList BlocksList;
         private System.Windows.Forms.TabPage ObjectsPage;
-        private System.Windows.Forms.ListBox ObjectList;
+        public System.Windows.Forms.ListBox ObjectList;
     }
 }

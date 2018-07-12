@@ -1,0 +1,79 @@
+GLOBAL
+
+1:	Player
+2:      Tails Object (Tail's Tail)
+3:      (AI) Player 2
+4:	StageSetup
+5:	HUD
+6:	Title Card
+7:      Death Event
+8:      Act Finish
+9:      Debug Mode
+10: 	Ring
+11:     Lose Ring
+12:     Ring Sparkle
+13:	Monitor
+14:	Monitor, Broken
+15:	Spring, Red
+16:	Spring, Yellow
+17:	Spikes
+18:	StarPost
+19:     Smoke Puff
+20:     Dust Puff
+21:	SignPost
+22:	Animal Prison
+23:     Explosion
+24:     Blue Shield
+25:     Insta Shield
+26:     Bubble Shield
+27:     Fire Shield
+28:     Lightning Shield
+29:     Lightning Spark
+30:     Invincibility
+31:     Super Spark
+32:	BoundsMarker
+33:     Object Score
+34:	MusicEvent
+35:	PlaneSwitch H
+36:	PlaneSwitch V
+37:     VS Game (??? what?)
+38:	Trigger next Stage
+39: 	Invisible Block
+40:	Spring Board
+
+MONITOR FLAGS:
+
+1:	Ring
+2: 	Shild
+3:	Invinsibility
+4:	Speed Shoes
+5:	1 UP Sonic
+6:	1 UP Tails
+7:	1 UP Knuckles
+8:	Super
+9:	Bubble Shild
+10:	Flame Shild
+11:	Lightning Shild
+12:	Eggman
+13:	Teleport
+14:	Random
+15:	Shild Mode Toggle (S2/S3/Random)
+16:	Emerald Toggle (none/all)
+
+EMERALD HILL ZONE
+
+40:	(Flicky?)
+43:	Platform, small, V
+44:	Platform, big, V
+45:	Bridge
+46:	Bridge, Beginning
+47:	Waterfall, Beginning
+51:	(Choconut?)
+53:	Chooper
+56:	Bee
+57:	Bee projectile
+58:	Snail
+60:	Drill Eggman
+
+
+

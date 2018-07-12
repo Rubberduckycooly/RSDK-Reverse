@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RetroED")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("RetroED - A General Purpose Editor for RSDK versions below RSDKv5")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("RetroED")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

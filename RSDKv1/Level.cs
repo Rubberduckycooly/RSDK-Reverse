@@ -92,6 +92,7 @@ namespace RSDKv1
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -241,7 +242,7 @@ namespace RSDKv1
                     MapLayout[y][x] = reader.ReadByte();
                 }
             }
-
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -266,6 +267,7 @@ namespace RSDKv1
             for (int y = 0; y < height; y++)
                 for (int x = 0; x < width; x++)
                     writer.Write((byte)MapLayout[y][x]);
+            writer.Close();
         }
 
     }
@@ -327,6 +329,7 @@ namespace RSDKv1
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -406,6 +409,7 @@ namespace RSDKv1
                 writer.Write((byte)(obj_yPos >> 8));
                 writer.Write((byte)(obj_yPos & 0xFF));
             }
+            writer.Close();
         }
     }
 
@@ -486,7 +490,7 @@ namespace RSDKv1
                     Console.WriteLine(reader.ReadByte());
                 }
             }
-
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -504,6 +508,7 @@ namespace RSDKv1
         internal void Write(Writer writer)
         {
 
+            writer.Close();
         }
 
             public class ParallaxValues
@@ -553,6 +558,7 @@ namespace RSDKv1
             {
                 Collision[i] = new TileConfig(reader, DCver);
             }
+            reader.Close();
         }
 
         public void Write(string filename, bool DCver)
@@ -573,6 +579,7 @@ namespace RSDKv1
             {
                 Collision[i].Write(writer, DCver);
             }
+            writer.Close();
         }
 
         public class TileConfig
@@ -697,7 +704,7 @@ namespace RSDKv1
                 BlockList.Add(currentBlock);
                 currentBlock = new Tile128();
             }
-
+            strm.Close();
         }
 
         public void Write(string filename)
@@ -751,6 +758,7 @@ namespace RSDKv1
                 tileIndex = 0;
                 chunkIndex++;
             }
+            writer.Close();
         }
 
         public Tile128 Clone(int ChunkID)
@@ -915,6 +923,7 @@ namespace RSDKv1
             this.ReadWAVConfiguration(reader);
 
             this.ReadOGGConfiguration(reader);
+            reader.Close();
         }
 
         internal void ReadObjectsSpriteSheets(Reader reader)
@@ -1003,6 +1012,7 @@ namespace RSDKv1
             WriteWAVConfiguration(writer);
 
             WriteOGGConfiguration(writer);
+            writer.Close();
         }
 
     }

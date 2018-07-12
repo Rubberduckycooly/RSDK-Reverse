@@ -39,7 +39,7 @@ namespace RSDKv4
             reader.Read(displayBytes, 0, 5); //Waste 5 bytes, I don't care about them right now.
             //The first 4 bytes are loaded into StageSystem.ActiveTileLayers. 5th byte is tLayerMidPoint.
             //If you want to know the values then look at the values for "DisplayBytes"
-            reader.Read(buffer, 0, 2); //Read Map size Width
+            reader.Read(buffer, 0, 2); //Read Map Width
 
             width = 0; height = 0;
 
@@ -65,12 +65,11 @@ namespace RSDKv4
                     //Little-Endian in RSDKv4	
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[0] + (buffer[1] << 8));
-                    //Console.WriteLine(MapLayout[y][x]);
                 }
             }
 
             // Read object data
-            //NOTE: Object data reading is wrong somehow,as either X or Y position is always 0, and every second object has a type & subtype of 0
+            //NOTE: Object data reading is wrong somehow,
             int ObjCount = 0;
 
 
@@ -80,9 +79,9 @@ namespace RSDKv4
             ObjCount |= reader.ReadByte() << 16;
             ObjCount |= reader.ReadByte() << 24;
 
-            ObjCount = ObjCount - 1;
+            Console.WriteLine(ObjCount);
 
-            //Console.WriteLine("Object Count = " + ObjCount + ", Also the reader pos =" + reader.Pos);
+            ObjCount = ObjCount - 1;
 
             int obj_type = 0;
             int obj_subtype = 0;
@@ -93,32 +92,35 @@ namespace RSDKv4
             {
             for (int n = 0; n < ObjCount; n++)
             {
-                // Object type, 1 byte, unsigned 
-                obj_type = reader.ReadByte();
 
-                // Object subtype, 1 byte, unsigned
-                obj_subtype = reader.ReadByte();
+                    // Object type, 1 byte, unsigned 
+                    obj_type = reader.ReadByte();
+                    //obj_type|= reader.ReadByte() << 8;
 
-                reader.ReadBytes(2);
+                    // Object subtype, 1 byte, unsigned
+                    obj_subtype = reader.ReadByte();
+                    //obj_subtype|= reader.ReadByte() << 8;
 
-                // X Position, 4 bytes, little-endian, unsigned
-                obj_xPos = reader.ReadByte();
-                obj_xPos |= reader.ReadByte() << 8;
-                obj_xPos |= reader.ReadByte() << 16;
-                obj_xPos |= reader.ReadByte() << 24;
+                    //Hm? What are these for?
+                    reader.ReadBytes(2);
 
-                // Y Position, 4 bytes, little-endian, unsigned
-                obj_yPos = reader.ReadByte();
-                obj_yPos |= reader.ReadByte() << 8;
-                obj_yPos |= reader.ReadByte() << 16;
-                obj_yPos |= reader.ReadByte() << 24;
+                    // X Position, 4 bytes, little-endian, unsigned
+                    obj_xPos = reader.ReadByte();
+                    obj_xPos |= reader.ReadByte() << 8;
+                    obj_xPos |= reader.ReadByte() << 16;
+                    obj_xPos |= reader.ReadByte() << 24;
 
+                    // Y Position, 4 bytes, little-endian, unsigned
+                    obj_yPos = reader.ReadByte();
+                    obj_yPos |= reader.ReadByte() << 8;
+                    obj_yPos |= reader.ReadByte() << 16;
+                    obj_yPos |= reader.ReadByte() << 24;
 
-                // Add object
-                objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
-                //Console.WriteLine(reader.BaseStream.Position + " Object "+ n + " Obj Values: Type: " + obj_type + " Subtype: " + obj_subtype + " Xpos = " + obj_xPos + " Ypos = " + obj_yPos);
+                    // Add object
+                    objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
+                    //Console.WriteLine(reader.BaseStream.Position + " Object "+ n + " Obj Values: Type: " + obj_type + " Subtype: " + obj_subtype + " Xpos = " + obj_xPos + " Ypos = " + obj_yPos);
             }
-            //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length);
+            Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length);
             }
             catch(Exception ex)
             {
@@ -187,13 +189,13 @@ namespace RSDKv4
                 // and the two other bytes are for an empty field
 
                 writer.Write((byte)(obj_type & 0xff));
-                //writer.Write(obj_type >> 8);
+                writer.Write(obj_type >> 8);
 
                 writer.Write((byte)(obj_subtype & 0xff));
-                //writer.Write(obj_subtype >> 8);
+                writer.Write(obj_subtype >> 8);
 
-                writer.Write(0);
-                writer.Write(0);
+                //writer.Write(0);
+                //writer.Write(0);
 
                 writer.Write((byte)(obj_xPos & 0xff));
                 writer.Write((byte)((obj_xPos >> 8) & 0xff));

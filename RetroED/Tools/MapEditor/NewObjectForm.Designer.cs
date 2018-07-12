@@ -39,6 +39,7 @@
             this.XposLabel = new System.Windows.Forms.Label();
             this.SubTypeLabel = new System.Windows.Forms.Label();
             this.ObjTypeLabel = new System.Windows.Forms.Label();
+            this.RemoveObjectButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YposNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).BeginInit();
@@ -48,6 +49,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.RemoveObjectButton);
             this.panel1.Controls.Add(this.CancelButton);
             this.panel1.Controls.Add(this.OKButton);
             this.panel1.Controls.Add(this.YposNUD);
@@ -173,6 +175,16 @@
             this.ObjTypeLabel.TabIndex = 0;
             this.ObjTypeLabel.Text = "Object Type:";
             // 
+            // RemoveObjectButton
+            // 
+            this.RemoveObjectButton.Location = new System.Drawing.Point(19, 201);
+            this.RemoveObjectButton.Name = "RemoveObjectButton";
+            this.RemoveObjectButton.Size = new System.Drawing.Size(140, 23);
+            this.RemoveObjectButton.TabIndex = 10;
+            this.RemoveObjectButton.Text = "Remove Object!";
+            this.RemoveObjectButton.UseVisualStyleBackColor = true;
+            this.RemoveObjectButton.Click += new System.EventHandler(this.RemoveObjectButton_Click);
+            // 
             // NewObjectForm
             // 
             this.AcceptButton = this.OKButton;
@@ -205,5 +217,6 @@
         public System.Windows.Forms.NumericUpDown SubtypeNUD;
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
+        private System.Windows.Forms.Button RemoveObjectButton;
     }
 }

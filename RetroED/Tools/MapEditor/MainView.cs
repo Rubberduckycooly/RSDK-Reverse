@@ -262,7 +262,7 @@ namespace RetroED.Tools.MapEditor
                 if (_RSDK1Level.width != OLDwidth || _RSDK1Level.height != OLDheight)
                 {
                     Console.WriteLine("Different");
-                    _RSDK1Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK1Level.width, (ushort)_RSDK1Level.height, RSDKver);
+                    _RSDK1Level.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDK1Level.width, (ushort)_RSDK1Level.height, RSDKver);
                     _mapViewer.DrawLevel();
                 }
             }
@@ -299,7 +299,8 @@ namespace RetroED.Tools.MapEditor
         ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
         {
             // fill the extended tile arrays with "empty" values
-
+            Console.WriteLine(oldHeight + " " + NewHeight);
+            Array.Resize(ref NewTiles, NewHeight);
             // if we're actaully getting shorter, do nothing!
             for (ushort i = oldHeight; i < NewHeight; i++)
             {
@@ -317,6 +318,7 @@ namespace RetroED.Tools.MapEditor
                 for (ushort j = oldWidth; j < NewWidth; j++)
                     NewTiles[i][j] = 0xffff; // and fill with blanks if wider
             }
+            _mapViewer.ResizeScrollBars();
             return NewTiles;
         }
 
@@ -648,7 +650,7 @@ namespace RetroED.Tools.MapEditor
 
         private void MenuItem_AddObject_Click(object sender, EventArgs e)
         {
-            NewObjectForm frm = new NewObjectForm();
+            NewObjectForm frm = new NewObjectForm(0);
 
             if (frm.ShowDialog(this) == DialogResult.OK)
             {

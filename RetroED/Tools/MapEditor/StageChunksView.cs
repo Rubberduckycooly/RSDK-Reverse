@@ -118,7 +118,7 @@ namespace RetroED.Tools.MapEditor
 
         private void ObjectList_DoubleClick(object sender, EventArgs e)
         {
-            NewObjectForm frm = new NewObjectForm();
+            NewObjectForm frm = new NewObjectForm(1);
             switch(loadedRSDKver)
             {
                 case 3:
@@ -149,29 +149,55 @@ namespace RetroED.Tools.MapEditor
 
             if (frm.ShowDialog(this) == DialogResult.OK)
             {
-                switch (loadedRSDKver)
+                if (frm.RemoveObject == 0)
                 {
-                    case 3:
-                        RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        MapView._RSDK1Level.objects[ObjectList.SelectedIndex] = Obj1;
-                        objectsV1[ObjectList.SelectedIndex] = Obj1;
-                        break;
-                    case 2:
-                        RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        MapView._RSDK2Level.objects[ObjectList.SelectedIndex] = Obj2;
-                        objectsV2[ObjectList.SelectedIndex] = Obj2;
-                        break;
-                    case 1:
-                        RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        MapView._RSDK3Level.objects[ObjectList.SelectedIndex] = Obj3;
-                        objectsV3[ObjectList.SelectedIndex] = Obj3;
-                        break;
-                    case 0:
-                        RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                        MapView._RSDK4Level.objects[ObjectList.SelectedIndex] = Obj4;
-                        objectsV4[ObjectList.SelectedIndex] = Obj4;
-                        break;
+                    switch (loadedRSDKver)
+                    {
+                        case 3:
+                            RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK1Level.objects[ObjectList.SelectedIndex] = Obj1;
+                            objectsV1[ObjectList.SelectedIndex] = Obj1;
+                            break;
+                        case 2:
+                            RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK2Level.objects[ObjectList.SelectedIndex] = Obj2;
+                            objectsV2[ObjectList.SelectedIndex] = Obj2;
+                            break;
+                        case 1:
+                            RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK3Level.objects[ObjectList.SelectedIndex] = Obj3;
+                            objectsV3[ObjectList.SelectedIndex] = Obj3;
+                            break;
+                        case 0:
+                            RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK4Level.objects[ObjectList.SelectedIndex] = Obj4;
+                            objectsV4[ObjectList.SelectedIndex] = Obj4;
+                            break;
+                    }
                 }
+                else if (frm.RemoveObject == 1)
+                {
+                    switch (loadedRSDKver)
+                    {
+                        case 3:
+                            MapView._RSDK1Level.objects.RemoveAt(ObjectList.SelectedIndex);
+                            //objectsV1.RemoveAt(ObjectList.SelectedIndex);
+                            break;
+                        case 2:
+                            MapView._RSDK2Level.objects.RemoveAt(ObjectList.SelectedIndex);
+                            //objectsV2.RemoveAt(ObjectList.SelectedIndex);
+                            break;
+                        case 1:
+                            MapView._RSDK3Level.objects.RemoveAt(ObjectList.SelectedIndex);
+                            //objectsV3.RemoveAt(ObjectList.SelectedIndex);
+                            break;
+                        case 0:
+                            MapView._RSDK4Level.objects.RemoveAt(ObjectList.SelectedIndex);
+                            //objectsV4.RemoveAt(ObjectList.SelectedIndex);
+                            break;
+                    }
+                }
+                
             }
             RefreshObjList();
         }

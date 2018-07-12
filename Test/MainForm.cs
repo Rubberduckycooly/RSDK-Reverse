@@ -30,7 +30,7 @@ namespace Test
             //gc.SetDevMenu();
             //gc.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic CD Source\\Data\\Game\\GameConfig2.bin");
 
-            //RSDKv2.GameConfig gc = new RSDKv2.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig.bin");
+            RSDKv2.GameConfig gc = new RSDKv2.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig.bin");
             //gc.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig2.bin");
 
             //RSDKv1.zcf zc = new RSDKv1.zcf("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EGZ\\Zone.zcf");
@@ -54,7 +54,7 @@ namespace Test
             //RSDKv1.BGLayout BGmap = new RSDKv1.BGLayout("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EHZ\\ZoneBG.map");
             //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\ZoneBG2.map");
 
-            RSDKv3.BGLayout BGmap = new RSDKv3.BGLayout("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic CD\\mods\\Testing things\\Data\\Stages\\R31A\\Backgrounds.bin");
+            //RSDKv3.BGLayout BGmap = new RSDKv3.BGLayout("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic CD\\mods\\Testing things\\Data\\Stages\\R31A\\Backgrounds.bin");
             //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic CD Source\\Data\\Stages\\R11A\\Backgrounds2.bin");
 
             //RSDKv4.BGLayout BGmap = new RSDKv4.BGLayout("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 2 Source\\Data\\Stages\\Zone01\\Backgrounds.bin");

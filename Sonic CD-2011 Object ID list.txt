@@ -1,0 +1,36 @@
+Global:
+
+1:	Player
+2:	StageSetup
+3:	HUD
+4:	Title Card
+5:      Act Finish
+6:      Death Event
+7:      Tails Object (Tails' Tail)
+8:      Pause Menu
+9: 	Ring
+10:     Lose Ring
+11:     Ring Sparkle
+12:	Monitor
+13:	Monitor, Broken
+14:	Spring, Red
+15:	Spring, Yellow
+16:	StarPost
+17:	FuturePost
+18:	PastPost
+19:	SignPost
+20:	GoalPost
+21:	Special Ring
+22:	Spikes
+23:     Smoke Puff
+24:     Explosion
+25:     Dust Puff
+26:     Blue Shield
+27:     Invincibility
+28:	Warp Star
+29:	Time Warp
+30:	Warp Sonic
+31:	Transporter
+32:	Metal Sonic Projector
+33:	Object Score
+34:	Debug Mode

@@ -1,0 +1,22 @@
+Global:
+
+1:	Stage Setup
+2:      TitleCard
+3:      HUD
+4:      Act Finish
+5:      Ring
+6:      Lose Ring
+7:      Ring Sparkle
+8:      Monitor
+9:      Broken Monitor
+10:     Red Spring
+11:     Yellow Spring
+12:     Spikes
+13:     StarPost
+14:     Explosion
+15:     PSwitch_A
+16:     PSwitch_B
+17:     PSwitch_Loop
+18:     SignPost
+19:     Invincibility
+20:     DeathEvent

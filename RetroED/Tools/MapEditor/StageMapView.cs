@@ -404,6 +404,27 @@ namespace RetroED.Tools.MapEditor
             }
         }
 
+        public void ResizeScrollBars()
+        {
+            switch (loadedRSDKver)
+            {
+                case 0:
+                    AutoScrollMinSize = new Size(_RSDK4Level.width * 128, _RSDK4Level.height * 128);
+                    break;
+                case 1:
+                    AutoScrollMinSize = new Size(_RSDK3Level.width * 128, _RSDK3Level.height * 128);
+                    break;
+                case 2:
+                    AutoScrollMinSize = new Size(_RSDK2Level.width * 128, _RSDK2Level.height * 128);
+                    break;
+                case 3:
+                    AutoScrollMinSize = new Size(_RSDK1Level.width * 128, _RSDK1Level.height * 128);
+                    break;
+                default:
+                    break;
+            }
+        }
+
         void LoadChunks()
         {
             Chunks.Clear();
@@ -461,6 +482,44 @@ namespace RetroED.Tools.MapEditor
                         tilePoint = tilePointNew;
                         SetChunk(tilePoint, (ushort)_ChunkView.selectedChunk);
                         DrawLevel();
+                    }
+                    if (PlacementMode == 2)
+                    {
+                        NewObjectForm frm = new NewObjectForm(0);
+                        frm.XposNUD.Value = e.X;
+                        frm.YposNUD.Value = e.Y;
+
+                        if (frm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            switch (loadedRSDKver)
+                            {
+                                case 3:
+                                        RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                                        _RSDK1Level.objects.Add(Obj1);
+                                        //_ChunkView.objectsV1.Add(Obj1);
+                                        _ChunkView.RefreshObjList();
+                                    break;
+                                case 2:
+                                        RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                                        _RSDK2Level.objects.Add(Obj2);
+                                        //_ChunkView.objectsV2.Add(Obj2);
+                                        _ChunkView.RefreshObjList();
+                                    break;
+                                case 1:
+                                        RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                                        _RSDK3Level.objects.Add(Obj3);
+                                        //_ChunkView.objectsV3.Add(Obj3);
+                                        _ChunkView.RefreshObjList();
+                                    break;
+                                case 0:
+                                    RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                                    _RSDK4Level.objects.Add(Obj4);
+                                    //_ChunkView.objectsV4.Add(Obj4);
+                                    _ChunkView.RefreshObjList();
+                                    break;
+                            }
+                        }
+                        //DrawLevel();
                     }
                     break;
                 case MouseButtons.Right:

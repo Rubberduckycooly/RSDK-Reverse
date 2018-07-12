@@ -13,14 +13,26 @@ namespace RetroED.Tools.MapEditor
     public partial class NewObjectForm : Form
     {
 
+        enum FormType
+        {
+            NewObject,
+            EditObject
+        }
+
         public ushort Type;
         public ushort Subtype;
         public ushort Xpos;
         public ushort Ypos;
 
-        public NewObjectForm()
+        public int RemoveObject = 0;
+
+        public NewObjectForm(int formType)
         {
             InitializeComponent();
+            if (formType == (int)FormType.NewObject)
+            {
+                RemoveObjectButton.Enabled = false;
+            }
         }
 
         private void TypeNUD_ValueChanged(object sender, EventArgs e)
@@ -52,6 +64,13 @@ namespace RetroED.Tools.MapEditor
         private void CancelButton_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
+            this.Close();
+        }
+
+        private void RemoveObjectButton_Click(object sender, EventArgs e)
+        {
+            RemoveObject = 1;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
     }
