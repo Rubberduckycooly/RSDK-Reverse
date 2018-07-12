@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace RetroED.Tools.ChunkMappingsEditor
 {
@@ -23,39 +16,50 @@ namespace RetroED.Tools.ChunkMappingsEditor
             RSDK4
         }
 
+        //What RSDK version is loaded?
         int LoadedChunkVer = (int)RSDKver.RSDK3;
 
+        //Stuff that tells the program what chunk to display
         int curChunk = 0;
         int selectedTile = 0;
         int gotoChunk = 0;
 
+        //What tile is being selected?
         Point tilepoint;
+
+        //The current Chunk
         Bitmap DisplayedChunk = new Bitmap(128, 128);
 
+        //Do we want a grid?
         bool showGrid = true;
 
+        //Where is the chunk's file path?
         string filename = null;
 
+        //Chunk Data
         RSDKv1.til Chunksv1;
         RSDKv2.Tiles128x128 Chunksv2;
         RSDKv3.Tiles128x128 Chunksv3;
         RSDKv4.Tiles128x128 Chunksv4;
 
+        //Tileset
         Bitmap Tiles;
 
-        //Auto-Set Values
+        //Should Auto-Set Be turned on?
         bool AutoSetDirectionBool = false;
         bool AutoSetVisualPlaneBool = false;
         bool AutoSetCollisionABool = false;
         bool AutoSetCollisionBBool = false;
         bool AutoSet16x16TileBool = false;
 
+        //Auto-Set Values
         byte AutoDirection;
         byte AutoVisualPlane;
         byte AutoCollisionA;
         byte AutoCollisionB;
         ushort AutoTile;
 
+        //Zoom!
         private float ZoomLevel = 1; //TODO: Add Zoom Options!
 
         public MainForm()
@@ -67,48 +71,48 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             if (LoadedChunkVer == (int)RSDKver.RSDK4)
             {
-                DisplayedChunk = Chunksv4.RenderChunk(curChunk, Tiles);
+                DisplayedChunk = Chunksv4.RenderChunk(curChunk, Tiles);//Draw the current chunk!
                 OrientationBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].Direction;
-                VisualBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
+                VisualBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].VisualPlane;//Update Chunk Values!
                 CollisionABox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv4.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv4.BlockList.Count + ":"; //What chunk are we on?
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK3)
             {
-                DisplayedChunk = Chunksv3.RenderChunk(curChunk, Tiles);
+                DisplayedChunk = Chunksv3.RenderChunk(curChunk, Tiles); //Draw the current chunk!
                 OrientationBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].Direction;
-                VisualBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
+                VisualBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].VisualPlane;//Update Chunk Values!
                 CollisionABox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv3.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv3.BlockList.Count + ":";//What chunk are we on?
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK2)
             {
-                DisplayedChunk = Chunksv2.RenderChunk(curChunk, Tiles);
+                DisplayedChunk = Chunksv2.RenderChunk(curChunk, Tiles);//Draw the current chunk!
                 OrientationBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].Direction;
-                VisualBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
+                VisualBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].VisualPlane;//Update Chunk Values!
                 CollisionABox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv2.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv2.BlockList.Count + ":";//What chunk are we on?
             }
             if (LoadedChunkVer == (int)RSDKver.RSDK1)
             {
-                DisplayedChunk = Chunksv1.RenderChunk(curChunk, Tiles);
-                OrientationBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].Orientation;
+                DisplayedChunk = Chunksv1.RenderChunk(curChunk, Tiles);//Draw the current chunk!
+                OrientationBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].Orientation; //Update Chunk Values!
                 VisualBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].VisualPlane;
                 CollisionABox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag0;
                 CollisionBBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[selectedTile].CollisionFlag1;
-                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv1.BlockList.Count + ":";
+                ChunkNoLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv1.BlockList.Count + ":";//What chunk are we on?
             }
 
             using (Graphics g = Graphics.FromImage(DisplayedChunk))
             {
 
-            if (showGrid)
+            if (showGrid) // Do we want a grid?
             {
-                Size gridCellSize = new Size(16, 16);
-                Bitmap mapLine = new Bitmap(128, 128);
+                Size gridCellSize = new Size(16 * (int)ZoomLevel, 16 * (int)ZoomLevel); // how big should each cell be?
+                Bitmap mapLine = new Bitmap(128 * (int)ZoomLevel, 128 * (int)ZoomLevel); // how big is the image?
 
                     Pen pen = new Pen(Color.DarkGray);
 
@@ -121,26 +125,26 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
                         for (int i = 0; i <= mapLine.Width; ++i)
                         {
-                            g.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, mapLine.Height);
+                            g.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, mapLine.Height); //Draw Lines every 128 Pixels along the width
                         }
 
                         for (int j = 0; j <= mapLine.Height; ++j)
                         {
-                            g.DrawLine(pen, 0, top + j * gridCellSize.Height, mapLine.Width, top + j * gridCellSize.Height);
+                            g.DrawLine(pen, 0, top + j * gridCellSize.Height, mapLine.Width, top + j * gridCellSize.Height); //Draw Lines every 128 Pixels along the height
                         }
 
                     }
 
-                    g.TranslateTransform(0, 0);
-                    g.ResetTransform();
-                    mapLine.Dispose();
+                    g.TranslateTransform(0, 0);// No idea lmao
+                    g.ResetTransform(); //Still No idea lmao
+                    mapLine.Dispose(); //Delet This!
                 }
            
-            Pen Recpen = new Pen(Color.Yellow);
-            g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16));
+            Pen Recpen = new Pen(Color.Yellow); //Draw a yellow rectangle to show the user what tile they are editing!
+            g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16)); 
         }
 
-        ChunkDisplay.BackgroundImage = DisplayedChunk;
+        ChunkDisplay.BackgroundImage = DisplayedChunk; //We want the chunk to show up! So make the background image display the currect chunk!
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -152,14 +156,14 @@ namespace RetroED.Tools.ChunkMappingsEditor
             {
                 curChunk = 0;
                 filename = dlg.FileName;
-                switch (dlg.FilterIndex - 1)
+                switch (dlg.FilterIndex - 1) //What RSDK version was loaded?
                 {
                     case 0:
                         Chunksv1 = null;
                         Chunksv2 = null;
                         Chunksv3 = null;
                         Chunksv4 = new RSDKv4.Tiles128x128(dlg.FileName);
-                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif"));
+                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         LoadedChunkVer = (int)RSDKver.RSDK4;
                         LoadTileSet(Tiles);
                         GotoNUD.Maximum = 512;
@@ -169,7 +173,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Chunksv1 = null;
                         Chunksv2 = null;
                         Chunksv3 = new RSDKv3.Tiles128x128(dlg.FileName);
-                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif"));
+                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK3;
                         LoadTileSet(Tiles);
@@ -179,7 +183,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                     case 2:
                         Chunksv1 = null;
                         Chunksv2 = new RSDKv2.Tiles128x128(dlg.FileName);
-                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif"));
+                        Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         Chunksv3 = null;
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK2;
@@ -193,10 +197,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Chunksv3 = null;
                         Chunksv4 = null;
                         LoadedChunkVer = (int)RSDKver.RSDK1;
-                        RSDKv1.gfx gfx = new RSDKv1.gfx(dlg.FileName.Replace("Zone.til", "Zone.gfx"), false);
+                        RSDKv1.gfx gfx = new RSDKv1.gfx(dlg.FileName.Replace("Zone.til", "Zone.gfx"), false); //A Zone's Tileset should be in the same folder as its chunk mappings
                         Tiles = new Bitmap(gfx.gfxImage);
                         LoadTileSet(Tiles);
-                        GotoNUD.Maximum = 256;
+                        GotoNUD.Maximum = 256; // Retro Sonic Only Supports 256 Chunks per File :(
                         RedrawChunk();
                         break;
                 }
@@ -205,15 +209,17 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         public void LoadTileSet(Bitmap TileSet)
         {
-            StageTilesList.Images.Clear();
-            int tsize = TileSet.Height;
-            for (int i = 0; i < (tsize / 16); i++)
+            StageTilesList.Images.Clear(); // Clear the previous images, since we load the entire file!
+            int tsize = TileSet.Height; //Height of the image in pixels
+            for (int i = 0; i < (tsize / 16); i++) //We divide by 16 to get the "height" in blocks
             {
-                Rectangle CropArea = new Rectangle(0, (i * 16), 16, 16);
-                Bitmap CroppedImage = CropImage(TileSet, CropArea);
-                StageTilesList.Images.Add(CroppedImage);
+                Rectangle CropArea = new Rectangle(0, (i * 16), 16, 16); //we then get tile at Y: i * 16, 
+                //we have to multiply i by 16 to get the "true Tile value" (1* 16 = 16, 2 * 16 = 32, etc.)
+
+                Bitmap CroppedImage = CropImage(TileSet, CropArea); // crop that image
+                StageTilesList.Images.Add(CroppedImage); // add it to the tile list
             }
-            StageTilesList.Refresh();
+            StageTilesList.Refresh(); // Update the tileList control
         }
 
         public Bitmap CropImage(Bitmap source, Rectangle section)
@@ -287,7 +293,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
             }
         }
 
-        private void renderEachChunkAsAnImageToolStripMenuItem_Click(object sender, EventArgs e)
+        private void renderEachChunkAsAnImageToolStripMenuItem_Click(object sender, EventArgs e) //Sounds Simple Enough...
         {
             using (System.Windows.Forms.FolderBrowserDialog dlg = new System.Windows.Forms.FolderBrowserDialog())
             {
@@ -337,13 +343,13 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void ChunkDisplay_MouseDown(object sender, MouseEventArgs e)
         {
-            tilepoint = new Point(((int)(e.X / ZoomLevel)) / 16, ((int)(e.Y / ZoomLevel)) / 16);
-            if (tilepoint.X >= 8 | tilepoint.Y >= 8) return;
-            //Console.WriteLine("Hello From " + tilepoint.X + " " + tilepoint.Y);
+            tilepoint = new Point(((int)(e.X / ZoomLevel)) / 16, ((int)(e.Y / ZoomLevel)) / 16); //Get the tile that was clicked, not the position on the screen
+            if (tilepoint.X >= 8 | tilepoint.Y >= 8) return; //Chunks dont have more than 8 tiles vertically OR horizontally!
+            
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    switch (tilepoint.Y)
+                    switch (tilepoint.Y) //calculate what tile was clicked
                     {
                         case 0:
                             selectedTile = tilepoint.X;
@@ -372,7 +378,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         default:
                             break;
                     }
-                    if (LoadedChunkVer == 1)
+                    if (LoadedChunkVer == 1) //if its on, Auto-Set Kicks in!
                     {
                         if (AutoSetDirectionBool)
                         {
@@ -395,7 +401,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                             Chunksv1.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
                         }
                     }
-                    if (LoadedChunkVer == 2)
+                    if (LoadedChunkVer == 2) //if its on, Auto-Set Kicks in!
                     {
                         if (AutoSetDirectionBool)
                         {
@@ -418,7 +424,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                             Chunksv2.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
                         }
                     }
-                    if (LoadedChunkVer == 3)
+                    if (LoadedChunkVer == 3) //if its on, Auto-Set Kicks in!
                     {
                         if (AutoSetDirectionBool)
                         {
@@ -441,7 +447,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                             Chunksv3.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
                         }
                     }
-                    if (LoadedChunkVer == 4)
+                    if (LoadedChunkVer == 4) //if its on, Auto-Set Kicks in!
                     {
                         if (AutoSetDirectionBool)
                         {
@@ -464,7 +470,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
                             Chunksv4.BlockList[curChunk].Mapping[selectedTile].Tile16x16 = AutoTile;
                         }
                     }
-                    RedrawChunk();
+                    RedrawChunk(); //If you don't know what this would do then you clearly shouldn't be here lol
               break;
             }
         }
@@ -586,18 +592,22 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void NextChunkButton_Click(object sender, EventArgs e)
         {
-            curChunk++;
-            if (curChunk > 511)
+            curChunk++; //go to the next chunk
+            if (LoadedChunkVer != (int)RSDKver.RSDK1 && curChunk > 511) //Make sure we don't go further than the amount of chunks we have
             {
                 curChunk = 511;
+            }
+            if (LoadedChunkVer == (int)RSDKver.RSDK1 && curChunk > 255) //Make sure we don't go further than the amount of chunks we have (But for Retro-Sonic this time!)
+            {
+                curChunk = 255;
             }
             RedrawChunk();
         }
 
         private void PrevChunkButton_Click(object sender, EventArgs e)
         {
-            curChunk--;
-            if (curChunk < 0)
+            curChunk--;//go to the previous chunk
+            if (curChunk < 0) //Don't go below zero
             {
                 curChunk = 0;
             }
