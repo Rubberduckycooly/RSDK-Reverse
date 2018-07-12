@@ -160,7 +160,12 @@ namespace RSDKv3
             public byte RelativeSpeed;
             public byte ConstantSpeed;
             public byte Unknown; //Flips when walking?
-
+            /*
+            CD has 3 Bytes called: 
+            Parallax Factor,
+            Scroll Speed and
+            Scroll Pos
+            */
             public ParallaxValues(Reader reader)
             {
                 LineNo = reader.ReadByte();
