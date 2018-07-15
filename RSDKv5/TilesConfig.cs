@@ -68,7 +68,6 @@ namespace RSDKv5
                 for (int i = 0; i < TILES_COUNT; ++i)
                     CollisionPath2[i] = new TileConfig(creader);
             }
-            reader.ReadByte();
         }
     }
 }

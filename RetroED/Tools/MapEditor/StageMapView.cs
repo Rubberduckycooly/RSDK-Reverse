@@ -15,6 +15,9 @@ namespace RetroED.Tools.MapEditor
         //What RSDK version is loaded?
         public int loadedRSDKver = 0;
 
+        //Where is the data folder?
+        public string datapath;
+
         //the tileset
         public Image _tiles;
 
@@ -33,22 +36,22 @@ namespace RetroED.Tools.MapEditor
         public bool ShowCollision = false;
         public bool ShowGrid = false;
 
-        //Built-In Object Definitions for your convenience
+        //Built-In Object Definitions for your convenience ;)
 
         //Retro-Sonic Global Objects
-        Object_Definitions.Retro_SonicGlobalObjects RSObjects = new Object_Definitions.Retro_SonicGlobalObjects();
+        public Object_Definitions.Retro_SonicObjects RSObjects = new Object_Definitions.Retro_SonicObjects();
 
         //Sonic Nexus Global Objects
-        Object_Definitions.SonicNexusGlobalObjects NexusObjects = new Object_Definitions.SonicNexusGlobalObjects();
+        public Object_Definitions.SonicNexusObjects NexusObjects = new Object_Definitions.SonicNexusObjects();
 
         //Sonic CD Global Objects
-        Object_Definitions.SonicCDGlobalObjects CDObjects = new Object_Definitions.SonicCDGlobalObjects();
+        public Object_Definitions.SonicCDObjects CDObjects = new Object_Definitions.SonicCDObjects();
 
         //Sonic 1 Global Objects
-        Object_Definitions.Sonic1GlobalObjects S1Objects = new Object_Definitions.Sonic1GlobalObjects();
+        public Object_Definitions.Sonic1Objects S1Objects = new Object_Definitions.Sonic1Objects();
 
         //Sonic 2 Global Objects
-        Object_Definitions.Sonic2GlobalObjects S2Objects = new Object_Definitions.Sonic2GlobalObjects();
+        public Object_Definitions.Sonic2Objects S2Objects = new Object_Definitions.Sonic2Objects();
 
         public List<Bitmap> Chunks = new List<Bitmap>();
 
@@ -56,28 +59,24 @@ namespace RetroED.Tools.MapEditor
 
         #region Retro-Sonic Development Kit
         public RSDKv1.Level _RSDK1Level;
-        public RSDKv1.BGLayout _RSDK1Background;
         public RSDKv1.til _RSDK1Chunks;
         public RSDKv1.tcf _RSDK1CollisionMask;
         #endregion
 
         #region RSDKv1
         public RSDKv2.Level _RSDK2Level;
-        public RSDKv2.BGLayout _RSDK2Background;
         public RSDKv2.Tiles128x128 _RSDK2Chunks;
         public RSDKv2.CollisionMask _RSDK2CollisionMask;
         #endregion
 
         #region RSDKv2
         public RSDKv3.Level _RSDK3Level;
-        public RSDKv3.BGLayout _RSDK3Background;
         public RSDKv3.Tiles128x128 _RSDK3Chunks;
         public RSDKv3.CollisionMask _RSDK3CollisionMask;
         #endregion
 
         #region RSDKvB
         public RSDKv4.Level _RSDK4Level;
-        public RSDKv4.BGLayout _RSDK4Background;
         public RSDKv4.Tiles128x128 _RSDK4Chunks;
         public RSDKv4.CollisionMask _RSDK4CollisionMask;
         #endregion
@@ -133,6 +132,24 @@ namespace RetroED.Tools.MapEditor
                             }
                         }
                     }
+                    if (ShowObjects) //Heh, It works now :)
+                    {
+                        for (int o = 0; o < _RSDK4Level.objects.Count; o++)
+                        {
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK4Level.objects[o].xPos, _RSDK4Level.objects[o].yPos, viewport4.Width, viewport4.Height)))
+                            {
+                                Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK4Level.objects[o].type, _RSDK4Level.objects[o].subtype);
+                                if (mapobj != null && mapobj.ID > 0)
+                                {
+                                    e.Graphics.DrawImageUnscaled(mapobj.RenderObject(loadedRSDKver, datapath), _RSDK4Level.objects[o].xPos, _RSDK4Level.objects[o].yPos);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK4Level.objects[o].xPos, _RSDK4Level.objects[o].yPos);
+                                }
+                            }
+                        }
+                    }
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -181,14 +198,28 @@ namespace RetroED.Tools.MapEditor
                                         }
                                         else { }
                                     }
-                                    /*if (ShowCollision)
+                                    if (ShowCollision)
                                     {
 
                                     }
-                                    if (ShowObjects)
-                                    {
-
-                                    }*/
+                                }
+                            }
+                        }
+                    }
+                    if (ShowObjects) //Heh, It works now :)
+                    {
+                        for (int o = 0; o < _RSDK3Level.objects.Count; o++)
+                        {
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK3Level.objects[o].xPos, _RSDK3Level.objects[o].yPos, viewport3.Width, viewport3.Height)))
+                            {
+                                Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK3Level.objects[o].type, _RSDK3Level.objects[o].subtype);
+                                if (mapobj != null && mapobj.ID > 0)
+                                {
+                                    e.Graphics.DrawImageUnscaled(mapobj.RenderObject(loadedRSDKver, datapath), _RSDK3Level.objects[o].xPos, _RSDK3Level.objects[o].yPos);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK3Level.objects[o].xPos, _RSDK3Level.objects[o].yPos);
                                 }
                             }
                         }
@@ -245,11 +276,26 @@ namespace RetroED.Tools.MapEditor
                                     {
 
                                     }
-                                    if (ShowObjects)
-                                    {
-
-                                    }
                                 }
+                            }
+                        }
+                    }
+                    if (ShowObjects) //Heh, It works now :)
+                    {
+                        for (int o = 0; o < _RSDK2Level.objects.Count; o++)
+                        {
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK2Level.objects[o].xPos, _RSDK2Level.objects[o].yPos, viewport2.Width, viewport2.Height)))
+                            {
+                                Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK2Level.objects[o].type, _RSDK2Level.objects[o].subtype);
+                                if (mapobj != null && mapobj.ID > 0)
+                                {
+                                    e.Graphics.DrawImageUnscaled(mapobj.RenderObject(loadedRSDKver, datapath), _RSDK2Level.objects[o].xPos, _RSDK2Level.objects[o].yPos);
+                                }
+                                else
+                                {
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK2Level.objects[o].xPos, _RSDK2Level.objects[o].yPos);
+                                }
+                                //Console.WriteLine(o);
                             }
                         }
                     }
@@ -314,20 +360,25 @@ namespace RetroED.Tools.MapEditor
                             }
                         }
 
-                        if (ShowObjects) //Heh
+                    }
+                    if (ShowObjects) //Heh, It works now :)
+                    {
+                        for (int o = 0; o < _RSDK1Level.objects.Count; o++)
                         {
-                            //Console.WriteLine(_RSDK1Level.objects.Count);
-                            /*for (int o = 0; o < _RSDK1Level.objects.Count; o++)
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK1Level.objects[o].xPos, _RSDK1Level.objects[o].yPos, viewport1.Width, viewport1.Height)))
                             {
                                 Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK1Level.objects[o].type, _RSDK1Level.objects[o].subtype);
-                                if (mapobj != null)
+                                if (mapobj != null && mapobj.ID >0)
                                 {
-                                    e.Graphics.DrawImageUnscaled(mapobj.RenderObject(), new Point(_RSDK1Level.objects[o].xPos, _RSDK1Level.objects[o].yPos));
+                                   e.Graphics.DrawImageUnscaled(mapobj.RenderObject(loadedRSDKver,datapath), _RSDK1Level.objects[o].xPos, _RSDK1Level.objects[o].yPos);
                                 }
-                                Console.WriteLine(o);
-                            }*/
+                                else
+                                {
+                                   e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK1Level.objects[o].xPos, _RSDK1Level.objects[o].yPos);
+                                }
+                                //Console.WriteLine(o);
+                            }
                         }
-
                     }
                     if (ShowGrid) //If we want a grid, then draw it over the map
                     {
@@ -502,25 +553,28 @@ namespace RetroED.Tools.MapEditor
                                         RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
                                     _RSDK1Level.objects.Add(Obj1); //Add it to the map!
                                     _ChunkView.RefreshObjList(); //Update the list!
+                                    DrawLevel();
                                     break;
                                 case 2:
                                         RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
                                     _RSDK2Level.objects.Add(Obj2); //Add it to the map!
                                     _ChunkView.RefreshObjList(); //Update the list!
+                                    DrawLevel();
                                     break;
                                 case 1:
                                         RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
                                     _RSDK3Level.objects.Add(Obj3); //Add it to the map!
                                     _ChunkView.RefreshObjList(); //Update the list!
+                                    DrawLevel();
                                     break;
                                 case 0:
                                     RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
                                     _RSDK4Level.objects.Add(Obj4); //Add it to the map!
                                     _ChunkView.RefreshObjList(); //Update the list!
+                                    DrawLevel();
                                     break;
                             }
                         }
-                        //DrawLevel();
                     }
                     break;
                 case MouseButtons.Right:

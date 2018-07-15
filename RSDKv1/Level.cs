@@ -588,9 +588,9 @@ namespace RSDKv1
             //DC version doesnt have this unknown value
             public byte PCunknown; //if it's Value is FF it causes the player's collision & gravity to be disabled until jumping, 00 causes the player to be unstuck from the tile
             //May be a "Tile Stickiness Value"
-            public byte[] tileCollisiondataP1 = new byte[32]; //Collision Values for Path A
+            public byte[] CollisionP1 = new byte[32]; //Collision Values for Path A
             public byte[] unknownP1 = new byte[32]; 
-            public byte[] tileCollisiondataP2 = new byte[32]; //Collision Values for Path B
+            public byte[] CollisionP2 = new byte[32]; //Collision Values for Path B
             public byte[] unknownP2 = new byte[32]; 
 
             public TileConfig(string filename, bool DCver) : this(new Reader(filename), DCver)
@@ -605,22 +605,19 @@ namespace RSDKv1
             {
                 if (DCver)
                 {
+                    CollisionP1 = reader.ReadBytes(32);
+                    CollisionP1 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path A)
                     unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
-                    tileCollisiondataP1 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                    CollisionP2 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path B)
                     unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
-                    tileCollisiondataP2 = reader.ReadBytes(32); //Read the 16 Bytes into the array
-                    //unknownP1 = reader.ReadBytes(32);
-                    //unknownP2 = reader.ReadBytes(32);
-                    //tileCollisiondataP1 = reader.ReadBytes(32);
-                    //tileCollisiondataP2 = reader.ReadBytes(32);
                 }
                 else if (!DCver)
                 {
                     PCunknown = reader.ReadByte(); // Single Byte
+                    CollisionP1 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path A)
                     unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
-                    tileCollisiondataP1 = reader.ReadBytes(32); //Read the 16 Bytes into the array
+                    CollisionP2 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path B)
                     unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
-                    tileCollisiondataP2 = reader.ReadBytes(32); //Read the 16 Bytes into the array
                 }
             }
 
@@ -640,18 +637,18 @@ namespace RSDKv1
             {
                 if (DCver)
                 {
+                    writer.Write(CollisionP1);
                     writer.Write(unknownP1);
+                    writer.Write(CollisionP2);
                     writer.Write(unknownP2);
-                    writer.Write(tileCollisiondataP1);
-                    writer.Write(tileCollisiondataP2);
                 }
                 else if (!DCver)
                 {
                     writer.Write(PCunknown);
+                    writer.Write(CollisionP1);
                     writer.Write(unknownP1);
-                    writer.Write(tileCollisiondataP1);
+                    writer.Write(CollisionP2);
                     writer.Write(unknownP2);
-                    writer.Write(tileCollisiondataP2);
                 }
             }
         }

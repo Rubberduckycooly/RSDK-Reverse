@@ -434,6 +434,7 @@
             this.ChunkDisplay.Name = "ChunkDisplay";
             this.ChunkDisplay.Size = new System.Drawing.Size(426, 425);
             this.ChunkDisplay.TabIndex = 3;
+            this.ChunkDisplay.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
             // 
             // CurChunkChangePanel
             // 

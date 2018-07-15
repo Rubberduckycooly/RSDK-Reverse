@@ -30,7 +30,7 @@ namespace Test
             //gc.SetDevMenu();
             //gc.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic CD Source\\Data\\Game\\GameConfig2.bin");
 
-            RSDKv2.GameConfig gc = new RSDKv2.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig.bin");
+            //RSDKv2.GameConfig gc = new RSDKv2.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig.bin");
             //gc.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Nexus Source\\Data\\Game\\GameConfig2.bin");
 
             //RSDKv1.zcf zc = new RSDKv1.zcf("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EGZ\\Zone.zcf");
@@ -76,147 +76,178 @@ namespace Test
 
             //RSDKv1.gfx img = new RSDKv1.gfx("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Levels\\EGZ\\Zone.gfx");
 
-            //RSDKv1.tcf tc = new RSDKv1.tcf("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\WHZ\\ZoneOG.tcf", true);
+            //RSDKv1.tcf tc = new RSDKv1.tcf("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EGZ\\ZoneOG.tcf", false);
 
-            //for (int i = 0; i < 1024; i++)
-            //{
+            for (int i = 0; i < 1024; i++)
+            {
+                //tc.Collision[i].PCunknown = 68;
 
-            //tc.Collision[i].PCunknown = 68;
+                //These Seem to control the Tile properties somehow?
 
-            /*tc.Collision[i].tileCollisiondataP1[0] = 0;
-            tc.Collision[i].tileCollisiondataP1[1] = 0;
-            tc.Collision[i].tileCollisiondataP1[2] = 0;
-            tc.Collision[i].tileCollisiondataP1[3] = 0;
-            tc.Collision[i].tileCollisiondataP1[4] = 0;
-            tc.Collision[i].tileCollisiondataP1[5] = 0;
-            tc.Collision[i].tileCollisiondataP1[6] = 0;
-            tc.Collision[i].tileCollisiondataP1[7] = 0;
-            tc.Collision[i].tileCollisiondataP1[8] = 0;
-            tc.Collision[i].tileCollisiondataP1[9] = 0;
-            tc.Collision[i].tileCollisiondataP1[10] = 0;
-            tc.Collision[i].tileCollisiondataP1[11] = 0;
-            tc.Collision[i].tileCollisiondataP1[12] = 0;
-            tc.Collision[i].tileCollisiondataP1[13] = 0;
-            tc.Collision[i].tileCollisiondataP1[14] = 0;
-            tc.Collision[i].tileCollisiondataP1[15] = 0;
-            tc.Collision[i].tileCollisiondataP1[16] = 0;
-            tc.Collision[i].tileCollisiondataP1[17] = 0;
-            tc.Collision[i].tileCollisiondataP1[18] = 0;
-            tc.Collision[i].tileCollisiondataP1[19] = 0;
-            tc.Collision[i].tileCollisiondataP1[20] = 0;
-            tc.Collision[i].tileCollisiondataP1[21] = 0;
-            tc.Collision[i].tileCollisiondataP1[22] = 0;
-            tc.Collision[i].tileCollisiondataP1[23] = 0;
-            tc.Collision[i].tileCollisiondataP1[24] = 0;
-            tc.Collision[i].tileCollisiondataP1[25] = 0;
-            tc.Collision[i].tileCollisiondataP1[26] = 0;
-            tc.Collision[i].tileCollisiondataP1[27] = 0;
-            tc.Collision[i].tileCollisiondataP1[28] = 0;
-            tc.Collision[i].tileCollisiondataP1[29] = 0;
-            tc.Collision[i].tileCollisiondataP1[30] = 0;
-            tc.Collision[i].tileCollisiondataP1[31] = 0;*/
+                /*tc.Collision[i].unknownP1[0] = 255;
+                tc.Collision[i].unknownP1[1] = 255;
+                tc.Collision[i].unknownP1[2] = 255;
+                tc.Collision[i].unknownP1[3] = 255;
+                tc.Collision[i].unknownP1[4] = 255;
+                tc.Collision[i].unknownP1[5] = 255;
+                tc.Collision[i].unknownP1[6] = 255;
+                tc.Collision[i].unknownP1[7] = 255;
+            tc.Collision[i].unknownP1[8] = 255;
+            tc.Collision[i].unknownP1[9] = 255;
+            tc.Collision[i].unknownP1[10] = 255;
+            tc.Collision[i].unknownP1[11] = 255;
+            tc.Collision[i].unknownP1[12] = 255;
+            tc.Collision[i].unknownP1[13] = 255;
+            tc.Collision[i].unknownP1[14] = 255;
+            tc.Collision[i].unknownP1[15] = 255;
+            tc.Collision[i].unknownP1[16] = 255;
+        tc.Collision[i].unknownP1[17] = 255;
+        tc.Collision[i].unknownP1[18] = 255;
+        tc.Collision[i].unknownP1[19] = 255;
+        tc.Collision[i].unknownP1[20] = 255;
+        tc.Collision[i].unknownP1[21] = 255;
+        tc.Collision[i].unknownP1[22] = 255;
+        tc.Collision[i].unknownP1[23] = 255;
+        tc.Collision[i].unknownP1[24] = 255;
+        tc.Collision[i].unknownP1[25] = 255;
+        tc.Collision[i].unknownP1[26] = 255;
+        tc.Collision[i].unknownP1[27] = 255;
+        tc.Collision[i].unknownP1[28] = 255;
+        tc.Collision[i].unknownP1[29] = 255;
+        tc.Collision[i].unknownP1[30] = 255;
+        tc.Collision[i].unknownP1[31] = 255;*/
 
-            /*tc.Collision[i].tileCollisiondataP2[0] = 0;
-            tc.Collision[i].tileCollisiondataP2[1] = 0;
-            tc.Collision[i].tileCollisiondataP2[2] = 0;
-            tc.Collision[i].tileCollisiondataP2[3] = 0;
-            tc.Collision[i].tileCollisiondataP2[4] = 0;
-            tc.Collision[i].tileCollisiondataP2[5] = 0;
-            tc.Collision[i].tileCollisiondataP2[6] = 0;
-            tc.Collision[i].tileCollisiondataP2[7] = 0;
-            tc.Collision[i].tileCollisiondataP2[8] = 0;
-            tc.Collision[i].tileCollisiondataP2[9] = 0;
-            tc.Collision[i].tileCollisiondataP2[10] = 0;
-            tc.Collision[i].tileCollisiondataP2[11] = 0;
-            tc.Collision[i].tileCollisiondataP2[12] = 0;
-            tc.Collision[i].tileCollisiondataP2[13] = 0;
-            tc.Collision[i].tileCollisiondataP2[14] = 0;
-            tc.Collision[i].tileCollisiondataP2[15] = 0;
-            tc.Collision[i].tileCollisiondataP2[16] = 0;
-            tc.Collision[i].tileCollisiondataP2[17] = 0;
-            tc.Collision[i].tileCollisiondataP2[18] = 0;
-            tc.Collision[i].tileCollisiondataP2[19] = 0;
-            tc.Collision[i].tileCollisiondataP2[20] = 0;
-            tc.Collision[i].tileCollisiondataP2[21] = 0;
-            tc.Collision[i].tileCollisiondataP2[22] = 0;
-            tc.Collision[i].tileCollisiondataP2[23] = 0;
-            tc.Collision[i].tileCollisiondataP2[24] = 0;
-            tc.Collision[i].tileCollisiondataP2[25] = 0;
-            tc.Collision[i].tileCollisiondataP2[26] = 0;
-            tc.Collision[i].tileCollisiondataP2[27] = 0;
-            tc.Collision[i].tileCollisiondataP2[28] = 0;
-            tc.Collision[i].tileCollisiondataP2[29] = 0;
-            tc.Collision[i].tileCollisiondataP2[30] = 0;
-            tc.Collision[i].tileCollisiondataP2[31] = 0;*/
+                /*tc.Collision[i].unknownP2[0] = 0;
+                tc.Collision[i].unknownP2[1] = 0;
+                tc.Collision[i].unknownP2[2] = 0;
+                tc.Collision[i].unknownP2[3] = 0;
+                tc.Collision[i].unknownP2[4] = 0;
+                tc.Collision[i].unknownP2[5] = 0;
+                tc.Collision[i].unknownP2[6] = 0;
+                tc.Collision[i].unknownP2[7] = 0;
+                tc.Collision[i].unknownP2[8] = 0;
+                tc.Collision[i].unknownP2[9] = 0;
+                tc.Collision[i].unknownP2[10] = 0;
+                tc.Collision[i].unknownP2[11] = 0;
+                tc.Collision[i].unknownP2[12] = 0;
+                tc.Collision[i].unknownP2[13] = 0;
+                tc.Collision[i].unknownP2[14] = 0;
+                tc.Collision[i].unknownP2[15] = 0;
+                tc.Collision[i].unknownP2[16] = 1;
+                tc.Collision[i].unknownP2[17] = 1;
+                tc.Collision[i].unknownP2[18] = 1;
+                tc.Collision[i].unknownP2[19] = 1;
+                tc.Collision[i].unknownP2[20] = 1;
+                tc.Collision[i].unknownP2[21] = 1;
+                tc.Collision[i].unknownP2[22] = 1;
+                tc.Collision[i].unknownP2[23] = 1;
+                tc.Collision[i].unknownP2[24] = 1;
+                tc.Collision[i].unknownP2[25] = 1;
+                tc.Collision[i].unknownP2[26] = 1;
+                tc.Collision[i].unknownP2[27] = 1;
+                tc.Collision[i].unknownP2[28] = 1;
+                tc.Collision[i].unknownP2[29] = 1;
+                tc.Collision[i].unknownP2[30] = 1;
+                tc.Collision[i].unknownP2[31] = 1;*/
 
-            /*tc.Collision[i].unknownP1[0] = 0;
-            tc.Collision[i].unknownP1[1] = 0;
-            tc.Collision[i].unknownP1[2] = 0;
-            tc.Collision[i].unknownP1[3] = 0;
-            tc.Collision[i].unknownP1[4] = 0;
-            tc.Collision[i].unknownP1[5] = 0;
-            tc.Collision[i].unknownP1[6] = 0;
-            tc.Collision[i].unknownP1[7] = 0;
-            tc.Collision[i].unknownP1[8] = 0;
-            tc.Collision[i].unknownP1[9] = 0;
-            tc.Collision[i].unknownP1[10] = 0;
-            tc.Collision[i].unknownP1[11] = 0;
-            tc.Collision[i].unknownP1[12] = 0;
-            tc.Collision[i].unknownP1[13] = 0;
-            tc.Collision[i].unknownP1[14] = 0;
-            tc.Collision[i].unknownP1[15] = 0;
-            tc.Collision[i].unknownP1[16] = 1;
-            tc.Collision[i].unknownP1[17] = 1;
-            tc.Collision[i].unknownP1[18] = 1;
-            tc.Collision[i].unknownP1[19] = 1;
-            tc.Collision[i].unknownP1[20] = 1;
-            tc.Collision[i].unknownP1[21] = 1;
-            tc.Collision[i].unknownP1[22] = 1;
-            tc.Collision[i].unknownP1[23] = 1;
-            tc.Collision[i].unknownP1[24] = 1;
-            tc.Collision[i].unknownP1[25] = 1;
-            tc.Collision[i].unknownP1[26] = 1;
-            tc.Collision[i].unknownP1[27] = 1;
-            tc.Collision[i].unknownP1[28] = 1;
-            tc.Collision[i].unknownP1[29] = 1;
-            tc.Collision[i].unknownP1[30] = 1;
-            tc.Collision[i].unknownP1[31] = 1;*/
+                //I'm 90% sure that these Values are angles for the tile, but then WHY ARE THERE 32 BYTES?
+                /*
+                tc.Collision[i].CollisionP1[0] = 128;
+                tc.Collision[i].CollisionP1[1] = 128;
+                tc.Collision[i].CollisionP1[2] = 128;
+                tc.Collision[i].CollisionP1[3] = 128;
+                tc.Collision[i].CollisionP1[4] = 128;
+                tc.Collision[i].CollisionP1[5] = 128;
+                tc.Collision[i].CollisionP1[6] = 128;
+                tc.Collision[i].CollisionP1[7] = 128;
+                tc.Collision[i].CollisionP1[8] = 128;
+                tc.Collision[i].CollisionP1[9] = 128;
+                tc.Collision[i].CollisionP1[10] = 128;
+                tc.Collision[i].CollisionP1[11] = 128;
+                tc.Collision[i].CollisionP1[12] = 128;
+                tc.Collision[i].CollisionP1[13] = 128;
+                tc.Collision[i].CollisionP1[14] = 128;
+                tc.Collision[i].CollisionP1[15] = 128;
+                tc.Collision[i].CollisionP1[16] = 128;
+                tc.Collision[i].CollisionP1[17] = 128;
+                tc.Collision[i].CollisionP1[18] = 128;
+                tc.Collision[i].CollisionP1[19] = 128;
+                tc.Collision[i].CollisionP1[20] = 128;
+                tc.Collision[i].CollisionP1[21] = 128;
+                tc.Collision[i].CollisionP1[22] = 128;
+                tc.Collision[i].CollisionP1[23] = 128;
+                tc.Collision[i].CollisionP1[24] = 128;
+                tc.Collision[i].CollisionP1[25] = 128;
+                tc.Collision[i].CollisionP1[26] = 128;
+                tc.Collision[i].CollisionP1[27] = 128;
+                tc.Collision[i].CollisionP1[28] = 128;
+                tc.Collision[i].CollisionP1[29] = 128;
+                tc.Collision[i].CollisionP1[30] = 128;
+                tc.Collision[i].CollisionP1[31] = 128;*/
 
-            /*tc.Collision[i].unknownP2[0] = 0;
-            tc.Collision[i].unknownP2[1] = 0;
-            tc.Collision[i].unknownP2[2] = 0;
-            tc.Collision[i].unknownP2[3] = 0;
-            tc.Collision[i].unknownP2[4] = 0;
-            tc.Collision[i].unknownP2[5] = 0;
-            tc.Collision[i].unknownP2[6] = 0;
-            tc.Collision[i].unknownP2[7] = 0;
-            tc.Collision[i].unknownP2[8] = 0;
-            tc.Collision[i].unknownP2[9] = 0;
-            tc.Collision[i].unknownP2[10] = 0;
-            tc.Collision[i].unknownP2[11] = 0;
-            tc.Collision[i].unknownP2[12] = 0;
-            tc.Collision[i].unknownP2[13] = 0;
-            tc.Collision[i].unknownP2[14] = 0;
-            tc.Collision[i].unknownP2[15] = 0;
-            tc.Collision[i].unknownP2[16] = 1;
-            tc.Collision[i].unknownP2[17] = 1;
-            tc.Collision[i].unknownP2[18] = 1;
-            tc.Collision[i].unknownP2[19] = 1;
-            tc.Collision[i].unknownP2[20] = 1;
-            tc.Collision[i].unknownP2[21] = 1;
-            tc.Collision[i].unknownP2[22] = 1;
-            tc.Collision[i].unknownP2[23] = 1;
-            tc.Collision[i].unknownP2[24] = 1;
-            tc.Collision[i].unknownP2[25] = 1;
-            tc.Collision[i].unknownP2[26] = 1;
-            tc.Collision[i].unknownP2[27] = 1;
-            tc.Collision[i].unknownP2[28] = 1;
-            tc.Collision[i].unknownP2[29] = 1;
-            tc.Collision[i].unknownP2[30] = 1;
-            tc.Collision[i].unknownP2[31] = 1;*/
-            //}
 
-            //tc.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\WHZ\\Zone.tcf", false);
+                /*tc.Collision[i].CollisionP2[0] = 0;
+                tc.Collision[i].CollisionP2[1] = 0;
+                tc.Collision[i].CollisionP2[2] = 0;
+                tc.Collision[i].CollisionP2[3] = 0;
+                tc.Collision[i].CollisionP2[4] = 0;
+                tc.Collision[i].CollisionP2[5] = 0;
+                tc.Collision[i].CollisionP2[6] = 0;
+                tc.Collision[i].CollisionP2[7] = 0;
+                tc.Collision[i].CollisionP2[8] = 0;
+                tc.Collision[i].CollisionP2[9] = 0;
+                tc.Collision[i].CollisionP2[10] = 0;
+                tc.Collision[i].CollisionP2[11] = 0;
+                tc.Collision[i].CollisionP2[12] = 0;
+                tc.Collision[i].CollisionP2[13] = 0;
+                tc.Collision[i].CollisionP2[14] = 0;
+                tc.Collision[i].CollisionP2[15] = 0;
+                tc.Collision[i].CollisionP2[16] = 0;
+                tc.Collision[i].CollisionP2[17] = 0;
+                tc.Collision[i].CollisionP2[18] = 0;
+                tc.Collision[i].CollisionP2[19] = 0;
+                tc.Collision[i].CollisionP2[20] = 0;
+                tc.Collision[i].CollisionP2[21] = 0;
+                tc.Collision[i].CollisionP2[22] = 0;
+                tc.Collision[i].CollisionP2[23] = 0;
+                tc.Collision[i].CollisionP2[24] = 0;
+                tc.Collision[i].CollisionP2[25] = 0;
+                tc.Collision[i].CollisionP2[26] = 0;
+                tc.Collision[i].CollisionP2[27] = 0;
+                tc.Collision[i].CollisionP2[28] = 0;
+                tc.Collision[i].CollisionP2[29] = 0;
+                tc.Collision[i].CollisionP2[30] = 0;
+                tc.Collision[i].CollisionP2[31] = 0;*/
+            }
+
+            //tc.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EGZ\\Zone.tcf", false);
+
+            //RSDKv2.CollisionMask cm = new RSDKv2.CollisionMask("C:\\Users\\owner\\Documents\\Fan Games\\Sonic Nexus\\Data\\Stages\\SSZ\\CollisionMasks2.bin");
+
+            for (int i = 0; i < 1024; i++)
+            {
+               /* //cm.Collision[i].Config[0] = 255; //Unknown, Makes the collision wonky if set to 255
+                //cm.Collision[i].Config[1] = 0; //Slope
+                //cm.Collision[i].Config[2] = 0; //Physics/Stickyness
+                //cm.Collision[i].Config[3] = 0; //Unknown
+                //cm.Collision[i].Config[4] = 255; //Unknown, if set to 255 it destroys the game's physics, (changes angle, stops player from using "Spin Tubes" & can even "Zip" the player)
+                if (i > 0)
+                {
+                cm.Collision[i].Collision[0] = 255;
+                cm.Collision[i].Collision[1] = 255;
+                cm.Collision[i].Collision[2] = 255;
+                cm.Collision[i].Collision[3] = 255;
+                cm.Collision[i].Collision[4] = 255;
+                cm.Collision[i].Collision[5] = 255;
+                cm.Collision[i].Collision[6] = 255;
+                cm.Collision[i].Collision[7] = 236;
+                cm.Collision[i].Collision[8] = 255;
+                cm.Collision[i].Collision[9] = 255;
+                }
+*/
+            }
+
+            //cm.Write("C:\\Users\\owner\\Documents\\Fan Games\\Sonic Nexus\\Data\\Stages\\SSZ\\CollisionMasks.bin");
 
             //RSDKv3.CollisionMask cm = new RSDKv3.CollisionMask("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic CD\\mods\\Testing things\\Data\\Stages\\R12A\\CollisionMasks2.bin");
 

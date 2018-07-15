@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace RetroED.Tools.MapEditor.Object_Definitions
 {
-    class SonicNexusGlobalObjects
+    public class SonicNexusObjects
     {
         MapObject Blank = new MapObject();
 
@@ -32,32 +32,32 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         MapObject DeathEvent = new MapObject("DeathEvent", 20, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
 
-        public Dictionary<Point, MapObject> GlobalObjects = new Dictionary<Point, MapObject>();
+        public Dictionary<Point, MapObject> Objects = new Dictionary<Point, MapObject>();
 
-        public SonicNexusGlobalObjects()
+        public SonicNexusObjects()
         {
-            GlobalObjects.Add(new Point(Blank.ID, Blank.SubType), Blank);
+            Objects.Add(new Point(Blank.ID, Blank.SubType), Blank);
 
-            GlobalObjects.Add(new Point(StageSetup.ID, StageSetup.SubType), StageSetup);
-            GlobalObjects.Add(new Point(HUD.ID, HUD.SubType), HUD);
-            GlobalObjects.Add(new Point(TitleCard.ID, TitleCard.SubType), TitleCard);
-            GlobalObjects.Add(new Point(ActFinish.ID, ActFinish.SubType), ActFinish);
-            GlobalObjects.Add(new Point(Ring.ID, Ring.SubType), Ring);
-            GlobalObjects.Add(new Point(Ring2.ID, Ring2.SubType), Ring2);
-            GlobalObjects.Add(new Point(RingSparkle.ID, RingSparkle.SubType), RingSparkle);
-            GlobalObjects.Add(new Point(Monitor.ID, Monitor.SubType), Monitor);
-            GlobalObjects.Add(new Point(BrokenMonitor.ID, BrokenMonitor.SubType), BrokenMonitor);
-            GlobalObjects.Add(new Point(SpringRed.ID, SpringRed.SubType), SpringRed);
-            GlobalObjects.Add(new Point(SpringYellow.ID, SpringYellow.SubType), SpringYellow);
-            GlobalObjects.Add(new Point(Spikes.ID, Spikes.SubType), Spikes);
-            GlobalObjects.Add(new Point(StarPost.ID, StarPost.SubType), StarPost);
-            GlobalObjects.Add(new Point(Explosion.ID, Explosion.SubType), Explosion);
-            GlobalObjects.Add(new Point(PlaneSwitchA.ID, PlaneSwitchA.SubType), PlaneSwitchA);
-            GlobalObjects.Add(new Point(PlaneSwitchB.ID, PlaneSwitchB.SubType), PlaneSwitchB);
-            GlobalObjects.Add(new Point(PlaneSwitchLoop.ID, PlaneSwitchLoop.SubType), PlaneSwitchLoop);
-            GlobalObjects.Add(new Point(SignPost.ID, SignPost.SubType), SignPost);
-            GlobalObjects.Add(new Point(Invincibility.ID, Invincibility.SubType), Invincibility);
-            GlobalObjects.Add(new Point(DeathEvent.ID, DeathEvent.SubType), DeathEvent);
+            Objects.Add(new Point(StageSetup.ID, StageSetup.SubType), StageSetup);
+            Objects.Add(new Point(HUD.ID, HUD.SubType), HUD);
+            Objects.Add(new Point(TitleCard.ID, TitleCard.SubType), TitleCard);
+            Objects.Add(new Point(ActFinish.ID, ActFinish.SubType), ActFinish);
+            Objects.Add(new Point(Ring.ID, Ring.SubType), Ring);
+            Objects.Add(new Point(Ring2.ID, Ring2.SubType), Ring2);
+            Objects.Add(new Point(RingSparkle.ID, RingSparkle.SubType), RingSparkle);
+            Objects.Add(new Point(Monitor.ID, Monitor.SubType), Monitor);
+            Objects.Add(new Point(BrokenMonitor.ID, BrokenMonitor.SubType), BrokenMonitor);
+            Objects.Add(new Point(SpringRed.ID, SpringRed.SubType), SpringRed);
+            Objects.Add(new Point(SpringYellow.ID, SpringYellow.SubType), SpringYellow);
+            Objects.Add(new Point(Spikes.ID, Spikes.SubType), Spikes);
+            Objects.Add(new Point(StarPost.ID, StarPost.SubType), StarPost);
+            Objects.Add(new Point(Explosion.ID, Explosion.SubType), Explosion);
+            Objects.Add(new Point(PlaneSwitchA.ID, PlaneSwitchA.SubType), PlaneSwitchA);
+            Objects.Add(new Point(PlaneSwitchB.ID, PlaneSwitchB.SubType), PlaneSwitchB);
+            Objects.Add(new Point(PlaneSwitchLoop.ID, PlaneSwitchLoop.SubType), PlaneSwitchLoop);
+            Objects.Add(new Point(SignPost.ID, SignPost.SubType), SignPost);
+            Objects.Add(new Point(Invincibility.ID, Invincibility.SubType), Invincibility);
+            Objects.Add(new Point(DeathEvent.ID, DeathEvent.SubType), DeathEvent);
         }
 
         public MapObject GetObjectByType(int Type, int Subtype)
@@ -65,7 +65,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             MapObject mo = null;
             try
             {
-                mo = GlobalObjects[new Point(Type, Subtype)];
+                mo = Objects[new Point(Type, Subtype)];
             }
             catch (Exception)
             {
@@ -74,6 +74,124 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             }
 
             return mo;
+        }
+
+
+        public void LoadObjList(string filePath)
+        {
+            Objects.Clear();
+            System.IO.StreamReader reader = new System.IO.StreamReader(filePath);
+            string Name = "";
+            string Type = "";
+            string SubType = "";
+            string ImagePath = "";
+            string SpriteImgXpos = "";
+            string SpriteImgYpos = "";
+            string SpriteWidth = "";
+            string SpriteHeight = "";
+            char buf = '>';
+            int T;
+            int ST;
+            int Xpos;
+            int Ypos;
+            int Width;
+            int Height;
+
+
+            while (!reader.EndOfStream)
+            {
+                Name = "";
+                Type = "";
+                SubType = "";
+                ImagePath = "";
+                SpriteImgXpos = "";
+                SpriteImgYpos = "";
+                SpriteWidth = "";
+                SpriteHeight = "";
+                buf = '>';
+                T = 0;
+                ST = 0;
+                Xpos = 0;
+                Ypos = 0;
+                Width = 0;
+                Height = 0;
+
+                while (buf != ',') //Load The name
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    Name = Name + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Type
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    Type = Type + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object SubType
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SubType = SubType + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's SpriteSheet
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    ImagePath = ImagePath + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's Spritesheet Xpos
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteImgXpos = SpriteImgXpos + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's Spritesheet Ypos
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteImgYpos = SpriteImgYpos + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Sprite's Width
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteWidth = SpriteWidth + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Sprite's Height
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ';') { break; } //detect if the line is over
+                    SpriteHeight = SpriteHeight + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                T = Int32.Parse(Type);
+                ST = Int32.Parse(SubType);
+                Xpos = Int32.Parse(SpriteImgXpos);
+                Ypos = Int32.Parse(SpriteImgYpos);
+                Width = Int32.Parse(SpriteWidth);
+                Height = Int32.Parse(SpriteHeight);
+
+                MapObject MapObj = new MapObject(Name, T, ST, ImagePath, Xpos, Ypos, Width, Height);
+                Objects.Add(new Point(MapObj.ID, MapObj.SubType), MapObj);
+
+                reader.ReadLine();
+            }
         }
     }
 }

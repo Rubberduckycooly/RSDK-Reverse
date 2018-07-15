@@ -11,7 +11,7 @@ namespace RSDKv1
         class SaveData
         {
             byte CurrentLevel;
-            byte Unknown;
+            byte EmeraldCount;
             byte Lives;
 
             public SaveData(Stream stream) : this(new Reader(stream))
@@ -25,7 +25,7 @@ namespace RSDKv1
             internal SaveData(Reader reader)
             {
                 CurrentLevel = reader.ReadByte();
-                Unknown = reader.ReadByte();
+                EmeraldCount = reader.ReadByte();
                 Lives = reader.ReadByte();
             }
 
@@ -44,7 +44,7 @@ namespace RSDKv1
             internal void Write(Writer writer)
             {
                 writer.Write(CurrentLevel);
-                writer.Write(Unknown);
+                writer.Write(EmeraldCount);
                 writer.Write(Lives);
             }
         }

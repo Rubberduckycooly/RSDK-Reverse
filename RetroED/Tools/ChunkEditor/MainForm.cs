@@ -345,7 +345,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             tilepoint = new Point(((int)(e.X / ZoomLevel)) / 16, ((int)(e.Y / ZoomLevel)) / 16); //Get the tile that was clicked, not the position on the screen
             if (tilepoint.X >= 8 | tilepoint.Y >= 8) return; //Chunks dont have more than 8 tiles vertically OR horizontally!
-            
+            Console.WriteLine(tilepoint.X + " " + tilepoint.Y);
             switch (e.Button)
             {
                 case MouseButtons.Left:

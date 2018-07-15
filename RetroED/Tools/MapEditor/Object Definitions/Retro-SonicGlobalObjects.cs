@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace RetroED.Tools.MapEditor.Object_Definitions
 {
-    class Retro_SonicGlobalObjects
+    public class Retro_SonicObjects
     {
-        MapObject Blank = new MapObject();
+        //MapObject Blank = new MapObject();
 
         MapObject Ring = new MapObject("Ring", 1, 0, "Objects\\General.gfx", 0, 0, 16, 16);
         MapObject Ring2 = new MapObject("Ring (Dropped)", 2, 0, "Objects\\General.gfx", 0, 0, 16, 16);
@@ -18,8 +18,8 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         MapObject MagnetShield = new MapObject("Magnet Shield", 4, 3, "Objects\\General.gfx", 0, 0, 14, 16);
         MapObject FireShield = new MapObject("Fire Shield", 4, 4, "Objects\\General.gfx", 0, 0, 14, 16);
         MapObject BubbleShield = new MapObject("Bubble Shield", 4, 5, "Objects\\General.gfx", 0, 0, 14, 16);
-        MapObject InvincibilityMonitor = new MapObject("Invincibility Monitor", 6, 8, "Objects\\General.gfx", 0, 0, 14, 16);
-        MapObject SpeedShoesMonitor = new MapObject("Speed Shoes Monitor", 7, 8, "Objects\\General.gfx", 0, 0, 14, 16);
+        MapObject InvincibilityMonitor = new MapObject("Invincibility Monitor", 4, 6, "Objects\\General.gfx", 0, 0, 14, 16);
+        MapObject SpeedShoesMonitor = new MapObject("Speed Shoes Monitor", 4, 7, "Objects\\General.gfx", 0, 0, 14, 16);
         MapObject EggmanMonitor = new MapObject("Eggman Monitor", 4, 8, "Objects\\General.gfx", 0, 0, 14, 16);
         MapObject oneUP = new MapObject("1UP", 4, 9, "Objects\\General.gfx", 0, 0, 14, 16);
         MapObject BlueRing = new MapObject("Blue Ring", 4, 10, "Objects\\General.gfx", 0, 0, 14, 16);
@@ -48,52 +48,51 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         MapObject SmokePuff = new MapObject("Smoke Puff", 30, 0, "Objects\\General.gfx", 256, 0, 64, 64);
         MapObject WaterTrigger = new MapObject("Water Trigger", 31, 0, "Objects\\General.gfx", 256, 0, 64, 64);
 
-        public Dictionary<Point ,MapObject> GlobalObjects = new Dictionary<Point, MapObject>();
+        public Dictionary<Point,MapObject> Objects = new Dictionary<Point, MapObject>();
 
-        public Retro_SonicGlobalObjects()
+        public Retro_SonicObjects()
         {
-            GlobalObjects.Add(new Point(Blank.ID, Blank.SubType), Blank);
 
-            GlobalObjects.Add(new Point(Ring.ID, Ring.SubType), Ring);
-            GlobalObjects.Add(new Point(Ring2.ID, Ring2.SubType), Ring2);
-            GlobalObjects.Add(new Point(RingSparkle.ID, RingSparkle.SubType), RingSparkle);
+            Objects.Add(new Point(Ring.ID, Ring.SubType), Ring);
+            Objects.Add(new Point(Ring2.ID, Ring2.SubType), Ring2);
+            Objects.Add(new Point(RingSparkle.ID, RingSparkle.SubType), RingSparkle);
 
-            GlobalObjects.Add(new Point(BlankItemBox.ID, BlankItemBox.SubType), BlankItemBox);
-            GlobalObjects.Add(new Point(RingBox.ID, RingBox.SubType), RingBox);
-            GlobalObjects.Add(new Point(BlueShield.ID, BlueShield.SubType), BlueShield);
-            GlobalObjects.Add(new Point(MagnetShield.ID, MagnetShield.SubType), MagnetShield);
-            GlobalObjects.Add(new Point(FireShield.ID, FireShield.SubType), FireShield);
-            GlobalObjects.Add(new Point(BubbleShield.ID, BubbleShield.SubType), BubbleShield);
-            GlobalObjects.Add(new Point(InvincibilityMonitor.ID, InvincibilityMonitor.SubType), InvincibilityMonitor);
-            GlobalObjects.Add(new Point(SpeedShoesMonitor.ID,SpeedShoesMonitor.SubType), SpeedShoesMonitor);
-            GlobalObjects.Add(new Point(EggmanMonitor.ID, EggmanMonitor.SubType), EggmanMonitor);
-            GlobalObjects.Add(new Point(oneUP.ID, oneUP.SubType), oneUP);
-            GlobalObjects.Add(new Point(BlueRing.ID, BlueRing.SubType), BlueRing);
-            GlobalObjects.Add(new Point(BrokenItemBox.ID, BrokenItemBox.SubType), BrokenItemBox);
+            Objects.Add(new Point(BlankItemBox.ID, BlankItemBox.SubType), BlankItemBox);
+            Objects.Add(new Point(RingBox.ID, RingBox.SubType), RingBox);
+            Objects.Add(new Point(BlueShield.ID, BlueShield.SubType), BlueShield);
+            Objects.Add(new Point(MagnetShield.ID, MagnetShield.SubType), MagnetShield);
+            Objects.Add(new Point(FireShield.ID, FireShield.SubType), FireShield);
+            Objects.Add(new Point(BubbleShield.ID, BubbleShield.SubType), BubbleShield);
+            Objects.Add(new Point(InvincibilityMonitor.ID, InvincibilityMonitor.SubType), InvincibilityMonitor);
+            Objects.Add(new Point(SpeedShoesMonitor.ID,SpeedShoesMonitor.SubType), SpeedShoesMonitor);
+            Objects.Add(new Point(EggmanMonitor.ID, EggmanMonitor.SubType), EggmanMonitor);
+            Objects.Add(new Point(oneUP.ID, oneUP.SubType), oneUP);
+            Objects.Add(new Point(BlueRing.ID, BlueRing.SubType), BlueRing);
+            Objects.Add(new Point(BrokenItemBox.ID, BrokenItemBox.SubType), BrokenItemBox);
 
-            GlobalObjects.Add(new Point(SpringYellow.ID, SpringYellow.SubType), SpringYellow);
-            GlobalObjects.Add(new Point(SpringRed.ID, SpringRed.SubType), SpringRed);
+            Objects.Add(new Point(SpringYellow.ID, SpringYellow.SubType), SpringYellow);
+            Objects.Add(new Point(SpringRed.ID, SpringRed.SubType), SpringRed);
 
-            GlobalObjects.Add(new Point(Spikes.ID, Spikes.SubType), Spikes);
+            Objects.Add(new Point(Spikes.ID, Spikes.SubType), Spikes);
 
-            GlobalObjects.Add(new Point(Checkpoint.ID, Checkpoint.SubType), Checkpoint);
+            Objects.Add(new Point(Checkpoint.ID, Checkpoint.SubType), Checkpoint);
 
-            GlobalObjects.Add(new Point(SignPost.ID, SignPost.SubType), SignPost);
-            GlobalObjects.Add(new Point(EggPrison.ID, EggPrison.SubType), EggPrison);
+            Objects.Add(new Point(SignPost.ID, SignPost.SubType), SignPost);
+            Objects.Add(new Point(EggPrison.ID, EggPrison.SubType), EggPrison);
 
-            GlobalObjects.Add(new Point(ExplodeSmall.ID, ExplodeSmall.SubType), ExplodeSmall);
-            GlobalObjects.Add(new Point(ExplodeBig.ID, ExplodeBig.SubType), ExplodeBig);
+            Objects.Add(new Point(ExplodeSmall.ID, ExplodeSmall.SubType), ExplodeSmall);
+            Objects.Add(new Point(ExplodeBig.ID, ExplodeBig.SubType), ExplodeBig);
 
-            GlobalObjects.Add(new Point(EPDebris.ID, EPDebris.SubType), EPDebris);
-            GlobalObjects.Add(new Point(Animal.ID, Animal.SubType), Animal);
+            Objects.Add(new Point(EPDebris.ID, EPDebris.SubType), EPDebris);
+            Objects.Add(new Point(Animal.ID, Animal.SubType), Animal);
 
-            GlobalObjects.Add(new Point(BigRing.ID, BigRing.SubType), BigRing);
+            Objects.Add(new Point(BigRing.ID, BigRing.SubType), BigRing);
 
-            GlobalObjects.Add(new Point(WaterSplash.ID, WaterSplash.SubType), WaterSplash);
-            GlobalObjects.Add(new Point(BubbleSpawn.ID, BubbleSpawn.SubType), BubbleSpawn);
-            GlobalObjects.Add(new Point(BubbleSmall.ID, BubbleSmall.SubType), BubbleSmall);
-            GlobalObjects.Add(new Point(SmokePuff.ID, SmokePuff.SubType), SmokePuff);
-            GlobalObjects.Add(new Point(WaterTrigger.ID, WaterTrigger.SubType), WaterTrigger);
+            Objects.Add(new Point(WaterSplash.ID, WaterSplash.SubType), WaterSplash);
+            Objects.Add(new Point(BubbleSpawn.ID, BubbleSpawn.SubType), BubbleSpawn);
+            Objects.Add(new Point(BubbleSmall.ID, BubbleSmall.SubType), BubbleSmall);
+            Objects.Add(new Point(SmokePuff.ID, SmokePuff.SubType), SmokePuff);
+            Objects.Add(new Point(WaterTrigger.ID, WaterTrigger.SubType), WaterTrigger);
         }
 
         public MapObject GetObjectByType(int Type, int Subtype)
@@ -101,15 +100,132 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             MapObject mo = null;
             try
             {
-                mo = GlobalObjects[new Point(Type, Subtype)];
+                mo = Objects[new Point(Type, Subtype)];
             }
             catch (Exception)
             {
-                Console.WriteLine("That Object Wasn't on the list!");
+                //Console.WriteLine("That Object Wasn't on the list!");
                 mo = new MapObject();
             }
 
             return mo;
+        }
+
+        public void LoadObjList(string filePath)
+        {
+            Objects.Clear();
+            System.IO.StreamReader reader = new System.IO.StreamReader(filePath);
+            string Name = "";
+            string Type = "";
+            string SubType = "";
+            string ImagePath = "";
+            string SpriteImgXpos = "";
+            string SpriteImgYpos = "";
+            string SpriteWidth = "";
+            string SpriteHeight = "";
+            char buf = '>';
+            int T;
+            int ST;
+            int Xpos;
+            int Ypos;
+            int Width;
+            int Height;
+
+
+            while (!reader.EndOfStream)
+            {
+                Name = "";
+                Type = "";
+                SubType = "";
+                ImagePath = "";
+                SpriteImgXpos = "";
+                SpriteImgYpos = "";
+                SpriteWidth = "";
+                SpriteHeight = "";
+                buf = '>';
+                T = 0;
+                ST = 0;
+                Xpos = 0;
+                Ypos = 0;
+                Width = 0;
+                Height = 0;
+
+                while (buf != ',') //Load The name
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    Name = Name + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Type
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    Type = Type + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object SubType
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SubType = SubType + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's SpriteSheet
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    ImagePath = ImagePath + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's Spritesheet Xpos
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteImgXpos = SpriteImgXpos + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object's Spritesheet Ypos
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteImgYpos = SpriteImgYpos + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Sprite's Width
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ',') { break; }
+                    SpriteWidth = SpriteWidth + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',') //Load The Object Sprite's Height
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ';') { break; } //detect if the line is over
+                    SpriteHeight = SpriteHeight + buf;
+                }
+                buf = '>'; //That char shouldn't show up so change the buffer to that!
+
+                T = Int32.Parse(Type);
+                ST = Int32.Parse(SubType);
+                Xpos = Int32.Parse(SpriteImgXpos);
+                Ypos = Int32.Parse(SpriteImgYpos);
+                Width = Int32.Parse(SpriteWidth);
+                Height = Int32.Parse(SpriteHeight);
+
+                MapObject MapObj = new MapObject(Name, T, ST, ImagePath, Xpos, Ypos, Width, Height);
+                Objects.Add(new Point(MapObj.ID, MapObj.SubType), MapObj);
+
+                reader.ReadLine();
+            }
         }
 
     }

@@ -472,6 +472,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tools\BackgroundEditor\Resources.ico" />
+    <None Include="Tools\MapEditor\OBJ.png" />
     <Content Include="Tools\MapEditor\Resources.ico" />
     <Content Include="Tools\PaletteEditor\icon.ico" />
     <Content Include="Tools\PaletteEditor\Resources\markdownpad-github.css" />

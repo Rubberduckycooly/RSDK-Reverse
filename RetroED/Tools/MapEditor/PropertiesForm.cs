@@ -28,7 +28,7 @@ namespace RetroED.Tools.MapEditor
 
         public void Setup()
         {
-            switch (LoadedRSDKver)
+            switch (LoadedRSDKver) //Set the UI values to the loaded ones
             {
                 case 3:
                     MapNameBox.Text = Mapv1.Title;
@@ -85,7 +85,7 @@ namespace RetroED.Tools.MapEditor
 
         private void MapNameBox_TextChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            switch (LoadedRSDKver) //Change the name of the map
             {
                 case 3:
                     Mapv1.Title = MapNameBox.Text;
@@ -106,7 +106,7 @@ namespace RetroED.Tools.MapEditor
 
         private void MapWidthNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            switch (LoadedRSDKver) //Change Map Width
             {
                 case 3:
                     Mapv1.width = (int)MapWidthNUD.Value;
@@ -127,7 +127,7 @@ namespace RetroED.Tools.MapEditor
 
         private void MapHeightNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            switch (LoadedRSDKver) //Change Map Height
             {
                 case 3:
                     Mapv1.height = (int)MapHeightNUD.Value;
@@ -148,7 +148,7 @@ namespace RetroED.Tools.MapEditor
 
         private void RSMusicNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (LoadedRSDKver == 3)
+            if (LoadedRSDKver == 3) //if we are using a Retro-Sonic map, Set the Music value
             {
                 Mapv1.Music = (byte)RSMusicNUD.Value;
             }
@@ -156,7 +156,7 @@ namespace RetroED.Tools.MapEditor
 
         private void RSBGNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (LoadedRSDKver == 3)
+            if (LoadedRSDKver == 3) //if we are using a Retro-Sonic map, Set the Background value
             {
                 Mapv1.Background = (byte)RSBGNUD.Value;
             }
@@ -164,7 +164,7 @@ namespace RetroED.Tools.MapEditor
 
         private void RSPlayerPosXNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (LoadedRSDKver == 3)
+            if (LoadedRSDKver == 3) //if we are using a Retro-Sonic map, Set the Player Spawn Xpos
             {
                 Mapv1.PlayerXpos = (ushort)RSPlayerPosXNUD.Value;
             }
@@ -172,7 +172,7 @@ namespace RetroED.Tools.MapEditor
 
         private void RSPlayerPosYNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (LoadedRSDKver == 3)
+            if (LoadedRSDKver == 3) //if we are using a Retro-Sonic map, Set the Player Spawn Ypos
             {
                 Mapv1.PlayerYPos = (ushort)RSPlayerPosYNUD.Value;
             }

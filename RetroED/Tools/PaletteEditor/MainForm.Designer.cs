@@ -148,6 +148,7 @@ namespace RetroED.Tools.PaletteEditor
             this.colorGrid.ShowCustomColors = false;
             this.colorGrid.Size = new System.Drawing.Size(301, 29);
             this.colorGrid.TabIndex = 2;
+            this.colorGrid.ColorChanged += new System.EventHandler(this.colorGrid_ColorChanged);
             // 
             // colorEditor
             // 
@@ -157,6 +158,7 @@ namespace RetroED.Tools.PaletteEditor
             this.colorEditor.Name = "colorEditor";
             this.colorEditor.Size = new System.Drawing.Size(400, 289);
             this.colorEditor.TabIndex = 1;
+            this.colorEditor.ColorChanged += new System.EventHandler(this.colorEditor_ColorChanged);
             // 
             // MainForm
             // 

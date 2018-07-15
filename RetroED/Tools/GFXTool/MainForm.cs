@@ -40,48 +40,46 @@ namespace RetroED.Tools.GFXTool
             {
                 filename = dlg.FileName;
                 SourceGFXLocation.Text = dlg.FileName;
-                if (dlg.FilterIndex-1 == 1)
+                if (dlg.FilterIndex-1 == 1) //Did the user want to load a Dreamcast .gfx file?
                 {
                     dcGFX = true;
                 }
-                GFX = new RSDKv1.gfx(filename, dcGFX);
+                GFX = new RSDKv1.gfx(filename, dcGFX); //Load the GFX file into a bitmap
             }
         }
 
         private void ExportButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.DefaultExt = ".GIF";
-            dlg.Filter = "PNG|*.png|GIF|*.gif|Bitmap Image|*.bmp";
+            dlg.DefaultExt = ".gif";
+            dlg.Filter = "Portable Network Graphics|*.png|Graphics Interchange Format Image|*.gif|Bitmap Image|*.bmp";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                    //RSDKv1.gfx old = new RSDKv1.gfx(filename,dcGFX);
-
                     switch (dlg.FilterIndex - 1)
                     {
                         case 0:
                         string txt0 = this.Text;
                         this.Text = "Exporting - " + txt0;
-                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Png); //Export to indexed PNG
                         this.Text = txt0;
                         break;
                         case 1:
                         string txt1 = this.Text;
                         this.Text = "Exporting - " + txt1;
-                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif); //Export to indexed GIF
                         this.Text = txt1;
                         break;
                         case 2:
                         string txt2 = this.Text;
                         this.Text = "Exporting - " + txt2;
-                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Bmp); //Export to indexed BMP
                         this.Text = txt2;
                         break;
                         default:
                         string txt3 = this.Text;
                         this.Text = "Exporting - " + txt3;
-                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                        GFX.export(dlg.FileName, System.Drawing.Imaging.ImageFormat.Gif); //Export to indexed GIF
                         this.Text = txt3;
                         break;
                     }
@@ -92,14 +90,14 @@ namespace RetroED.Tools.GFXTool
         private void SelectGIFButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.DefaultExt = ".GIF";
-            dlg.Filter = "GIF|*.gif|Bitmap Image|*.bmp";
+            dlg.DefaultExt = ".gif";
+            dlg.Filter = "Graphics Interchange Format Image|*.gif|Bitmap Image|*.bmp";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 filename = dlg.FileName;
                 SourceIMGLocation.Text = dlg.FileName;
-                IMG = (Bitmap)Image.FromFile(dlg.FileName).Clone();
+                IMG = (Bitmap)Image.FromFile(dlg.FileName).Clone(); //Copy the image into memory
                 GFX.importFromBitmap(IMG);
             }
         }
@@ -113,7 +111,7 @@ namespace RetroED.Tools.GFXTool
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 filename = dlg.FileName;
-                SourceGFXLocation.Text = dlg.FileName;
+                SourceIMGLocation.Text = dlg.FileName;
                 if (dlg.FilterIndex - 1 == 1)
                 {
                     dcGFX = true;

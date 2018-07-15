@@ -2,7 +2,7 @@
 
 namespace RetroED.Tools.MapEditor.Object_Definitions
 {
-    class MapObject
+    public class MapObject
     {
         public string Name, SpriteSheet;
         public int ID, SubType, X, Y, Width, Height;
@@ -24,11 +24,37 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             Height = height;
         }
 
-        public Bitmap RenderObject()
+        public Bitmap RenderObject(int RSDKver, string DataPath)
         {
-            RSDKv1.gfx g = new RSDKv1.gfx("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\" + SpriteSheet, false);
-            Bitmap b;
-            b = CropImage(g.gfxImage, new Rectangle(X, Y, Width, Height));
+            Bitmap b = RetroED.Properties.Resources.OBJ;
+            if (!System.IO.File.Exists(DataPath + SpriteSheet))
+            {
+                b = RetroED.Properties.Resources.OBJ;
+                return b;
+            }
+            switch (RSDKver)
+            {
+                case 3:
+                    RSDKv1.gfx g = new RSDKv1.gfx(DataPath + SpriteSheet, false);
+                    b = CropImage(g.gfxImage, new Rectangle(X, Y, Width, Height));
+                    b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+                        break;
+                case 2:
+                    b = new Bitmap(DataPath + SpriteSheet, false);
+                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
+                    break;
+                case 1:
+                    b = new Bitmap(DataPath + SpriteSheet, false);
+                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
+                    break;
+                case 0:
+                    b = new Bitmap(DataPath + SpriteSheet, false);
+                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
+                    break;
+            }
             return b;
         }
 

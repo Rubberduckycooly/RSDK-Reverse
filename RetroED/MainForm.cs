@@ -102,7 +102,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the Map Editor (and returns a referece to it)
 
         Tools.ChunkMappingsEditor.MainForm OpenMappingsEditor()
         {
@@ -117,7 +117,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the Chunk Mappings Editor (and returns a referece to it)
 
         Tools.BackgroundEditor.MainView OpenBackgroundEditor()
         {
@@ -133,7 +133,7 @@ namespace RetroED
             this.TabControl.SelectedTab.Text = frm.Text;
             frm.Show();
             return frm;
-        }
+        } //Opens the Background Editor (and returns a referece to it)
 
         Tools.PaletteEditor.MainForm OpenPaletteEditor()
         {
@@ -148,7 +148,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the Palette Editor (and returns a referece to it)
 
         Tools.GFXTool.MainForm OpenGFXTool()
         {
@@ -163,7 +163,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the GFX Tool (and returns a referece to it)
 
         Tools.NexusDecrypt.MainForm OpenNexusDecryptTool()
         {
@@ -178,7 +178,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the Nexus Decrypter (and returns a referece to it)
 
         Tools.RSDKUnpacker.MainForm OpenRSDKUnpacker()
         {
@@ -193,7 +193,7 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        }
+        } //Opens the RSDK Unpacker (and returns a referece to it)
 
         private void MenuItem_RSDKUnpacker_Click(object sender, EventArgs e)
         {

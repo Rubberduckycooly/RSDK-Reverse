@@ -113,6 +113,16 @@ namespace RetroED.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap OBJ {
+            get {
+                object obj = ResourceManager.GetObject("OBJ", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap SavePalette {
             get {
                 object obj = ResourceManager.GetObject("SavePalette", resourceCulture);

@@ -12,14 +12,21 @@ namespace RetroED.Tools.MapEditor
 {
     public partial class StageChunksView : DockContent
     {
+        //What RSDK version are we using?
         public int loadedRSDKver = 0;
+
+        //The Stage's Tileset
         public Image _tiles;
 
+        //A List of all the chunks (in image form)
         public List<Bitmap> Chunks = new List<Bitmap>();
 
+        //a reference to The Map view
         public StageMapView MapView;
 
         //private Point tilePoint;
+
+        //What Chunk is selected?
         public int selectedChunk;
 
         #region Retro-Sonic Development Kit
@@ -48,24 +55,24 @@ namespace RetroED.Tools.MapEditor
             MapView = mpv;
         }
 
-        public void SetChunks()
+        public void SetChunks() //Load Chunks. Used for initializing
         {
             LoadChunks(_tiles);
             Refresh();
         }
 
-        void LoadChunks(Image Tiles)
+        void LoadChunks(Image Tiles) //Load the chunks into a list!
         {
             switch (loadedRSDKver)
             {
                 case 0:
-                    BlocksList.Images.Clear();
+                    BlocksList.Images.Clear(); //Chunk zero should be ID Zero
                     for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
                     {
-                        Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles);
+                        Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles); //Render chunk using the tileset as a source
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
-                        Chunks.Add(b);
-                        BlocksList.Images.Add(b);
+                        Chunks.Add(b); //Add it to the list of chunk images
+                        BlocksList.Images.Add(b); //add it to the "List" of chunks that the user selects from
                         //b.Dispose();
                     }
                     break;
@@ -107,19 +114,18 @@ namespace RetroED.Tools.MapEditor
 
         private void BlocksList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedChunk = BlocksList.SelectedIndex;
-            Console.WriteLine("New Chunk " + selectedChunk);
+            selectedChunk = BlocksList.SelectedIndex; //Update the selected chunk
         }
 
         private void ObjectList_SelectedIndexChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void ObjectList_DoubleClick(object sender, EventArgs e)
         {
-            NewObjectForm frm = new NewObjectForm(1);
-            switch(loadedRSDKver)
+            NewObjectForm frm = new NewObjectForm(1); //We are modifying an object so the "formtype" should be 1
+            switch(loadedRSDKver) //Set the form's values to the selected Object's values
             {
                 case 3:
                     frm.TypeNUD.Value = objectsV1[ObjectList.SelectedIndex].type;
@@ -149,14 +155,14 @@ namespace RetroED.Tools.MapEditor
 
             if (frm.ShowDialog(this) == DialogResult.OK)
             {
-                if (frm.RemoveObject == 0)
+                if (frm.RemoveObject == 0) //Make sure we didn't decide to remove the object
                 {
-                    switch (loadedRSDKver)
+                    switch (loadedRSDKver) //Set the new values
                     {
                         case 3:
-                            RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                            MapView._RSDK1Level.objects[ObjectList.SelectedIndex] = Obj1;
-                            objectsV1[ObjectList.SelectedIndex] = Obj1;
+                            RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //Create a temp object to store our data
+                            MapView._RSDK1Level.objects[ObjectList.SelectedIndex] = Obj1; //Modify the selected object's data
+                            objectsV1[ObjectList.SelectedIndex] = Obj1; //Modify the selected object's data
                             break;
                         case 2:
                             RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
@@ -180,46 +186,42 @@ namespace RetroED.Tools.MapEditor
                     switch (loadedRSDKver)
                     {
                         case 3:
-                            MapView._RSDK1Level.objects.RemoveAt(ObjectList.SelectedIndex);
-                            //objectsV1.RemoveAt(ObjectList.SelectedIndex);
+                            MapView._RSDK1Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 2:
-                            MapView._RSDK2Level.objects.RemoveAt(ObjectList.SelectedIndex);
-                            //objectsV2.RemoveAt(ObjectList.SelectedIndex);
+                            MapView._RSDK2Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 1:
-                            MapView._RSDK3Level.objects.RemoveAt(ObjectList.SelectedIndex);
-                            //objectsV3.RemoveAt(ObjectList.SelectedIndex);
+                            MapView._RSDK3Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 0:
-                            MapView._RSDK4Level.objects.RemoveAt(ObjectList.SelectedIndex);
-                            //objectsV4.RemoveAt(ObjectList.SelectedIndex);
+                            MapView._RSDK4Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                     }
                 }
                 
             }
-            RefreshObjList();
+            RefreshObjList(); //Reload the list of objects
         }
 
         public void RefreshObjList()
         {
-            ObjectList.Items.Clear();
+            ObjectList.Items.Clear(); //We want a full refresh, so clear out all previous objects
             switch(loadedRSDKver)
             {
                 case 3:
-                    Object_Definitions.Retro_SonicGlobalObjects RSObj = new Object_Definitions.Retro_SonicGlobalObjects();
+                    Object_Definitions.Retro_SonicObjects RSObj = new Object_Definitions.Retro_SonicObjects();
                     for (int i = 0; i < objectsV1.Count; i++)
                     {
                         string Obj;
-                        string t = RSObj.GetObjectByType(objectsV1[i].type, objectsV1[i].subtype).Name;
-                        if (t != null) { Obj = t + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; }
-                        else { Obj = "Unnamed Object" + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; }
+                        string t = RSObj.GetObjectByType(objectsV1[i].type, objectsV1[i].subtype).Name; //Get the object name
+                        if (t != null) { Obj = t + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If the object's definition is found, we use it's name in the list
+                        else { Obj = "Unnamed Object" + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If not, call it "Unnamed Object"
                         ObjectList.Items.Add(Obj);
                     }
                     break;
                 case 2:
-                    Object_Definitions.SonicNexusGlobalObjects RSDK2Obj = new Object_Definitions.SonicNexusGlobalObjects();
+                    Object_Definitions.SonicNexusObjects RSDK2Obj = new Object_Definitions.SonicNexusObjects();
                     for (int i = 0; i < objectsV2.Count; i++)
                     {
                         string Obj;
@@ -230,7 +232,7 @@ namespace RetroED.Tools.MapEditor
                     }
                     break;
                 case 1:
-                    Object_Definitions.SonicCDGlobalObjects RSDK3Obj = new Object_Definitions.SonicCDGlobalObjects();
+                    Object_Definitions.SonicCDObjects RSDK3Obj = new Object_Definitions.SonicCDObjects();
                     for (int i = 0; i < objectsV3.Count; i++)
                     {
                         string Obj;
@@ -241,7 +243,7 @@ namespace RetroED.Tools.MapEditor
                     }
                     break;
                 case 0:
-                    Object_Definitions.Sonic1GlobalObjects RSDKBObj = new Object_Definitions.Sonic1GlobalObjects();
+                    Object_Definitions.Sonic1Objects RSDKBObj = new Object_Definitions.Sonic1Objects();
                     for (int i = 0; i < objectsV4.Count; i++)
                     {
                         string Obj;

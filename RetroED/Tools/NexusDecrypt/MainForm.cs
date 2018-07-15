@@ -37,11 +37,11 @@ namespace RetroED.Tools.NexusDecrypt
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                FlipBits(filename ,dlg.FileName);
+                FlipBytes(filename, dlg.FileName);
             }
         }
 
-        void FlipBits(string file,string filepath)
+        void FlipBytes(string file,string filepath)
         {
             byte[] filebytes;
             int[] filebytes2;
@@ -49,9 +49,9 @@ namespace RetroED.Tools.NexusDecrypt
 
             filebytes = new byte[(int)reader.BaseStream.Length];
 
-            filebytes = reader.ReadBytes((int)reader.BaseStream.Length);
+            filebytes = reader.ReadBytes((int)reader.BaseStream.Length); //Load every byte in the file
 
-            reader.Close();
+            reader.Close(); //Close the reader
 
             System.IO.BinaryWriter writer = new System.IO.BinaryWriter(File.Open(filepath, FileMode.Create));
 
@@ -59,14 +59,14 @@ namespace RetroED.Tools.NexusDecrypt
 
             for (int i = 0; i < filebytes.Length; i++)
             {
-                filebytes2[i] = ~filebytes[i];
+                filebytes2[i] = ~filebytes[i]; //"Mirror" the byte (e.g. 00 becomes FF)
             }
 
             for (int i = 0; i < filebytes2.Length; i++)
             {
-                writer.Write((byte)filebytes2[i]);
+                writer.Write((byte)filebytes2[i]); //Save The "mirrored" bytes
             }
-            writer.Close();
+            writer.Close(); //Close the writer
         }
     }
 }
