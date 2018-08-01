@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Level Converter", "Level Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroED", "RetroED\RetroED.csproj", "{3E81A985-99EE-4B8B-B90E-A8208DE152AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimConverter", "AnimConverter\AnimConverter.csproj", "{F1F46A85-5DB6-4B81-BAF1-B30C648A2388}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{3E81A985-99EE-4B8B-B90E-A8208DE152AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E81A985-99EE-4B8B-B90E-A8208DE152AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E81A985-99EE-4B8B-B90E-A8208DE152AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1F46A85-5DB6-4B81-BAF1-B30C648A2388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1F46A85-5DB6-4B81-BAF1-B30C648A2388}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1F46A85-5DB6-4B81-BAF1-B30C648A2388}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1F46A85-5DB6-4B81-BAF1-B30C648A2388}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

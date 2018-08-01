@@ -13,18 +13,17 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         MapObject Player = new MapObject("Player Spawn", 1, 0, "Objects\\General.gfx", 0, 0, 16, 16);
         MapObject StageSetup = new MapObject("Stage Setup", 2, 0, "Objects\\General.gfx", 0, 0, 16, 16);
         MapObject HUD = new MapObject("HUD", 3, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject TitleCard = new MapObject("Title Card", 4, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject ActFinish = new MapObject("Act Finish", 5, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject DeathEvent = new MapObject("Death Event", 6, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject TailsTail = new MapObject("Tails' Tail", 7, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject PauseMenu = new MapObject("Pause Menu", 8, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject ActFinish = new MapObject("Act Finish", 4, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject DeathEvent = new MapObject("Death Event", 5, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject TailsTail = new MapObject("Tails' Tail", 6, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject PauseMenu = new MapObject("Pause Menu", 7, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject Ring = new MapObject("Ring", 9, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject Ring2 = new MapObject("Lose Ring", 10, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject RingSparkle = new MapObject("Ring Sparkle", 11, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Ring = new MapObject("Ring", 8, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Ring2 = new MapObject("Lose Ring", 9, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject RingSparkle = new MapObject("Ring Sparkle", 10, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject BlankMonitor = new MapObject("Blank Monitor", 12, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        //MapObject RingMonitor = new MapObject("Ring Monitor", 13, 1, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject BlankMonitor = new MapObject("Blank Monitor", 11, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        //MapObject RingMonitor = new MapObject("Ring Monitor", 11, 1, "Objects\\General.gfx", 0, 0, 16, 16);
         //MapObject ShieldMonitor = new MapObject("Shield Monitor", 13, 2, "Objects\\General.gfx", 0, 0, 16, 16);
         //MapObject InvincMonitor = new MapObject("Invincibility Monitor", 13, 3, "Objects\\General.gfx", 0, 0, 16, 16);
         //MapObject SpeedMonitor = new MapObject("Speed Shoes Monitor", 13, 4, "Objects\\General.gfx", 0, 0, 16, 16);
@@ -32,33 +31,35 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         //MapObject OneUPtMonitor = new MapObject("1UP (Tails) Monitor", 13, 6, "Objects\\General.gfx", 0, 0, 16, 16);
         //MapObject OneUPkMonitor = new MapObject("1UP (Knuckles) Monitor", 13, 7, "Objects\\General.gfx", 0, 0, 16, 16);
         //MapObject EggmanMonitor = new MapObject("Eggman Monitor", 13, 12, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject MonitorBroken = new MapObject("Broken Monitor", 13, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject MonitorBroken = new MapObject("Broken Monitor", 12, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject RedSpring = new MapObject("Red Spring", 14, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject YellowSpring = new MapObject("Yellow Spring", 15, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject RedSpring = new MapObject("Red Spring", 13, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject YellowSpring = new MapObject("Yellow Spring", 14, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject Checkpoint = new MapObject("Checkpoint", 16, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject FuturePost = new MapObject("Future Post", 17, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject PastPost = new MapObject("Past Post", 18, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject SignPost = new MapObject("Sign Post", 19, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject GoalPost = new MapObject("Goal Post", 20, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject SpecialRing = new MapObject("Special Ring", 21, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Checkpoint = new MapObject("Checkpoint", 15, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject FuturePost = new MapObject("Future Post", 16, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject PastPost = new MapObject("Past Post", 17, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject SignPost = new MapObject("Sign Post", 18, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject GoalPost = new MapObject("Goal Post", 19, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject SpecialRing = new MapObject("Special Ring", 20, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject Spikes = new MapObject("Spikes", 22, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject SmokePuff = new MapObject("Smoke Puff", 23, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject Explosion = new MapObject("Explosion", 24, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject DustPuff = new MapObject("Dust Puff", 25, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Spikes = new MapObject("Spikes", 21, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject SmokePuff = new MapObject("Smoke Puff", 22, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Explosion = new MapObject("Explosion", 23, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject DustPuff = new MapObject("Dust Puff", 24, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject BlueShield = new MapObject("Blue Shield", 26, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject Invincibility = new MapObject("Invincibility", 27, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject WarpStar = new MapObject("Warp Star", 28, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject TimeWarp = new MapObject("Time Warp", 29, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject WarpSonic = new MapObject("Warp Sonic", 30, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject BlueShield = new MapObject("Blue Shield", 25, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Invincibility = new MapObject("Invincibility", 26, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject WarpStar = new MapObject("Warp Star", 27, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject TimeWarp = new MapObject("Time Warp", 28, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject WarpSonic = new MapObject("Warp Sonic", 29, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
-        MapObject Transporter = new MapObject("Transporter", 31, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject MSProjector = new MapObject("Metal Sonic Projector", 32, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject ObjectScore = new MapObject("Object Score", 33, 0, "Objects\\General.gfx", 0, 0, 16, 16);
-        MapObject debugMode = new MapObject("Debug Mode", 34, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject Transporter = new MapObject("Transporter", 30, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject MSProjector = new MapObject("Metal Sonic Projector", 31, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject ObjectScore = new MapObject("Object Score", 32, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+        MapObject debugMode = new MapObject("Debug Mode", 33, 0, "Objects\\General.gfx", 0, 0, 16, 16);
+
+        MapObject TitleCard = new MapObject("Title Card", 34, 0, "Objects\\General.gfx", 0, 0, 16, 16);
 
         public Dictionary<Point, MapObject> Objects = new Dictionary<Point, MapObject>();
 

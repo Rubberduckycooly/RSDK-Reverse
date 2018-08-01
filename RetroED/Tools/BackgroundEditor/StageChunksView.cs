@@ -118,41 +118,57 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void pValuesList_DoubleClick(object sender, EventArgs e)
         {
-            LineScrollForm frm = new LineScrollForm(loadedRSDKver, pValuesList.SelectedIndex);
-            switch(loadedRSDKver)
+            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, pValuesList.SelectedIndex);
+            CD12_LineScrollForm frm2 = new CD12_LineScrollForm(loadedRSDKver, pValuesList.SelectedIndex);
+
+            switch (loadedRSDKver)
             {
                 case 3:
-                    frm.Mapv1 = _RSDK1Background;
+                    frm1.Mapv1 = _RSDK1Background;
                     break;
                 case 2:
-                    frm.Mapv2 = _RSDK2Background;
+                    frm1.Mapv2 = _RSDK2Background;
                     break;
                 case 1:
-                    frm.Mapv3 = _RSDK3Background;
+                    frm2.Mapv3 = _RSDK3Background;
                     break;
                 case 0:
-                    frm.Mapv4 = _RSDK4Background;
+                    frm2.Mapv4 = _RSDK4Background;
                     break;
             }
-            frm.Setup();
-            if (frm.ShowDialog(this) == DialogResult.OK)
+            if (loadedRSDKver <= 1)
             {
-                switch (loadedRSDKver)
+                frm2.Setup();
+                if (frm2.ShowDialog(this) == DialogResult.OK)
                 {
-                    case 3:
-                        _RSDK1Background = frm.Mapv1;
-                        break;
-                    case 2:
-                        _RSDK2Background = frm.Mapv2;
-                        break;
-                    case 1:
-                        _RSDK3Background = frm.Mapv3;
-                        break;
-                    case 0:
-                        _RSDK4Background = frm.Mapv4;
-                        break;
+                    switch (loadedRSDKver)
+                    {
+                        case 1:
+                            _RSDK3Background = frm2.Mapv3;
+                            break;
+                        case 0:
+                            _RSDK4Background = frm2.Mapv4;
+                            break;
+                    }
+                    RefreshParallaxList();
                 }
-                RefreshParallaxList();
+            }
+            if (loadedRSDKver >= 2)
+            {
+                frm1.Setup();
+                if (frm1.ShowDialog(this) == DialogResult.OK)
+                {
+                    switch (loadedRSDKver)
+                    {
+                        case 3:
+                            _RSDK1Background = frm1.Mapv1;
+                            break;
+                        case 2:
+                            _RSDK2Background = frm1.Mapv2;
+                            break;
+                    }
+                    RefreshParallaxList();
+                }
             }
 
         }
@@ -165,15 +181,15 @@ namespace RetroED.Tools.BackgroundEditor
                 case 3:
                     for (int i = 0; i < _RSDK1Background.Lines.Count; i++)
                     {
-                        string line = _RSDK1Background.Lines[i].LineNo + " - " + _RSDK1Background.Lines[i].OverallSpeed + " - " + _RSDK1Background.Lines[i].Deform;
+                        string line = _RSDK1Background.Lines[i].RHSpeed + " - " + _RSDK1Background.Lines[i].CHSpeed + " - " + _RSDK1Background.Lines[i].Deform;
                         pValuesList.Items.Add(line);
                     }
                     break;
                 case 2:
                     for (int i = 0; i < _RSDK2Background.Lines.Count; i++)
                     {
-                        //string line = _RSDK2Background.Lines[i].LineNo + " - " + _RSDK2Background.Lines[i].OverallSpeed + " - " + _RSDK2Background.Lines[i].Deform;
-                        //pValuesList.Items.Add(line);
+                        string line = _RSDK2Background.Lines[i].RHSpeed + " - " + _RSDK2Background.Lines[i].CHSpeed + " - " + _RSDK2Background.Lines[i].Deform;
+                        pValuesList.Items.Add(line);
                     }
                     break;
                 case 1:

@@ -10,20 +10,25 @@ using System.Windows.Forms;
 
 namespace RetroED.Tools.BackgroundEditor
 {
-    public partial class PropertiesForm : Form
+    public partial class RSN_LineScrollForm : Form
     {
 
         public int LoadedRSDKver;
+
+        public int Pvalue;
+
+        /*The unknown values seem to be line positions for each LineScroll Class*/
 
         public RSDKv1.BGLayout Mapv1;
         public RSDKv2.BGLayout Mapv2;
         public RSDKv3.BGLayout Mapv3;
         public RSDKv4.BGLayout Mapv4;
 
-        public PropertiesForm(int RSDKver)
+        public RSN_LineScrollForm(int RSDKver, int PVal)
         {
             InitializeComponent();
             LoadedRSDKver = RSDKver;
+            Pvalue = PVal;
         }
 
         public void Setup()
@@ -31,20 +36,14 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 3:
-                    MapWidthNUD.Value = Mapv1.Width;
-                    MapHeightNUD.Value = Mapv1.Height;
+                    LineNoNUD.Value = Mapv1.Lines[Pvalue].RHSpeed;
+                    SPDNUD.Value = Mapv1.Lines[Pvalue].CHSpeed;
+                    DeformNUD.Value = Mapv1.Lines[Pvalue].Deform;
                     break;
                 case 2:
-                    MapWidthNUD.Value = Mapv2.width;
-                    MapHeightNUD.Value = Mapv2.height;
-                    break;
-                case 1:
-                    MapWidthNUD.Value = Mapv3.width;
-                    MapHeightNUD.Value = Mapv3.height;
-                    break;
-                case 0:
-                    MapWidthNUD.Value = Mapv4.width;
-                    MapHeightNUD.Value = Mapv4.height;
+                    LineNoNUD.Value = Mapv2.Lines[Pvalue].RHSpeed;
+                    SPDNUD.Value = Mapv2.Lines[Pvalue].CHSpeed;
+                    DeformNUD.Value = Mapv2.Lines[Pvalue].Deform;
                     break;
                 default:
                     break;
@@ -62,42 +61,45 @@ namespace RetroED.Tools.BackgroundEditor
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-        private void MapWidthNUD_ValueChanged(object sender, EventArgs e)
+        private void LineNoNUD_ValueChanged(object sender, EventArgs e)
         {
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Width = (int)MapWidthNUD.Value;
+                    Mapv1.Lines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
                     break;
                 case 2:
-                    Mapv2.width = (int)MapWidthNUD.Value;
-                    break;
-                case 1:
-                    Mapv3.width = (int)MapWidthNUD.Value;
-                    break;
-                case 0:
-                    Mapv4.width = (int)MapWidthNUD.Value;
+                    Mapv2.Lines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
                     break;
                 default:
                     break;
             }
         }
 
-        private void MapHeightNUD_ValueChanged(object sender, EventArgs e)
+        private void SPDNUD_ValueChanged(object sender, EventArgs e)
         {
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Height = (int)MapHeightNUD.Value;
+                    Mapv1.Lines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
                     break;
                 case 2:
-                    Mapv2.height = (int)MapHeightNUD.Value;
+                    Mapv2.Lines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
                     break;
-                case 1:
-                    Mapv3.height = (int)MapHeightNUD.Value;
+                default:
                     break;
-                case 0:
-                    Mapv4.height = (int)MapHeightNUD.Value;
+            }
+        }
+
+        private void CSPDNUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 3:
+                    Mapv1.Lines[Pvalue].Deform = (byte)DeformNUD.Value;
+                    break;
+                case 2:
+                    Mapv2.Lines[Pvalue].Deform = (byte)DeformNUD.Value;
                     break;
                 default:
                     break;

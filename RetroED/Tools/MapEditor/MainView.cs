@@ -22,6 +22,8 @@ namespace RetroED.Tools.MapEditor
         //What RSDK version is loaded?
         public int LoadedRSDKver = 0;
 
+        bool LoadedObjDefinitions = false;
+
         //Stage's Tileset
         private Image _loadedTiles;
 
@@ -367,7 +369,7 @@ namespace RetroED.Tools.MapEditor
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
 
-            if (_mapViewer.datapath == null)
+            if (_mapViewer.datapath == null && LoadedObjDefinitions)
             {
                 FolderBrowserDialog dlg = new FolderBrowserDialog();
                 dlg.Description = "Select Data Folder";
@@ -861,7 +863,7 @@ namespace RetroED.Tools.MapEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewChunks1[i] = new ushort[_RSDK1Level.width];
                         for (int j = 0; j < _RSDK1Level.width; ++j)
-                            NewChunks1[i][j] = 0xffff; // fill the chunks with blanks
+                            NewChunks1[i][j] = 0; // fill the chunks with blanks
                     }
                     _mapViewer._RSDK1Level.MapLayout = NewChunks1;
                     _mapViewer.DrawLevel();
@@ -874,9 +876,10 @@ namespace RetroED.Tools.MapEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles2[i] = new ushort[_RSDK2Level.width];
                         for (int j = 0; j < _RSDK2Level.width; ++j)
-                            NewTiles2[i][j] = 0xffff; // fill the chunks with blanks
+                            NewTiles2[i][j] = 0; // fill the chunks with blanks
                     }
                     _mapViewer._RSDK2Level.MapLayout = NewTiles2;
+
                     _mapViewer.DrawLevel();
                     break;
                 case 1:
@@ -887,7 +890,7 @@ namespace RetroED.Tools.MapEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles3[i] = new ushort[_RSDK3Level.width];
                         for (int j = 0; j < _RSDK3Level.width; ++j)
-                            NewTiles3[i][j] = 0xffff; // fill the chunks with blanks
+                            NewTiles3[i][j] = 0; // fill the chunks with blanks
                     }
                     _mapViewer._RSDK3Level.MapLayout = NewTiles3;
                     _mapViewer.DrawLevel();
@@ -900,7 +903,7 @@ namespace RetroED.Tools.MapEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles4[i] = new ushort[_RSDK4Level.width];
                         for (int j = 0; j < _RSDK4Level.width; ++j)
-                            NewTiles4[i][j] = 0xffff; // fill the chunks with blanks
+                            NewTiles4[i][j] = 0; // fill the chunks with blanks
                     }
                     _mapViewer._RSDK4Level.MapLayout = NewTiles4;
                     _mapViewer.DrawLevel();
@@ -1174,6 +1177,18 @@ namespace RetroED.Tools.MapEditor
 
         private void MenuItem_AddObjList_Click(object sender, EventArgs e)
         {
+            if (_mapViewer.datapath == null)
+            {
+                FolderBrowserDialog fdlg = new FolderBrowserDialog();
+                fdlg.Description = "Select Data Folder";
+
+                if (fdlg.ShowDialog(this) == DialogResult.OK)
+                {
+                    _mapViewer.datapath = fdlg.SelectedPath + "\\";
+                    LoadedObjDefinitions = true;
+                }
+            }
+
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.Filter = "Object Definition Lists (*.txt)|*.txt";
 
@@ -1183,15 +1198,19 @@ namespace RetroED.Tools.MapEditor
                 {
                     case 0:
                         _mapViewer.S1Objects.LoadObjList(dlg.FileName); //Load the object definitions into memory
+                        _blocksViewer.RefreshObjList();
                         break;
                     case 1:
                         _mapViewer.CDObjects.LoadObjList(dlg.FileName); //Load the object definitions into memory
+                        _blocksViewer.RefreshObjList();
                         break;
                     case 2:
                         _mapViewer.NexusObjects.LoadObjList(dlg.FileName); //Load the object definitions into memory
+                        _blocksViewer.RefreshObjList();
                         break;
                     case 3:
                         _mapViewer.RSObjects.LoadObjList(dlg.FileName); //Load the object definitions into memory
+                        _blocksViewer.RefreshObjList();
                         break;
                     default:
                         break;

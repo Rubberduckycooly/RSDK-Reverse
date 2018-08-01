@@ -4,10 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*
-This Loader uses code heavily based off of programs: "Retro Engine Map Viewer" and TaxEd by -- and Nextvolume respectivley 
-*/
-
 namespace RSDKv2
 {
     public class Level
@@ -15,7 +11,7 @@ namespace RSDKv2
         public string Title { get; set; }
         public ushort[][] MapLayout { get; set; }
 
-        public byte[] displayBytes = {1,9,0,0,3};
+        public byte[] displayBytes = {1,2,0,0,3};
 
         public List<Object> objects = new List<Object>();
         public List<string> objectTypeNames = new List<string>();
@@ -37,7 +33,7 @@ namespace RSDKv2
             Title = reader.ReadRSDKString();
             Console.WriteLine(Title);
             byte[] buffer = new byte[5];
-            reader.Read(buffer, 0, 5); //Waste 5 bytes, I don't care about them right now.
+            reader.Read(displayBytes, 0, 5); //Waste 5 bytes, I don't care about them right now.
             //The first 4 bytes are loaded into StageSystem.ActiveTileLayers. 5th byte is tLayerMidPoint.
             //If you want to know the values then look at the values for "DisplayBytes"
             reader.Read(buffer, 0, 2); //Read size
@@ -109,7 +105,7 @@ namespace RSDKv2
                 // Add object
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
             }
-
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -194,7 +190,6 @@ namespace RSDKv2
             {
                 writer.WriteRSDKString(objectTypeNames[n]);
             }
-
             // Write number of objects
             writer.Write((byte)(num_of_objects >> 8));
             writer.Write((byte)(num_of_objects & 0xFF));
@@ -218,7 +213,7 @@ namespace RSDKv2
                 writer.Write((byte)(obj_yPos >> 8));
                 writer.Write((byte)(obj_yPos & 0xFF));
             }
-
+            writer.Close();
         }
 
     }

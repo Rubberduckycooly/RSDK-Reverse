@@ -58,9 +58,9 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             return b;
         }
 
-        public Bitmap RenderObject(Color Transparent)
+        public Bitmap RenderObject(string DataPath, Color Transparent)
         {
-            Bitmap b = (Bitmap)Image.FromFile(SpriteSheet).Clone();
+            Bitmap b = (Bitmap)Image.FromFile(DataPath + SpriteSheet).Clone();
             b.MakeTransparent(Transparent);
             b = CropImage(b, new Rectangle(X, Y, Width, Height));
             return b;

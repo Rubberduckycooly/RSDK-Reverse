@@ -38,6 +38,7 @@
             this.menuItem14 = new System.Windows.Forms.MenuItem();
             this.MenuItem_AnimationEditor = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapEditor = new System.Windows.Forms.MenuItem();
+            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.MenuItem_PaletteEditor = new System.Windows.Forms.MenuItem();
             this.MenuItem_ChunkEditor = new System.Windows.Forms.MenuItem();
             this.MenuItem_GFXTool = new System.Windows.Forms.MenuItem();
@@ -46,7 +47,6 @@
             this.MenuItem_CloseTab = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem6 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // TabControl
@@ -121,6 +121,12 @@
             this.MenuItem_MapEditor.Text = "Map Editor";
             this.MenuItem_MapEditor.Click += new System.EventHandler(this.MenuItem_MapEditor_Click);
             // 
+            // menuItem6
+            // 
+            this.menuItem6.Index = 4;
+            this.menuItem6.Text = "Background Editor";
+            this.menuItem6.Click += new System.EventHandler(this.backgroundEditorToolStripMenuItem_Click);
+            // 
             // MenuItem_PaletteEditor
             // 
             this.MenuItem_PaletteEditor.Index = 5;
@@ -170,12 +176,6 @@
             this.menuItem5.Index = 0;
             this.menuItem5.Text = "About RetroED";
             this.menuItem5.Click += new System.EventHandler(this.MenuItem_About_Click);
-            // 
-            // menuItem6
-            // 
-            this.menuItem6.Index = 4;
-            this.menuItem6.Text = "Background Editor";
-            this.menuItem6.Click += new System.EventHandler(this.backgroundEditorToolStripMenuItem_Click);
             // 
             // MainForm
             // 

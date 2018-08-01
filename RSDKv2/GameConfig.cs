@@ -240,6 +240,8 @@ namespace RSDKv2
 
             Scenes = new StageList(reader);
 
+            reader.Close();
+
         }
 
         public void Write(string filename)
@@ -280,6 +282,9 @@ namespace RSDKv2
 
             Scenes.Write(writer);
             writer.Write((byte)0);
+
+            writer.Close();
+
         }
 
         internal void ReadObjectsNames(Reader reader)

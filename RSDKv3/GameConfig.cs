@@ -214,6 +214,8 @@ namespace RSDKv3
             this.ReadWAVConfiguration(reader);
 
             Stages = new StageList(reader);
+
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -246,6 +248,8 @@ namespace RSDKv3
 
             Stages.Write(writer);
             writer.Write((byte)0);
+
+            writer.Close();
         }
 
         internal void ReadObjectsNames(Reader reader)

@@ -9,23 +9,160 @@ namespace RSDKv3
     /* Background Layout */
     public class BGLayout
     {
-        public int width, height = 0;
+        public class UnknownValues
+        {
+            public byte Value1;
+            public byte Value2;
+            public byte Value3;
 
-        byte Unknown1; //Has something to do with the layer shown, since most values cause a blank BG
-        byte Unknown2; //makes the background do weird things
-        byte RelativeVSpeed;
-        byte ConstantVSpeed;
+            public UnknownValues(Reader reader)
+            {
+                Value1 = reader.ReadByte();
+                Value2 = reader.ReadByte();
+                Value3 = reader.ReadByte();
+            }
 
-        public ushort[][] MapLayout { get; set; }
+            public void Write(Writer writer)
+            {
+                writer.Write(Value1);
+                writer.Write(Value2);
+                writer.Write(Value3);
+            }
+
+        }
+
+        public class BGLayer
+        {
+
+            public class UnknownValues2
+            {
+                public byte Value1;
+                public byte Value2;
+                public byte Value3;
+            }
+
+            public ushort[][] MapLayout { get; set; }
+
+            public int width, height = 0;
+            public byte Unknown1; //Has something to do with the layer shown, since most values cause a blank BG
+            public byte Unknown2; //makes the background do weird things
+            public byte RelativeVSpeed;
+            public byte ConstantVSpeed;
+
+            public List<UnknownValues2> UnknownVals2 = new List<UnknownValues2>();
+
+            public BGLayer(Reader reader)
+            {
+                width = reader.ReadByte();
+                height = reader.ReadByte();
+                Unknown1 = reader.ReadByte();
+                Unknown2 = reader.ReadByte();
+                RelativeVSpeed = reader.ReadByte();
+                ConstantVSpeed = reader.ReadByte();
+
+                //Console.WriteLine("Width = " + width + " Height = " + height + " Unknown 1 = " + Unknown1 + " Unknown 2 = " + Unknown2 + " Unknown 3 = " + Unknown3);
+
+                int j = 0;
+                while (j < 1)
+                {
+                    UnknownValues2 u2 = new UnknownValues2();
+                    u2.Value1 = reader.ReadByte();
+
+                    if (u2.Value1 == 255)
+                    {
+                        u2.Value2 = reader.ReadByte();
+
+                        if (u2.Value2 == 255)
+                        {
+                            j = 1;
+                        }
+                        else
+                        {
+                            u2.Value3 = reader.ReadByte();
+                        }
+                    }
+                    else if (u2.Value1 != 255)
+                    {
+                        u2.Value3 = reader.ReadByte();
+                    }
+                    UnknownVals2.Add(u2);
+                }
+
+                byte[] buffer = new byte[2];
+
+                MapLayout = new ushort[height][];
+                for (int m = 0; m < height; m++)
+                {
+                    MapLayout[m] = new ushort[width];
+                }
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        reader.Read(buffer, 0, 2); //Read size
+                        MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
+                    }
+                }
+            }
+
+            public void Write(Writer writer)
+            {
+                writer.Write((byte)width);
+                writer.Write((byte)height);
+                writer.Write(Unknown1);
+                writer.Write(Unknown2);
+                writer.Write(RelativeVSpeed);
+                writer.Write(ConstantVSpeed);
+
+                Console.WriteLine(UnknownVals2.Count);
+
+                for (int i = 0; i < UnknownVals2.Count; i++)
+                {
+                    writer.Write(UnknownVals2[i].Value1);
+                    Console.WriteLine(UnknownVals2[i].Value1);
+
+                    if (UnknownVals2[i].Value1 == 255)
+                    {
+                        writer.Write(UnknownVals2[i].Value2);
+                        Console.WriteLine(UnknownVals2[i].Value2);
+
+                        if (UnknownVals2[i].Value1 == 255 && UnknownVals2[i].Value2 == 255)
+                        {
+                            break;
+                        }
+
+                        if (UnknownVals2[i].Value2 != 255)
+                        {
+                            writer.Write(UnknownVals2[i].Value3);
+                        }
+                    }
+                    else
+                    {
+                        writer.Write(UnknownVals2[i].Value3);
+                    }
+                }
+
+                for (int h = 0; h < height; h++)
+                {
+                    for (int w = 0; w < width; w++)
+                    {
+                        writer.Write((byte)(MapLayout[h][w] >> 8));
+                        writer.Write((byte)(MapLayout[h][w] & 0xff));
+                    }
+                }
+
+            }
+
+        }
+
+        byte LayerCount;
+        byte UnknownValue2;
 
         public List<ParallaxValues> Lines = new List<ParallaxValues>();
 
-        public List<byte> UnknownValues = new List<byte>();
+        public List<BGLayer> Layers = new List<BGLayer>();
 
-        byte UnknownValue;
-        byte UnknownValue2;
-
-        byte[] unknown = new byte[363];
+        public List<byte> Unknown = new List<byte>();
 
         //RSDKv2 & RSDKvB have different background layouts
         //NOTES:
@@ -50,7 +187,7 @@ namespace RSDKv3
 
         public BGLayout(Reader reader)
         {
-            UnknownValue = reader.ReadByte();//destroys the background if above 9
+            LayerCount = reader.ReadByte();
             byte LineCount = reader.ReadByte();
             UnknownValue2 = reader.ReadByte();// No idea what it does, honestly...
 
@@ -60,49 +197,16 @@ namespace RSDKv3
                 Lines.Add(p);
             }
 
-            //These Bytes seem to tell the engine how to display the layer(s)
-            width = reader.ReadByte();
-            height = reader.ReadByte();
-            Unknown1 = reader.ReadByte(); //Has something to do with the layer shown, since most values cause a blank BG
-            Unknown2 = reader.ReadByte(); //makes the background do weird things
-            RelativeVSpeed = reader.ReadByte();
-            ConstantVSpeed = reader.ReadByte();
-
-            //Read LineInfo
-
-            unknown = reader.ReadBytes(363); //Dont know how to get this value yet :/
-
-            //reader.ReadBytes(2); //always ends with "FF FF"
-
-            MapLayout = new ushort[height][];
-            for (int i = 0; i < height; i++)
+            for (int i = 0; i < LayerCount; i++)
             {
-                MapLayout[i] = new ushort[width];
+                Layers.Add(new BGLayer(reader));
             }
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv2 and RSDKv3
-                    byte[] buffer = new byte[5];
-                    reader.Read(buffer, 0, 2); //Read size
-                    MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
-                    //Console.WriteLine(MapLayout[y][x]);
-                }
-            }
-
-            while (!reader.IsEof)
-            {
-                UnknownValues.Add(reader.ReadByte()); //I have no idea what these are for, so lets just store them so we can write them back later :)
-            }
-
-            //Read Line Positions
-
-            //Read Tiles
 
             //Read Unknown Flags
+            while (!reader.IsEof)
+            {
+                Unknown.Add(reader.ReadByte()); //I have no idea what these are for, so lets just store them so we can write them back later :)
+            }
             reader.Close();
         }
 
@@ -120,7 +224,7 @@ namespace RSDKv3
 
         internal void Write(Writer writer)
         {
-            writer.Write(UnknownValue);
+            writer.Write(LayerCount);
             writer.Write((byte)Lines.Count);
             writer.Write(UnknownValue2);
 
@@ -129,34 +233,21 @@ namespace RSDKv3
                 Lines[i].Write(writer);
             }
 
-            writer.Write((byte)width);
-            writer.Write((byte)height);
-            writer.Write(Unknown1);
-            writer.Write(Unknown2);
-            writer.Write(RelativeVSpeed);
-            writer.Write(ConstantVSpeed);
-
-            writer.Write(unknown);
-
-            for (int h = 0; h < this.height; h++)
+            for (int i = 0; i < LayerCount; i++)
             {
-                for (int w = 0; w < this.width; w++)
-                {
-                    writer.Write((byte)(MapLayout[h][w] >> 8));
-                    writer.Write((byte)(MapLayout[h][w] & 0xff));
-                }
+                Layers[i].Write(writer);
             }
 
-            for (int i = 0; i < UnknownValues.Count; i++)
+            for (int i = 0; i < Unknown.Count; i++)
             {
-                writer.Write(UnknownValues[i]);
+                writer.Write(Unknown[i]);
             }
             writer.Close();
         }
 
         public class ParallaxValues
         {
-            public byte LineNo;
+            public byte LineNo; //Not LineNo...
             public byte RelativeSpeed;
             public byte ConstantSpeed;
             public byte Unknown; //Flips when walking?
@@ -166,6 +257,15 @@ namespace RSDKv3
             Scroll Speed and
             Scroll Pos
             */
+
+            public ParallaxValues()
+            {
+                LineNo = 0;
+                RelativeSpeed = 0;
+                ConstantSpeed = 0;
+                Unknown = 0;
+            }
+
             public ParallaxValues(Reader reader)
             {
                 LineNo = reader.ReadByte();

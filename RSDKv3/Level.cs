@@ -17,6 +17,13 @@ namespace RSDKv3
 
         public byte[] displayBytes = {1,9,0,0,3};
 
+        /* Values for the "Display Bytes" */
+        public byte ActiveLayer0 = 1; //Usually BG Layer
+        public byte ActiveLayer1 = 9; //Unknown
+        public byte ActiveLayer2 = 0; //Usually Foreground (Map) Layer
+        public byte ActiveLayer3 = 0; //Usually Foreground (Map) Layer
+        public byte Midpoint = 3;
+
         //Byte 5: Stage.MidPoint
         //if it's 0 then nothing but the objects are drawn
         //if its 1 or 2 the tiles on high layer are drawn on the low layer
@@ -48,7 +55,7 @@ namespace RSDKv3
             Title = reader.ReadRSDKString();
             Console.WriteLine(Title);
             byte[] buffer = new byte[5];
-            reader.Read(buffer, 0, 5); //Waste 5 bytes, I don't care about them right now.
+            reader.Read(displayBytes, 0, 5); //Waste 5 bytes, I don't care about them right now.
             //The first 4 bytes are loaded into Stage.ActiveLayer. 5th byte is Stage.MidPoint.
             //If you want to know the values then look at the values for "DisplayBytes"
             reader.Read(buffer, 0, 2); //Read size
@@ -125,7 +132,7 @@ namespace RSDKv3
                 objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
                 //Console.WriteLine(n + " Obj Values: Type: " + obj_type + ", Subtype: " + obj_subtype + ", Xpos = " + obj_xPos + ", Ypos = " + obj_yPos);
             }
-
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -234,7 +241,7 @@ namespace RSDKv3
                 writer.Write((byte)(obj_yPos >> 8));
                 writer.Write((byte)(obj_yPos & 0xFF));
             }
-
+            writer.Close();
         }
 
     }

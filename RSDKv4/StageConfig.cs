@@ -36,6 +36,7 @@ namespace RSDKv4
 
             this.ReadObjectsNames(reader);
 
+            reader.Close();
         }
 
         internal void ReadObjectsNames(Reader reader)
@@ -95,6 +96,9 @@ namespace RSDKv4
             WriteWAVConfiguration(writer);
 
             WriteObjectsNames(writer);
+
+            writer.Close();
+
         }
 
     }

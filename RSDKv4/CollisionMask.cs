@@ -53,6 +53,7 @@ namespace RSDKv4
                     CollisionPath1[i] = new TileConfig(reader);
                 for (int i = 0; i < TILES_COUNT; ++i)
                     CollisionPath2[i] = new TileConfig(reader);
+            reader.Close();
         }
     }
 }

@@ -55,6 +55,7 @@ namespace RSDKv3
                 BlockList.Add(currentBlock);
                 currentBlock = new Tile128();
             }
+            strm.Close();
         }
 
         public void Write(string filename)
@@ -108,6 +109,8 @@ namespace RSDKv3
                 tileIndex = 0;
                 chunkIndex++;
             }
+            writer.Close();
+
         }
 
         public Bitmap RenderChunk(int ChunkID, Bitmap Tiles)

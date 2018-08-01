@@ -57,6 +57,8 @@
             this.refreshChunksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.drawAllLayersToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectedLayerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearChunksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
@@ -64,15 +66,18 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dpMain = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.clearParallaxValuesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.openToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.saveToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.cutToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.copyToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.PlaceTileButton = new System.Windows.Forms.ToolStripButton();
+            this.addParallaxValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.msMenus.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -159,7 +164,9 @@
             this.ViewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshChunksToolStripMenuItem,
             this.toolStripSeparator6,
-            this.showGridToolStripMenuItem});
+            this.showGridToolStripMenuItem,
+            this.drawAllLayersToolStripMenuItem,
+            this.selectedLayerToolStripMenuItem});
             this.ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
             this.ViewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
             this.ViewToolStripMenuItem.Text = "View";
@@ -167,25 +174,44 @@
             // refreshChunksToolStripMenuItem
             // 
             this.refreshChunksToolStripMenuItem.Name = "refreshChunksToolStripMenuItem";
-            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
             this.refreshChunksToolStripMenuItem.Text = "Refresh Chunks";
             this.refreshChunksToolStripMenuItem.Click += new System.EventHandler(this.refreshChunksToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(180, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(183, 6);
             // 
             // showGridToolStripMenuItem
             // 
             this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
             this.showGridToolStripMenuItem.Text = "Show Grid";
             this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
+            // 
+            // drawAllLayersToolStripMenuItem
+            // 
+            this.drawAllLayersToolStripMenuItem.Checked = true;
+            this.drawAllLayersToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.drawAllLayersToolStripMenuItem.Name = "drawAllLayersToolStripMenuItem";
+            this.drawAllLayersToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.drawAllLayersToolStripMenuItem.Text = "Draw All Layers";
+            this.drawAllLayersToolStripMenuItem.Click += new System.EventHandler(this.drawAllLayersToolStripMenuItem_Click);
+            // 
+            // selectedLayerToolStripMenuItem
+            // 
+            this.selectedLayerToolStripMenuItem.Name = "selectedLayerToolStripMenuItem";
+            this.selectedLayerToolStripMenuItem.Size = new System.Drawing.Size(186, 26);
+            this.selectedLayerToolStripMenuItem.Text = "Select Layer";
+            this.selectedLayerToolStripMenuItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.selectedLayerToolStripMenuItem_DropDownItemClicked);
             // 
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addParallaxValueToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.clearParallaxValuesToolStripMenuItem,
             this.clearChunksToolStripMenuItem,
             this.toolStripSeparator4,
             this.mapPropertiesToolStripMenuItem});
@@ -196,20 +222,20 @@
             // clearChunksToolStripMenuItem
             // 
             this.clearChunksToolStripMenuItem.Name = "clearChunksToolStripMenuItem";
-            this.clearChunksToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
+            this.clearChunksToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
             this.clearChunksToolStripMenuItem.Text = "Clear Chunks";
             this.clearChunksToolStripMenuItem.Click += new System.EventHandler(this.clearChunksToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(182, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(216, 6);
             // 
             // mapPropertiesToolStripMenuItem
             // 
             this.mapPropertiesToolStripMenuItem.Name = "mapPropertiesToolStripMenuItem";
-            this.mapPropertiesToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
-            this.mapPropertiesToolStripMenuItem.Text = "Map Properties";
+            this.mapPropertiesToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
+            this.mapPropertiesToolStripMenuItem.Text = "Layer Properties";
             this.mapPropertiesToolStripMenuItem.Click += new System.EventHandler(this.mapPropertiesToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
@@ -294,6 +320,23 @@
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
+            // toolStripSeparator
+            // 
+            this.toolStripSeparator.Name = "toolStripSeparator";
+            this.toolStripSeparator.Size = new System.Drawing.Size(6, 27);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
+            // 
+            // clearParallaxValuesToolStripMenuItem
+            // 
+            this.clearParallaxValuesToolStripMenuItem.Name = "clearParallaxValuesToolStripMenuItem";
+            this.clearParallaxValuesToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
+            this.clearParallaxValuesToolStripMenuItem.Text = "Clear Parallax Values";
+            this.clearParallaxValuesToolStripMenuItem.Click += new System.EventHandler(this.clearParallaxValuesToolStripMenuItem_Click);
+            // 
             // newToolStripButton
             // 
             this.newToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -323,11 +366,6 @@
             this.saveToolStripButton.Text = "&Save";
             this.saveToolStripButton.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
-            // toolStripSeparator
-            // 
-            this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(6, 27);
-            // 
             // cutToolStripButton
             // 
             this.cutToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -355,11 +393,6 @@
             this.pasteToolStripButton.Size = new System.Drawing.Size(24, 24);
             this.pasteToolStripButton.Text = "&Paste";
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
-            // 
             // PlaceTileButton
             // 
             this.PlaceTileButton.BackColor = System.Drawing.SystemColors.Control;
@@ -371,6 +404,18 @@
             this.PlaceTileButton.Size = new System.Drawing.Size(24, 24);
             this.PlaceTileButton.Text = "PlaceTile";
             this.PlaceTileButton.Click += new System.EventHandler(this.PlaceTileButton_Click);
+            // 
+            // addParallaxValueToolStripMenuItem
+            // 
+            this.addParallaxValueToolStripMenuItem.Name = "addParallaxValueToolStripMenuItem";
+            this.addParallaxValueToolStripMenuItem.Size = new System.Drawing.Size(219, 26);
+            this.addParallaxValueToolStripMenuItem.Text = "Add Parallax Value";
+            this.addParallaxValueToolStripMenuItem.Click += new System.EventHandler(this.addParallaxValueToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(216, 6);
             // 
             // MainView
             // 
@@ -426,6 +471,11 @@
         private System.Windows.Forms.ToolStripMenuItem refreshChunksToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem showGridToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem drawAllLayersToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectedLayerToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem clearParallaxValuesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addParallaxValueToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 

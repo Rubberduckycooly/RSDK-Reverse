@@ -417,16 +417,155 @@ namespace RSDKv1
     public class BGLayout
     {
 
-        public int Width, Height = 0;
+        public class BGLayer
+        {
 
-        public ushort[][] Layout { get; set; }
+            public class UnknownValues2
+            {
+                public byte Value1;
+                public byte Value2;
+                public byte Value3;
+            }
+
+            public ushort[][] MapLayout { get; set; }
+
+            public int width, height = 0;
+            public byte Deform; //1 for parallax, 2 for no parallax, 3 for "3D Sky", anything else for nothing
+            public byte RelativeVSpeed;
+            public byte ConstantVSpeed;
+
+            public List<UnknownValues2> UnknownVals2 = new List<UnknownValues2>();
+
+            public BGLayer(Reader reader)
+            {
+                width = reader.ReadByte();
+                height = reader.ReadByte();
+                Deform = reader.ReadByte();
+                RelativeVSpeed = reader.ReadByte();
+                ConstantVSpeed = reader.ReadByte();
+
+                //Console.WriteLine("Width = " + width + " Height = " + height + " Unknown 1 = " + Unknown1 + " Unknown 2 = " + Unknown2 + " Unknown 3 = " + Unknown3);
+
+                int j = 0;
+                while (j < 1)
+                {
+                    UnknownValues2 u2 = new UnknownValues2();
+                    u2.Value1 = reader.ReadByte();
+
+                    if (u2.Value1 == 255)
+                    {
+                        u2.Value2 = reader.ReadByte();
+
+                        if (u2.Value2 == 255)
+                        {
+                            j = 1;
+                        }
+                        else
+                        {
+                            u2.Value3 = reader.ReadByte();
+                        }
+                    }
+                    else if (u2.Value1 != 255)
+                    {
+                        u2.Value3 = reader.ReadByte();
+                    }
+                    UnknownVals2.Add(u2);
+                }
+                Console.WriteLine(reader.Pos);
+                MapLayout = new ushort[height][];
+                for (int m = 0; m < height; m++)
+                {
+                    MapLayout[m] = new ushort[width];
+                }
+                for (int y = 0; y < height; y++)
+                {
+                    for (int x = 0; x < width; x++)
+                    {
+                        MapLayout[y][x] = reader.ReadByte();
+                        //Console.WriteLine("Map = " + MapLayout[y][x]);
+                    }
+                }
+            }
+
+            public void Write(Writer writer)
+            {
+                writer.Write((byte)width);
+                writer.Write((byte)height);
+                writer.Write(Deform);
+                writer.Write(RelativeVSpeed);
+                writer.Write(ConstantVSpeed);
+
+                Console.WriteLine(UnknownVals2.Count);
+
+                for (int i = 0; i < UnknownVals2.Count; i++)
+                {
+                    writer.Write(UnknownVals2[i].Value1);
+                    Console.WriteLine(UnknownVals2[i].Value1);
+
+                    if (UnknownVals2[i].Value1 == 255)
+                    {
+                        writer.Write(UnknownVals2[i].Value2);
+                        Console.WriteLine(UnknownVals2[i].Value2);
+
+                        if (UnknownVals2[i].Value1 == 255 && UnknownVals2[i].Value2 == 255)
+                        {
+                            break;
+                        }
+
+                        if (UnknownVals2[i].Value2 != 255)
+                        {
+                            writer.Write(UnknownVals2[i].Value3);
+                        }
+                    }
+                    else
+                    {
+                        writer.Write(UnknownVals2[i].Value3);
+                    }
+                }
+
+                for (int h = 0; h < height; h++)
+                {
+                    for (int w = 0; w < width; w++)
+                    {
+                        writer.Write((byte)(MapLayout[h][w]));
+                    }
+                }
+            }
+
+        }
+
+        public class UnknownValues
+        {
+            public byte Value1;
+            public byte Value2;
+            public byte Value3;
+
+            public UnknownValues(Reader reader)
+            {
+                Value1 = reader.ReadByte();
+                Value2 = reader.ReadByte();
+                Value3 = reader.ReadByte();
+            }
+
+            public void Write(Writer writer)
+            {
+                writer.Write(Value1);
+                writer.Write(Value2);
+                writer.Write(Value3);
+            }
+
+        }
+
+        public byte layerCount;
+        public byte LinesPerLayer;
+
+        public byte Unknown1;
+
+        public List<UnknownValues> UnknownVals = new List<UnknownValues>();
 
         public List<ParallaxValues> Lines = new List<ParallaxValues>();
 
-        byte layerCount;
-        byte LinesPerLayer;
-
-        List<byte> Unknown = new List<byte>();
+        public List<BGLayer> Layers = new List<BGLayer>();
 
         //NOTES:
         //Byte 1 are the number of layers
@@ -451,45 +590,24 @@ namespace RSDKv1
             LinesPerLayer = reader.ReadByte();
 
             //First up is certainly the Parallax vallues
-            for (int lc = 0; lc <= LinesPerLayer; lc++)
+            for (int lc = 0; lc < LinesPerLayer; lc++)
             {
                 Lines.Add(new ParallaxValues(reader));
             }
 
-            byte Unknown1;
-            byte Unknown4;
-            byte Unknown5;
-            byte Unknown6;
+            Unknown1 = reader.ReadByte(); //Used for reading these unknown values 
 
-            Unknown1 = reader.ReadByte();
-            Width = reader.ReadByte();
-            Height = reader.ReadByte();
-            Unknown4 = reader.ReadByte();
-            Unknown5 = reader.ReadByte();
-            Unknown6 = reader.ReadByte();
-
-            Console.WriteLine(Unknown1); //Unknown
-            Console.WriteLine(Width);
-            Console.WriteLine(Height);
-            Console.WriteLine(Unknown4); //1 for parallax, 2 for no parallax, anything else for nothing
-            Console.WriteLine(Unknown5); //Unknown, but is different for different levels, so it does something...
-            Console.WriteLine(Unknown6); //Unknown
-
-            Layout = new ushort[Height][];
-            for (int i = 0; i < Height; i++)
+            for (int i = 0; i < Unknown1; i++)
             {
-                Layout[i] = new ushort[Width];
+                UnknownValues u = new UnknownValues(reader);
+                UnknownVals.Add(u);
             }
 
-            for (int y = 0; y < Height; y++)
+            for (int i = 0; i < layerCount; i++) //Read BG Layers
             {
-                for (int x = 0; x < Width; x++)
-                {
-                    //Layout[y][x] = reader.ReadByte();
-                    //Console.WriteLine(Layout[y][x]);
-                    Console.WriteLine(reader.ReadByte());
-                }
+                Layers.Add(new BGLayer(reader));
             }
+
             reader.Close();
         }
 
@@ -507,28 +625,53 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
+            writer.Write(layerCount);
+            writer.Write((byte)Lines.Count);
+
+            for (int lc = 0; lc < Lines.Count; lc++)
+            {
+                Lines[lc].Write(writer);
+            }
+
+            writer.Write(Unknown1);
+
+            for (int i = 0; i < Unknown1; i++)
+            {
+                UnknownVals[i].Write(writer);
+            }
+
+            for (int i = 0; i < layerCount; i++) //Read BG Layers
+            {
+                Layers[i].Write(writer);
+            }
 
             writer.Close();
         }
 
             public class ParallaxValues
             {
-                public byte LineNo;
-                public byte OverallSpeed;
-                public byte Deform;
+            public byte RHSpeed; //Known as "Speed" in Taxman's Editor
+            public byte CHSpeed; //Known as "Scroll" in Taxman's Editor
+            public byte Deform; //Known as "Deform" in Taxman's Editor, Same here!
 
-                public ParallaxValues(Reader reader)
-                {
-                    LineNo = reader.ReadByte();
-                    OverallSpeed = reader.ReadByte();
-                    Deform = reader.ReadByte();
-                    Console.WriteLine(LineNo + " " + OverallSpeed + " " + Deform);
-                }
+            public ParallaxValues()
+            {
+                RHSpeed = 0;
+                CHSpeed = 0;
+                Deform = 0;
+            }
+
+            public ParallaxValues(Reader reader)
+            {
+                RHSpeed = reader.ReadByte();
+                CHSpeed = reader.ReadByte();
+                Deform = reader.ReadByte();
+            }
 
                 public void Write(Writer writer)
                 {
-                    writer.Write(LineNo);
-                    writer.Write(OverallSpeed);
+                    writer.Write(RHSpeed);
+                    writer.Write(CHSpeed);
                     writer.Write(Deform);
                 }
 
@@ -588,10 +731,15 @@ namespace RSDKv1
             //DC version doesnt have this unknown value
             public byte PCunknown; //if it's Value is FF it causes the player's collision & gravity to be disabled until jumping, 00 causes the player to be unstuck from the tile
             //May be a "Tile Stickiness Value"
-            public byte[] CollisionP1 = new byte[32]; //Collision Values for Path A
-            public byte[] unknownP1 = new byte[32]; 
-            public byte[] CollisionP2 = new byte[32]; //Collision Values for Path B
-            public byte[] unknownP2 = new byte[32]; 
+            public int[] CollisionP1 = new int[16]; //Collision Values for Path A
+            public int[] unknownP1 = new int[16];
+            public int[] unknown2P1 = new int[16];
+            public int[] unknown3P1 = new int[16];
+
+            public int[] CollisionP2 = new int[16]; //Collision Values for Path A
+            public int[] unknownP2 = new int[16];
+            public int[] unknown2P2 = new int[16];
+            public int[] unknown3P2 = new int[16];
 
             public TileConfig(string filename, bool DCver) : this(new Reader(filename), DCver)
             {
@@ -605,19 +753,50 @@ namespace RSDKv1
             {
                 if (DCver)
                 {
-                    CollisionP1 = reader.ReadBytes(32);
-                    CollisionP1 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path A)
-                    unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
-                    CollisionP2 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path B)
-                    unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
+                    //CollisionP1 = reader.ReadBytes(32);
+                    //CollisionP1 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path A)
+                    //unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
+                    //CollisionP2 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path B)
+                    //unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
                 }
                 else if (!DCver)
                 {
                     PCunknown = reader.ReadByte(); // Single Byte
-                    CollisionP1 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path A)
-                    unknownP1 = reader.ReadBytes(32); //Unknown, Seems to be for path A
-                    CollisionP2 = reader.ReadBytes(32); //First 16 bytes are for Collision Angle, Next 16 control how the tile behaves somehow (Path B)
-                    unknownP2 = reader.ReadBytes(32); //Unknown, Seems to be for path B
+                    for (int i = 0; i < 16; i++)
+                    {
+                        CollisionP1[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknownP1[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknown2P1[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknown3P1[i] = reader.ReadByte();
+                    }
+
+
+
+                    for (int i = 0; i < 16; i++)
+                    {
+                        CollisionP2[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknownP2[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknown2P2[i] = reader.ReadByte();
+                    }
+                    for (int i = 0; i < 16; i++)
+                    {
+                        unknown3P2[i] = reader.ReadByte();
+                    }
                 }
             }
 
@@ -637,18 +816,50 @@ namespace RSDKv1
             {
                 if (DCver)
                 {
-                    writer.Write(CollisionP1);
-                    writer.Write(unknownP1);
-                    writer.Write(CollisionP2);
-                    writer.Write(unknownP2);
+                    //writer.Write(CollisionP1);
+                    //writer.Write(unknownP1);
+                    //writer.Write(CollisionP2);
+                    //writer.Write(unknownP2);
                 }
                 else if (!DCver)
                 {
                     writer.Write(PCunknown);
-                    writer.Write(CollisionP1);
-                    writer.Write(unknownP1);
-                    writer.Write(CollisionP2);
-                    writer.Write(unknownP2);
+                    for (int i = 0; i < CollisionP1.Length; i++)
+                    {
+                        writer.Write((byte)CollisionP1[i]);
+                    }
+                    for (int i = 0; i < unknownP1.Length; i++)
+                    {
+                        writer.Write((byte)unknownP1[i]);
+                    }
+                    for (int i = 0; i < unknown2P1.Length; i++)
+                    {
+                        writer.Write((byte)unknown2P1[i]);
+                    }
+                    for (int i = 0; i < unknown3P1.Length; i++)
+                    {
+                        writer.Write((byte)unknown3P1[i]);
+                    }
+
+
+
+                    for (int i = 0; i < CollisionP2.Length; i++)
+                    {
+                        writer.Write((byte)CollisionP2[i]);
+                    }
+                    for (int i = 0; i < unknownP2.Length; i++)
+                    {
+                        writer.Write((byte)unknownP2[i]);
+                    }
+                    for (int i = 0; i < unknown2P2.Length; i++)
+                    {
+                        writer.Write((byte)unknown2P2[i]);
+                    }
+                    for (int i = 0; i < unknown3P2.Length; i++)
+                    {
+                        writer.Write((byte)unknown3P2[i]);
+                    }
+
                 }
             }
         }
@@ -885,7 +1096,7 @@ namespace RSDKv1
     public class zcf
     {
 
-        public byte[] Unknown = new byte[26];
+        public byte[] Unknown;
 
         public Palette palette = new Palette();
 
@@ -915,8 +1126,6 @@ namespace RSDKv1
 
             this.ReadObjectsNames(reader);
 
-            Unknown = reader.ReadBytes(26); //unknown values
-
             this.ReadWAVConfiguration(reader);
 
             this.ReadOGGConfiguration(reader);
@@ -941,16 +1150,21 @@ namespace RSDKv1
         internal void ReadObjectsNames(Reader reader)
         {
             byte objects_count = reader.ReadByte();
-
+            Unknown = new byte[objects_count];
             for (int i = 0; i < objects_count; ++i)
             { ObjectsNames.Add(reader.ReadRSDKString()); }
+            for (int i = 0; i < objects_count; i++)
+            {
+                Unknown[i] = reader.ReadByte();
+            }
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
-                writer.WriteRSDKString(name);
+            { writer.WriteRSDKString(name); }
+            writer.Write(Unknown);
         }
 
         internal void ReadWAVConfiguration(Reader reader)
@@ -1003,8 +1217,6 @@ namespace RSDKv1
             WriteObjectsSpriteSheets(writer);
 
             WriteObjectsNames(writer);
-
-            writer.Write(Unknown);
 
             WriteWAVConfiguration(writer);
 

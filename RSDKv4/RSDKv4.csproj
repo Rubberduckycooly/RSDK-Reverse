@@ -50,7 +50,6 @@
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="CollisionMask.cs" />
     <Compile Include="GameConfig.cs" />
-    <Compile Include="Model.cs" />
     <Compile Include="Animation.AnimationEntry.cs" />
     <Compile Include="Animation.cs" />
     <Compile Include="Animation.Frame.cs" />

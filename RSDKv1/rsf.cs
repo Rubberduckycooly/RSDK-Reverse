@@ -24,6 +24,7 @@ namespace RSDKv1
         internal void Write(Writer writer)
         {
 
+            writer.Close();
         }
 
     }

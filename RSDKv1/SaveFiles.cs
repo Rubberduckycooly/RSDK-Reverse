@@ -65,6 +65,7 @@ namespace RSDKv1
             {
                 Saves[i] = new SaveData(reader);
             }
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -85,6 +86,7 @@ namespace RSDKv1
             {
                 Saves[i].Write(writer);
             }
+            writer.Close();
         }
     }
 }

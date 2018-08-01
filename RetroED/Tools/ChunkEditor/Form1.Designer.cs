@@ -55,6 +55,13 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OptionsPanel = new System.Windows.Forms.Panel();
+            this.CurChunkChangePanel = new System.Windows.Forms.Panel();
+            this.GotoButton = new System.Windows.Forms.Button();
+            this.GotoNUD = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ChunkNoLabel = new System.Windows.Forms.Label();
+            this.PrevChunkButton = new System.Windows.Forms.Button();
+            this.NextChunkButton = new System.Windows.Forms.Button();
             this.CollisionBBox = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.CollisionABox = new System.Windows.Forms.ComboBox();
@@ -64,13 +71,6 @@
             this.OrientationBox = new System.Windows.Forms.ComboBox();
             this.OrientationLabel = new System.Windows.Forms.Label();
             this.ChunkDisplay = new System.Windows.Forms.Panel();
-            this.CurChunkChangePanel = new System.Windows.Forms.Panel();
-            this.GotoButton = new System.Windows.Forms.Button();
-            this.GotoNUD = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.ChunkNoLabel = new System.Windows.Forms.Label();
-            this.PrevChunkButton = new System.Windows.Forms.Button();
-            this.NextChunkButton = new System.Windows.Forms.Button();
             this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -328,6 +328,83 @@
             this.OptionsPanel.Size = new System.Drawing.Size(306, 425);
             this.OptionsPanel.TabIndex = 0;
             // 
+            // CurChunkChangePanel
+            // 
+            this.CurChunkChangePanel.Controls.Add(this.GotoButton);
+            this.CurChunkChangePanel.Controls.Add(this.GotoNUD);
+            this.CurChunkChangePanel.Controls.Add(this.label4);
+            this.CurChunkChangePanel.Controls.Add(this.ChunkNoLabel);
+            this.CurChunkChangePanel.Controls.Add(this.PrevChunkButton);
+            this.CurChunkChangePanel.Controls.Add(this.NextChunkButton);
+            this.CurChunkChangePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.CurChunkChangePanel.Location = new System.Drawing.Point(0, 372);
+            this.CurChunkChangePanel.Name = "CurChunkChangePanel";
+            this.CurChunkChangePanel.Size = new System.Drawing.Size(306, 53);
+            this.CurChunkChangePanel.TabIndex = 8;
+            // 
+            // GotoButton
+            // 
+            this.GotoButton.Location = new System.Drawing.Point(194, 28);
+            this.GotoButton.Name = "GotoButton";
+            this.GotoButton.Size = new System.Drawing.Size(107, 23);
+            this.GotoButton.TabIndex = 5;
+            this.GotoButton.Text = "GO!";
+            this.GotoButton.UseVisualStyleBackColor = true;
+            this.GotoButton.Click += new System.EventHandler(this.GotoButton_Click);
+            // 
+            // GotoNUD
+            // 
+            this.GotoNUD.Location = new System.Drawing.Point(247, 6);
+            this.GotoNUD.Maximum = new decimal(new int[] {
+            512,
+            0,
+            0,
+            0});
+            this.GotoNUD.Name = "GotoNUD";
+            this.GotoNUD.Size = new System.Drawing.Size(54, 22);
+            this.GotoNUD.TabIndex = 4;
+            this.GotoNUD.ValueChanged += new System.EventHandler(this.GotoNUD_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(155, 6);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(85, 17);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "Go to chunk";
+            // 
+            // ChunkNoLabel
+            // 
+            this.ChunkNoLabel.AutoSize = true;
+            this.ChunkNoLabel.Location = new System.Drawing.Point(4, 6);
+            this.ChunkNoLabel.Name = "ChunkNoLabel";
+            this.ChunkNoLabel.Size = new System.Drawing.Size(95, 17);
+            this.ChunkNoLabel.TabIndex = 2;
+            this.ChunkNoLabel.Text = "Chunk 0 Of 0:";
+            // 
+            // PrevChunkButton
+            // 
+            this.PrevChunkButton.BackColor = System.Drawing.SystemColors.Control;
+            this.PrevChunkButton.Location = new System.Drawing.Point(3, 28);
+            this.PrevChunkButton.Name = "PrevChunkButton";
+            this.PrevChunkButton.Size = new System.Drawing.Size(89, 23);
+            this.PrevChunkButton.TabIndex = 1;
+            this.PrevChunkButton.Text = "Prev Chunk";
+            this.PrevChunkButton.UseVisualStyleBackColor = false;
+            this.PrevChunkButton.Click += new System.EventHandler(this.PrevChunkButton_Click);
+            // 
+            // NextChunkButton
+            // 
+            this.NextChunkButton.BackColor = System.Drawing.SystemColors.Control;
+            this.NextChunkButton.Location = new System.Drawing.Point(98, 28);
+            this.NextChunkButton.Name = "NextChunkButton";
+            this.NextChunkButton.Size = new System.Drawing.Size(89, 23);
+            this.NextChunkButton.TabIndex = 0;
+            this.NextChunkButton.Text = "Next Chunk";
+            this.NextChunkButton.UseVisualStyleBackColor = false;
+            this.NextChunkButton.Click += new System.EventHandler(this.NextChunkButton_Click);
+            // 
             // CollisionBBox
             // 
             this.CollisionBBox.BackColor = System.Drawing.SystemColors.ControlDark;
@@ -435,83 +512,7 @@
             this.ChunkDisplay.Size = new System.Drawing.Size(426, 425);
             this.ChunkDisplay.TabIndex = 3;
             this.ChunkDisplay.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
-            // 
-            // CurChunkChangePanel
-            // 
-            this.CurChunkChangePanel.Controls.Add(this.GotoButton);
-            this.CurChunkChangePanel.Controls.Add(this.GotoNUD);
-            this.CurChunkChangePanel.Controls.Add(this.label4);
-            this.CurChunkChangePanel.Controls.Add(this.ChunkNoLabel);
-            this.CurChunkChangePanel.Controls.Add(this.PrevChunkButton);
-            this.CurChunkChangePanel.Controls.Add(this.NextChunkButton);
-            this.CurChunkChangePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.CurChunkChangePanel.Location = new System.Drawing.Point(0, 372);
-            this.CurChunkChangePanel.Name = "CurChunkChangePanel";
-            this.CurChunkChangePanel.Size = new System.Drawing.Size(306, 53);
-            this.CurChunkChangePanel.TabIndex = 8;
-            // 
-            // GotoButton
-            // 
-            this.GotoButton.Location = new System.Drawing.Point(194, 28);
-            this.GotoButton.Name = "GotoButton";
-            this.GotoButton.Size = new System.Drawing.Size(107, 23);
-            this.GotoButton.TabIndex = 5;
-            this.GotoButton.Text = "GO!";
-            this.GotoButton.UseVisualStyleBackColor = true;
-            this.GotoButton.Click += new System.EventHandler(this.GotoButton_Click);
-            // 
-            // GotoNUD
-            // 
-            this.GotoNUD.Location = new System.Drawing.Point(247, 6);
-            this.GotoNUD.Maximum = new decimal(new int[] {
-            512,
-            0,
-            0,
-            0});
-            this.GotoNUD.Name = "GotoNUD";
-            this.GotoNUD.Size = new System.Drawing.Size(54, 22);
-            this.GotoNUD.TabIndex = 4;
-            this.GotoNUD.ValueChanged += new System.EventHandler(this.GotoNUD_ValueChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(155, 6);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(85, 17);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "Go to chunk";
-            // 
-            // ChunkNoLabel
-            // 
-            this.ChunkNoLabel.AutoSize = true;
-            this.ChunkNoLabel.Location = new System.Drawing.Point(4, 6);
-            this.ChunkNoLabel.Name = "ChunkNoLabel";
-            this.ChunkNoLabel.Size = new System.Drawing.Size(95, 17);
-            this.ChunkNoLabel.TabIndex = 2;
-            this.ChunkNoLabel.Text = "Chunk 0 Of 0:";
-            // 
-            // PrevChunkButton
-            // 
-            this.PrevChunkButton.BackColor = System.Drawing.SystemColors.Control;
-            this.PrevChunkButton.Location = new System.Drawing.Point(3, 28);
-            this.PrevChunkButton.Name = "PrevChunkButton";
-            this.PrevChunkButton.Size = new System.Drawing.Size(89, 23);
-            this.PrevChunkButton.TabIndex = 1;
-            this.PrevChunkButton.Text = "Prev Chunk";
-            this.PrevChunkButton.UseVisualStyleBackColor = false;
-            this.PrevChunkButton.Click += new System.EventHandler(this.PrevChunkButton_Click);
-            // 
-            // NextChunkButton
-            // 
-            this.NextChunkButton.BackColor = System.Drawing.SystemColors.Control;
-            this.NextChunkButton.Location = new System.Drawing.Point(98, 28);
-            this.NextChunkButton.Name = "NextChunkButton";
-            this.NextChunkButton.Size = new System.Drawing.Size(89, 23);
-            this.NextChunkButton.TabIndex = 0;
-            this.NextChunkButton.Text = "Next Chunk";
-            this.NextChunkButton.UseVisualStyleBackColor = false;
-            this.NextChunkButton.Click += new System.EventHandler(this.NextChunkButton_Click);
+            this.ChunkDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
             // 
             // StageTilesList
             // 
@@ -524,6 +525,7 @@
             this.StageTilesList.SelectedIndex = -1;
             this.StageTilesList.Size = new System.Drawing.Size(242, 425);
             this.StageTilesList.TabIndex = 1;
+            this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageTilesList_SelectedIndexChanged);
             // 
             // MainForm
             // 

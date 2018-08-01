@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace RetroED.Tools.BackgroundEditor
 {
-    public partial class LineScrollForm : Form
+    public partial class CD12_LineScrollForm : Form
     {
 
         public int LoadedRSDKver;
@@ -22,7 +22,7 @@ namespace RetroED.Tools.BackgroundEditor
         public RSDKv3.BGLayout Mapv3;
         public RSDKv4.BGLayout Mapv4;
 
-        public LineScrollForm(int RSDKver, int PVal)
+        public CD12_LineScrollForm(int RSDKver, int PVal)
         {
             InitializeComponent();
             LoadedRSDKver = RSDKver;
@@ -33,14 +33,6 @@ namespace RetroED.Tools.BackgroundEditor
         {
             switch (LoadedRSDKver)
             {
-                case 3:
-                    //LineNoNUD.Value = Mapv1.Lines[Pvalue].LineNo;
-                    //RSPDNUD.Value = Mapv1.Height;
-                    break;
-                case 2:
-                    //LineNoNUD.Value = Mapv2.width;
-                    //RSPDNUD.Value = Mapv2.height;
-                    break;
                 case 1:
                     LineNoNUD.Value = Mapv3.Lines[Pvalue].LineNo;
                     RSPDNUD.Value = Mapv3.Lines[Pvalue].RelativeSpeed;
@@ -48,8 +40,10 @@ namespace RetroED.Tools.BackgroundEditor
                     UnknownNUD.Value = Mapv3.Lines[Pvalue].Unknown;
                     break;
                 case 0:
-                    //LineNoNUD.Value = Mapv4.width;
-                    //RSPDNUD.Value = Mapv4.height;
+                    LineNoNUD.Value = Mapv4.Lines[Pvalue].LineNo;
+                    RSPDNUD.Value = Mapv4.Lines[Pvalue].RelativeSpeed;
+                    CSPDNUD.Value = Mapv4.Lines[Pvalue].ConstantSpeed;
+                    UnknownNUD.Value = Mapv4.Lines[Pvalue].Unknown;
                     break;
                 default:
                     break;
@@ -67,42 +61,30 @@ namespace RetroED.Tools.BackgroundEditor
             this.DialogResult = DialogResult.Cancel;
             this.Close();
         }
-        private void MapWidthNUD_ValueChanged(object sender, EventArgs e)
+        private void LineNoNUD_ValueChanged(object sender, EventArgs e)
         {
             switch (LoadedRSDKver)
             {
-                case 3:
-                    //Mapv1.Width = (int)LineNoNUD.Value;
-                    break;
-                case 2:
-                    //Mapv2.width = (int)LineNoNUD.Value;
-                    break;
                 case 1:
                     Mapv3.Lines[Pvalue].LineNo = (byte)LineNoNUD.Value;
                     break;
                 case 0:
-                    //Mapv4.width = (int)LineNoNUD.Value;
+                    Mapv4.Lines[Pvalue].LineNo = (byte)LineNoNUD.Value;
                     break;
                 default:
                     break;
             }
         }
 
-        private void MapHeightNUD_ValueChanged(object sender, EventArgs e)
+        private void RSPDNUD_ValueChanged(object sender, EventArgs e)
         {
             switch (LoadedRSDKver)
             {
-                case 3:
-                    //Mapv1.Height = (int)RSPDNUD.Value;
-                    break;
-                case 2:
-                    //Mapv2.height = (int)RSPDNUD.Value;
-                    break;
                 case 1:
                     Mapv3.Lines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
                     break;
                 case 0:
-                    //Mapv4.height = (int)RSPDNUD.Value;
+                    Mapv4.Lines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
                     break;
                 default:
                     break;
@@ -113,17 +95,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             switch (LoadedRSDKver)
             {
-                case 3:
-                    //Mapv1.Height = (int)RSPDNUD.Value;
-                    break;
-                case 2:
-                    //Mapv2.height = (int)RSPDNUD.Value;
-                    break;
                 case 1:
                     Mapv3.Lines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
                     break;
                 case 0:
-                    //Mapv4.height = (int)RSPDNUD.Value;
+                    Mapv4.Lines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
                     break;
                 default:
                     break;
@@ -134,17 +110,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             switch (LoadedRSDKver)
             {
-                case 3:
-                    //Mapv1.Height = (int)RSPDNUD.Value;
-                    break;
-                case 2:
-                    //Mapv2.height = (int)RSPDNUD.Value;
-                    break;
                 case 1:
                     Mapv3.Lines[Pvalue].Unknown = (byte)UnknownNUD.Value;
                     break;
                 case 0:
-                    //Mapv4.height = (int)RSPDNUD.Value;
+                    Mapv4.Lines[Pvalue].Unknown = (byte)UnknownNUD.Value;
                     break;
                 default:
                     break;

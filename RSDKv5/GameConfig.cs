@@ -21,13 +21,15 @@ namespace RSDKv5
             public string Name;
             public string Zone;
             public string SceneID;
+            public byte SceneMode;
 
             internal SceneInfo(Reader reader)
             {
                 Name = reader.ReadRSDKString();
                 Zone = reader.ReadRSDKString();
                 SceneID = reader.ReadRSDKString();
-                Console.WriteLine("Name = " + Name + " ,Zone = " + Zone + " ,SceneID = " + SceneID);
+                SceneMode = reader.ReadByte();
+                Console.WriteLine("Name = " + Name + " ,Zone = " + Zone + " ,SceneID = " + SceneID + ",Scene Mode = " + SceneMode);
             }
 
             internal void Write(Writer writer)
@@ -109,11 +111,10 @@ namespace RSDKv5
 
             StartSceneCategoryIndex = reader.ReadByte();
             StartSceneIndex = reader.ReadUInt16();
-
             base.ReadCommonConfig(reader);
 
             ushort TotalScenes = reader.ReadUInt16();
-
+            Console.WriteLine(TotalScenes);
             byte categories_count = reader.ReadByte();
             for (int i = 0; i < categories_count; ++i)
                 Categories.Add(new Category(reader));

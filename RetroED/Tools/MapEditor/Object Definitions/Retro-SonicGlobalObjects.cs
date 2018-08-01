@@ -226,6 +226,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
 
                 reader.ReadLine();
             }
+            reader.Close();
         }
 
     }

@@ -65,6 +65,28 @@ namespace RSDKv3
             {
                 Saves[i] = new SaveData(reader);
             }
+            reader.Close();
+        }
+
+                    public void Write(string filename)
+            {
+                using (Writer writer = new Writer(filename))
+                    this.Write(writer);
+            }
+
+            public void Write(System.IO.Stream stream)
+            {
+                using (Writer writer = new Writer(stream))
+                    this.Write(writer);
+            }
+
+            internal void Write(Writer writer)
+            {
+            for (int i = 0; i < 4; i++)
+            {
+                Saves[i].Write(writer);
+            }
+            writer.Close();
         }
     }
 }

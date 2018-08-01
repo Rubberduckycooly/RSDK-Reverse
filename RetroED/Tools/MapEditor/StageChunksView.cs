@@ -199,9 +199,8 @@ namespace RetroED.Tools.MapEditor
                             break;
                     }
                 }
-                
+                RefreshObjList(); //Reload the list of objects
             }
-            RefreshObjList(); //Reload the list of objects
         }
 
         public void RefreshObjList()

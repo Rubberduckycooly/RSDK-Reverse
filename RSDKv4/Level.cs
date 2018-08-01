@@ -127,6 +127,9 @@ namespace RSDKv4
                 if (reader.IsEof)
 				throw ex;
             }
+
+            reader.Close();
+
         }
 
         public void Write(string filename)

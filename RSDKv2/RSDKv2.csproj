@@ -51,6 +51,7 @@
     <Compile Include="BackgroundLayout.cs" />
     <Compile Include="CollisionMask.cs" />
     <Compile Include="GameConfig.cs" />
+    <Compile Include="gfx.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="IAnimation.cs" />
     <Compile Include="IBinarySerializable.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="rsv.cs" />
-    <Compile Include="Script.cs" />
     <Compile Include="StageConfig.cs" />
     <Compile Include="StringEncoding.cs" />
     <Compile Include="Tiles128x128.cs" />

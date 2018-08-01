@@ -8,7 +8,7 @@ using zlib;
 
 namespace RSDKv5
 {
-    internal class Writer : BinaryWriter
+    public class Writer : BinaryWriter
     {
         public Writer(Stream stream) : base(stream)
         {

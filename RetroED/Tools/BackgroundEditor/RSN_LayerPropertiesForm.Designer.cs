@@ -1,6 +1,6 @@
 ﻿namespace RetroED.Tools.BackgroundEditor
 {
-    partial class PropertiesForm
+    partial class RSN_LayerPropertiesForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,12 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CVSPDNUD = new System.Windows.Forms.NumericUpDown();
+            this.CVSPDLabel = new System.Windows.Forms.Label();
+            this.RVSPDNUD = new System.Windows.Forms.NumericUpDown();
+            this.DeformNUD = new System.Windows.Forms.NumericUpDown();
+            this.RVSPDLabel = new System.Windows.Forms.Label();
+            this.DeformLabel = new System.Windows.Forms.Label();
             this.MapHeightNUD = new System.Windows.Forms.NumericUpDown();
             this.MapWidthNUD = new System.Windows.Forms.NumericUpDown();
             this.MapHeightLabel = new System.Windows.Forms.Label();
@@ -36,12 +42,21 @@
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CVSPDNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RVSPDNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DeformNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.CVSPDNUD);
+            this.panel1.Controls.Add(this.CVSPDLabel);
+            this.panel1.Controls.Add(this.RVSPDNUD);
+            this.panel1.Controls.Add(this.DeformNUD);
+            this.panel1.Controls.Add(this.RVSPDLabel);
+            this.panel1.Controls.Add(this.DeformLabel);
             this.panel1.Controls.Add(this.MapHeightNUD);
             this.panel1.Controls.Add(this.MapWidthNUD);
             this.panel1.Controls.Add(this.MapHeightLabel);
@@ -54,16 +69,92 @@
             this.panel1.Size = new System.Drawing.Size(371, 187);
             this.panel1.TabIndex = 0;
             // 
-            // MapHeightNUD
+            // CVSPDNUD
             // 
-            this.MapHeightNUD.Location = new System.Drawing.Point(98, 36);
-            this.MapHeightNUD.Maximum = new decimal(new int[] {
-            1000,
+            this.CVSPDNUD.Location = new System.Drawing.Point(182, 121);
+            this.CVSPDNUD.Maximum = new decimal(new int[] {
+            255,
             0,
             0,
             0});
-            this.MapHeightNUD.Minimum = new decimal(new int[] {
+            this.CVSPDNUD.Name = "CVSPDNUD";
+            this.CVSPDNUD.Size = new System.Drawing.Size(153, 22);
+            this.CVSPDNUD.TabIndex = 13;
+            this.CVSPDNUD.Value = new decimal(new int[] {
             1,
+            0,
+            0,
+            0});
+            this.CVSPDNUD.ValueChanged += new System.EventHandler(this.Unknown3NUD_ValueChanged);
+            // 
+            // CVSPDLabel
+            // 
+            this.CVSPDLabel.AutoSize = true;
+            this.CVSPDLabel.Location = new System.Drawing.Point(12, 123);
+            this.CVSPDLabel.Name = "CVSPDLabel";
+            this.CVSPDLabel.Size = new System.Drawing.Size(164, 17);
+            this.CVSPDLabel.TabIndex = 12;
+            this.CVSPDLabel.Text = "Constant Vertical Speed:";
+            // 
+            // RVSPDNUD
+            // 
+            this.RVSPDNUD.Location = new System.Drawing.Point(182, 92);
+            this.RVSPDNUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.RVSPDNUD.Name = "RVSPDNUD";
+            this.RVSPDNUD.Size = new System.Drawing.Size(153, 22);
+            this.RVSPDNUD.TabIndex = 11;
+            this.RVSPDNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.RVSPDNUD.ValueChanged += new System.EventHandler(this.Unknown2NUD_ValueChanged);
+            // 
+            // DeformNUD
+            // 
+            this.DeformNUD.Location = new System.Drawing.Point(182, 65);
+            this.DeformNUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.DeformNUD.Name = "DeformNUD";
+            this.DeformNUD.Size = new System.Drawing.Size(153, 22);
+            this.DeformNUD.TabIndex = 10;
+            this.DeformNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.DeformNUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged);
+            // 
+            // RVSPDLabel
+            // 
+            this.RVSPDLabel.AutoSize = true;
+            this.RVSPDLabel.Location = new System.Drawing.Point(12, 94);
+            this.RVSPDLabel.Name = "RVSPDLabel";
+            this.RVSPDLabel.Size = new System.Drawing.Size(159, 17);
+            this.RVSPDLabel.TabIndex = 9;
+            this.RVSPDLabel.Text = "Relative Vertical Speed:";
+            // 
+            // DeformLabel
+            // 
+            this.DeformLabel.AutoSize = true;
+            this.DeformLabel.Location = new System.Drawing.Point(12, 65);
+            this.DeformLabel.Name = "DeformLabel";
+            this.DeformLabel.Size = new System.Drawing.Size(98, 17);
+            this.DeformLabel.TabIndex = 8;
+            this.DeformLabel.Text = "Layer Deform:";
+            // 
+            // MapHeightNUD
+            // 
+            this.MapHeightNUD.Location = new System.Drawing.Point(182, 36);
+            this.MapHeightNUD.Maximum = new decimal(new int[] {
+            255,
             0,
             0,
             0});
@@ -79,14 +170,9 @@
             // 
             // MapWidthNUD
             // 
-            this.MapWidthNUD.Location = new System.Drawing.Point(98, 9);
+            this.MapWidthNUD.Location = new System.Drawing.Point(182, 9);
             this.MapWidthNUD.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.MapWidthNUD.Minimum = new decimal(new int[] {
-            1,
+            255,
             0,
             0,
             0});
@@ -105,18 +191,18 @@
             this.MapHeightLabel.AutoSize = true;
             this.MapHeightLabel.Location = new System.Drawing.Point(12, 38);
             this.MapHeightLabel.Name = "MapHeightLabel";
-            this.MapHeightLabel.Size = new System.Drawing.Size(77, 17);
+            this.MapHeightLabel.Size = new System.Drawing.Size(93, 17);
             this.MapHeightLabel.TabIndex = 5;
-            this.MapHeightLabel.Text = "BG Height:";
+            this.MapHeightLabel.Text = "Layer Height:";
             // 
             // MapWidthLabel
             // 
             this.MapWidthLabel.AutoSize = true;
             this.MapWidthLabel.Location = new System.Drawing.Point(12, 9);
             this.MapWidthLabel.Name = "MapWidthLabel";
-            this.MapWidthLabel.Size = new System.Drawing.Size(72, 17);
+            this.MapWidthLabel.Size = new System.Drawing.Size(88, 17);
             this.MapWidthLabel.TabIndex = 4;
-            this.MapWidthLabel.Text = "BG Width:";
+            this.MapWidthLabel.Text = "Layer Width:";
             // 
             // CancelButton
             // 
@@ -140,16 +226,19 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // PropertiesForm
+            // RSN_LayerPropertiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(371, 187);
             this.Controls.Add(this.panel1);
-            this.Name = "PropertiesForm";
-            this.Text = "PropertiesForm";
+            this.Name = "RSN_LayerPropertiesForm";
+            this.Text = "Layer Properties";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CVSPDNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RVSPDNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DeformNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).EndInit();
             this.ResumeLayout(false);
@@ -165,5 +254,11 @@
         private System.Windows.Forms.NumericUpDown MapWidthNUD;
         private System.Windows.Forms.Label MapHeightLabel;
         private System.Windows.Forms.Label MapWidthLabel;
+        private System.Windows.Forms.NumericUpDown CVSPDNUD;
+        private System.Windows.Forms.Label CVSPDLabel;
+        private System.Windows.Forms.NumericUpDown RVSPDNUD;
+        private System.Windows.Forms.NumericUpDown DeformNUD;
+        private System.Windows.Forms.Label RVSPDLabel;
+        private System.Windows.Forms.Label DeformLabel;
     }
 }

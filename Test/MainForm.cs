@@ -23,6 +23,8 @@ namespace Test
 
             //RSDKv5.GameConfig gc = new RSDKv5.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic Mania Source\\Original\\Data\\Game\\GameConfig.bin");
 
+            //RSDKv5.GameConfig gc = new RSDKv5.GameConfig("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Game\\GameConfig.bin");
+
             //RSDKv4.GameConfig gc = new RSDKv4.GameConfig("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Game\\GameConfig.bin");
             //gc.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Game\\GameConfig2.bin");
 
@@ -220,9 +222,9 @@ namespace Test
                 tc.Collision[i].CollisionP2[31] = 0;*/
             }
 
-            //tc.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EGZ\\Zone.tcf", false);
+            //tc.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EGZ\\Zone2.tcf", false);
 
-            //RSDKv2.CollisionMask cm = new RSDKv2.CollisionMask("C:\\Users\\owner\\Documents\\Fan Games\\Sonic Nexus\\Data\\Stages\\SSZ\\CollisionMasks2.bin");
+            //RSDKv2.CollisionMask cm = new RSDKv2.CollisionMask("C:\\Users\\owner\\Documents\\Fan Games\\Sonic Nexus\\Data\\Stages\\SSZ\\CollisionMasks.bin");
 
             for (int i = 0; i < 1024; i++)
             {
@@ -276,6 +278,10 @@ namespace Test
             //RSDKv4.CollisionMask cm = new RSDKv4.CollisionMask("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Stages\\Zone01\\CollisionMasks.bin");
 
             //RSDKv5.TilesConfig tc = new RSDKv5.TilesConfig("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Stages\\GHZ\\TileConfig.bin");
+
+            //RSDKv1.mdf RetroStages = new RSDKv1.mdf("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones.mdf");
+
+            //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
             /* Palettes
             RSDKv4.Palette p = new RSDKv4.Palette();

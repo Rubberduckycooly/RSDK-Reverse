@@ -3,34 +3,34 @@ Global:
 1:	Player
 2:	StageSetup
 3:	HUD
-4:	Title Card
-5:      Act Finish
-6:      Death Event
-7:      Tails Object (Tails' Tail)
-8:      Pause Menu
-9: 	Ring
-10:     Lose Ring
-11:     Ring Sparkle
-12:	Monitor
-13:	Monitor, Broken
-14:	Spring, Red
-15:	Spring, Yellow
-16:	StarPost
-17:	FuturePost
-18:	PastPost
-19:	SignPost
-20:	GoalPost
-21:	Special Ring
-22:	Spikes
-23:     Smoke Puff
-24:     Explosion
-25:     Dust Puff
-26:     Blue Shield
-27:     Invincibility
-28:	Warp Star
-29:	Time Warp
-30:	Warp Sonic
-31:	Transporter
-32:	Metal Sonic Projector
-33:	Object Score
-34:	Debug Mode
+4:      Act Finish
+5:      Death Event
+6:      Tails Object (Tails' Tail)
+7:      Pause Menu
+8: 	Ring
+9:      Lose Ring
+10:     Ring Sparkle
+11:	Monitor
+12:	Monitor, Broken
+13:	Spring, Red
+14:	Spring, Yellow
+15:	StarPost
+16:	FuturePost
+17:	PastPost
+18:	SignPost
+19:	GoalPost
+20:	Special Ring
+21:	Spikes
+22:     Smoke Puff
+23:     Explosion
+24:     Dust Puff
+25:     Blue Shield
+26:     Invincibility
+27:	Warp Star
+28:	Time Warp
+29:	Warp Sonic
+30:	Transporter
+31:	Metal Sonic Projector
+32:	Object Score
+33:	Debug Mode
+34:	Title Card (always 1st Stage-Specific Object)
