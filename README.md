@@ -2,15 +2,15 @@
 A collection of libraries for the RSDK (Retro Engine Software Development Kit) + A few basic tools 
 
 This repository contains libaries for all versions of the RSDK (and a few tools for editing certain file formats):
-- RSDK 1: A libary for the Retro-Sonic Development Kit (Retro Sonic). 
+- RSDKvRS: A libary for the Retro-Sonic Development Kit (Retro Sonic). 
 
-- RSDK 2: A libary for RSDKv1 (Sonic Nexus).
+- RSDKv1: A libary for RSDKv1 (Sonic Nexus).
 
-- RSDK 3: A libary for RSDKv2 (Sonic CD (2011)).
+- RSDKv2: A libary for RSDKv2 (Sonic CD (2011)).
 
-- RSDK 4: A libary for RSDKvB (Sonic 1 and Sonic 2 Mobile Remakes).
+- RSDKvB: A libary for RSDKvB (Sonic 1 and Sonic 2 Mobile Remakes).
 
-- RSDK 5: A libary for RSDKv5 (Sonic Mania). This was made by koolkdev/EyeKey, with tweaks by me. original download here: https://github.com/koolkdev/ManiacEditor
+- RSDKv5: A libary for RSDKv5 (Sonic Mania). This was made by koolkdev/EyeKey, with tweaks by me. original download here: https://github.com/koolkdev/ManiacEditor
 
 - RetroED: A set of tools designed to modify the filetypes used by Retro Engine versions below version 5
 
