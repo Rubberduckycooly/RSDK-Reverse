@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BFD77E2A-D988-49F2-BFEC-23B52C2326D2}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>StaticPaletteViewer</RootNamespace>
+    <AssemblyName>StaticPaletteViewer</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdobeColorTablePaletteSerializer.cs" />
+    <Compile Include="AdobePhotoshopColorSwatchColorSpace.cs" />
+    <Compile Include="AdobePhotoshopColorSwatchFileVersion.cs" />
+    <Compile Include="AdobePhotoShopColorSwatchSerializer.cs" />
+    <Compile Include="BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorBarStyle.cs" />
+    <Compile Include="ColorCellBorderStyle.cs" />
+    <Compile Include="ColorCollection.cs" />
+    <Compile Include="ColorCollectionEventArgs.cs" />
+    <Compile Include="ColorCollectionSortOrder.cs" />
+    <Compile Include="ColorComparer.cs" />
+    <Compile Include="ColorEditingMode.cs" />
+    <Compile Include="ColorEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ColorEditor.Designer.cs" />
+    <Compile Include="ColorEditorManager.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorGrid.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorGridSelectedCellStyle.cs" />
+    <Compile Include="ColorHitTestInfo.cs" />
+    <Compile Include="ColorPalette.cs" />
+    <Compile Include="ColorPalettes.cs" />
+    <Compile Include="ColorPickerDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ColorPickerDialog.Designer.cs" />
+    <Compile Include="ColorPreviewBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ColorSliderNubStyle.cs" />
+    <Compile Include="ColorSource.cs" />
+    <Compile Include="ColorWheel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EditColorCancelEventArgs.cs" />
+    <Compile Include="EditColorEventArgs.cs" />
+    <Compile Include="EventsListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GimpPaletteSerializer.cs" />
+    <Compile Include="GroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HslColor.cs" />
+    <Compile Include="HsvColor.cs" />
+    <Compile Include="HueColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="IColorEditor.cs" />
+    <Compile Include="InterleavedBitmapPaletteSerializer.cs" />
+    <Compile Include="IPaletteSerializer.cs" />
+    <Compile Include="JascPaletteSerializer.cs" />
+    <Compile Include="LightnessColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="NavigationOrigin.cs" />
+    <Compile Include="OpenPaletteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OpenPaletteForm.Designer.cs">
+      <DependentUpon>OpenPaletteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PaintNetPaletteSerializer.cs" />
+    <Compile Include="PaletteSerializer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RawPaletteSerializer.cs" />
+    <Compile Include="RgbaChannel.cs" />
+    <Compile Include="RgbaColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SaturationColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ScreenColorPicker.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolStripColorPickerDropDown.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolStripColorPickerSplitButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ToolStripHostDemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ToolStripHostDemoForm.Designer.cs">
+      <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="ColorEditor.resx" />
+    <EmbeddedResource Include="ColorPickerDialog.resx" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OpenPaletteForm.resx">
+      <DependentUpon>OpenPaletteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="ToolStripColorPickerDropDown.resx" />
+    <EmbeddedResource Include="ToolStripHostDemoForm.resx">
+      <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cellbackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\eyedropper.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fill.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\markdownpad-github.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\palette-load.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\palette-save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\text.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

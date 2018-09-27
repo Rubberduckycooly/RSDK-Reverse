@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.RemoveObjectButton = new System.Windows.Forms.Button();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.YposNUD = new System.Windows.Forms.NumericUpDown();
@@ -39,7 +40,9 @@
             this.XposLabel = new System.Windows.Forms.Label();
             this.SubTypeLabel = new System.Windows.Forms.Label();
             this.ObjTypeLabel = new System.Windows.Forms.Label();
-            this.RemoveObjectButton = new System.Windows.Forms.Button();
+            this.ListSelectLabel = new System.Windows.Forms.Label();
+            this.ObjectSelectBox = new System.Windows.Forms.ComboBox();
+            this.ChangeManualLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.YposNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.XposNUD)).BeginInit();
@@ -49,6 +52,9 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.ChangeManualLabel);
+            this.panel1.Controls.Add(this.ObjectSelectBox);
+            this.panel1.Controls.Add(this.ListSelectLabel);
             this.panel1.Controls.Add(this.RemoveObjectButton);
             this.panel1.Controls.Add(this.CancelButton);
             this.panel1.Controls.Add(this.OKButton);
@@ -65,6 +71,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(347, 227);
             this.panel1.TabIndex = 0;
+            // 
+            // RemoveObjectButton
+            // 
+            this.RemoveObjectButton.Location = new System.Drawing.Point(19, 201);
+            this.RemoveObjectButton.Name = "RemoveObjectButton";
+            this.RemoveObjectButton.Size = new System.Drawing.Size(140, 23);
+            this.RemoveObjectButton.TabIndex = 10;
+            this.RemoveObjectButton.Text = "Remove Object!";
+            this.RemoveObjectButton.UseVisualStyleBackColor = true;
+            this.RemoveObjectButton.Click += new System.EventHandler(this.RemoveObjectButton_Click);
             // 
             // CancelButton
             // 
@@ -89,12 +105,17 @@
             // 
             // YposNUD
             // 
-            this.YposNUD.Location = new System.Drawing.Point(142, 101);
+            this.YposNUD.Location = new System.Drawing.Point(139, 170);
             this.YposNUD.Maximum = new decimal(new int[] {
             65500,
             0,
             0,
             0});
+            this.YposNUD.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.YposNUD.Name = "YposNUD";
             this.YposNUD.Size = new System.Drawing.Size(80, 22);
             this.YposNUD.TabIndex = 7;
@@ -102,12 +123,17 @@
             // 
             // XposNUD
             // 
-            this.XposNUD.Location = new System.Drawing.Point(142, 74);
+            this.XposNUD.Location = new System.Drawing.Point(139, 143);
             this.XposNUD.Maximum = new decimal(new int[] {
             65500,
             0,
             0,
             0});
+            this.XposNUD.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            -2147483648});
             this.XposNUD.Name = "XposNUD";
             this.XposNUD.Size = new System.Drawing.Size(80, 22);
             this.XposNUD.TabIndex = 6;
@@ -115,7 +141,7 @@
             // 
             // SubtypeNUD
             // 
-            this.SubtypeNUD.Location = new System.Drawing.Point(128, 42);
+            this.SubtypeNUD.Location = new System.Drawing.Point(139, 110);
             this.SubtypeNUD.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -128,7 +154,7 @@
             // 
             // TypeNUD
             // 
-            this.TypeNUD.Location = new System.Drawing.Point(109, 13);
+            this.TypeNUD.Location = new System.Drawing.Point(139, 80);
             this.TypeNUD.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -142,7 +168,7 @@
             // YPosLabel
             // 
             this.YPosLabel.AutoSize = true;
-            this.YPosLabel.Location = new System.Drawing.Point(16, 103);
+            this.YPosLabel.Location = new System.Drawing.Point(13, 172);
             this.YPosLabel.Name = "YPosLabel";
             this.YPosLabel.Size = new System.Drawing.Size(120, 17);
             this.YPosLabel.TabIndex = 3;
@@ -151,7 +177,7 @@
             // XposLabel
             // 
             this.XposLabel.AutoSize = true;
-            this.XposLabel.Location = new System.Drawing.Point(16, 74);
+            this.XposLabel.Location = new System.Drawing.Point(13, 143);
             this.XposLabel.Name = "XposLabel";
             this.XposLabel.Size = new System.Drawing.Size(120, 17);
             this.XposLabel.TabIndex = 2;
@@ -160,7 +186,7 @@
             // SubTypeLabel
             // 
             this.SubTypeLabel.AutoSize = true;
-            this.SubTypeLabel.Location = new System.Drawing.Point(13, 44);
+            this.SubTypeLabel.Location = new System.Drawing.Point(13, 112);
             this.SubTypeLabel.Name = "SubTypeLabel";
             this.SubTypeLabel.Size = new System.Drawing.Size(109, 17);
             this.SubTypeLabel.TabIndex = 1;
@@ -169,21 +195,39 @@
             // ObjTypeLabel
             // 
             this.ObjTypeLabel.AutoSize = true;
-            this.ObjTypeLabel.Location = new System.Drawing.Point(13, 13);
+            this.ObjTypeLabel.Location = new System.Drawing.Point(16, 80);
             this.ObjTypeLabel.Name = "ObjTypeLabel";
             this.ObjTypeLabel.Size = new System.Drawing.Size(89, 17);
             this.ObjTypeLabel.TabIndex = 0;
             this.ObjTypeLabel.Text = "Object Type:";
             // 
-            // RemoveObjectButton
+            // ListSelectLabel
             // 
-            this.RemoveObjectButton.Location = new System.Drawing.Point(19, 201);
-            this.RemoveObjectButton.Name = "RemoveObjectButton";
-            this.RemoveObjectButton.Size = new System.Drawing.Size(140, 23);
-            this.RemoveObjectButton.TabIndex = 10;
-            this.RemoveObjectButton.Text = "Remove Object!";
-            this.RemoveObjectButton.UseVisualStyleBackColor = true;
-            this.RemoveObjectButton.Click += new System.EventHandler(this.RemoveObjectButton_Click);
+            this.ListSelectLabel.AutoSize = true;
+            this.ListSelectLabel.Location = new System.Drawing.Point(13, 9);
+            this.ListSelectLabel.Name = "ListSelectLabel";
+            this.ListSelectLabel.Size = new System.Drawing.Size(113, 17);
+            this.ListSelectLabel.TabIndex = 11;
+            this.ListSelectLabel.Text = "Select From List:";
+            // 
+            // ObjectSelectBox
+            // 
+            this.ObjectSelectBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ObjectSelectBox.FormattingEnabled = true;
+            this.ObjectSelectBox.Location = new System.Drawing.Point(13, 30);
+            this.ObjectSelectBox.Name = "ObjectSelectBox";
+            this.ObjectSelectBox.Size = new System.Drawing.Size(208, 24);
+            this.ObjectSelectBox.TabIndex = 12;
+            this.ObjectSelectBox.SelectedIndexChanged += new System.EventHandler(this.ObjectSelectBox_SelectedIndexChanged);
+            // 
+            // ChangeManualLabel
+            // 
+            this.ChangeManualLabel.AutoSize = true;
+            this.ChangeManualLabel.Location = new System.Drawing.Point(16, 57);
+            this.ChangeManualLabel.Name = "ChangeManualLabel";
+            this.ChangeManualLabel.Size = new System.Drawing.Size(179, 17);
+            this.ChangeManualLabel.TabIndex = 13;
+            this.ChangeManualLabel.Text = "Or Change Values Directly:";
             // 
             // NewObjectForm
             // 
@@ -218,5 +262,8 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.Button RemoveObjectButton;
+        private System.Windows.Forms.Label ChangeManualLabel;
+        private System.Windows.Forms.ComboBox ObjectSelectBox;
+        private System.Windows.Forms.Label ListSelectLabel;
     }
 }

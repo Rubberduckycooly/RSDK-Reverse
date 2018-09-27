@@ -8,7 +8,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
 {
     public class SonicCDObjects
     {
-        MapObject Blank = new MapObject();
+        MapObject Blank = new MapObject("Blank Object", 0, 0, "Blank Objects Don't Need Sprites Lmao", 0, 0, 0, 0);
 
         MapObject Player = new MapObject("Player Spawn", 1, 0, "Objects\\General.gfx", 0, 0, 16, 16);
         MapObject StageSetup = new MapObject("Stage Setup", 2, 0, "Objects\\General.gfx", 0, 0, 16, 16);
@@ -70,7 +70,6 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             Objects.Add(new Point(Player.ID, Player.SubType), Player);
             Objects.Add(new Point(StageSetup.ID, StageSetup.SubType), StageSetup);
             Objects.Add(new Point(HUD.ID, HUD.SubType), HUD);
-            Objects.Add(new Point(TitleCard.ID, TitleCard.SubType), TitleCard);
             Objects.Add(new Point(DeathEvent.ID, DeathEvent.SubType), DeathEvent);
             Objects.Add(new Point(TailsTail.ID, TailsTail.SubType), TailsTail);
             Objects.Add(new Point(ActFinish.ID, ActFinish.SubType), ActFinish);
@@ -113,6 +112,8 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             Objects.Add(new Point(MSProjector.ID, MSProjector.SubType), MSProjector);
             Objects.Add(new Point(ObjectScore.ID, ObjectScore.SubType), ObjectScore);
             Objects.Add(new Point(debugMode.ID, debugMode.SubType), debugMode);
+
+            Objects.Add(new Point(TitleCard.ID, TitleCard.SubType), TitleCard);
         }
 
         public MapObject GetObjectByType(int Type, int Subtype)
@@ -124,13 +125,11 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             }
             catch (Exception)
             {
-                Console.WriteLine("That Object Wasn't on the list!");
                 mo = new MapObject();
             }
 
             return mo;
         }
-
 
         public void LoadObjList(string filePath)
         {
@@ -144,13 +143,19 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             string SpriteImgYpos = "";
             string SpriteWidth = "";
             string SpriteHeight = "";
+            string pivotX = "";
+            string pivotY = "";
+            string flip = "";
             char buf = '>';
-            int T;
-            int ST;
-            int Xpos;
-            int Ypos;
-            int Width;
-            int Height;
+            int T = 0;
+            int ST = 0;
+            int Xpos = 0;
+            int Ypos = 0;
+            int Width = 0;
+            int Height = 0;
+            int PivotX = 0;
+            int PivotY = 0;
+            int Flip = 0;
 
 
             while (!reader.EndOfStream)
@@ -163,6 +168,9 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
                 SpriteImgYpos = "";
                 SpriteWidth = "";
                 SpriteHeight = "";
+                pivotX = "";
+                pivotY = "";
+                flip = "";
                 buf = '>';
                 T = 0;
                 ST = 0;
@@ -230,8 +238,33 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
                 while (buf != ',') //Load The Object Sprite's Height
                 {
                     buf = (char)reader.Read();
-                    if (buf == ';') { break; } //detect if the line is over
+                    if (buf == ';' || buf == ',') { break; } //detect if the line is over
                     SpriteHeight = SpriteHeight + buf;
+                }
+                bool Legacy = true;
+                if (buf != ';') { buf = '>'; Legacy = false; } //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',' && buf != ';' && !Legacy) //Load The Object Sprite's Height
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ';' || buf == ',') { break; } //detect if the line is over
+                    pivotX = pivotX + buf;
+                }
+                if (buf != ';') { buf = '>'; } //That char shouldn't show up so change the buffer to that!
+
+                while (buf != ',' && buf != ';' && !Legacy) //Load The Object Sprite's Height
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ';' || buf == ',') { break; } //detect if the line is over
+                    pivotY = pivotY + buf;
+                }
+                if (buf != ';') { buf = '>'; } //That char shouldn't show up so change the buffer to that!  
+
+                while (buf != ',' && buf != ';' && !Legacy) //Load The Object Sprite's Height
+                {
+                    buf = (char)reader.Read();
+                    if (buf == ';') { break; } //detect if the line is over
+                    flip = flip + buf;
                 }
                 buf = '>'; //That char shouldn't show up so change the buffer to that!
 
@@ -241,12 +274,27 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
                 Ypos = Int32.Parse(SpriteImgYpos);
                 Width = Int32.Parse(SpriteWidth);
                 Height = Int32.Parse(SpriteHeight);
-
-                MapObject MapObj = new MapObject(Name, T, ST, ImagePath, Xpos, Ypos, Width, Height);
-                Objects.Add(new Point(MapObj.ID, MapObj.SubType), MapObj);
+                if (!Legacy)
+                {
+                    PivotX = Int32.Parse(pivotX);
+                    PivotY = Int32.Parse(pivotY);
+                    Flip = Int32.Parse(flip);
+                }
+                MapObject MapObj;
+                if (Legacy)
+                {
+                    MapObj = new MapObject(Name, T, ST, ImagePath, Xpos, Ypos, Width, Height);
+                    Objects.Add(new Point(MapObj.ID, MapObj.SubType), MapObj);
+                }
+                else if (!Legacy)
+                {
+                    MapObj = new MapObject(Name, T, ST, ImagePath, Xpos, Ypos, Width, Height, PivotX, PivotY, Flip);
+                    Objects.Add(new Point(MapObj.ID, MapObj.SubType), MapObj);
+                }
 
                 reader.ReadLine();
             }
+            reader.Close();
         }
     }
 }

@@ -42,13 +42,6 @@ namespace RSDKv1
 
         private bool Flag2;
 
-        //private int animNo = 1;
-
-        //	private byte[] debugData;
-
-        //	private byte[][] debugData2;
-
-
         public int Flags { get; set; }
 
         public AnimationEntry()
@@ -68,7 +61,6 @@ namespace RSDKv1
             Flag1 = flag1;
             Flag2 = flag2;
             FrameCount = framecount;
-            System.Console.WriteLine(name);
             Read(reader);
         }
 
@@ -103,8 +95,7 @@ namespace RSDKv1
         public void Write(BinaryWriter writer)
         {
             writer.Write((byte)Frames.Count);
-            int ASp = Speed / 4;
-            writer.Write((byte)ASp);
+            writer.Write((byte)Speed);
             writer.Write((byte)Loop);
             foreach (var entry in Frames)
                 entry.Write(writer);

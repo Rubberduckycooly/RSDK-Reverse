@@ -29,24 +29,29 @@ namespace RetroED.Tools.MapEditor
         //What Chunk is selected?
         public int selectedChunk;
 
+        /*public Object_Definitions.Retro_SonicObjects RSObj = new Object_Definitions.Retro_SonicObjects();
+        public Object_Definitions.SonicNexusObjects RSDK2Obj = new Object_Definitions.SonicNexusObjects();
+        public Object_Definitions.SonicCDObjects RSDK3Obj = new Object_Definitions.SonicCDObjects();
+        public Object_Definitions.Sonic1Objects RSDKBObj = new Object_Definitions.Sonic1Objects();*/
+
         #region Retro-Sonic Development Kit
-        public RSDKv1.til _RSDK1Chunks;
-        public List<RSDKv1.Object> objectsV1 = new List<RSDKv1.Object>();
+        public RSDKvRS.Tiles128x128 _RSDK1Chunks;
+        public List<RSDKvRS.Object> objectsV1 = new List<RSDKvRS.Object>();
         #endregion
 
         #region RSDKv1
-        public RSDKv2.Tiles128x128 _RSDK2Chunks;
-        public List<RSDKv2.Object> objectsV2 = new List<RSDKv2.Object>();
+        public RSDKv1.Tiles128x128 _RSDK2Chunks;
+        public List<RSDKv1.Object> objectsV2 = new List<RSDKv1.Object>();
         #endregion
 
-        #region RSDKv2
-        public RSDKv3.Tiles128x128 _RSDK3Chunks;
-        public List<RSDKv3.Object> objectsV3 = new List<RSDKv3.Object>();
+        #region RSDKv1
+        public RSDKv2.Tiles128x128 _RSDK3Chunks;
+        public List<RSDKv2.Object> objectsV3 = new List<RSDKv2.Object>();
         #endregion
 
         #region RSDKvB
-        public RSDKv4.Tiles128x128 _RSDK4Chunks;
-        public List<RSDKv4.Object> objectsV4 = new List<RSDKv4.Object>();
+        public RSDKvB.Tiles128x128 _RSDK4Chunks;
+        public List<RSDKvB.Object> objectsV4 = new List<RSDKvB.Object>();
         #endregion
 
         public StageChunksView(StageMapView mpv)
@@ -124,8 +129,26 @@ namespace RetroED.Tools.MapEditor
 
         private void ObjectList_DoubleClick(object sender, EventArgs e)
         {
-            NewObjectForm frm = new NewObjectForm(1); //We are modifying an object so the "formtype" should be 1
-            switch(loadedRSDKver) //Set the form's values to the selected Object's values
+            NewObjectForm frm = new NewObjectForm(loadedRSDKver,1); //We are modifying an object so the "formtype" should be 1
+
+            switch (loadedRSDKver) //Set the object Definitions
+            {
+                case 3:
+                    frm.RSObjects = MapView.RSObjects;
+                    break;
+                case 2:
+                    frm.NexusObjects = MapView.NexusObjects;
+                    break;
+                case 1:
+                    frm.CDObjects = MapView.CDObjects;
+                    break;
+                case 0:
+                    frm.S1Objects = MapView.S1Objects;
+                    break;
+            }
+            frm.SetupObjects();
+
+            switch (loadedRSDKver) //Set the form's values to the selected Object's values
             {
                 case 3:
                     frm.TypeNUD.Value = objectsV1[ObjectList.SelectedIndex].type;
@@ -160,23 +183,23 @@ namespace RetroED.Tools.MapEditor
                     switch (loadedRSDKver) //Set the new values
                     {
                         case 3:
-                            RSDKv1.Object Obj1 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //Create a temp object to store our data
-                            MapView._RSDK1Level.objects[ObjectList.SelectedIndex] = Obj1; //Modify the selected object's data
+                            RSDKvRS.Object Obj1 = new RSDKvRS.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //Create a temp object to store our data
+                            MapView._RSDK1Scene.objects[ObjectList.SelectedIndex] = Obj1; //Modify the selected object's data
                             objectsV1[ObjectList.SelectedIndex] = Obj1; //Modify the selected object's data
                             break;
                         case 2:
-                            RSDKv2.Object Obj2 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                            MapView._RSDK2Level.objects[ObjectList.SelectedIndex] = Obj2;
+                            RSDKv1.Object Obj2 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK2Scene.objects[ObjectList.SelectedIndex] = Obj2;
                             objectsV2[ObjectList.SelectedIndex] = Obj2;
                             break;
                         case 1:
-                            RSDKv3.Object Obj3 = new RSDKv3.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                            MapView._RSDK3Level.objects[ObjectList.SelectedIndex] = Obj3;
+                            RSDKv2.Object Obj3 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK3Scene.objects[ObjectList.SelectedIndex] = Obj3;
                             objectsV3[ObjectList.SelectedIndex] = Obj3;
                             break;
                         case 0:
-                            RSDKv4.Object Obj4 = new RSDKv4.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
-                            MapView._RSDK4Level.objects[ObjectList.SelectedIndex] = Obj4;
+                            RSDKvB.Object Obj4 = new RSDKvB.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            MapView._RSDK4Scene.objects[ObjectList.SelectedIndex] = Obj4;
                             objectsV4[ObjectList.SelectedIndex] = Obj4;
                             break;
                     }
@@ -186,16 +209,16 @@ namespace RetroED.Tools.MapEditor
                     switch (loadedRSDKver)
                     {
                         case 3:
-                            MapView._RSDK1Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
+                            MapView._RSDK1Scene.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 2:
-                            MapView._RSDK2Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
+                            MapView._RSDK2Scene.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 1:
-                            MapView._RSDK3Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
+                            MapView._RSDK3Scene.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                         case 0:
-                            MapView._RSDK4Level.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
+                            MapView._RSDK4Scene.objects.RemoveAt(ObjectList.SelectedIndex); //Delete Selected Object
                             break;
                     }
                 }
@@ -209,44 +232,40 @@ namespace RetroED.Tools.MapEditor
             switch(loadedRSDKver)
             {
                 case 3:
-                    Object_Definitions.Retro_SonicObjects RSObj = new Object_Definitions.Retro_SonicObjects();
                     for (int i = 0; i < objectsV1.Count; i++)
                     {
                         string Obj;
-                        string t = RSObj.GetObjectByType(objectsV1[i].type, objectsV1[i].subtype).Name; //Get the object name
+                        string t = MapView.RSObjects.GetObjectByType(objectsV1[i].type, objectsV1[i].subtype).Name; //Get the object name
                         if (t != null) { Obj = t + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If the object's definition is found, we use it's name in the list
                         else { Obj = "Unnamed Object" + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If not, call it "Unnamed Object"
                         ObjectList.Items.Add(Obj);
                     }
                     break;
                 case 2:
-                    Object_Definitions.SonicNexusObjects RSDK2Obj = new Object_Definitions.SonicNexusObjects();
                     for (int i = 0; i < objectsV2.Count; i++)
                     {
                         string Obj;
-                        string t = RSDK2Obj.GetObjectByType(objectsV2[i].type, objectsV2[i].subtype).Name;
+                        string t = MapView.NexusObjects.GetObjectByType(objectsV2[i].type, objectsV2[i].subtype).Name;
                         if (t != null) { Obj = t + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
                         else { Obj = "Unnamed Object" + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
                         ObjectList.Items.Add(Obj);
                     }
                     break;
                 case 1:
-                    Object_Definitions.SonicCDObjects RSDK3Obj = new Object_Definitions.SonicCDObjects();
                     for (int i = 0; i < objectsV3.Count; i++)
                     {
                         string Obj;
-                        string t = RSDK3Obj.GetObjectByType(objectsV3[i].type, objectsV3[i].subtype).Name;
+                        string t = MapView.CDObjects.GetObjectByType(objectsV3[i].type, objectsV3[i].subtype).Name;
                         if (t != null) { Obj = t + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
                         else { Obj = "Unnamed Object" + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
                         ObjectList.Items.Add(Obj);
                     }
                     break;
                 case 0:
-                    Object_Definitions.Sonic1Objects RSDKBObj = new Object_Definitions.Sonic1Objects();
                     for (int i = 0; i < objectsV4.Count; i++)
                     {
                         string Obj;
-                        string t = RSDKBObj.GetObjectByType(objectsV4[i].type, objectsV4[i].subtype).Name;
+                        string t = MapView.S1Objects.GetObjectByType(objectsV4[i].type, objectsV4[i].subtype).Name;
                         if (t != null) { Obj = t + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
                         else { Obj = "Unnamed Object" + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
                         ObjectList.Items.Add(Obj);

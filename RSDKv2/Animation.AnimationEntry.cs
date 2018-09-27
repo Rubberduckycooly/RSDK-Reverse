@@ -32,15 +32,9 @@ namespace RSDKv2
 
         public List<Frame> Frames { get; private set; } = new List<Frame>();
 
-        public int FrameCount { get; set; } = 1;
-
         public int Speed { get; set; }
 
         public int Loop { get; set; }
-
-        private bool Flag1;
-
-        private bool Flag2;
 
         public int Flags { get; set; }
 
@@ -50,17 +44,6 @@ namespace RSDKv2
 
         public AnimationEntry(BinaryReader reader)
         {
-            Read(reader);
-        }
-
-        public AnimationEntry(string name, int framecount, int speed, int loopStart, bool flag1, bool flag2, BinaryReader reader)
-        {
-            Name = name;
-            Speed = speed;
-            Loop = loopStart;
-            Flag1 = flag1;
-            Flag2 = flag2;
-            FrameCount = framecount;
             Read(reader);
         }
 
@@ -84,7 +67,13 @@ namespace RSDKv2
 
         public void Read(BinaryReader reader)
         {
-            for (int i = 0; i < FrameCount; i++)
+            Name = StringEncoding.GetString(reader);
+
+            var framesCount = reader.ReadByte();
+            Speed = reader.ReadByte();
+            Loop = reader.ReadByte();
+            Flags = reader.ReadByte();
+            for (int i = 0; i < framesCount; i++)
             {
                 var frame = new Frame();
                 frame.Read(reader);
@@ -94,9 +83,11 @@ namespace RSDKv2
 
         public void Write(BinaryWriter writer)
         {
+            writer.Write(StringEncoding.GetBytes(Name));
             writer.Write((byte)Frames.Count);
             writer.Write((byte)Speed);
             writer.Write((byte)Loop);
+            writer.Write((byte)Flags);
             foreach (var entry in Frames)
                 entry.Write(writer);
         }

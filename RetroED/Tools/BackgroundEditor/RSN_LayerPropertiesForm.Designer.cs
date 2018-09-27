@@ -146,9 +146,9 @@
             this.DeformLabel.AutoSize = true;
             this.DeformLabel.Location = new System.Drawing.Point(12, 65);
             this.DeformLabel.Name = "DeformLabel";
-            this.DeformLabel.Size = new System.Drawing.Size(98, 17);
+            this.DeformLabel.Size = new System.Drawing.Size(76, 17);
             this.DeformLabel.TabIndex = 8;
-            this.DeformLabel.Text = "Layer Deform:";
+            this.DeformLabel.Text = "Behaviour:";
             // 
             // MapHeightNUD
             // 

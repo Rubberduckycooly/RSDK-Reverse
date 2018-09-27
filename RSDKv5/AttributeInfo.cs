@@ -22,6 +22,7 @@ namespace RSDKv5
         COLOR = 11,
     }
 
+    [Serializable]
     public class AttributeInfo
     {
         public readonly NameIdentifier Name;

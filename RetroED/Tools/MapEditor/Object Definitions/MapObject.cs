@@ -5,7 +5,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
     public class MapObject
     {
         public string Name, SpriteSheet;
-        public int ID, SubType, X, Y, Width, Height;
+        public int ID, SubType, X, Y, Width, Height, PivotX, PivotY, Flip;
 
         public MapObject()
         {
@@ -24,6 +24,21 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             Height = height;
         }
 
+        public MapObject(string name, int id, int sID, string sheet, int Sheetxpos, int Sheetypos, int width, int height, int pivotX, int pivotY, int flip)
+        {
+            Name = name;
+            ID = id;
+            SubType = sID;
+            SpriteSheet = sheet;
+            X = Sheetxpos;
+            Y = Sheetypos;
+            Width = width;
+            Height = height;
+            PivotX = pivotX;
+            PivotY = pivotY;
+            Flip = flip;
+        }
+
         public Bitmap RenderObject(int RSDKver, string DataPath)
         {
             Bitmap b = RetroED.Properties.Resources.OBJ;
@@ -35,7 +50,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             switch (RSDKver)
             {
                 case 3:
-                    RSDKv1.gfx g = new RSDKv1.gfx(DataPath + SpriteSheet, false);
+                    RSDKvRS.gfx g = new RSDKvRS.gfx(DataPath + SpriteSheet, false);
                     b = CropImage(g.gfxImage, new Rectangle(X, Y, Width, Height));
                     b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
                         break;
@@ -63,6 +78,9 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             Bitmap b = (Bitmap)Image.FromFile(DataPath + SpriteSheet).Clone();
             b.MakeTransparent(Transparent);
             b = CropImage(b, new Rectangle(X, Y, Width, Height));
+            if (Flip == 1) { b.RotateFlip(RotateFlipType.RotateNoneFlipX); }
+            if (Flip == 2) { b.RotateFlip(RotateFlipType.RotateNoneFlipY); }
+            if (Flip == 3) { b.RotateFlip(RotateFlipType.RotateNoneFlipXY); }
             return b;
         }
 

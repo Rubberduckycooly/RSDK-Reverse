@@ -12,11 +12,12 @@ namespace RSDKv2
     {
 
         public Palette palette = new Palette();
-        public byte[] Unknown = new byte[97];
 
         public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
+        public List<string> WAVnames = new List<string>();
 
         public List<string> ObjectsNames = new List<string>();
+        public List<string> SourceTxtLocations = new List<string>();
 
         public StageConfig(string filename) : this(new Reader(filename))
         {
@@ -45,9 +46,11 @@ namespace RSDKv2
         internal void ReadObjectsNames(Reader reader)
         {
             byte objects_count = reader.ReadByte();
-
+            Console.WriteLine(objects_count);
             for (int i = 0; i < objects_count; ++i)
             { ObjectsNames.Add(reader.ReadRSDKString()); }
+            for (int i = 0; i < objects_count; ++i)
+            { SourceTxtLocations.Add(reader.ReadRSDKString()); }
         }
 
         internal void WriteObjectsNames(Writer writer)
@@ -55,6 +58,8 @@ namespace RSDKv2
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
+            foreach (string srcname in SourceTxtLocations)
+                writer.WriteRSDKString(srcname);
         }
 
         internal void ReadWAVConfiguration(Reader reader)
@@ -88,13 +93,14 @@ namespace RSDKv2
         {
             palette.Write(writer);
 
-            writer.Write(0);
+            writer.Write((byte)0);
 
             WriteObjectsNames(writer);
 
             WriteWAVConfiguration(writer);
 
             writer.Close();
+
         }
 
     }

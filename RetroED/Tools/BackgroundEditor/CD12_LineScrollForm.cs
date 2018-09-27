@@ -15,38 +15,66 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int LoadedRSDKver;
 
+        public bool RemoveVal = false;
+
         public int Pvalue;
 
-        public RSDKv1.BGLayout Mapv1;
-        public RSDKv2.BGLayout Mapv2;
-        public RSDKv3.BGLayout Mapv3;
-        public RSDKv4.BGLayout Mapv4;
+        public RSDKvRS.BGLayout Mapv1;
+        public RSDKv1.BGLayout Mapv2;
+        public RSDKv2.BGLayout Mapv3;
+        public RSDKvB.BGLayout Mapv4;
 
-        public CD12_LineScrollForm(int RSDKver, int PVal)
+        int hv = 0;
+
+        public CD12_LineScrollForm(int RSDKver, int PVal, int HV)
         {
             InitializeComponent();
+            hv = HV;
             LoadedRSDKver = RSDKver;
             Pvalue = PVal;
         }
 
         public void Setup()
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 1:
-                    LineNoNUD.Value = Mapv3.Lines[Pvalue].LineNo;
-                    RSPDNUD.Value = Mapv3.Lines[Pvalue].RelativeSpeed;
-                    CSPDNUD.Value = Mapv3.Lines[Pvalue].ConstantSpeed;
-                    UnknownNUD.Value = Mapv3.Lines[Pvalue].Unknown;
-                    break;
-                case 0:
-                    LineNoNUD.Value = Mapv4.Lines[Pvalue].LineNo;
-                    RSPDNUD.Value = Mapv4.Lines[Pvalue].RelativeSpeed;
-                    CSPDNUD.Value = Mapv4.Lines[Pvalue].ConstantSpeed;
-                    UnknownNUD.Value = Mapv4.Lines[Pvalue].Unknown;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        LineNoNUD.Value = Mapv3.HLines[Pvalue].LineNo;
+                        RSPDNUD.Value = Mapv3.HLines[Pvalue].RelativeSpeed;
+                        CSPDNUD.Value = Mapv3.HLines[Pvalue].ConstantSpeed;
+                        UnknownNUD.Value = Mapv3.HLines[Pvalue].Unknown;
+                        break;
+                    case 0:
+                        LineNoNUD.Value = Mapv4.HLines[Pvalue].LineNo;
+                        RSPDNUD.Value = Mapv4.HLines[Pvalue].RelativeSpeed;
+                        CSPDNUD.Value = Mapv4.HLines[Pvalue].ConstantSpeed;
+                        UnknownNUD.Value = Mapv4.HLines[Pvalue].Unknown;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        LineNoNUD.Value = Mapv3.VLines[Pvalue].LineNo;
+                        RSPDNUD.Value = Mapv3.VLines[Pvalue].RelativeSpeed;
+                        CSPDNUD.Value = Mapv3.VLines[Pvalue].ConstantSpeed;
+                        UnknownNUD.Value = Mapv3.VLines[Pvalue].Unknown;
+                        break;
+                    case 0:
+                        LineNoNUD.Value = Mapv4.VLines[Pvalue].LineNo;
+                        RSPDNUD.Value = Mapv4.VLines[Pvalue].RelativeSpeed;
+                        CSPDNUD.Value = Mapv4.VLines[Pvalue].ConstantSpeed;
+                        UnknownNUD.Value = Mapv4.VLines[Pvalue].Unknown;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -63,62 +91,137 @@ namespace RetroED.Tools.BackgroundEditor
         }
         private void LineNoNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 1:
-                    Mapv3.Lines[Pvalue].LineNo = (byte)LineNoNUD.Value;
-                    break;
-                case 0:
-                    Mapv4.Lines[Pvalue].LineNo = (byte)LineNoNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.HLines[Pvalue].LineNo = (byte)LineNoNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.HLines[Pvalue].LineNo = (byte)LineNoNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (hv == 0)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.VLines[Pvalue].LineNo = (byte)LineNoNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.VLines[Pvalue].LineNo = (byte)LineNoNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void RSPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 1:
-                    Mapv3.Lines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                    break;
-                case 0:
-                    Mapv4.Lines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.HLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.HLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.VLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.VLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void CSPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 1:
-                    Mapv3.Lines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                    break;
-                case 0:
-                    Mapv4.Lines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.HLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.HLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.VLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.VLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void UnknownNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 1:
-                    Mapv3.Lines[Pvalue].Unknown = (byte)UnknownNUD.Value;
-                    break;
-                case 0:
-                    Mapv4.Lines[Pvalue].Unknown = (byte)UnknownNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.HLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.HLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 1:
+                        Mapv3.VLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        break;
+                    case 0:
+                        Mapv4.VLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RemoveVal = true;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

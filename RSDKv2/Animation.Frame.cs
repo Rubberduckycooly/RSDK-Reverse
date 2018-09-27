@@ -32,10 +32,6 @@ namespace RSDKv2
 
         public int Id { get => 0; set { } }
 
-        public bool flag1 { get => false; set { } }
-
-        public bool flag2 { get => false; set { } }
-
         public int Duration
         {
             get => 256;
@@ -66,31 +62,21 @@ namespace RSDKv2
 
         public void Read(BinaryReader reader)
         {
-            // byte 1 - Number of image the frame is located in
-            // byte 2 - UnKnown/Useless		
-            // byte 3 - X position in image of the frame
-            // byte 4 - Y position in image of the frame
-            // byte 5 - Width of frame
-            // byte 6 - Height of frame
-            // byte 7 - Hot spot horizontal displacement
-            // byte 8 - Hot spot vertical displacement
             SpriteSheet = reader.ReadByte();
-            reader.ReadByte();
+            CollisionBox = reader.ReadByte();
+            Id = 0;
             X = reader.ReadByte();
             Y = reader.ReadByte();
             Width = reader.ReadByte();
             Height = reader.ReadByte();
             CenterX = reader.ReadSByte();
             CenterY = reader.ReadSByte();
-            flag1 = false; // UNKNOWN
-            flag2 = false; // UNKNOWN
-            Id = 0;
         }
 
         public void Write(BinaryWriter writer)
         {
             writer.Write((byte)SpriteSheet);
-            writer.Write((byte)0);
+            writer.Write((byte)CollisionBox);
             writer.Write((byte)X);
             writer.Write((byte)Y);
             writer.Write((byte)Width);

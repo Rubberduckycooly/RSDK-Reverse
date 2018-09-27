@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace RSDKv5
 {
     // Thanks to Xeeynamo for the Animation information
+    [Serializable]
     public class Animation
     {
 
@@ -48,17 +49,17 @@ namespace RSDKv5
         {
             public string AnimName;
             public List<Frame> Frames = new List<Frame>();
-            public int LoopFrame;
-            public int Speed;
-            public int Flags;
+            public int FrameLoop;
+            public int FrameSpeed;
+            public byte Unknown;
 
             public AnimationEntry Load(BinaryReader reader, Animation anim)
             {
                 AnimName = ReadString(reader);
                 short frameCount = reader.ReadInt16();
-                Speed = reader.ReadInt16();
-                LoopFrame = reader.ReadByte();
-                Flags = reader.ReadByte();
+                FrameSpeed = reader.ReadInt16();
+                FrameLoop = reader.ReadByte();
+                Unknown = reader.ReadByte();
                 for (int i = 0; i < frameCount; ++i)
                 {
                     Frames.Add(Frame.ReadFrame(reader, anim));
@@ -88,7 +89,7 @@ namespace RSDKv5
                 frame.SpriteSheet = reader.ReadByte();
                 frame.CollisionBox = 0;
                 frame.Duration = reader.ReadInt16();
-                frame.ID = reader.ReadUInt16();
+                frame.ID = reader.ReadInt16();
                 frame.X = reader.ReadInt16();
                 frame.Y = reader.ReadInt16();
                 frame.Width = reader.ReadInt16();

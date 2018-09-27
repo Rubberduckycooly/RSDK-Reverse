@@ -13,6 +13,8 @@ namespace RSDKv5
         public String GameSubname;
         public String Version;
 
+        bool _scenesHaveModeFilter;
+
         public byte StartSceneCategoryIndex;
         public ushort StartSceneIndex;
 
@@ -21,22 +23,28 @@ namespace RSDKv5
             public string Name;
             public string Zone;
             public string SceneID;
-            public byte SceneMode;
+            public byte ModeFilter;
 
-            internal SceneInfo(Reader reader)
+            public SceneInfo()
+            {
+            }
+
+            internal SceneInfo(Reader reader, bool scenesHaveModeFilter)
             {
                 Name = reader.ReadRSDKString();
                 Zone = reader.ReadRSDKString();
                 SceneID = reader.ReadRSDKString();
-                SceneMode = reader.ReadByte();
-                Console.WriteLine("Name = " + Name + " ,Zone = " + Zone + " ,SceneID = " + SceneID + ",Scene Mode = " + SceneMode);
+
+                if (scenesHaveModeFilter) ModeFilter = reader.ReadByte();
             }
 
-            internal void Write(Writer writer)
+            internal void Write(Writer writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
                 writer.WriteRSDKString(Zone);
                 writer.WriteRSDKString(SceneID);
+
+                if (scenesHaveModeFilter) writer.Write(ModeFilter);
             }
         }
 
@@ -45,22 +53,22 @@ namespace RSDKv5
             public string Name;
             public List<SceneInfo> Scenes = new List<SceneInfo>();
 
-            internal Category(Reader reader)
+            internal Category(Reader reader, bool scenesHaveModeFilter)
             {
                 Name = reader.ReadRSDKString();
 
                 byte scenes_count = reader.ReadByte();
                 for (int i = 0; i < scenes_count; ++i)
-                    Scenes.Add(new SceneInfo(reader));
+                    Scenes.Add(new SceneInfo(reader, scenesHaveModeFilter));
             }
 
-            internal void Write(Writer writer)
+            internal void Write(Writer writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
 
                 writer.Write((byte)Scenes.Count);
                 foreach (SceneInfo scene in Scenes)
-                    scene.Write(writer);
+                    scene.Write(writer, scenesHaveModeFilter);
             }
         }
 
@@ -91,17 +99,17 @@ namespace RSDKv5
 
         public List<ConfigurableMemoryEntry> ConfigMemory = new List<ConfigurableMemoryEntry>();
 
-        public GameConfig(string filename) : this(new Reader(filename))
+        public GameConfig(string filename) : this(new Reader(filename), true)
         {
 
         }
 
-        public GameConfig(Stream stream) : this(new Reader(stream))
+        public GameConfig(Stream stream) : this(new Reader(stream), false)
         {
 
         }
 
-        private GameConfig(Reader reader)
+        private GameConfig(Reader reader, bool closeStream = false)
         {
             base.ReadMagic(reader);
 
@@ -109,34 +117,50 @@ namespace RSDKv5
             GameSubname = reader.ReadRSDKString();
             Version = reader.ReadRSDKString();
 
+            InterpretVersion();
+
             StartSceneCategoryIndex = reader.ReadByte();
             StartSceneIndex = reader.ReadUInt16();
+
             base.ReadCommonConfig(reader);
 
             ushort TotalScenes = reader.ReadUInt16();
-            Console.WriteLine(TotalScenes);
+
             byte categories_count = reader.ReadByte();
             for (int i = 0; i < categories_count; ++i)
-                Categories.Add(new Category(reader));
+                Categories.Add(new Category(reader, _scenesHaveModeFilter));
 
             byte config_memory_count = reader.ReadByte();
             for (int i = 0; i < config_memory_count; ++i)
                 ConfigMemory.Add(new ConfigurableMemoryEntry(reader));
+
+            if (closeStream)
+                reader.Close();
         }
 
-        public void Write(string filename)
+        private void InterpretVersion()
+        {
+            string[] versionParts = Version.Split('.');
+            int midVersion = Int32.Parse(versionParts[1]);
+            if (midVersion >= 5)
+            {
+                _scenesHaveModeFilter = true;
+            }
+        }
+
+        public void Write(string filename, bool closeStream)
         {
             using (Writer writer = new Writer(filename))
-                this.Write(writer);
+                this.Write(writer,closeStream);
         }
 
-        public void Write(Stream stream)
+        public void Write(Stream stream, bool closeStream)
         {
             using (Writer writer = new Writer(stream))
-                this.Write(writer);
+                this.Write(writer, closeStream);
         }
 
-        internal void Write(Writer writer)
+        internal void Write(Writer writer, bool CloseStream)
         {
             base.WriteMagic(writer);
 
@@ -153,11 +177,14 @@ namespace RSDKv5
 
             writer.Write((byte)Categories.Count);
             foreach (Category cat in Categories)
-                cat.Write(writer);
+                cat.Write(writer, _scenesHaveModeFilter);
 
             writer.Write((byte)ConfigMemory.Count);
             foreach (ConfigurableMemoryEntry c in ConfigMemory)
                 c.Write(writer);
+
+            if (CloseStream)
+            writer.Close();
         }
     }
 }

@@ -8,7 +8,7 @@ using zlib;
 
 namespace RSDKv5
 {
-    internal class Reader : BinaryReader
+    public class Reader : BinaryReader
     {
         public Reader(Stream stream) : base(stream)
         {

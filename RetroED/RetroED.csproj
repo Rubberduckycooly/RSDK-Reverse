@@ -13,14 +13,15 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,6 +34,31 @@
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Retro_Engine_logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -59,6 +85,7 @@
     <Compile Include="AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Discord.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -84,6 +111,12 @@
     </Compile>
     <Compile Include="Tools\BackgroundEditor\CD12_LineScrollForm.Designer.cs">
       <DependentUpon>CD12_LineScrollForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\BackgroundEditor\SelectLayerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\BackgroundEditor\SelectLayerForm.Designer.cs">
+      <DependentUpon>SelectLayerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\ChunkEditor\AutoSetTiles.cs">
       <SubType>Form</SubType>
@@ -135,6 +168,43 @@
       <DependentUpon>TileList.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\ChunkEditor\TileSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\Classic\Angles.cs" />
+    <Compile Include="Tools\RSDKCollisionEditor\Classic\CollisionArray.cs" />
+    <Compile Include="Tools\RSDKCollisionEditor\Classic\StageCollisions.cs" />
+    <Compile Include="Tools\RSDKUnpacker\FileOptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\RSDKUnpacker\FileOptionsForm.Designer.cs">
+      <DependentUpon>FileOptionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSonicCollisionEditor\Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\RSonicCollisionEditor\Mainform.Designer.cs">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\Extensions.cs" />
+    <Compile Include="Tools\RSDKCollisionEditor\Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\Mainform.Designer.cs">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\TileList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\TileList.Designer.cs">
+      <DependentUpon>TileList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\RSDKCollisionEditor\TileSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Tools\GFXTool\Form1.Designer.cs">
@@ -342,10 +412,10 @@
     <Compile Include="Tools\PaletteEditor\ToolStripHostDemoForm.Designer.cs">
       <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tools\RSDK Unpacker\Form1.Designer.cs">
+    <Compile Include="Tools\RSDKUnpacker\Form1.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tools\RSDK Unpacker\MainForm.cs">
+    <Compile Include="Tools\RSDKUnpacker\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <EmbeddedResource Include="AboutForm.resx">
@@ -373,6 +443,9 @@
     <EmbeddedResource Include="Tools\BackgroundEditor\CD12_LineScrollForm.resx">
       <DependentUpon>CD12_LineScrollForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\BackgroundEditor\SelectLayerForm.resx">
+      <DependentUpon>SelectLayerForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\ChunkEditor\AutoSetTiles.resx">
       <DependentUpon>AutoSetTiles.cs</DependentUpon>
     </EmbeddedResource>
@@ -393,6 +466,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\ChunkEditor\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\RSDKUnpacker\FileOptionsForm.resx">
+      <DependentUpon>FileOptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\RSonicCollisionEditor\Mainform.resx">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\RSDKCollisionEditor\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\RSDKCollisionEditor\Mainform.resx">
+      <DependentUpon>Mainform.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\GFXTool\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -448,7 +533,7 @@
     <EmbeddedResource Include="Tools\PaletteEditor\ToolStripHostDemoForm.resx">
       <DependentUpon>ToolStripHostDemoForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tools\RSDK Unpacker\MainForm.resx">
+    <EmbeddedResource Include="Tools\RSDKUnpacker\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
@@ -467,30 +552,57 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RSDKv1\RSDKv1.csproj">
-      <Project>{aae1bacd-fe6b-4cc6-ad2d-073315f45eaf}</Project>
-      <Name>RSDKv1</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSDKv2\RSDKv2.csproj">
-      <Project>{e089db56-f8d4-434e-a9a8-c7efcc3278d8}</Project>
-      <Name>RSDKv2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSDKv3\RSDKv3.csproj">
-      <Project>{b41a3858-7e66-4755-9f50-94ea021155b6}</Project>
-      <Name>RSDKv3</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSDKv4\RSDKv4.csproj">
-      <Project>{1a58ba31-c9e1-4d18-876e-ec73799e7a9f}</Project>
-      <Name>RSDKv4</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\RSDKv5\RSDKv5.csproj">
-      <Project>{cf5496f8-002b-408f-9b3d-67c88f610283}</Project>
-      <Name>RSDKv5</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Retro_Engine_logo.ico" />
     <Content Include="Tools\BackgroundEditor\Resources.ico" />
     <None Include="Tools\MapEditor\OBJ.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Maniac.bmp" />
+    <Content Include="Tools\RSonicCollisionEditor\Maniac.ico" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\0.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\1.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\10.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\11.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\12.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\13.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\14.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\15.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\16.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\2.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\3.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\4.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\5.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\6.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\7.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\8.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\9.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Green.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Image1.bmp" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Maniac.bmp" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Maniac.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Maniac2.png" />
+    <None Include="Tools\RSonicCollisionEditor\Resources\Red.png" />
+    <Content Include="Tools\RSDKCollisionEditor\Maniac.ico" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\0.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\1.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\2.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\3.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\4.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\5.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\6.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\7.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\8.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\9.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\10.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\11.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\12.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\13.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\14.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\15.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\16.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Green.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Image1.bmp" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Maniac.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Maniac2.png" />
+    <None Include="Tools\RSDKCollisionEditor\Resources\Red.png" />
     <Content Include="Tools\MapEditor\Resources.ico" />
     <Content Include="Tools\PaletteEditor\icon.ico" />
     <Content Include="Tools\PaletteEditor\Resources\markdownpad-github.css" />
@@ -504,6 +616,28 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\AnimationEditor\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RSDKv1\RSDKv1.csproj">
+      <Project>{e089db56-f8d4-434e-a9a8-c7efcc3278d8}</Project>
+      <Name>RSDKv1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv2\RSDKv2.csproj">
+      <Project>{b41a3858-7e66-4755-9f50-94ea021155b6}</Project>
+      <Name>RSDKv2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKv5\RSDKv5.csproj">
+      <Project>{cf5496f8-002b-408f-9b3d-67c88f610283}</Project>
+      <Name>RSDKv5</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKvB\RSDKvB.csproj">
+      <Project>{1a58ba31-c9e1-4d18-876e-ec73799e7a9f}</Project>
+      <Name>RSDKvB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RSDKvRS\RSDKvRS.csproj">
+      <Project>{aae1bacd-fe6b-4cc6-ad2d-073315f45eaf}</Project>
+      <Name>RSDKvRS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

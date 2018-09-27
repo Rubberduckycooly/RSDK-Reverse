@@ -17,36 +17,62 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int Pvalue;
 
+        public bool RemoveVal = false;
+
         /*The unknown values seem to be line positions for each LineScroll Class*/
 
-        public RSDKv1.BGLayout Mapv1;
-        public RSDKv2.BGLayout Mapv2;
-        public RSDKv3.BGLayout Mapv3;
-        public RSDKv4.BGLayout Mapv4;
+        public RSDKvRS.BGLayout Mapv1;
+        public RSDKv1.BGLayout Mapv2;
+        public RSDKv2.BGLayout Mapv3;
+        public RSDKvB.BGLayout Mapv4;
 
-        public RSN_LineScrollForm(int RSDKver, int PVal)
+        int hv = 0;
+
+        public RSN_LineScrollForm(int RSDKver, int PVal, int HV)
         {
             InitializeComponent();
+            hv = HV;
             LoadedRSDKver = RSDKver;
             Pvalue = PVal;
         }
 
         public void Setup()
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 3:
-                    LineNoNUD.Value = Mapv1.Lines[Pvalue].RHSpeed;
-                    SPDNUD.Value = Mapv1.Lines[Pvalue].CHSpeed;
-                    DeformNUD.Value = Mapv1.Lines[Pvalue].Deform;
-                    break;
-                case 2:
-                    LineNoNUD.Value = Mapv2.Lines[Pvalue].RHSpeed;
-                    SPDNUD.Value = Mapv2.Lines[Pvalue].CHSpeed;
-                    DeformNUD.Value = Mapv2.Lines[Pvalue].Deform;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        LineNoNUD.Value = Mapv1.HLines[Pvalue].RHSpeed;
+                        SPDNUD.Value = Mapv1.HLines[Pvalue].CHSpeed;
+                        DeformNUD.Value = Mapv1.HLines[Pvalue].Deform;
+                        break;
+                    case 2:
+                        LineNoNUD.Value = Mapv2.HLines[Pvalue].RHSpeed;
+                        SPDNUD.Value = Mapv2.HLines[Pvalue].CHSpeed;
+                        DeformNUD.Value = Mapv2.HLines[Pvalue].Deform;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        LineNoNUD.Value = Mapv1.VLines[Pvalue].RHSpeed;
+                        SPDNUD.Value = Mapv1.VLines[Pvalue].CHSpeed;
+                        DeformNUD.Value = Mapv1.VLines[Pvalue].Deform;
+                        break;
+                    case 2:
+                        LineNoNUD.Value = Mapv2.VLines[Pvalue].RHSpeed;
+                        SPDNUD.Value = Mapv2.VLines[Pvalue].CHSpeed;
+                        DeformNUD.Value = Mapv2.VLines[Pvalue].Deform;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -63,47 +89,105 @@ namespace RetroED.Tools.BackgroundEditor
         }
         private void LineNoNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 3:
-                    Mapv1.Lines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Lines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.HLines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.HLines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.VLines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.VLines[Pvalue].RHSpeed = (byte)LineNoNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void SPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 3:
-                    Mapv1.Lines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Lines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.HLines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.HLines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.VLines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.VLines[Pvalue].CHSpeed = (byte)SPDNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
         private void CSPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (hv == 0)
             {
-                case 3:
-                    Mapv1.Lines[Pvalue].Deform = (byte)DeformNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Lines[Pvalue].Deform = (byte)DeformNUD.Value;
-                    break;
-                default:
-                    break;
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.HLines[Pvalue].Deform = (byte)DeformNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.HLines[Pvalue].Deform = (byte)DeformNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
             }
+            else if (hv == 1)
+            {
+                switch (LoadedRSDKver)
+                {
+                    case 3:
+                        Mapv1.VLines[Pvalue].Deform = (byte)DeformNUD.Value;
+                        break;
+                    case 2:
+                        Mapv2.VLines[Pvalue].Deform = (byte)DeformNUD.Value;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            RemoveVal = true;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
         }
     }
 }

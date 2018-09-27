@@ -16,7 +16,7 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int curlayer = 0;
 
-        public bool DrawAllLayers = true;
+        public bool DrawAllLayers = false;
 
         public Image _tiles;
         public StageChunksView _ChunkView;
@@ -35,23 +35,23 @@ namespace RetroED.Tools.BackgroundEditor
         public Point tilePoint;
 
         #region Retro-Sonic Development Kit
-        public RSDKv1.BGLayout _RSDK1Background;
-        public RSDKv1.til _RSDK1Chunks;
+        public RSDKvRS.BGLayout _RSDK1Background;
+        public RSDKvRS.Tiles128x128 _RSDK1Chunks;
         #endregion
 
         #region RSDKv1
-        public RSDKv2.BGLayout _RSDK2Background;
-        public RSDKv2.Tiles128x128 _RSDK2Chunks;
+        public RSDKv1.BGLayout _RSDK2Background;
+        public RSDKv1.Tiles128x128 _RSDK2Chunks;
         #endregion
 
-        #region RSDKv2
-        public RSDKv3.BGLayout _RSDK3Background;
-        public RSDKv3.Tiles128x128 _RSDK3Chunks;
+        #region RSDKv1
+        public RSDKv2.BGLayout _RSDK3Background;
+        public RSDKv2.Tiles128x128 _RSDK3Chunks;
         #endregion
 
         #region RSDKvB
-        public RSDKv4.BGLayout _RSDK4Background;
-        public RSDKv4.Tiles128x128 _RSDK4Chunks;
+        public RSDKvB.BGLayout _RSDK4Background;
+        public RSDKvB.Tiles128x128 _RSDK4Chunks;
         #endregion
 
         public StageMapView()
@@ -77,19 +77,45 @@ namespace RetroED.Tools.BackgroundEditor
                     if (startY4 < 0) startY4 = 0;
                     int endX4 = startX4 + (pnlMap.Width / 128) + 1;
                     int endY4 = startY4 + (pnlMap.Height / 128) + 1;
-                    for (int y = startY4; y < endY4; y++)
+                    if (DrawAllLayers)
                     {
-                        for (int x = startX4; x < endX4; x++)
+                        for (int l = 0; l < _RSDK4Background.Layers.Count; l++)
                         {
-                            if (y < _RSDK4Background.Layers[curlayer].MapLayout.Length && x < _RSDK4Background.Layers[curlayer].MapLayout[y].Length && _RSDK4Background.Layers[curlayer].MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                            for (int y = startY4; y < endY4; y++)
                             {
-                                if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                for (int x = startX4; x < endX4; x++)
                                 {
+                                    if (y < _RSDK4Background.Layers[l].MapLayout.Length && x < _RSDK4Background.Layers[l].MapLayout[y].Length && _RSDK4Background.Layers[l].MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                                    {
+                                        if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                        {
+                                            if (_RSDK4Background.Layers[l].MapLayout[y][x] > 0)
+                                            {
+                                                e.Graphics.DrawImageUnscaled(Chunks[_RSDK4Background.Layers[l].MapLayout[y][x]], x * 128, y * 128);
+                                            }
+                                            else { }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (!DrawAllLayers)
+                    {
+                        for (int y = startY4; y < endY4; y++)
+                        {
+                            for (int x = startX4; x < endX4; x++)
+                            {
+                                if (y < _RSDK4Background.Layers[curlayer].MapLayout.Length && x < _RSDK4Background.Layers[curlayer].MapLayout[y].Length && _RSDK4Background.Layers[curlayer].MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                                {
+                                    if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                    {
                                         if (_RSDK4Background.Layers[curlayer].MapLayout[y][x] > 0)
                                         {
                                             e.Graphics.DrawImageUnscaled(Chunks[_RSDK4Background.Layers[curlayer].MapLayout[y][x]], x * 128, y * 128);
                                         }
                                         else { }
+                                    }
                                 }
                             }
                         }
@@ -130,21 +156,50 @@ namespace RetroED.Tools.BackgroundEditor
                     if (startY3 < 0) startY3 = 0;
                     int endX3 = startX3 + (pnlMap.Width / 128) + 1;
                     int endY3 = startY3 + (pnlMap.Height / 128) + 1;
-                    for (int y = startY3; y < endY3; y++)
+                    if (DrawAllLayers)
                     {
-                        for (int x = startX3; x < endX3; x++)
+                        for (int l = 0; l < _RSDK3Background.Layers.Count; l++)
                         {
-                            if (y < _RSDK3Background.Layers[curlayer].MapLayout.Length && x < _RSDK3Background.Layers[curlayer].MapLayout[y].Length && _RSDK3Background.Layers[curlayer].MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
+                            for (int y = startY3; y < endY3; y++)
                             {
-                                if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                for (int x = startX3; x < endX3; x++)
                                 {
-                                    if (ShowMap)
+                                    if (y < _RSDK3Background.Layers[l].MapLayout.Length && x < _RSDK3Background.Layers[l].MapLayout[y].Length && _RSDK3Background.Layers[l].MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
                                     {
-                                        if (_RSDK3Background.Layers[curlayer].MapLayout[y][x] > 0)
+                                        if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK3Background.Layers[curlayer].MapLayout[y][x]], x * 128, y * 128);
+                                            if (ShowMap)
+                                            {
+                                                if (_RSDK3Background.Layers[l].MapLayout[y][x] > 0)
+                                                {
+                                                    e.Graphics.DrawImageUnscaled(Chunks[_RSDK3Background.Layers[l].MapLayout[y][x]], x * 128, y * 128);
+                                                }
+                                                else { }
+                                            }
                                         }
-                                        else { }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (!DrawAllLayers)
+                    {
+                        for (int y = startY3; y < endY3; y++)
+                        {
+                            for (int x = startX3; x < endX3; x++)
+                            {
+                                if (y < _RSDK3Background.Layers[curlayer].MapLayout.Length && x < _RSDK3Background.Layers[curlayer].MapLayout[y].Length && _RSDK3Background.Layers[curlayer].MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
+                                {
+                                    if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                    {
+                                        if (ShowMap)
+                                        {
+                                            if (_RSDK3Background.Layers[curlayer].MapLayout[y][x] > 0)
+                                            {
+                                                e.Graphics.DrawImageUnscaled(Chunks[_RSDK3Background.Layers[curlayer].MapLayout[y][x]], x * 128, y * 128);
+                                            }
+                                            else { }
+                                        }
                                     }
                                 }
                             }
@@ -264,22 +319,50 @@ namespace RetroED.Tools.BackgroundEditor
                     if (startY1 < 0) startY1 = 0;
                     int endX1 = startX1 + (pnlMap.Width / 128) + 1;
                     int endY1 = startY1 + (pnlMap.Height / 128) + 1;
-                    for (int y = startY1; y < endY1; y++)
+                    if (DrawAllLayers)
                     {
-                        for (int x = startX1; x < endX1; x++)
+                        for (int l = 0; l < _RSDK1Background.Layers.Count; l++)
                         {
-                            if (y < _RSDK1Background.Layers[curlayer].MapLayout.Length && x < _RSDK1Background.Layers[curlayer].MapLayout[y].Length && _RSDK1Background.Layers[curlayer].MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
+                            for (int y = startY1; y < endY1; y++)
                             {
-                                //if (e.ClipRectangle.IntersectsWith(new Rectangle(0, 0, viewport1.Width, viewport1.Height)))
-                                if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                for (int x = startX1; x < endX1; x++)
                                 {
-                                    if (ShowMap)
+                                    if (y < _RSDK1Background.Layers[l].MapLayout.Length && x < _RSDK1Background.Layers[l].MapLayout[y].Length && _RSDK1Background.Layers[l].MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
                                     {
-                                        if (_RSDK1Background.Layers[curlayer].MapLayout[y][x] > 0)
+                                        if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK1Background.Layers[curlayer].MapLayout[y][x]], x * 128, y * 128);
+                                            if (ShowMap)
+                                            {
+                                                if (_RSDK1Background.Layers[l].MapLayout[y][x] > 0)
+                                                {
+                                                    e.Graphics.DrawImageUnscaled(Chunks[_RSDK1Background.Layers[l].MapLayout[y][x]], x * 128, y * 128);
+                                                }
+                                                else { }
+                                            }
                                         }
-                                        else { }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (!DrawAllLayers)
+                    {
+                        for (int y = startY1; y < endY1; y++)
+                        {
+                            for (int x = startX1; x < endX1; x++)
+                            {
+                                if (y < _RSDK1Background.Layers[curlayer].MapLayout.Length && x < _RSDK1Background.Layers[curlayer].MapLayout[y].Length && _RSDK1Background.Layers[curlayer].MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
+                                {
+                                    if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
+                                    {
+                                        if (ShowMap)
+                                        {
+                                            if (_RSDK1Background.Layers[curlayer].MapLayout[y][x] > 0)
+                                            {
+                                                e.Graphics.DrawImageUnscaled(Chunks[_RSDK1Background.Layers[curlayer].MapLayout[y][x]], x * 128, y * 128);
+                                            }
+                                            else { }
+                                        }
                                     }
                                 }
                             }

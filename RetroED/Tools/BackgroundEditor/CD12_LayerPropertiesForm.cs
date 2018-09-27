@@ -17,8 +17,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int CurLayer = 0;
 
-        public RSDKv3.BGLayout Mapv3;
-        public RSDKv4.BGLayout Mapv4;
+        public RSDKv2.BGLayout Mapv3;
+        public RSDKvB.BGLayout Mapv4;
 
         public CD12_LayerPropertiesForm(int RSDKver)
         {
@@ -146,6 +146,36 @@ namespace RetroED.Tools.BackgroundEditor
                     break;
                 case 0:
                     Mapv4.Layers[CurLayer].RelativeVSpeed = (byte)RelativeVSPDNUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Unknown1NUD_ValueChanged_1(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 1:
+                    Mapv3.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Unknown2NUD_ValueChanged_1(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 1:
+                    Mapv3.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
                     break;
                 default:
                     break;

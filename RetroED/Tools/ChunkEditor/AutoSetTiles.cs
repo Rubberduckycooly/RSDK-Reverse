@@ -42,13 +42,13 @@ namespace RetroED.Tools.ChunkEditor
                 }
                 if (dlg.FilterIndex - 1 == 1)
                 {
-                    RSDKv1.gfx g = new RSDKv1.gfx(dlg.FileName, false);
+                    RSDKvRS.gfx g = new RSDKvRS.gfx(dlg.FileName, false);
                     Tileset = g.gfxImage;
                     LoadTileSet(Tileset);
                 }
                 if (dlg.FilterIndex - 1 == 2)
                 {
-                    RSDKv1.gfx g = new RSDKv1.gfx(dlg.FileName, true);
+                    RSDKvRS.gfx g = new RSDKvRS.gfx(dlg.FileName, true);
                     Tileset = g.gfxImage;
                     LoadTileSet(Tileset);
                 }

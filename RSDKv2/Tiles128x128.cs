@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 
 namespace RSDKv2
@@ -18,7 +17,7 @@ namespace RSDKv2
 
         }
 
-        public Tiles128x128(System.IO.Stream stream) : this(new Reader(stream))
+        public Tiles128x128(System.IO.Stream strm) : this(new Reader(strm))
         {
 
         }
@@ -28,28 +27,24 @@ namespace RSDKv2
             BlockList = new List<Tile128>();
             byte[] mappingEntry = new byte[3];
             Tile128 currentBlock = new Tile128();
-            int tileIndex = 0;
-            while (strm.Read(mappingEntry, 0, mappingEntry.Length) > 0)
+
+            for (int c = 0; c < 512; c++)
             {
-                if (tileIndex >= currentBlock.Mapping.Length)
+                for (int y = 0; y < 8; y++)
                 {
-                    tileIndex = 0;
-                    BlockList.Add(currentBlock);
-                    currentBlock = new Tile128();
+                    for (int x = 0; x < 8; x++)
+                    {
+                        strm.Read(mappingEntry, 0, mappingEntry.Length);
+                        mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
+                        currentBlock.Mapping[y][x].VisualPlane = (byte)(mappingEntry[0] >> 4);
+                        mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
+                        currentBlock.Mapping[y][x].Direction = (byte)(mappingEntry[0] >> 2);
+                        mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
+                        currentBlock.Mapping[y][x].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
+                        currentBlock.Mapping[y][x].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
+                        currentBlock.Mapping[y][x].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
+                    }
                 }
-                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
-                currentBlock.Mapping[tileIndex].VisualPlane = (byte)(mappingEntry[0] >> 4);
-                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
-                currentBlock.Mapping[tileIndex].Direction = (byte)(mappingEntry[0] >> 2);
-                mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
-                currentBlock.Mapping[tileIndex].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
-                currentBlock.Mapping[tileIndex].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
-                currentBlock.Mapping[tileIndex].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
-                tileIndex++;
-            }
-            if (tileIndex >= currentBlock.Mapping.Length)
-            {
-                tileIndex = 0;
                 BlockList.Add(currentBlock);
                 currentBlock = new Tile128();
             }
@@ -71,42 +66,35 @@ namespace RSDKv2
         internal void Write(Writer writer)
         {
             int[] mappingEntry = new int[3];
-            int tileIndex = 0;
-            int chunkIndex = 0;
 
-            while (chunkIndex < 512)
+            mappingEntry = new int[3];
+
+            for (int c = 0; c < 512; c++)
             {
-                if (tileIndex >= BlockList[chunkIndex].Mapping.Length)
+                for (int y = 0; y < 8; y++)
                 {
-                    tileIndex = 0;
-                    chunkIndex++;
+                    for (int x = 0; x < 8; x++)
+                    {
+                        mappingEntry = new int[3];
+                        mappingEntry[0] |= (byte)(BlockList[c].Mapping[y][x].Tile16x16 >> 8); //Put the first bit onto buffer[0]
+                        mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 2 << 2));
+                        mappingEntry[0] |= (BlockList[c].Mapping[y][x].Direction) << 2; //Put the Flip of the tile two bits in
+                        mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 4 << 4));
+                        mappingEntry[0] |= (BlockList[c].Mapping[y][x].VisualPlane) << 4; //Put the Layer of the tile four bits in
+                        mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 6 << 6));
+
+                        mappingEntry[1] = (byte)(BlockList[c].Mapping[y][x].Tile16x16); //Put the rest of the Tile16x16 Value into this buffer
+
+                        mappingEntry[2] = BlockList[c].Mapping[y][x].CollisionFlag1; //Colision Flag 1 is all bytes before bit 5
+                        mappingEntry[2] = mappingEntry[2] | BlockList[c].Mapping[y][x].CollisionFlag0 << 4; //Colision Flag 0 is all bytes after bit 4
+
+                        writer.Write((byte)mappingEntry[0]);
+                        writer.Write((byte)mappingEntry[1]);
+                        writer.Write((byte)mappingEntry[2]);
+                    }
                 }
-                mappingEntry = new int[3];
-                if (chunkIndex > 511) break;
-
-                mappingEntry[0] |= (byte)(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16 >> 8); //Put the first bit onto buffer[0]
-                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 2 << 2));
-                mappingEntry[0] |= (BlockList[chunkIndex].Mapping[tileIndex].Direction) << 2; //Put the Flip of the tile two bits in
-                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 4 << 4));
-                mappingEntry[0] |= (BlockList[chunkIndex].Mapping[tileIndex].VisualPlane) << 4; //Put the Layer of the tile four bits in
-                mappingEntry[0] = (byte)(mappingEntry[0] + (mappingEntry[0] >> 6 << 6));
-
-                mappingEntry[1] = (byte)(BlockList[chunkIndex].Mapping[tileIndex].Tile16x16); //Put the rest of the Tile16x16 Value into this buffer
-
-                mappingEntry[2] = BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag1; //Colision Flag 1 is all bytes before bit 5
-                mappingEntry[2] = mappingEntry[2] | BlockList[chunkIndex].Mapping[tileIndex].CollisionFlag0 << 4; //Colision Flag 0 is all bytes after bit 4
-
-                writer.Write((byte)mappingEntry[0]);
-                writer.Write((byte)mappingEntry[1]);
-                writer.Write((byte)mappingEntry[2]);
-                tileIndex++;
             }
 
-            if (chunkIndex < 512 && tileIndex >= BlockList[chunkIndex].Mapping.Length)
-            {
-                tileIndex = 0;
-                chunkIndex++;
-            }
             writer.Close();
         }
 
@@ -120,13 +108,16 @@ namespace RSDKv2
         public Tile128 Clone(int ChunkID)
         {
             Tile128 Copy = new Tile128();
-            for (int i = 0; i < 64; i++)
+            for (int y = 0; y < 8; y++)
             {
-                Copy.Mapping[i].VisualPlane = BlockList[ChunkID].Mapping[i].VisualPlane;
-                Copy.Mapping[i].Direction = BlockList[ChunkID].Mapping[i].Direction;
-                Copy.Mapping[i].Tile16x16 = BlockList[ChunkID].Mapping[i].Tile16x16;
-                Copy.Mapping[i].CollisionFlag0 = BlockList[ChunkID].Mapping[i].CollisionFlag0;
-                Copy.Mapping[i].CollisionFlag1 = BlockList[ChunkID].Mapping[i].CollisionFlag1;
+                for (int x = 0; x < 8; x++)
+                {
+                    Copy.Mapping[y][x].VisualPlane = BlockList[ChunkID].Mapping[y][x].VisualPlane;
+                    Copy.Mapping[y][x].Direction = BlockList[ChunkID].Mapping[y][x].Direction;
+                    Copy.Mapping[y][x].Tile16x16 = BlockList[ChunkID].Mapping[y][x].Tile16x16;
+                    Copy.Mapping[y][x].CollisionFlag0 = BlockList[ChunkID].Mapping[y][x].CollisionFlag0;
+                    Copy.Mapping[y][x].CollisionFlag1 = BlockList[ChunkID].Mapping[y][x].CollisionFlag1;
+                }
             }
             return Copy;
         }
@@ -135,14 +126,23 @@ namespace RSDKv2
 
     public class Tile128
     {
-        public Tile16[] Mapping;
+        public Tile16[][] Mapping;
         public Tile128()
         {
-            Mapping = new Tile16[8 * 8];
-            for (int i = 0; i < Mapping.Length; i++)
+            Mapping = new Tile16[8][];
+            for (int i = 0; i < 8; i++)
             {
-                Mapping[i] = new Tile16();
+                Mapping[i] = new Tile16[8];
             }
+
+            for (int y = 0; y < 8; y++)
+            {
+                for (int x = 0; x < 8; x++)
+                {
+                    Mapping[y][x] = new Tile16();
+                }
+            }
+
         }
 
         public Bitmap Render(Image tiles)
@@ -150,34 +150,32 @@ namespace RSDKv2
             Bitmap retval = new Bitmap(128, 128);
             using (Graphics rg = Graphics.FromImage(retval))
             {
-                int i = 0;
                 for (int y = 0; y < 8; y++)
                 {
                     for (int x = 0; x < 8; x++)
                     {
                         Rectangle destRect = new Rectangle(x * 16, y * 16, 16, 16);
-                        Rectangle srcRect = new Rectangle(0, Mapping[i].Tile16x16 * 16, 16, 16);
+                        Rectangle srcRect = new Rectangle(0, Mapping[y][x].Tile16x16 * 16, 16, 16);
                         using (Bitmap tile = new Bitmap(16, 16))
                         {
                             using (Graphics tg = Graphics.FromImage(tile))
                             {
                                 tg.DrawImage(tiles, 0, 0, srcRect, GraphicsUnit.Pixel);
                             }
-                            if (Mapping[i].Direction == 1)
+                            if (Mapping[y][x].Direction == 1)
                             {
                                 tile.RotateFlip(RotateFlipType.RotateNoneFlipX);
                             }
-                            else if (Mapping[i].Direction == 2)
+                            else if (Mapping[y][x].Direction == 2)
                             {
                                 tile.RotateFlip(RotateFlipType.RotateNoneFlipY);
                             }
-                            else if (Mapping[i].Direction == 3)
+                            else if (Mapping[y][x].Direction == 3)
                             {
                                 tile.RotateFlip(RotateFlipType.RotateNoneFlipXY);
                             }
                             rg.DrawImage(tile, destRect);
                         }
-                        i++;
                     }
                 }
             }
@@ -193,5 +191,4 @@ namespace RSDKv2
         public byte CollisionFlag0 { get; set; }
         public byte CollisionFlag1 { get; set; }
     }
-
 }

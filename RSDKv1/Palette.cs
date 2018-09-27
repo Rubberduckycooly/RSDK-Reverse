@@ -36,7 +36,7 @@ namespace RSDKv1
             {
                 Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                { Colors[i][j] = new PaletteColor(reader); }//Console.WriteLine(Colors[i][j].R + Colors[i][j].G + Colors[i][j].B); }
+                { Colors[i][j] = new PaletteColor(reader); }
             }
         }
 
@@ -68,11 +68,12 @@ namespace RSDKv1
         internal void Write(Writer writer)
         {
             int palColumns = Colors.Length/16;
-            Console.WriteLine(palColumns);
+            int c = 0;
+
             foreach (PaletteColor[] column in Colors)
-                if (column != null)
+                if (column != null && c < 32)
                     foreach (PaletteColor color in column)
-                    { color.Write(writer);}
+                    { color.Write(writer); c++; }
         }
 
     }

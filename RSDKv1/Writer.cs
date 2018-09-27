@@ -38,12 +38,6 @@ namespace RSDKv1
             get { return BaseStream.Length; }
         }
 
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
-        }
-
         public void WriteUInt32BE(uint val)
         {
             val = ((val >> 24) & 0xff) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | ((val << 24) & 0xff000000);

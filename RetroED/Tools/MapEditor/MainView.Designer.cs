@@ -72,7 +72,8 @@
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapLayer = new System.Windows.Forms.MenuItem();
             this.MenuItem_Objects = new System.Windows.Forms.MenuItem();
-            this.MenuItem_CollisionMasks = new System.Windows.Forms.MenuItem();
+            this.MenuItem_CollisionMasksLyrA = new System.Windows.Forms.MenuItem();
+            this.MenuItem_CollisionMasksLyrB = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
             this.MenuItem_RefreshChunks = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
@@ -83,6 +84,7 @@
             this.menuItem7 = new System.Windows.Forms.MenuItem();
             this.MenuItem_AddObject = new System.Windows.Forms.MenuItem();
             this.MenuItem_AddObjList = new System.Windows.Forms.MenuItem();
+            this.MenuItem_LoadObjListFromData = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
@@ -97,7 +99,7 @@
             this.dpMain.Location = new System.Drawing.Point(0, 0);
             this.dpMain.Margin = new System.Windows.Forms.Padding(4);
             this.dpMain.Name = "dpMain";
-            this.dpMain.Size = new System.Drawing.Size(651, 446);
+            this.dpMain.Size = new System.Drawing.Size(651, 420);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -326,6 +328,7 @@
             // menuItem5
             // 
             this.menuItem5.Index = 7;
+            this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
             this.menuItem5.Text = "Select Data Folder";
             this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
             // 
@@ -347,7 +350,8 @@
             this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MenuItem_MapLayer,
             this.MenuItem_Objects,
-            this.MenuItem_CollisionMasks,
+            this.MenuItem_CollisionMasksLyrA,
+            this.MenuItem_CollisionMasksLyrB,
             this.menuItem13,
             this.MenuItem_RefreshChunks,
             this.menuItem15,
@@ -367,32 +371,38 @@
             this.MenuItem_Objects.Text = "Objects";
             this.MenuItem_Objects.Click += new System.EventHandler(this.MenuItem_Objects_Click);
             // 
-            // MenuItem_CollisionMasks
+            // MenuItem_CollisionMasksLyrA
             // 
-            this.MenuItem_CollisionMasks.Enabled = false;
-            this.MenuItem_CollisionMasks.Index = 2;
-            this.MenuItem_CollisionMasks.Text = "Collision Masks";
-            this.MenuItem_CollisionMasks.Click += new System.EventHandler(this.MenuItem_CollisionMasks_Click);
+            this.MenuItem_CollisionMasksLyrA.Index = 2;
+            this.MenuItem_CollisionMasksLyrA.Text = "Collision Masks (Layer A)";
+            this.MenuItem_CollisionMasksLyrA.Click += new System.EventHandler(this.MenuItem_CollisionMasks_Click);
+            // 
+            // MenuItem_CollisionMasksLyrB
+            // 
+            this.MenuItem_CollisionMasksLyrB.Index = 3;
+            this.MenuItem_CollisionMasksLyrB.Text = "Collision Masks (Layer B)";
+            this.MenuItem_CollisionMasksLyrB.Click += new System.EventHandler(this.MenuItem_CollisionMasksLyrB_Click);
             // 
             // menuItem13
             // 
-            this.menuItem13.Index = 3;
+            this.menuItem13.Index = 4;
             this.menuItem13.Text = "-";
             // 
             // MenuItem_RefreshChunks
             // 
-            this.MenuItem_RefreshChunks.Index = 4;
+            this.MenuItem_RefreshChunks.Index = 5;
+            this.MenuItem_RefreshChunks.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
             this.MenuItem_RefreshChunks.Text = "Refresh Chunks";
             this.MenuItem_RefreshChunks.Click += new System.EventHandler(this.MenuItem_RefreshChunks_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 5;
+            this.menuItem15.Index = 6;
             this.menuItem15.Text = "-";
             // 
             // MenuItem_ShowGrid
             // 
-            this.MenuItem_ShowGrid.Index = 6;
+            this.MenuItem_ShowGrid.Index = 7;
             this.MenuItem_ShowGrid.Text = "Show Grid";
             this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
             // 
@@ -405,6 +415,7 @@
             this.menuItem7,
             this.MenuItem_AddObject,
             this.MenuItem_AddObjList,
+            this.MenuItem_LoadObjListFromData,
             this.menuItem11,
             this.MenuItem_MapProp});
             this.menuItem3.Text = "Tools";
@@ -438,14 +449,20 @@
             this.MenuItem_AddObjList.Text = "&Set Object Definition List";
             this.MenuItem_AddObjList.Click += new System.EventHandler(this.MenuItem_AddObjList_Click);
             // 
+            // MenuItem_LoadObjListFromData
+            // 
+            this.MenuItem_LoadObjListFromData.Index = 5;
+            this.MenuItem_LoadObjListFromData.Text = "Load Object Names from data folder";
+            this.MenuItem_LoadObjListFromData.Click += new System.EventHandler(this.MenuItem_LoadObjListFromData_Click);
+            // 
             // menuItem11
             // 
-            this.menuItem11.Index = 5;
+            this.menuItem11.Index = 6;
             this.menuItem11.Text = "-";
             // 
             // MenuItem_MapProp
             // 
-            this.MenuItem_MapProp.Index = 6;
+            this.MenuItem_MapProp.Index = 7;
             this.MenuItem_MapProp.Text = "Map &Properties";
             this.MenuItem_MapProp.Click += new System.EventHandler(this.MenuItem_MapProp_Click);
             // 
@@ -466,7 +483,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 446);
+            this.ClientSize = new System.Drawing.Size(651, 420);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dpMain);
             this.DoubleBuffered = true;
@@ -474,7 +491,7 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Menu = this.mainMenu1;
             this.Name = "MainView";
-            this.Text = "Retro Engine Map Editor";
+            this.Text = "RSDK Map Editor";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -515,7 +532,7 @@
         private System.Windows.Forms.MenuItem MenuItem_MapProp;
         private System.Windows.Forms.MenuItem MenuItem_MapLayer;
         private System.Windows.Forms.MenuItem MenuItem_Objects;
-        private System.Windows.Forms.MenuItem MenuItem_CollisionMasks;
+        private System.Windows.Forms.MenuItem MenuItem_CollisionMasksLyrA;
         private System.Windows.Forms.MenuItem menuItem13;
         private System.Windows.Forms.MenuItem MenuItem_RefreshChunks;
         private System.Windows.Forms.MenuItem menuItem15;
@@ -525,6 +542,8 @@
         private System.Windows.Forms.MenuItem menuItem5;
         private System.Windows.Forms.MenuItem MenuItem_MapImgExp;
         private System.Windows.Forms.MenuItem MenuItem_ObjImgExp;
+        private System.Windows.Forms.MenuItem MenuItem_CollisionMasksLyrB;
+        private System.Windows.Forms.MenuItem MenuItem_LoadObjListFromData;
     }
 }
 

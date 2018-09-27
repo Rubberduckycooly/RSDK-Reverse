@@ -7,6 +7,7 @@ using System.IO;
 
 namespace RSDKv5
 {
+    [Serializable]
     public class NameIdentifier
     {
         private readonly byte[] Hash;

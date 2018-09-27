@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E089DB56-F8D4-434E-A9A8-C7EFCC3278D8}</ProjectGuid>
+    <ProjectGuid>{B41A3858-7E66-4755-9F50-94EA021155B6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RSDKv2</RootNamespace>
@@ -49,23 +49,26 @@
     <Compile Include="Animation.Frame.cs" />
     <Compile Include="Animation.HitboxEntry.cs" />
     <Compile Include="BackgroundLayout.cs" />
+    <Compile Include="Bytecode.cs" />
     <Compile Include="CollisionMask.cs" />
+    <Compile Include="DataFile.cs" />
     <Compile Include="GameConfig.cs" />
-    <Compile Include="gfx.cs" />
+    <Compile Include="GraphicsImage.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="IAnimation.cs" />
     <Compile Include="IBinarySerializable.cs" />
     <Compile Include="IHitbox.cs" />
-    <Compile Include="Level.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="PaletteColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="rsv.cs" />
+    <Compile Include="SaveFiles.cs" />
     <Compile Include="StageConfig.cs" />
     <Compile Include="StringEncoding.cs" />
     <Compile Include="Tiles128x128.cs" />
+    <Compile Include="Video.cs" />
     <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>

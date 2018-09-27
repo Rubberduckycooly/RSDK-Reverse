@@ -29,14 +29,6 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.OKButton = new System.Windows.Forms.Button();
-            this.CancelButton = new System.Windows.Forms.Button();
-            this.MapNameLabel = new System.Windows.Forms.Label();
-            this.MapNameBox = new System.Windows.Forms.TextBox();
-            this.MapWidthLabel = new System.Windows.Forms.Label();
-            this.MapHeightLabel = new System.Windows.Forms.Label();
-            this.MapWidthNUD = new System.Windows.Forms.NumericUpDown();
-            this.MapHeightNUD = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RSPlayerPosYNUD = new System.Windows.Forms.NumericUpDown();
             this.RSPlayerPosXNUD = new System.Windows.Forms.NumericUpDown();
@@ -46,18 +38,44 @@
             this.RSMusicNUD = new System.Windows.Forms.NumericUpDown();
             this.RSBGLabel = new System.Windows.Forms.Label();
             this.RSMusicLabel = new System.Windows.Forms.Label();
+            this.MapHeightNUD = new System.Windows.Forms.NumericUpDown();
+            this.MapWidthNUD = new System.Windows.Forms.NumericUpDown();
+            this.MapHeightLabel = new System.Windows.Forms.Label();
+            this.MapWidthLabel = new System.Windows.Forms.Label();
+            this.MapNameBox = new System.Windows.Forms.TextBox();
+            this.MapNameLabel = new System.Windows.Forms.Label();
+            this.CancelButton = new System.Windows.Forms.Button();
+            this.OKButton = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.Layer2NUD = new System.Windows.Forms.NumericUpDown();
+            this.Layer1NUD = new System.Windows.Forms.NumericUpDown();
+            this.Layer2Label = new System.Windows.Forms.Label();
+            this.Layer1Label = new System.Windows.Forms.Label();
+            this.Layer0NUD = new System.Windows.Forms.NumericUpDown();
+            this.MidpointNUD = new System.Windows.Forms.NumericUpDown();
+            this.Layer0Label = new System.Windows.Forms.Label();
+            this.MidpointLabel = new System.Windows.Forms.Label();
+            this.Layer3NUD = new System.Windows.Forms.NumericUpDown();
+            this.Layer3Label = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RSPlayerPosYNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPlayerPosXNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSBGNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSMusicNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer2NUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer1NUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer0NUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MidpointNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer3NUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.MapHeightNUD);
             this.panel1.Controls.Add(this.MapWidthNUD);
@@ -70,112 +88,8 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(462, 272);
+            this.panel1.Size = new System.Drawing.Size(592, 292);
             this.panel1.TabIndex = 0;
-            // 
-            // OKButton
-            // 
-            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Location = new System.Drawing.Point(375, 246);
-            this.OKButton.Name = "OKButton";
-            this.OKButton.Size = new System.Drawing.Size(75, 23);
-            this.OKButton.TabIndex = 0;
-            this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
-            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
-            // 
-            // CancelButton
-            // 
-            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(294, 246);
-            this.CancelButton.Name = "CancelButton";
-            this.CancelButton.Size = new System.Drawing.Size(75, 23);
-            this.CancelButton.TabIndex = 1;
-            this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
-            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
-            // MapNameLabel
-            // 
-            this.MapNameLabel.AutoSize = true;
-            this.MapNameLabel.Location = new System.Drawing.Point(12, 9);
-            this.MapNameLabel.Name = "MapNameLabel";
-            this.MapNameLabel.Size = new System.Drawing.Size(80, 17);
-            this.MapNameLabel.TabIndex = 2;
-            this.MapNameLabel.Text = "Map Name:";
-            // 
-            // MapNameBox
-            // 
-            this.MapNameBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.MapNameBox.Location = new System.Drawing.Point(98, 9);
-            this.MapNameBox.Name = "MapNameBox";
-            this.MapNameBox.Size = new System.Drawing.Size(153, 22);
-            this.MapNameBox.TabIndex = 3;
-            this.MapNameBox.TextChanged += new System.EventHandler(this.MapNameBox_TextChanged);
-            // 
-            // MapWidthLabel
-            // 
-            this.MapWidthLabel.AutoSize = true;
-            this.MapWidthLabel.Location = new System.Drawing.Point(12, 40);
-            this.MapWidthLabel.Name = "MapWidthLabel";
-            this.MapWidthLabel.Size = new System.Drawing.Size(79, 17);
-            this.MapWidthLabel.TabIndex = 4;
-            this.MapWidthLabel.Text = "Map Width:";
-            // 
-            // MapHeightLabel
-            // 
-            this.MapHeightLabel.AutoSize = true;
-            this.MapHeightLabel.Location = new System.Drawing.Point(12, 69);
-            this.MapHeightLabel.Name = "MapHeightLabel";
-            this.MapHeightLabel.Size = new System.Drawing.Size(84, 17);
-            this.MapHeightLabel.TabIndex = 5;
-            this.MapHeightLabel.Text = "Map Height:";
-            // 
-            // MapWidthNUD
-            // 
-            this.MapWidthNUD.Location = new System.Drawing.Point(98, 40);
-            this.MapWidthNUD.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.MapWidthNUD.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MapWidthNUD.Name = "MapWidthNUD";
-            this.MapWidthNUD.Size = new System.Drawing.Size(153, 22);
-            this.MapWidthNUD.TabIndex = 6;
-            this.MapWidthNUD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MapWidthNUD.ValueChanged += new System.EventHandler(this.MapWidthNUD_ValueChanged);
-            // 
-            // MapHeightNUD
-            // 
-            this.MapHeightNUD.Location = new System.Drawing.Point(98, 67);
-            this.MapHeightNUD.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
-            this.MapHeightNUD.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MapHeightNUD.Name = "MapHeightNUD";
-            this.MapHeightNUD.Size = new System.Drawing.Size(153, 22);
-            this.MapHeightNUD.TabIndex = 7;
-            this.MapHeightNUD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.MapHeightNUD.ValueChanged += new System.EventHandler(this.MapHeightNUD_ValueChanged);
             // 
             // groupBox1
             // 
@@ -282,24 +196,264 @@
             this.RSMusicLabel.TabIndex = 16;
             this.RSMusicLabel.Text = "Music";
             // 
+            // MapHeightNUD
+            // 
+            this.MapHeightNUD.Location = new System.Drawing.Point(98, 67);
+            this.MapHeightNUD.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.MapHeightNUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MapHeightNUD.Name = "MapHeightNUD";
+            this.MapHeightNUD.Size = new System.Drawing.Size(153, 22);
+            this.MapHeightNUD.TabIndex = 7;
+            this.MapHeightNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MapHeightNUD.ValueChanged += new System.EventHandler(this.MapHeightNUD_ValueChanged);
+            // 
+            // MapWidthNUD
+            // 
+            this.MapWidthNUD.Location = new System.Drawing.Point(98, 40);
+            this.MapWidthNUD.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.MapWidthNUD.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MapWidthNUD.Name = "MapWidthNUD";
+            this.MapWidthNUD.Size = new System.Drawing.Size(153, 22);
+            this.MapWidthNUD.TabIndex = 6;
+            this.MapWidthNUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.MapWidthNUD.ValueChanged += new System.EventHandler(this.MapWidthNUD_ValueChanged);
+            // 
+            // MapHeightLabel
+            // 
+            this.MapHeightLabel.AutoSize = true;
+            this.MapHeightLabel.Location = new System.Drawing.Point(12, 69);
+            this.MapHeightLabel.Name = "MapHeightLabel";
+            this.MapHeightLabel.Size = new System.Drawing.Size(84, 17);
+            this.MapHeightLabel.TabIndex = 5;
+            this.MapHeightLabel.Text = "Map Height:";
+            // 
+            // MapWidthLabel
+            // 
+            this.MapWidthLabel.AutoSize = true;
+            this.MapWidthLabel.Location = new System.Drawing.Point(12, 40);
+            this.MapWidthLabel.Name = "MapWidthLabel";
+            this.MapWidthLabel.Size = new System.Drawing.Size(79, 17);
+            this.MapWidthLabel.TabIndex = 4;
+            this.MapWidthLabel.Text = "Map Width:";
+            // 
+            // MapNameBox
+            // 
+            this.MapNameBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.MapNameBox.Location = new System.Drawing.Point(98, 9);
+            this.MapNameBox.Name = "MapNameBox";
+            this.MapNameBox.Size = new System.Drawing.Size(153, 22);
+            this.MapNameBox.TabIndex = 3;
+            this.MapNameBox.TextChanged += new System.EventHandler(this.MapNameBox_TextChanged);
+            // 
+            // MapNameLabel
+            // 
+            this.MapNameLabel.AutoSize = true;
+            this.MapNameLabel.Location = new System.Drawing.Point(12, 9);
+            this.MapNameLabel.Name = "MapNameLabel";
+            this.MapNameLabel.Size = new System.Drawing.Size(80, 17);
+            this.MapNameLabel.TabIndex = 2;
+            this.MapNameLabel.Text = "Map Name:";
+            // 
+            // CancelButton
+            // 
+            this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.CancelButton.Location = new System.Drawing.Point(424, 266);
+            this.CancelButton.Name = "CancelButton";
+            this.CancelButton.Size = new System.Drawing.Size(75, 23);
+            this.CancelButton.TabIndex = 1;
+            this.CancelButton.Text = "Cancel";
+            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.Click += new System.EventHandler(this.CancelButton_Click);
+            // 
+            // OKButton
+            // 
+            this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.OKButton.Location = new System.Drawing.Point(505, 266);
+            this.OKButton.Name = "OKButton";
+            this.OKButton.Size = new System.Drawing.Size(75, 23);
+            this.OKButton.TabIndex = 0;
+            this.OKButton.Text = "OK";
+            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.Layer3NUD);
+            this.groupBox2.Controls.Add(this.Layer3Label);
+            this.groupBox2.Controls.Add(this.Layer2NUD);
+            this.groupBox2.Controls.Add(this.Layer1NUD);
+            this.groupBox2.Controls.Add(this.Layer2Label);
+            this.groupBox2.Controls.Add(this.Layer1Label);
+            this.groupBox2.Controls.Add(this.Layer0NUD);
+            this.groupBox2.Controls.Add(this.MidpointNUD);
+            this.groupBox2.Controls.Add(this.Layer0Label);
+            this.groupBox2.Controls.Add(this.MidpointLabel);
+            this.groupBox2.Location = new System.Drawing.Point(282, 95);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(201, 164);
+            this.groupBox2.TabIndex = 24;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Display Properties";
+            // 
+            // Layer2NUD
+            // 
+            this.Layer2NUD.Location = new System.Drawing.Point(109, 110);
+            this.Layer2NUD.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.Layer2NUD.Name = "Layer2NUD";
+            this.Layer2NUD.Size = new System.Drawing.Size(74, 22);
+            this.Layer2NUD.TabIndex = 23;
+            this.Layer2NUD.ValueChanged += new System.EventHandler(this.Layer2NUD_ValueChanged);
+            // 
+            // Layer1NUD
+            // 
+            this.Layer1NUD.Location = new System.Drawing.Point(109, 83);
+            this.Layer1NUD.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.Layer1NUD.Name = "Layer1NUD";
+            this.Layer1NUD.Size = new System.Drawing.Size(74, 22);
+            this.Layer1NUD.TabIndex = 22;
+            this.Layer1NUD.ValueChanged += new System.EventHandler(this.Layer1NUD_ValueChanged);
+            // 
+            // Layer2Label
+            // 
+            this.Layer2Label.AutoSize = true;
+            this.Layer2Label.Location = new System.Drawing.Point(10, 112);
+            this.Layer2Label.Name = "Layer2Label";
+            this.Layer2Label.Size = new System.Drawing.Size(60, 17);
+            this.Layer2Label.TabIndex = 21;
+            this.Layer2Label.Text = "Layer 2:";
+            // 
+            // Layer1Label
+            // 
+            this.Layer1Label.AutoSize = true;
+            this.Layer1Label.Location = new System.Drawing.Point(10, 83);
+            this.Layer1Label.Name = "Layer1Label";
+            this.Layer1Label.Size = new System.Drawing.Size(60, 17);
+            this.Layer1Label.TabIndex = 20;
+            this.Layer1Label.Text = "Layer 1:";
+            // 
+            // Layer0NUD
+            // 
+            this.Layer0NUD.Location = new System.Drawing.Point(109, 55);
+            this.Layer0NUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.Layer0NUD.Name = "Layer0NUD";
+            this.Layer0NUD.Size = new System.Drawing.Size(74, 22);
+            this.Layer0NUD.TabIndex = 19;
+            this.Layer0NUD.ValueChanged += new System.EventHandler(this.Layer0NUD_ValueChanged);
+            // 
+            // MidpointNUD
+            // 
+            this.MidpointNUD.Location = new System.Drawing.Point(109, 28);
+            this.MidpointNUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.MidpointNUD.Name = "MidpointNUD";
+            this.MidpointNUD.Size = new System.Drawing.Size(74, 22);
+            this.MidpointNUD.TabIndex = 18;
+            this.MidpointNUD.ValueChanged += new System.EventHandler(this.MidpointNUD_ValueChanged);
+            // 
+            // Layer0Label
+            // 
+            this.Layer0Label.AutoSize = true;
+            this.Layer0Label.Location = new System.Drawing.Point(10, 57);
+            this.Layer0Label.Name = "Layer0Label";
+            this.Layer0Label.Size = new System.Drawing.Size(60, 17);
+            this.Layer0Label.TabIndex = 17;
+            this.Layer0Label.Text = "Layer 0:";
+            // 
+            // MidpointLabel
+            // 
+            this.MidpointLabel.AutoSize = true;
+            this.MidpointLabel.Location = new System.Drawing.Point(10, 28);
+            this.MidpointLabel.Name = "MidpointLabel";
+            this.MidpointLabel.Size = new System.Drawing.Size(65, 17);
+            this.MidpointLabel.TabIndex = 16;
+            this.MidpointLabel.Text = "Midpoint:";
+            // 
+            // Layer3NUD
+            // 
+            this.Layer3NUD.Location = new System.Drawing.Point(109, 136);
+            this.Layer3NUD.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.Layer3NUD.Name = "Layer3NUD";
+            this.Layer3NUD.Size = new System.Drawing.Size(74, 22);
+            this.Layer3NUD.TabIndex = 25;
+            this.Layer3NUD.ValueChanged += new System.EventHandler(this.Layer3NUD_ValueChanged);
+            // 
+            // Layer3Label
+            // 
+            this.Layer3Label.AutoSize = true;
+            this.Layer3Label.Location = new System.Drawing.Point(10, 138);
+            this.Layer3Label.Name = "Layer3Label";
+            this.Layer3Label.Size = new System.Drawing.Size(60, 17);
+            this.Layer3Label.TabIndex = 24;
+            this.Layer3Label.Text = "Layer 3:";
+            // 
             // PropertiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(462, 272);
+            this.ClientSize = new System.Drawing.Size(592, 292);
             this.Controls.Add(this.panel1);
             this.Name = "PropertiesForm";
             this.Text = "PropertiesForm";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RSPlayerPosYNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPlayerPosXNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSBGNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSMusicNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer2NUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer1NUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer0NUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MidpointNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Layer3NUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -324,5 +478,16 @@
         private System.Windows.Forms.NumericUpDown RSMusicNUD;
         private System.Windows.Forms.Label RSBGLabel;
         private System.Windows.Forms.Label RSMusicLabel;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.NumericUpDown Layer3NUD;
+        private System.Windows.Forms.Label Layer3Label;
+        private System.Windows.Forms.NumericUpDown Layer2NUD;
+        private System.Windows.Forms.NumericUpDown Layer1NUD;
+        private System.Windows.Forms.Label Layer2Label;
+        private System.Windows.Forms.Label Layer1Label;
+        private System.Windows.Forms.NumericUpDown Layer0NUD;
+        private System.Windows.Forms.NumericUpDown MidpointNUD;
+        private System.Windows.Forms.Label Layer0Label;
+        private System.Windows.Forms.Label MidpointLabel;
     }
 }

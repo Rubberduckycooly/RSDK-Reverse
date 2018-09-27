@@ -59,12 +59,6 @@ namespace RSDKv1
             get { return BaseStream.Length; }
         }
         
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
-        }
-
         public uint ReadUInt32BE()
         {
             byte[] bytes = ReadBytes(4);

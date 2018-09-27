@@ -29,7 +29,7 @@ namespace RSDKv2
 {
     public class Animation : IAnimation
     {
-        public int Version => 2;
+        public int Version => 3;
 
         public List<string> SpriteSheets { get; }
 
@@ -41,47 +41,22 @@ namespace RSDKv2
 
         public Animation(BinaryReader reader)
         {
-            reader.ReadBytes(5); //skip these bytes, as they seem to be useless/unused...
-
-            int spriteSheetsCount = 3; //always 3
-
+            int spriteSheetsCount = reader.ReadByte();
             SpriteSheets = new List<string>(spriteSheetsCount);
+            while (spriteSheetsCount-- > 0)
+                SpriteSheets.Add(StringEncoding.GetString(reader));
 
-            byte[] byteBuf = null;
-
-            for (int i = 0; i < spriteSheetsCount; i++)
-            {
-                int sLen = reader.ReadByte();
-                byteBuf = new byte[sLen];
-
-                byteBuf = reader.ReadBytes(sLen);
-
-                string result = System.Text.Encoding.UTF8.GetString(byteBuf);
-
-                SpriteSheets.Add(result);
-                Console.WriteLine(result);
-            }
-            byteBuf = null;
-
-            reader.ReadByte(); //skip this byte, it seems to be useless
-            // Read number of animations
             var animationsCount = reader.ReadByte();
-
             Animations = new List<AnimationEntry>(animationsCount);
+            while (animationsCount-- > 0)
+                Animations.Add(new AnimationEntry(reader));
 
-            for (int i = 0; i < animationsCount; i++)
-            {
-                // Read number of frames
-                int frameCount = reader.ReadByte();
-                // Read speed
-                int animationSpeed = reader.ReadByte();
-                // Read loop start
-                int loopFrom = reader.ReadByte();
+            var collisionBoxesCount = reader.ReadByte();
+            Hitboxes = new List<HitboxEntry>(collisionBoxesCount);
+            while (collisionBoxesCount-- > 0)
+                Hitboxes.Add(new HitboxEntry(reader));
+        }
 
-                Animations.Add(new AnimationEntry(("Sonic-Nexus Animation #" + (i + 1)), frameCount, animationSpeed,
-                    loopFrom, false, false, reader));
-            }
-    }
         public void Factory(out IAnimationEntry o) { o = new AnimationEntry(); }
         public void Factory(out IFrame o) { o = new Frame(); }
         public void Factory(out IHitboxEntry o) { o = new HitboxEntry(); }
@@ -101,15 +76,15 @@ namespace RSDKv2
 
         public IEnumerable<IHitboxEntry> GetHitboxes()
         {
-            return null;
+            return Hitboxes.Select(x => (IHitboxEntry)x);
         }
 
         public void SetHitboxes(IEnumerable<IHitboxEntry> hitboxes)
         {
-            /*Hitboxes.Clear();
+            Hitboxes.Clear();
             Hitboxes.AddRange(hitboxes
                 .Select(x => x as HitboxEntry)
-                .Where(x => x != null));*/
+                .Where(x => x != null));
         }
         public void SetHitboxTypes(IEnumerable<string> hitboxTypes)
         { }
@@ -117,28 +92,26 @@ namespace RSDKv2
 
         public void SaveChanges(BinaryWriter writer)
         {
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-
             var spriteSheetsCount = (byte)Math.Min(SpriteSheets.Count, byte.MaxValue);
-
+            writer.Write(spriteSheetsCount);
             for (int i = 0; i < spriteSheetsCount; i++)
             {
                 var item = SpriteSheets[i];
                 writer.Write(StringEncoding.GetBytes(item));
             }
 
-            writer.Write((byte)0); //"skip" this byte, it seems to be useless
-
             var animationsCount = (byte)Math.Min(Animations.Count, byte.MaxValue);
             writer.Write(animationsCount);
-
             for (int i = 0; i < animationsCount; i++)
             {
                 Animations[i].SaveChanges(writer);
+            }
+
+            var collisionBoxesCount = (byte)Math.Min(Hitboxes.Count, byte.MaxValue);
+            writer.Write(collisionBoxesCount);
+            for (int i = 0; i < collisionBoxesCount; i++)
+            {
+                Hitboxes[i].SaveChanges(writer);
             }
         }
     }

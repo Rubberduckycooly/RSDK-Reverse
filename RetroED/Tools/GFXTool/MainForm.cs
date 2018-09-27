@@ -17,7 +17,7 @@ namespace RetroED.Tools.GFXTool
 
         bool dcGFX = false;
 
-        RSDKv1.gfx GFX;
+        RSDKvRS.gfx GFX;
         System.Drawing.Imaging.ColorPalette GFXPal;
 
         Bitmap IMG;
@@ -26,7 +26,7 @@ namespace RetroED.Tools.GFXTool
         public MainForm()
         {
             InitializeComponent();
-            GFX = new RSDKv1.gfx();
+            GFX = new RSDKvRS.gfx();
             IMG = new Bitmap(1,1);
         }
 
@@ -44,7 +44,7 @@ namespace RetroED.Tools.GFXTool
                 {
                     dcGFX = true;
                 }
-                GFX = new RSDKv1.gfx(filename, dcGFX); //Load the GFX file into a bitmap
+                GFX = new RSDKvRS.gfx(filename, dcGFX); //Load the GFX file into a bitmap
             }
         }
 
@@ -99,6 +99,7 @@ namespace RetroED.Tools.GFXTool
                 SourceIMGLocation.Text = dlg.FileName;
                 IMG = (Bitmap)Image.FromFile(dlg.FileName).Clone(); //Copy the image into memory
                 GFX.importFromBitmap(IMG);
+                //GFX = null;
             }
         }
 

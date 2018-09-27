@@ -18,43 +18,8 @@ namespace RSDKv5
         private ushort _width;
         private ushort _height;
 
-        public ushort RelativeVSpeed;
-        public ushort ConstantVSpeed;
-
-        public class ScrollInfo
-        {
-            ushort RelativeSpeed;
-            ushort ConstantSpeed;
-            byte Behaviour;
-            byte UnknownByte2;
-
-            public ScrollInfo(ushort RSpeed = 0x100, ushort CSpeed = 0, byte behaviour = 0, byte byte2 = 0)
-            {
-                this.RelativeSpeed = RSpeed;
-                this.ConstantSpeed = CSpeed;
-
-                this.Behaviour = behaviour;
-                this.UnknownByte2 = byte2;
-            }
-
-            internal ScrollInfo(Reader reader)
-            {
-                RelativeSpeed = reader.ReadUInt16();
-                ConstantSpeed = reader.ReadUInt16();
-
-                Behaviour = reader.ReadByte();
-                UnknownByte2 = reader.ReadByte();
-            }
-
-            internal void Write(Writer writer)
-            {
-                writer.Write(RelativeSpeed);
-                writer.Write(ConstantSpeed);
-
-                writer.Write(Behaviour);
-                writer.Write(UnknownByte2);
-            }
-        }
+        public short RelativeVSpeed;
+        public short ConstantVSpeed;
 
         public List<ScrollInfo> ScrollingInfo = new List<ScrollInfo>();
 
@@ -63,8 +28,8 @@ namespace RSDKv5
         public ushort[][] Tiles;
 
         public string Name { get => _name; set => _name = value; }
-        public ushort Width { get => _width; set => _width = value; }
-        public ushort Height { get => _height; set => _height = value; }
+        public ushort Width { get => _width; private set => _width = value; }
+        public ushort Height { get => _height; private set => _height = value; }
 
         public SceneLayer(string name, ushort width, ushort height)
         {
@@ -80,7 +45,7 @@ namespace RSDKv5
             {
                 Tiles[i] = new ushort[Width];
                 for (int j = 0; j < Width; ++j)
-                { Tiles[i][j] = 0xffff; }
+                    Tiles[i][j] = 0xffff;
             }
         }
 
@@ -96,8 +61,8 @@ namespace RSDKv5
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
 
-            RelativeVSpeed = reader.ReadUInt16();
-            ConstantVSpeed = reader.ReadUInt16();
+            RelativeVSpeed = reader.ReadInt16();
+            ConstantVSpeed = reader.ReadInt16();
 
             ushort scrolling_info_count = reader.ReadUInt16();
             for (int i = 0; i < scrolling_info_count; ++i)
@@ -112,7 +77,7 @@ namespace RSDKv5
                 {
                     Tiles[i] = new ushort[Width];
                     for (int j = 0; j < Width; ++j)
-                    { Tiles[i][j] = creader.ReadUInt16();}
+                        Tiles[i][j] = creader.ReadUInt16();
                 }
             }
         }
@@ -141,9 +106,9 @@ namespace RSDKv5
             using (MemoryStream cmem = new MemoryStream())
             using (Writer cwriter = new Writer(cmem))
             {
-                    for (int i = 0; i < Height; ++i)
-                        for (int j = 0; j < Width; ++j)
-                        { cwriter.Write(Tiles[i][j]);}
+                for (int i = 0; i < Height; ++i)
+                    for (int j = 0; j < Width; ++j)
+                        cwriter.Write(Tiles[i][j]);
                 cwriter.Close();
                 writer.WriteCompressed(cmem.ToArray());
             }

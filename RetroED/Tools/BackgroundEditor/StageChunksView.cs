@@ -23,23 +23,23 @@ namespace RetroED.Tools.BackgroundEditor
         public int selectedChunk;
 
         #region Retro-Sonic Development Kit
-        public RSDKv1.til _RSDK1Chunks;
-        public RSDKv1.BGLayout _RSDK1Background;
+        public RSDKvRS.Tiles128x128 _RSDK1Chunks;
+        public RSDKvRS.BGLayout _RSDK1Background;
         #endregion
 
         #region RSDKv1
-        public RSDKv2.Tiles128x128 _RSDK2Chunks;
-        public RSDKv2.BGLayout _RSDK2Background;
+        public RSDKv1.Tiles128x128 _RSDK2Chunks;
+        public RSDKv1.BGLayout _RSDK2Background;
         #endregion
 
-        #region RSDKv2
-        public RSDKv3.Tiles128x128 _RSDK3Chunks;
-        public RSDKv3.BGLayout _RSDK3Background;
+        #region RSDKv1
+        public RSDKv2.Tiles128x128 _RSDK3Chunks;
+        public RSDKv2.BGLayout _RSDK3Background;
         #endregion
 
         #region RSDKvB
-        public RSDKv4.Tiles128x128 _RSDK4Chunks;
-        public RSDKv4.BGLayout _RSDK4Background;
+        public RSDKvB.Tiles128x128 _RSDK4Chunks;
+        public RSDKvB.BGLayout _RSDK4Background;
         #endregion
 
         public StageChunksView(StageMapView mpv)
@@ -111,15 +111,10 @@ namespace RetroED.Tools.BackgroundEditor
             Console.WriteLine("New Chunk " + selectedChunk);
         }
 
-        private void pValuesList_SelectedIndexChanged(object sender, EventArgs e)
+        private void HpValuesList_DoubleClick(object sender, EventArgs e)
         {
-
-        }
-
-        private void pValuesList_DoubleClick(object sender, EventArgs e)
-        {
-            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, pValuesList.SelectedIndex);
-            CD12_LineScrollForm frm2 = new CD12_LineScrollForm(loadedRSDKver, pValuesList.SelectedIndex);
+            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, HpValuesList.SelectedIndex,0);
+            CD12_LineScrollForm frm2 = new CD12_LineScrollForm(loadedRSDKver, HpValuesList.SelectedIndex, 0);
 
             switch (loadedRSDKver)
             {
@@ -141,16 +136,32 @@ namespace RetroED.Tools.BackgroundEditor
                 frm2.Setup();
                 if (frm2.ShowDialog(this) == DialogResult.OK)
                 {
-                    switch (loadedRSDKver)
+                    if (!frm2.RemoveVal)
                     {
-                        case 1:
-                            _RSDK3Background = frm2.Mapv3;
-                            break;
-                        case 0:
-                            _RSDK4Background = frm2.Mapv4;
-                            break;
+                        switch (loadedRSDKver)
+                        {
+                            case 1:
+                                _RSDK3Background = frm2.Mapv3;
+                                break;
+                            case 0:
+                                _RSDK4Background = frm2.Mapv4;
+                                break;
+                        }
+                        RefreshParallaxList();
                     }
-                    RefreshParallaxList();
+                    else if (frm2.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 1:
+                                _RSDK3Background.HLines.RemoveAt(HpValuesList.SelectedIndex);
+                                break;
+                            case 0:
+                                _RSDK4Background.HLines.RemoveAt(HpValuesList.SelectedIndex);
+                                break;
+                        }
+                        RefreshParallaxList();
+                    }
                 }
             }
             if (loadedRSDKver >= 2)
@@ -158,56 +169,199 @@ namespace RetroED.Tools.BackgroundEditor
                 frm1.Setup();
                 if (frm1.ShowDialog(this) == DialogResult.OK)
                 {
-                    switch (loadedRSDKver)
+                    if (!frm1.RemoveVal)
                     {
-                        case 3:
-                            _RSDK1Background = frm1.Mapv1;
-                            break;
-                        case 2:
-                            _RSDK2Background = frm1.Mapv2;
-                            break;
+                        switch (loadedRSDKver)
+                        {
+                            case 3:
+                                _RSDK1Background = frm1.Mapv1;
+                                break;
+                            case 2:
+                                _RSDK2Background = frm1.Mapv2;
+                                break;
+                        }
+                        RefreshParallaxList();
                     }
-                    RefreshParallaxList();
+                    else if (frm1.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 3:
+                                _RSDK1Background.HLines.RemoveAt(HpValuesList.SelectedIndex);
+                                break;
+                            case 2:
+                                _RSDK2Background.HLines.RemoveAt(HpValuesList.SelectedIndex);
+                                break;
+                        }
+                        RefreshParallaxList();
+                    }
                 }
             }
 
         }
 
-        public void RefreshParallaxList()
+        private void VpValuesList_DoubleClick(object sender, EventArgs e)
         {
-            pValuesList.Items.Clear();
-            switch(loadedRSDKver)
+            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, VpValuesList.SelectedIndex, 1);
+            CD12_LineScrollForm frm2 = new CD12_LineScrollForm(loadedRSDKver, VpValuesList.SelectedIndex, 1);
+
+            switch (loadedRSDKver)
             {
                 case 3:
-                    for (int i = 0; i < _RSDK1Background.Lines.Count; i++)
-                    {
-                        string line = _RSDK1Background.Lines[i].RHSpeed + " - " + _RSDK1Background.Lines[i].CHSpeed + " - " + _RSDK1Background.Lines[i].Deform;
-                        pValuesList.Items.Add(line);
-                    }
+                    frm1.Mapv1 = _RSDK1Background;
                     break;
                 case 2:
-                    for (int i = 0; i < _RSDK2Background.Lines.Count; i++)
-                    {
-                        string line = _RSDK2Background.Lines[i].RHSpeed + " - " + _RSDK2Background.Lines[i].CHSpeed + " - " + _RSDK2Background.Lines[i].Deform;
-                        pValuesList.Items.Add(line);
-                    }
+                    frm1.Mapv2 = _RSDK2Background;
                     break;
                 case 1:
-                    for (int i = 0; i < _RSDK3Background.Lines.Count; i++)
-                    {
-                        string line = _RSDK3Background.Lines[i].LineNo + " - " + _RSDK3Background.Lines[i].RelativeSpeed + " - " + _RSDK3Background.Lines[i].ConstantSpeed + " - " + _RSDK3Background.Lines[i].Unknown;
-                        pValuesList.Items.Add(line);
-                    }
+                    frm2.Mapv3 = _RSDK3Background;
                     break;
                 case 0:
-                    for (int i = 0; i < _RSDK4Background.Lines.Count; i++)
-                    {
-                        //string line = _RSDK4Background.Lines[i].LineNo + " - " + _RSDK4Background.Lines[i].OverallSpeed + " - " + _RSDK4Background.Lines[i].Deform;
-                        //pValuesList.Items.Add(line);
-                    }
+                    frm2.Mapv4 = _RSDK4Background;
                     break;
             }
+            if (loadedRSDKver <= 1)
+            {
+                frm2.Setup();
+                if (frm2.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (!frm2.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 1:
+                                _RSDK3Background = frm2.Mapv3;
+                                break;
+                            case 0:
+                                _RSDK4Background = frm2.Mapv4;
+                                break;
+                        }
+                        RefreshParallaxList(1);
+                    }
+                    else if (frm2.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 1:
+                                _RSDK3Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
+                                break;
+                            case 0:
+                                _RSDK4Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
+                                break;
+                        }
+                        RefreshParallaxList(1);
+                    }
+                }
+            }
+            if (loadedRSDKver >= 2)
+            {
+                frm1.Setup();
+                if (frm1.ShowDialog(this) == DialogResult.OK)
+                {
+                    if (!frm1.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 3:
+                                _RSDK1Background = frm1.Mapv1;
+                                break;
+                            case 2:
+                                _RSDK2Background = frm1.Mapv2;
+                                break;
+                        }
+                        RefreshParallaxList(1);
+                    }
+                    else if (frm1.RemoveVal)
+                    {
+                        switch (loadedRSDKver)
+                        {
+                            case 3:
+                                _RSDK1Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
+                                break;
+                            case 2:
+                                _RSDK2Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
+                                break;
+                        }
+                        RefreshParallaxList(1);
+                    }
+                }
+            }
+
         }
 
+        public void RefreshParallaxList(int HV = 0)
+        {
+            if (HV == 0)
+            {
+                HpValuesList.Items.Clear();
+                switch (loadedRSDKver)
+                {
+                    case 3:
+                        for (int i = 0; i < _RSDK1Background.HLines.Count; i++)
+                        {
+                            string line = _RSDK1Background.HLines[i].RHSpeed + " - " + _RSDK1Background.HLines[i].CHSpeed + " - " + _RSDK1Background.HLines[i].Deform;
+                            HpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < _RSDK2Background.HLines.Count; i++)
+                        {
+                            string line = _RSDK2Background.HLines[i].RHSpeed + " - " + _RSDK2Background.HLines[i].CHSpeed + " - " + _RSDK2Background.HLines[i].Deform;
+                            HpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 1:
+                        for (int i = 0; i < _RSDK3Background.HLines.Count; i++)
+                        {
+                            string line = _RSDK3Background.HLines[i].LineNo + " - " + _RSDK3Background.HLines[i].RelativeSpeed + " - " + _RSDK3Background.HLines[i].ConstantSpeed + " - " + _RSDK3Background.HLines[i].Unknown;
+                            HpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 0:
+                        for (int i = 0; i < _RSDK4Background.HLines.Count; i++)
+                        {
+                            string line = _RSDK4Background.HLines[i].LineNo + " - " + _RSDK4Background.HLines[i].RelativeSpeed + " - " + _RSDK4Background.HLines[i].ConstantSpeed + " - " + _RSDK4Background.HLines[i].Unknown;
+                            HpValuesList.Items.Add(line);
+                        }
+                        break;
+                }
+            }
+
+            if (HV == 1)
+            {
+                VpValuesList.Items.Clear();
+                switch (loadedRSDKver)
+                {
+                    case 3:
+                        for (int i = 0; i < _RSDK1Background.VLines.Count; i++)
+                        {
+                            string line = _RSDK1Background.VLines[i].RHSpeed + " - " + _RSDK1Background.VLines[i].CHSpeed + " - " + _RSDK1Background.VLines[i].Deform;
+                            VpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 2:
+                        for (int i = 0; i < _RSDK2Background.VLines.Count; i++)
+                        {
+                            string line = _RSDK2Background.VLines[i].RHSpeed + " - " + _RSDK2Background.VLines[i].CHSpeed + " - " + _RSDK2Background.VLines[i].Deform;
+                            VpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 1:
+                        for (int i = 0; i < _RSDK3Background.VLines.Count; i++)
+                        {
+                            string line = _RSDK3Background.VLines[i].LineNo + " - " + _RSDK3Background.VLines[i].RelativeSpeed + " - " + _RSDK3Background.VLines[i].ConstantSpeed + " - " + _RSDK3Background.HLines[i].Unknown;
+                            VpValuesList.Items.Add(line);
+                        }
+                        break;
+                    case 0:
+                        for (int i = 0; i < _RSDK4Background.VLines.Count; i++)
+                        {
+                            string line = _RSDK4Background.VLines[i].LineNo + " - " + _RSDK4Background.VLines[i].RelativeSpeed + " - " + _RSDK4Background.VLines[i].ConstantSpeed + " - " + _RSDK4Background.VLines[i].Unknown;
+                            VpValuesList.Items.Add(line);
+                        }
+                        break;
+                }
+            }
+        }
     }
 }

@@ -15,10 +15,10 @@ namespace RetroED.Tools.MapEditor
 
         public int LoadedRSDKver;
 
-        public RSDKv1.Level Mapv1;
-        public RSDKv2.Level Mapv2;
-        public RSDKv3.Level Mapv3;
-        public RSDKv4.Level Mapv4;
+        public RSDKvRS.Scene Mapv1;
+        public RSDKv1.Scene Mapv2;
+        public RSDKv2.Scene Mapv3;
+        public RSDKvB.Scene Mapv4;
 
         public PropertiesForm(int RSDKver)
         {
@@ -38,11 +38,21 @@ namespace RetroED.Tools.MapEditor
                     RSBGNUD.Value = Mapv1.Background;
                     RSPlayerPosXNUD.Value = Mapv1.PlayerXpos;
                     RSPlayerPosYNUD.Value = Mapv1.PlayerYPos;
+                    MidpointNUD.Enabled = false;
+                    Layer0NUD.Enabled = false;
+                    Layer1NUD.Enabled = false;
+                    Layer2NUD.Enabled = false;
+                    Layer3NUD.Enabled = false;
                     break;
                 case 2:
                     MapNameBox.Text = Mapv2.Title;
                     MapWidthNUD.Value = Mapv2.width;
                     MapHeightNUD.Value = Mapv2.height;
+                    MidpointNUD.Value = Mapv2.Midpoint;
+                    Layer0NUD.Value = Mapv2.ActiveLayer0;
+                    Layer1NUD.Value = Mapv2.ActiveLayer1;
+                    Layer2NUD.Value = Mapv2.ActiveLayer2;
+                    Layer3NUD.Value = Mapv2.ActiveLayer3;
                     RSMusicNUD.Enabled = false;
                     RSBGNUD.Enabled = false;
                     RSPlayerPosXNUD.Enabled = false;
@@ -52,6 +62,11 @@ namespace RetroED.Tools.MapEditor
                     MapNameBox.Text = Mapv3.Title;
                     MapWidthNUD.Value = Mapv3.width;
                     MapHeightNUD.Value = Mapv3.height;
+                    MidpointNUD.Value = Mapv3.Midpoint;
+                    Layer0NUD.Value = Mapv3.ActiveLayer0;
+                    Layer1NUD.Value = Mapv3.ActiveLayer1;
+                    Layer2NUD.Value = Mapv3.ActiveLayer2;
+                    Layer3NUD.Value = Mapv3.ActiveLayer3;
                     RSMusicNUD.Enabled = false;
                     RSBGNUD.Enabled = false;
                     RSPlayerPosXNUD.Enabled = false;
@@ -61,6 +76,11 @@ namespace RetroED.Tools.MapEditor
                     MapNameBox.Text = Mapv4.Title;
                     MapWidthNUD.Value = Mapv4.width;
                     MapHeightNUD.Value = Mapv4.height;
+                    MidpointNUD.Value = Mapv4.Midpoint;
+                    Layer0NUD.Value = Mapv4.ActiveLayer0;
+                    Layer1NUD.Value = Mapv4.ActiveLayer1;
+                    Layer2NUD.Value = Mapv4.ActiveLayer2;
+                    Layer3NUD.Value = Mapv4.ActiveLayer3;
                     RSMusicNUD.Enabled = false;
                     RSBGNUD.Enabled = false;
                     RSPlayerPosXNUD.Enabled = false;
@@ -175,6 +195,96 @@ namespace RetroED.Tools.MapEditor
             if (LoadedRSDKver == 3) //if we are using a Retro-Sonic map, Set the Player Spawn Ypos
             {
                 Mapv1.PlayerYPos = (ushort)RSPlayerPosYNUD.Value;
+            }
+        }
+
+        private void MidpointNUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver) //Change Map Layer Midpoint
+            {
+                case 2:
+                    Mapv2.Midpoint = (byte)MidpointNUD.Value;
+                    break;
+                case 1:
+                    Mapv3.Midpoint = (byte)MidpointNUD.Value;
+                    break;
+                case 0:
+                    Mapv4.Midpoint = (byte)MidpointNUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Layer0NUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver) //Change Map Layer 0
+            {
+                case 2:
+                    Mapv2.ActiveLayer0 = (byte)Layer0NUD.Value;
+                    break;
+                case 1:
+                    Mapv3.ActiveLayer0 = (byte)Layer0NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.ActiveLayer0 = (byte)Layer0NUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Layer1NUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver) //Change Map Layer 1
+            {
+                case 2:
+                    Mapv2.ActiveLayer1 = (byte)Layer1NUD.Value;
+                    break;
+                case 1:
+                    Mapv3.ActiveLayer1 = (byte)Layer1NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.ActiveLayer1 = (byte)Layer1NUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Layer2NUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver) //Change Map Layer 2
+            {
+                case 2:
+                    Mapv2.ActiveLayer2 = (byte)Layer2NUD.Value;
+                    break;
+                case 1:
+                    Mapv3.ActiveLayer2 = (byte)Layer2NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.ActiveLayer2 = (byte)Layer2NUD.Value;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private void Layer3NUD_ValueChanged(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver) //Change Map Layer 3
+            {
+                case 2:
+                    Mapv2.ActiveLayer3 = (byte)Layer3NUD.Value;
+                    break;
+                case 1:
+                    Mapv3.ActiveLayer3 = (byte)Layer3NUD.Value;
+                    break;
+                case 0:
+                    Mapv4.ActiveLayer3 = (byte)Layer3NUD.Value;
+                    break;
+                default:
+                    break;
             }
         }
     }

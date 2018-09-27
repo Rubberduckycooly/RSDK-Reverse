@@ -25,7 +25,9 @@ namespace RetroED.Tools.BackgroundEditor
         private StageChunksView _blocksViewer;
         private StageMapView _mapViewer;
 
-        int curlayer = 1;
+        int curlayer = 0;
+
+        public RetroED.MainForm Parent;
 
         //Stack<UndoAction> UndoList;
         //Stack<UndoAction> RedoList;
@@ -38,23 +40,23 @@ namespace RetroED.Tools.BackgroundEditor
         int PlacementMode = 0;
 
         #region Retro-Sonic Development Kit
-        RSDKv1.BGLayout _RSDK1Background;
-        RSDKv1.til _RSDK1Chunks;
+        RSDKvRS.BGLayout _RSDK1Background;
+        RSDKvRS.Tiles128x128 _RSDK1Chunks;
         #endregion
 
         #region RSDKv1
-        RSDKv2.BGLayout _RSDK2Background;
-        RSDKv2.Tiles128x128 _RSDK2Chunks;
+        RSDKv1.BGLayout _RSDK2Background;
+        RSDKv1.Tiles128x128 _RSDK2Chunks;
         #endregion
 
-        #region RSDKv2
-        RSDKv3.BGLayout _RSDK3Background;
-        RSDKv3.Tiles128x128 _RSDK3Chunks;
+        #region RSDKv1
+        RSDKv2.BGLayout _RSDK3Background;
+        RSDKv2.Tiles128x128 _RSDK3Chunks;
         #endregion
 
         #region RSDKvB
-        RSDKv4.BGLayout _RSDK4Background;
-        RSDKv4.Tiles128x128 _RSDK4Chunks;
+        RSDKvB.BGLayout _RSDK4Background;
+        RSDKvB.Tiles128x128 _RSDK4Chunks;
         #endregion
 
         public MainView()
@@ -104,6 +106,12 @@ namespace RetroED.Tools.BackgroundEditor
                         MessageBox.Show("Tiles and Mappings need to exist in the same folder as act data, just like the game.");
                     }
                 }
+
+                Parent.rp.state = "RetroED - " + this.Text;
+                Parent.rp.details = "Editing: " + System.IO.Path.GetFileName(ofd.FileName);
+                SharpPresence.Discord.RunCallbacks();
+                SharpPresence.Discord.UpdatePresence(Parent.rp);
+
             }
         }
 
@@ -116,11 +124,11 @@ namespace RetroED.Tools.BackgroundEditor
                 case 0:
                     using (Stream strm = File.OpenRead(level))
                     {
-                        _RSDK4Background = new RSDKv4.BGLayout(strm);
+                        _RSDK4Background = new RSDKvB.BGLayout(strm);
                     }
                     using (Stream strm = File.OpenRead(mappings))
                     {
-                        _RSDK4Chunks = new RSDKv4.Tiles128x128(strm);
+                        _RSDK4Chunks = new RSDKvB.Tiles128x128(strm);
                     }
                     _loadedTiles = Bitmap.FromFile(tiles);
                     _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
@@ -137,21 +145,21 @@ namespace RetroED.Tools.BackgroundEditor
                     _mapViewer.SetLevel();
                     _mapViewer.DrawLevel();
 
-                    selectedLayerToolStripMenuItem.DropDownItems.Clear();
-                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
-                    {
-                        selectedLayerToolStripMenuItem.DropDownItems.Add("Background Layer " + i.ToString());
-                    }
+                    //MenuItem_SelectLayer.MenuItems.Clear();
+                    //for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
+                    //{
+                    //    MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    //}  
 
                     break;
                 case 1:
                     using (Stream strm = File.OpenRead(level))
                     {
-                        _RSDK3Background = new RSDKv3.BGLayout(strm);
+                        _RSDK3Background = new RSDKv2.BGLayout(strm);
                     }
                     using (Stream strm = File.OpenRead(mappings))
                     {
-                        _RSDK3Chunks = new RSDKv3.Tiles128x128(strm);
+                        _RSDK3Chunks = new RSDKv2.Tiles128x128(strm);
                     }
                     _loadedTiles = Bitmap.FromFile(tiles);
                     _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
@@ -168,21 +176,21 @@ namespace RetroED.Tools.BackgroundEditor
                     _mapViewer.SetLevel();
                     _mapViewer.DrawLevel();
 
-                    selectedLayerToolStripMenuItem.DropDownItems.Clear();
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
                     for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
                     {
-                        selectedLayerToolStripMenuItem.DropDownItems.Add("Background Layer " + i.ToString());
-                    }
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
 
                     break;
                 case 2:
                     using (Stream strm = File.OpenRead(level))
                     {
-                        _RSDK2Background = new RSDKv2.BGLayout(strm);
+                        _RSDK2Background = new RSDKv1.BGLayout(strm);
                     }
                     using (Stream strm = File.OpenRead(mappings))
                     {
-                        _RSDK2Chunks = new RSDKv2.Tiles128x128(strm);
+                        _RSDK2Chunks = new RSDKv1.Tiles128x128(strm);
                     }
                     _loadedTiles = Bitmap.FromFile(tiles);
                     _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
@@ -199,22 +207,17 @@ namespace RetroED.Tools.BackgroundEditor
                     _mapViewer.SetLevel();
                     _mapViewer.DrawLevel();
 
-                    selectedLayerToolStripMenuItem.DropDownItems.Clear();
-                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
-                    {
-                        selectedLayerToolStripMenuItem.DropDownItems.Add("Background Layer " + i.ToString());
-                    }
                     break;
                 case 3:
                     using (Stream strm = File.OpenRead(level))
                     {
-                        _RSDK1Background = new RSDKv1.BGLayout(strm);
+                        _RSDK1Background = new RSDKvRS.BGLayout(strm);
                     }
                     using (Stream strm = File.OpenRead(mappings))
                     {
-                        _RSDK1Chunks = new RSDKv1.til(strm);
+                        _RSDK1Chunks = new RSDKvRS.Tiles128x128(strm);
                     }
-                    RSDKv1.gfx gfx = new RSDKv1.gfx(tiles, false);
+                    RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles, false);
 
                     _loadedTiles = gfx.gfxImage;
 
@@ -232,11 +235,11 @@ namespace RetroED.Tools.BackgroundEditor
                     _mapViewer.SetLevel();
                     _mapViewer.DrawLevel();
 
-                    selectedLayerToolStripMenuItem.DropDownItems.Clear();
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
                     for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
                     {
-                        selectedLayerToolStripMenuItem.DropDownItems.Add("Background Layer " + i.ToString());
-                    }
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
                     break;
                 default:
                     break;
@@ -439,7 +442,7 @@ namespace RetroED.Tools.BackgroundEditor
             ushort[][] NewTiles = new ushort[0][];
             int OLDwidth = 0;
             int OLDheight = 0;
-            Console.WriteLine(_mapViewer.curlayer);
+
             switch (LoadedRSDKver)
             {
                 case 3:
@@ -517,7 +520,6 @@ namespace RetroED.Tools.BackgroundEditor
 
         void CheckDimensions(int RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight)
         {
-
             if (RSDKver == 3)
             {
                 if (_RSDK1Background.Layers[curlayer].width != OLDwidth || _RSDK1Background.Layers[curlayer].height != OLDheight)
@@ -555,25 +557,19 @@ namespace RetroED.Tools.BackgroundEditor
 
         ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
         {
+            //Yeah, I "borrowed" this from Maniac
+
             // fill the extended tile arrays with "empty" values
+            Array.Resize(ref NewTiles, NewHeight);
 
             // if we're actaully getting shorter, do nothing!
-            if (oldWidth > 0 && oldHeight > 0)
+            for (ushort i = oldHeight; i < NewHeight; i++)
             {
-                for (ushort i = oldHeight; i < NewHeight; i++)
-                {
-                    // first create arrays child arrays to the old width
-                    // a little inefficient, but at least they'll all be equal sized
-                    NewTiles[i] = new ushort[oldWidth];
-                    for (int j = 0; j < oldWidth; ++j)
-                        NewTiles[i][j] = 0xffff; // fill the new ones with blanks
-                }
-            }
-            else
-            {
-                NewTiles = new ushort[NewHeight][];
-                oldWidth = 1;
-                oldHeight = 1;
+                // first create arrays child arrays to the old width
+                // a little inefficient, but at least they'll all be equal sized
+                NewTiles[i] = new ushort[oldWidth];
+                for (int j = 0; j < oldWidth; ++j)
+                    NewTiles[i][j] = 0; // fill the new ones with blanks
             }
 
             for (ushort i = 0; i < NewHeight; i++)
@@ -581,23 +577,23 @@ namespace RetroED.Tools.BackgroundEditor
                 // now resize all child arrays to the new width
                 Array.Resize(ref NewTiles[i], NewWidth);
                 for (ushort j = oldWidth; j < NewWidth; j++)
-                    NewTiles[i][j] = 0xffff; // and fill with blanks if wider
+                    NewTiles[i][j] = 0; // and fill with blanks if wider
             }
             return NewTiles;
         }
 
-        private void showGridToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ShowGrid_Click(object sender, EventArgs e)
         {
             if (!showgrid)
             {
-                showGridToolStripMenuItem.Checked = true;
+                MenuItem_ShowGrid.Checked = true;
                 showgrid = true;
                 _mapViewer.ShowGrid = true;
                 _mapViewer.DrawLevel();
             }
             else if (showgrid)
             {
-                showGridToolStripMenuItem.Checked = false;
+                MenuItem_ShowGrid.Checked = false;
                 showgrid = false;
                 _mapViewer.ShowGrid = false;
                 _mapViewer.DrawLevel();
@@ -611,7 +607,7 @@ namespace RetroED.Tools.BackgroundEditor
                     case 0:
                         using (Stream strm = File.OpenRead(mappings))
                         {
-                            _RSDK4Chunks = new RSDKv4.Tiles128x128(strm);
+                            _RSDK4Chunks = new RSDKvB.Tiles128x128(strm);
                         }
                         _loadedTiles = Bitmap.FromFile(tiles);
                         _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
@@ -628,7 +624,7 @@ namespace RetroED.Tools.BackgroundEditor
                     case 1:
                         using (Stream strm = File.OpenRead(mappings))
                         {
-                            _RSDK3Chunks = new RSDKv3.Tiles128x128(strm);
+                            _RSDK3Chunks = new RSDKv2.Tiles128x128(strm);
                         }
                         _loadedTiles = Bitmap.FromFile(tiles);
                         _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
@@ -645,7 +641,7 @@ namespace RetroED.Tools.BackgroundEditor
                     case 2:
                         using (Stream strm = File.OpenRead(mappings))
                         {
-                            _RSDK2Chunks = new RSDKv2.Tiles128x128(strm);
+                            _RSDK2Chunks = new RSDKv1.Tiles128x128(strm);
                         }
                         _loadedTiles = Bitmap.FromFile(tiles);
                         _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
@@ -662,9 +658,9 @@ namespace RetroED.Tools.BackgroundEditor
                     case 3:
                         using (Stream strm = File.OpenRead(mappings))
                         {
-                            _RSDK1Chunks = new RSDKv1.til(strm);
+                            _RSDK1Chunks = new RSDKvRS.Tiles128x128(strm);
                         }
-                        RSDKv1.gfx gfx = new RSDKv1.gfx(tiles, false);
+                        RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles, false);
 
                         _loadedTiles = gfx.gfxImage;
 
@@ -696,7 +692,7 @@ namespace RetroED.Tools.BackgroundEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles1[i] = new ushort[_RSDK1Background.Layers[curlayer].width];
                         for (int j = 0; j < _RSDK1Background.Layers[curlayer].width; ++j)
-                            NewTiles1[i][j] = 0xffff; // fill the tiles with blanks
+                            NewTiles1[i][j] = 0; // fill the tiles with blanks
                     }
                     _mapViewer._RSDK1Background.Layers[curlayer].MapLayout = NewTiles1;
                     _mapViewer.DrawLevel();
@@ -709,7 +705,7 @@ namespace RetroED.Tools.BackgroundEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles2[i] = new ushort[_RSDK2Background.Layers[_mapViewer.curlayer].width];
                         for (int j = 0; j < _RSDK2Background.Layers[_mapViewer.curlayer].width; ++j)
-                            NewTiles2[i][j] = 0xffff; // fill the tiles with blanks
+                            NewTiles2[i][j] = 0; // fill the tiles with blanks
                     }
                     _mapViewer._RSDK2Background.Layers[curlayer].MapLayout = NewTiles2;
                     _mapViewer.DrawLevel();
@@ -722,7 +718,7 @@ namespace RetroED.Tools.BackgroundEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles3[i] = new ushort[_RSDK3Background.Layers[curlayer].width];
                         for (int j = 0; j < _RSDK3Background.Layers[curlayer].width; ++j)
-                            NewTiles3[i][j] = 0xffff; // fill the tiles with blanks
+                            NewTiles3[i][j] = 0; // fill the tiles with blanks
                     }
                     _mapViewer._RSDK3Background.Layers[curlayer].MapLayout = NewTiles3;
                     _mapViewer.DrawLevel();
@@ -735,7 +731,7 @@ namespace RetroED.Tools.BackgroundEditor
                         // a little inefficient, but at least they'll all be equal sized
                         NewTiles4[i] = new ushort[_RSDK4Background.Layers[curlayer].width];
                         for (int j = 0; j < _RSDK4Background.Layers[curlayer].width; ++j)
-                            NewTiles4[i][j] = 0xffff; // fill the tiles with blanks
+                            NewTiles4[i][j] = 0; // fill the tiles with blanks
                     }
                     _mapViewer._RSDK4Background.Layers[curlayer].MapLayout = NewTiles4;
                     _mapViewer.DrawLevel();
@@ -743,25 +739,25 @@ namespace RetroED.Tools.BackgroundEditor
             }
         }
 
-        private void drawAllLayersToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_DrawAllLayers_Click(object sender, EventArgs e)
         {
             if (_mapViewer.DrawAllLayers)
             {
-                drawAllLayersToolStripMenuItem.Checked = _mapViewer.DrawAllLayers = false;
+                MenuItem_DrawAllLayers.Checked = _mapViewer.DrawAllLayers = false;
                 _mapViewer.DrawLevel();
             }
             else
             {
-                drawAllLayersToolStripMenuItem.Checked = _mapViewer.DrawAllLayers = true;
+                MenuItem_DrawAllLayers.Checked = _mapViewer.DrawAllLayers = true;
                 _mapViewer.DrawLevel();
             }
         }
 
-        private void selectedLayerToolStripMenuItem_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void MenuItem_SelectLayer_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            curlayer = selectedLayerToolStripMenuItem.DropDownItems.IndexOf(e.ClickedItem);
-            _mapViewer.curlayer = selectedLayerToolStripMenuItem.DropDownItems.IndexOf(e.ClickedItem);
-            _mapViewer.DrawLevel();
+            //curlayer = MenuItem_SelectLayer.MenuItems.IndexOf(e.ClickedItem);
+            //_mapViewer.curlayer = MenuItem_SelectLayer.MenuItems.IndexOf(e.ClickedItem);
+            //_mapViewer.DrawLevel();
         }
 
         private void clearParallaxValuesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -769,19 +765,19 @@ namespace RetroED.Tools.BackgroundEditor
             switch(LoadedRSDKver)
             {
                 case 0:
-                    _RSDK4Background.Lines.Clear();
+                    _RSDK4Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 1:
-                    _RSDK3Background.Lines.Clear();
+                    _RSDK3Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 2:
-                    _RSDK2Background.Lines.Clear();
+                    _RSDK2Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 3:
-                    _RSDK1Background.Lines.Clear();
+                    _RSDK1Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
             }
@@ -792,19 +788,218 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 0:
-                    _RSDK4Background.Lines.Add(new RSDKv4.BGLayout.ParallaxValues());
+                    _RSDK4Background.HLines.Add(new RSDKvB.BGLayout.HorizontalParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 1:
-                    _RSDK3Background.Lines.Add(new RSDKv3.BGLayout.ParallaxValues());
+                    _RSDK3Background.HLines.Add(new RSDKv2.BGLayout.HorizontalParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 2:
-                    _RSDK2Background.Lines.Add(new RSDKv2.BGLayout.ParallaxValues());
+                    _RSDK2Background.HLines.Add(new RSDKv1.BGLayout.HorizontalParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 3:
-                    _RSDK1Background.Lines.Add(new RSDKv1.BGLayout.ParallaxValues());
+                    _RSDK1Background.HLines.Add(new RSDKvRS.BGLayout.HorizontalParallaxValues());
+                    _blocksViewer.RefreshParallaxList();
+                    break;
+            }
+        }
+
+        private void addLayerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            switch(LoadedRSDKver)
+            {
+                case 3:
+                    _RSDK1Background.Layers.Add(new RSDKvRS.BGLayout.BGLayer());
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
+                    break;
+                case 2:
+                    _RSDK2Background.Layers.Add(new RSDKv1.BGLayout.BGLayer());
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }
+                    */
+                    break;
+                case 1:
+                    _RSDK3Background.Layers.Add(new RSDKv2.BGLayout.BGLayer());
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }
+                    */
+                    break;
+                case 0:
+                    _RSDK4Background.Layers.Add(new RSDKvB.BGLayout.BGLayer());
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }
+                    */
+                    break;
+            }
+        }
+
+        private void removeCurrentLayerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 3:
+                    _RSDK1Background.Layers.RemoveAt(curlayer);
+                    curlayer = 0;
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
+                    _mapViewer.DrawLevel();
+                    break;
+                case 2:
+                    _RSDK2Background.Layers.RemoveAt(curlayer);
+                    curlayer = 0;
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
+                    _mapViewer.DrawLevel();
+                    break;
+                case 1:
+                    _RSDK3Background.Layers.RemoveAt(curlayer);
+                    curlayer = 0;
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
+                    _mapViewer.DrawLevel();
+                    break;
+                case 0:
+                    _RSDK4Background.Layers.RemoveAt(curlayer);
+                    curlayer = 0;
+                    /*MenuItem_SelectLayer.MenuItems.Clear();
+                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
+                    {
+                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+                    }*/
+                    _mapViewer.DrawLevel();
+                    break;
+            }
+        }
+
+        private void MenuItem_SelectLayer_Click(object sender, EventArgs e)
+        {
+            SelectLayerForm SLF = new SelectLayerForm();
+            SLF.SelLayer = curlayer;
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
+                    {
+                        SLF.LayerList.Items.Add("Background Layer " + i);
+                    }
+                    break;
+                case 1:
+                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
+                    {
+                        SLF.LayerList.Items.Add("Background Layer " + i);
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
+                    {
+                        SLF.LayerList.Items.Add("Background Layer " + i);
+                    }
+                    break;
+                case 3:
+                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
+                    {
+                        SLF.LayerList.Items.Add("Background Layer " + i);
+                    }
+                    break;
+            }
+
+            if (SLF.ShowDialog(this) == DialogResult.OK)
+            {
+                _mapViewer.curlayer = curlayer = SLF.SelLayer;
+                Console.WriteLine(SLF.SelLayer + " " + _mapViewer.curlayer + " " + curlayer);
+                _mapViewer.DrawLevel();
+            }
+
+        }
+
+        private void MenuItem_AddVPValues_Click(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    _RSDK4Background.VLines.Add(new RSDKvB.BGLayout.VerticalParallaxValues());
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 1:
+                    _RSDK3Background.VLines.Add(new RSDKv2.BGLayout.VerticalParallaxValues());
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 2:
+                    _RSDK2Background.VLines.Add(new RSDKv1.BGLayout.VerticalParallaxValues());
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 3:
+                    _RSDK1Background.VLines.Add(new RSDKvRS.BGLayout.VerticalParallaxValues());
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+            }
+        }
+
+        private void MenuItem_ClearVPvalues_Click(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    _RSDK4Background.VLines.Clear();
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 1:
+                    _RSDK3Background.VLines.Clear();
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 2:
+                    _RSDK2Background.VLines.Clear();
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+                case 3:
+                    _RSDK1Background.VLines.Clear();
+                    _blocksViewer.RefreshParallaxList(1);
+                    break;
+            }
+        }
+
+        private void MenuItem_ClearHPValues_Click(object sender, EventArgs e)
+        {
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    _RSDK4Background.HLines.Clear();
+                    _blocksViewer.RefreshParallaxList();
+                    break;
+                case 1:
+                    _RSDK3Background.HLines.Clear();
+                    _blocksViewer.RefreshParallaxList();
+                    break;
+                case 2:
+                    _RSDK2Background.HLines.Clear();
+                    _blocksViewer.RefreshParallaxList();
+                    break;
+                case 3:
+                    _RSDK1Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
             }

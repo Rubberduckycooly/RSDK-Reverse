@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AAE1BACD-FE6B-4CC6-AD2D-073315F45EAF}</ProjectGuid>
+    <ProjectGuid>{E089DB56-F8D4-434E-A9A8-C7EFCC3278D8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RSDKv1</RootNamespace>
@@ -20,7 +20,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -49,21 +48,25 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Animation.Frame.cs" />
     <Compile Include="Animation.HitboxEntry.cs" />
-    <Compile Include="gfx.cs" />
+    <Compile Include="BackgroundLayout.cs" />
+    <Compile Include="CollisionMask.cs" />
+    <Compile Include="DataFile.cs" />
+    <Compile Include="GameConfig.cs" />
+    <Compile Include="GraphicsImage.cs" />
     <Compile Include="Hitbox.cs" />
     <Compile Include="IAnimation.cs" />
     <Compile Include="IBinarySerializable.cs" />
     <Compile Include="IHitbox.cs" />
-    <Compile Include="Level.cs" />
-    <Compile Include="mdf.cs" />
+    <Compile Include="Scene.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="PaletteColor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="rsf.cs" />
-    <Compile Include="SaveFiles.cs" />
+    <Compile Include="Video.cs" />
+    <Compile Include="StageConfig.cs" />
     <Compile Include="StringEncoding.cs" />
+    <Compile Include="Tiles128x128.cs" />
     <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>

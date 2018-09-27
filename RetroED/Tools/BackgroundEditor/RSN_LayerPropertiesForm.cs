@@ -17,8 +17,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int CurLayer = 0;
 
-        public RSDKv1.BGLayout Mapv1;
-        public RSDKv2.BGLayout Mapv2;
+        public RSDKvRS.BGLayout Mapv1;
+        public RSDKv1.BGLayout Mapv2;
 
         public RSN_LayerPropertiesForm(int RSDKver)
         {

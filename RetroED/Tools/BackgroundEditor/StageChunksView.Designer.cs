@@ -30,18 +30,22 @@
         {
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ChunksPage = new System.Windows.Forms.TabPage();
-            this.pValues = new System.Windows.Forms.TabPage();
-            this.pValuesList = new System.Windows.Forms.ListBox();
             this.BlocksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
+            this.HpValues = new System.Windows.Forms.TabPage();
+            this.HpValuesList = new System.Windows.Forms.ListBox();
+            this.VpValues = new System.Windows.Forms.TabPage();
+            this.VpValuesList = new System.Windows.Forms.ListBox();
             this.tabControl.SuspendLayout();
             this.ChunksPage.SuspendLayout();
-            this.pValues.SuspendLayout();
+            this.HpValues.SuspendLayout();
+            this.VpValues.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
             // 
             this.tabControl.Controls.Add(this.ChunksPage);
-            this.tabControl.Controls.Add(this.pValues);
+            this.tabControl.Controls.Add(this.HpValues);
+            this.tabControl.Controls.Add(this.VpValues);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -60,28 +64,6 @@
             this.ChunksPage.Text = "Chunks";
             this.ChunksPage.UseVisualStyleBackColor = true;
             // 
-            // pValues
-            // 
-            this.pValues.Controls.Add(this.pValuesList);
-            this.pValues.Location = new System.Drawing.Point(4, 26);
-            this.pValues.Name = "pValues";
-            this.pValues.Size = new System.Drawing.Size(309, 351);
-            this.pValues.TabIndex = 1;
-            this.pValues.Text = "Parallax Values";
-            this.pValues.UseVisualStyleBackColor = true;
-            // 
-            // pValuesList
-            // 
-            this.pValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pValuesList.FormattingEnabled = true;
-            this.pValuesList.ItemHeight = 17;
-            this.pValuesList.Location = new System.Drawing.Point(0, 0);
-            this.pValuesList.Name = "pValuesList";
-            this.pValuesList.Size = new System.Drawing.Size(309, 351);
-            this.pValuesList.TabIndex = 0;
-            this.pValuesList.SelectedIndexChanged += new System.EventHandler(this.pValuesList_SelectedIndexChanged);
-            this.pValuesList.DoubleClick += new System.EventHandler(this.pValuesList_DoubleClick);
-            // 
             // BlocksList
             // 
             this.BlocksList.BackColor = System.Drawing.SystemColors.Window;
@@ -98,6 +80,48 @@
             this.BlocksList.TabIndex = 0;
             this.BlocksList.SelectedIndexChanged += new System.EventHandler(this.BlocksList_SelectedIndexChanged);
             // 
+            // HpValues
+            // 
+            this.HpValues.Controls.Add(this.HpValuesList);
+            this.HpValues.Location = new System.Drawing.Point(4, 26);
+            this.HpValues.Name = "HpValues";
+            this.HpValues.Size = new System.Drawing.Size(309, 351);
+            this.HpValues.TabIndex = 1;
+            this.HpValues.Text = "Horizontal Parallax Values";
+            this.HpValues.UseVisualStyleBackColor = true;
+            // 
+            // HpValuesList
+            // 
+            this.HpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.HpValuesList.FormattingEnabled = true;
+            this.HpValuesList.ItemHeight = 17;
+            this.HpValuesList.Location = new System.Drawing.Point(0, 0);
+            this.HpValuesList.Name = "HpValuesList";
+            this.HpValuesList.Size = new System.Drawing.Size(309, 351);
+            this.HpValuesList.TabIndex = 0;
+            this.HpValuesList.DoubleClick += new System.EventHandler(this.HpValuesList_DoubleClick);
+            // 
+            // VpValues
+            // 
+            this.VpValues.Controls.Add(this.VpValuesList);
+            this.VpValues.Location = new System.Drawing.Point(4, 26);
+            this.VpValues.Name = "VpValues";
+            this.VpValues.Size = new System.Drawing.Size(309, 351);
+            this.VpValues.TabIndex = 2;
+            this.VpValues.Text = "Vertical Parallax Values";
+            this.VpValues.UseVisualStyleBackColor = true;
+            // 
+            // VpValuesList
+            // 
+            this.VpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.VpValuesList.FormattingEnabled = true;
+            this.VpValuesList.ItemHeight = 17;
+            this.VpValuesList.Location = new System.Drawing.Point(0, 0);
+            this.VpValuesList.Name = "VpValuesList";
+            this.VpValuesList.Size = new System.Drawing.Size(309, 351);
+            this.VpValuesList.TabIndex = 1;
+            this.VpValuesList.DoubleClick += new System.EventHandler(this.VpValuesList_DoubleClick);
+            // 
             // StageChunksView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
@@ -111,7 +135,8 @@
             this.Text = "128x128 Chunks";
             this.tabControl.ResumeLayout(false);
             this.ChunksPage.ResumeLayout(false);
-            this.pValues.ResumeLayout(false);
+            this.HpValues.ResumeLayout(false);
+            this.VpValues.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -121,7 +146,9 @@
         public ChunkMappingsEditor.TileList BlocksList;
         private System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage ChunksPage;
-        private System.Windows.Forms.TabPage pValues;
-        private System.Windows.Forms.ListBox pValuesList;
+        private System.Windows.Forms.TabPage HpValues;
+        private System.Windows.Forms.ListBox HpValuesList;
+        private System.Windows.Forms.TabPage VpValues;
+        private System.Windows.Forms.ListBox VpValuesList;
     }
 }

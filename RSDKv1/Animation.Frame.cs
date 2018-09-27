@@ -32,9 +32,9 @@ namespace RSDKv1
 
         public int Id { get => 0; set { } }
 
-        public int flag1 { get; set; }
+        public bool flag1 { get => false; set { } }
 
-        public int flag2 { get; set; }
+        public bool flag2 { get => false; set { } }
 
         public int Duration
         {
@@ -54,10 +54,6 @@ namespace RSDKv1
 
         public int CenterY { get; set; }
 
-        public int[] Hitbox;
-
-        public int[] PivotVals;
-
         public IHitbox GetHitbox(int index)
         {
             return new Hitbox();
@@ -70,51 +66,37 @@ namespace RSDKv1
 
         public void Read(BinaryReader reader)
         {
-            // byte 1 - Image's X Position
-            // byte 2 - Image's Y Position		
-            // byte 3 - Width
-            // byte 4 - Height
-            // byte 5 - Image Number
-            // byte 6 - Hitbox Left
-            // byte 7 - Hitbox Top
-            // byte 8 - Hitbox Right
-            // byte 9 - Hitbox Bottom
-            // byte 10 - Center X
-            // byte 11 - Center Y
+            // byte 1 - Number of image the frame is located in
+            // byte 2 - UnKnown/Useless		
+            // byte 3 - X position in image of the frame
+            // byte 4 - Y position in image of the frame
+            // byte 5 - Width of frame
+            // byte 6 - Height of frame
+            // byte 7 - Hot spot horizontal displacement
+            // byte 8 - Hot spot vertical displacement
+            SpriteSheet = reader.ReadByte();
+            reader.ReadByte();
             X = reader.ReadByte();
             Y = reader.ReadByte();
             Width = reader.ReadByte();
             Height = reader.ReadByte();
-            SpriteSheet = reader.ReadByte();
+            CenterX = reader.ReadSByte();
+            CenterY = reader.ReadSByte();
+            flag1 = false; // UNKNOWN
+            flag2 = false; // UNKNOWN
             Id = 0;
-
-            Hitbox = new int[4];
-            PivotVals = new int[2];
-
-            for (int k = 0; k < 4; k++)
-            { Hitbox[k] = reader.ReadByte(); }
-
-            for (int k = 0; k < 2; k++)
-            { PivotVals[k] = reader.ReadByte(); }
-
-            // Compute hotspot displacements
-            CenterX = Hitbox[2] - PivotVals[0]; //PivotVal[0] is the true Value, this calculation is just done so the animation looks right upon playback
-            CenterY = Hitbox[3] - PivotVals[1]; //PivotVal[1] is the true Value, this calculation is just done so the animation looks right upon playback
         }
 
         public void Write(BinaryWriter writer)
         {
+            writer.Write((byte)SpriteSheet);
+            writer.Write((byte)0);
             writer.Write((byte)X);
             writer.Write((byte)Y);
             writer.Write((byte)Width);
             writer.Write((byte)Height);
-            writer.Write((byte)SpriteSheet);
-            writer.Write((byte)Hitbox[0]); //Hitbox values, Left
-            writer.Write((byte)Hitbox[1]); //Hitbox values, Top
-            writer.Write((byte)Hitbox[2]); //Hitbox values, Right
-            writer.Write((byte)Hitbox[3]); //Hitbox values, Bottom
-            writer.Write((byte)PivotVals[0]); 
-            writer.Write((byte)PivotVals[1]);
+            writer.Write((byte)CenterX);
+            writer.Write((byte)CenterY);
         }
 
         public object Clone()

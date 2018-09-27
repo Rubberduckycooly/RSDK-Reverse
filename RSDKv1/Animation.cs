@@ -29,11 +29,9 @@ namespace RSDKv1
 {
     public class Animation : IAnimation
     {
-        public int Version => 1;
+        public int Version => 2;
 
         public List<string> SpriteSheets { get; }
-
-        public byte PlayerType = 0;
 
         public List<AnimationEntry> Animations { get; }
 
@@ -41,20 +39,11 @@ namespace RSDKv1
 
         public IEnumerable<string> HitboxTypes => null;
 
-        public Animation(BinaryReader reader, bool RSDC)
+        public Animation(BinaryReader reader)
         {
-            reader.ReadByte(); //skip this byte, as it seems unused
-            PlayerType = reader.ReadByte(); //Tells the engine what player is selected; It is 0 for sonic, 1 for tails & 2 for Knux, so maybe it specifies a player value?
-            int spriteSheetsCount = 3;
-            if (RSDC) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
-            {
-                spriteSheetsCount = 2;
-            }
-            else //But the PC demo has 3 spritesheets per animation! so we set that here!
-            {
-                spriteSheetsCount = 3;
-            }
-            var animationsCount = reader.ReadByte();
+            reader.ReadBytes(5); //skip these bytes, as they seem to be useless/unused...
+
+            int spriteSheetsCount = 3; //always 3
 
             SpriteSheets = new List<string>(spriteSheetsCount);
 
@@ -74,29 +63,25 @@ namespace RSDKv1
             }
             byteBuf = null;
 
-            // Read number of animations		
+            reader.ReadByte(); //skip this byte, it seems to be useless
+            // Read number of animations
+            var animationsCount = reader.ReadByte();
+
             Animations = new List<AnimationEntry>(animationsCount);
 
             for (int i = 0; i < animationsCount; i++)
             {
-                // In the 3 bytes:
-                // byte 1 - Number of frames
-                // byte 2 - Animation speed
-                // byte 3 - Frame to start looping from, when looping
-
-                // read frame count	
+                // Read number of frames
                 int frameCount = reader.ReadByte();
-                //read Animation Speed
-                int animationSpeed = reader.ReadByte() * 4;
-                //read Loop Index
+                // Read speed
+                int animationSpeed = reader.ReadByte();
+                // Read loop start
                 int loopFrom = reader.ReadByte();
 
-                //The Retro Sonic Animation Files Don't Have Names, so let's give them "ID's" instead
-                Animations.Add(new AnimationEntry(("Retro Sonic Animation #" + (i+1)), frameCount, animationSpeed,
+                Animations.Add(new AnimationEntry(("Sonic-Nexus Animation #" + (i + 1)), frameCount, animationSpeed,
                     loopFrom, false, false, reader));
-                }
             }
-
+    }
         public void Factory(out IAnimationEntry o) { o = new AnimationEntry(); }
         public void Factory(out IFrame o) { o = new Frame(); }
         public void Factory(out IHitboxEntry o) { o = new HitboxEntry(); }
@@ -116,12 +101,11 @@ namespace RSDKv1
 
         public IEnumerable<IHitboxEntry> GetHitboxes()
         {
-            //return Hitboxes.Select(x => (IHitboxEntry)x);
             return null;
         }
 
         public void SetHitboxes(IEnumerable<IHitboxEntry> hitboxes)
-        {           
+        {
             /*Hitboxes.Clear();
             Hitboxes.AddRange(hitboxes
                 .Select(x => x as HitboxEntry)
@@ -130,19 +114,27 @@ namespace RSDKv1
         public void SetHitboxTypes(IEnumerable<string> hitboxTypes)
         { }
 
+
         public void SaveChanges(BinaryWriter writer)
         {
             writer.Write((byte)0);
             writer.Write((byte)0);
-            var animationsCount = (byte)Math.Min(Animations.Count, byte.MaxValue);
-            writer.Write(animationsCount);
+            writer.Write((byte)0);
+            writer.Write((byte)0);
+            writer.Write((byte)0);
 
             var spriteSheetsCount = (byte)Math.Min(SpriteSheets.Count, byte.MaxValue);
+
             for (int i = 0; i < spriteSheetsCount; i++)
             {
                 var item = SpriteSheets[i];
                 writer.Write(StringEncoding.GetBytes(item));
             }
+
+            writer.Write((byte)0); //"skip" this byte, it seems to be useless
+
+            var animationsCount = (byte)Math.Min(Animations.Count, byte.MaxValue);
+            writer.Write(animationsCount);
 
             for (int i = 0; i < animationsCount; i++)
             {

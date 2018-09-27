@@ -66,6 +66,12 @@ namespace RSDKv2
             return BitConverter.ToUInt32(bytes, 0);
         }
 
+        public string GetFilename()
+        {
+            var fileStream = BaseStream as FileStream;
+            return fileStream.Name;
+        }
+
         public string ReadRSDKString()
         {
             return new UTF8Encoding().GetString(ReadBytes(this.ReadByte()));

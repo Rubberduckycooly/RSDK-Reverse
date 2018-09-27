@@ -7,9 +7,10 @@ using System.IO;
 
 namespace RSDKv5
 {
+    [Serializable]
     public struct Position
     {
-
+        [Serializable]
         public struct Value 
         {
             public Value(short high = 0, ushort low = 0)

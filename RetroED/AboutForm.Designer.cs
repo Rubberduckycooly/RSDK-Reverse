@@ -28,7 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AboutForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -36,8 +39,6 @@
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,19 +59,37 @@
             this.panel1.Size = new System.Drawing.Size(377, 237);
             this.panel1.TabIndex = 0;
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(125, 168);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(97, 17);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "SuperSonic16";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(125, 147);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(109, 17);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Special Thanks:";
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(14, 157);
+            this.label6.Location = new System.Drawing.Point(15, 118);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(77, 17);
+            this.label6.Size = new System.Drawing.Size(217, 17);
             this.label6.TabIndex = 9;
-            this.label6.Text = "Beta Angel";
+            this.label6.Text = "With Assistance from: Beta Angel";
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 140);
+            this.label5.Location = new System.Drawing.Point(14, 168);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(59, 17);
             this.label5.TabIndex = 8;
@@ -79,7 +98,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(15, 119);
+            this.label4.Location = new System.Drawing.Point(15, 147);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 17);
             this.label4.TabIndex = 7;
@@ -97,7 +116,7 @@
             // linkLabel2
             // 
             this.linkLabel2.AutoSize = true;
-            this.linkLabel2.Location = new System.Drawing.Point(15, 93);
+            this.linkLabel2.Location = new System.Drawing.Point(15, 65);
             this.linkLabel2.Name = "linkLabel2";
             this.linkLabel2.Size = new System.Drawing.Size(241, 17);
             this.linkLabel2.TabIndex = 5;
@@ -107,7 +126,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(15, 65);
+            this.label3.Location = new System.Drawing.Point(15, 91);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(207, 17);
             this.label3.TabIndex = 3;
@@ -123,30 +142,13 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "RetroED - Retro Engine Editor";
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(125, 119);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(109, 17);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Special Thanks:";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(125, 140);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(97, 17);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "SuperSonic16";
-            // 
             // AboutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 237);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "AboutForm";
             this.Text = "About";
             this.panel1.ResumeLayout(false);
