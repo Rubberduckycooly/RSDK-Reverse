@@ -11,8 +11,8 @@ namespace RSDKvRS
     /* Full Map Layout */
     public class Scene
     {
-        public string Title { get; set; }
-        public ushort[][] MapLayout { get; set; }
+        public string Title = "Stage";
+        public ushort[][] MapLayout;
 
         public byte Music; //This is usually Set to 0
         public byte Background; //This is usually Set to 1 in PC, 0 in DC
@@ -23,6 +23,11 @@ namespace RSDKvRS
         public List<Object> objects = new List<Object>();
 
         public int width, height;
+
+        public Scene()
+        {
+
+        }
 
         public Scene(string filename) : this(new Reader(filename))
         {
@@ -76,21 +81,8 @@ namespace RSDKvRS
 
             for (int i = 0; i < ObjCount; i++)
             {
-                // Object type, 1 byte, unsigned
-                int obj_type = ITMreader.ReadByte();
-                // Object subtype, 1 byte, unsigned
-                int obj_subtype = ITMreader.ReadByte();
-
-                // X Position, 2 bytes, big-endian, signed			
-                int obj_xPos = ITMreader.ReadSByte() << 8;
-                obj_xPos |= ITMreader.ReadByte();
-
-                // Y Position, 2 bytes, big-endian, signed
-                int obj_yPos = ITMreader.ReadSByte() << 8;
-                obj_yPos |= ITMreader.ReadByte();
-
                 // Add object
-                objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
+                objects.Add(new Object(ITMreader));
             }
             reader.Close();
         }
@@ -122,28 +114,6 @@ namespace RSDKvRS
 
             if (num_of_objects > 65535)
                 throw new Exception("Cannot save as Retro-Sonic map. Number of objects > 65535");
-
-            for (int n = 0; n < num_of_objects; n++)
-            {
-                Object obj = objects[n];
-
-                int obj_type = obj.getType();
-                int obj_subtype = obj.getSubtype();
-                int obj_xPos = obj.getXPos();
-                int obj_yPos = obj.getYPos();
-
-                if (obj_type > 255)
-                    throw new Exception("Cannot save as Retro-Sonic map. Object type > 255");
-
-                if (obj_subtype > 255)
-                    throw new Exception("Cannot save as Retro-Sonic map. Object subtype > 255");
-
-                if (obj_xPos < -32768 || obj_xPos > 32767)
-                    throw new Exception("Cannot save as Retro-Sonic. Object X Position can't fit in 16-bits");
-
-                if (obj_yPos < -32768 || obj_yPos > 32767)
-                    throw new Exception("Cannot save as Retro-Sonic. Object Y Position can't fit in 16-bits");
-            }
 
             // Separate path components			
             String dirname = Path.GetDirectoryName(writer.GetFilename());
@@ -186,19 +156,7 @@ namespace RSDKvRS
             {
                 Object obj = objects[n];
 
-                int obj_type = obj.type;
-                int obj_subtype = obj.subtype;
-                int obj_xPos = obj.xPos;
-                int obj_yPos = obj.yPos;
-
-                ITMwriter.Write((byte)obj_type);
-                ITMwriter.Write((byte)obj_subtype);
-
-                ITMwriter.Write((byte)(obj_xPos >> 8));
-                ITMwriter.Write((byte)(obj_xPos & 0xFF));
-
-                ITMwriter.Write((byte)(obj_yPos >> 8));
-                ITMwriter.Write((byte)(obj_yPos & 0xFF));
+                obj.Write(ITMwriter);
             }
             ITMwriter.Close();
         }
@@ -313,21 +271,8 @@ namespace RSDKvRS
             ObjCount |= reader.ReadByte();
             for (int i = 0; i < ObjCount; i++)
             {
-                // Object type, 1 byte, unsigned
-                int obj_type = reader.ReadByte();
-                // Object subtype, 1 byte, unsigned
-                int obj_subtype = reader.ReadByte();
-
-                // X Position, 2 bytes, big-endian, signed			
-                int obj_xPos = reader.ReadSByte() << 8;
-                obj_xPos |= reader.ReadByte();
-
-                // Y Position, 2 bytes, big-endian, signed
-                int obj_yPos = reader.ReadSByte() << 8;
-                obj_yPos |= reader.ReadByte();
-
                 // Add object
-                objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
+                objects.Add(new Object(reader));
             }
             reader.Close();
         }
@@ -353,28 +298,6 @@ namespace RSDKvRS
             if (num_of_objects > 65535)
                 throw new Exception("Cannot save as Retro-Sonic map. Number of objects > 65535");
 
-            for (int n = 0; n < num_of_objects; n++)
-            {
-                Object obj = objects[n];
-
-                int obj_type = obj.getType();
-                int obj_subtype = obj.getSubtype();
-                int obj_xPos = obj.getXPos();
-                int obj_yPos = obj.getYPos();
-
-                if (obj_type > 255)
-                    throw new Exception("Cannot save as Retro-Sonic map. Object type > 255");
-
-                if (obj_subtype > 255)
-                    throw new Exception("Cannot save as Retro-Sonic map. Object subtype > 255");
-
-                if (obj_xPos < -32768 || obj_xPos > 32767)
-                    throw new Exception("Cannot save as Retro-Sonic. Object X Position can't fit in 16-bits");
-
-                if (obj_yPos < -32768 || obj_yPos > 32767)
-                    throw new Exception("Cannot save as Retro-Sonic. Object Y Position can't fit in 16-bits");
-            }
-
             // Save zone name
             writer.WriteRSDKString(Title);
 
@@ -395,19 +318,7 @@ namespace RSDKvRS
             {
                 Object obj = objects[n];
 
-                int obj_type = obj.type;
-                int obj_subtype = obj.subtype;
-                int obj_xPos = obj.xPos;
-                int obj_yPos = obj.yPos;
-
-                writer.Write((byte)obj_type);
-                writer.Write((byte)obj_subtype);
-
-                writer.Write((byte)(obj_xPos >> 8));
-                writer.Write((byte)(obj_xPos & 0xFF));
-
-                writer.Write((byte)(obj_yPos >> 8));
-                writer.Write((byte)(obj_yPos & 0xFF));
+                obj.Write(writer);
             }
             writer.Close();
         }

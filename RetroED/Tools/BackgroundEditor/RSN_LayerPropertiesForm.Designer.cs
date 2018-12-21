@@ -71,6 +71,7 @@
             // 
             // CVSPDNUD
             // 
+            this.CVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.CVSPDNUD.Location = new System.Drawing.Point(182, 121);
             this.CVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -98,6 +99,7 @@
             // 
             // RVSPDNUD
             // 
+            this.RVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RVSPDNUD.Location = new System.Drawing.Point(182, 92);
             this.RVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -116,6 +118,7 @@
             // 
             // DeformNUD
             // 
+            this.DeformNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.DeformNUD.Location = new System.Drawing.Point(182, 65);
             this.DeformNUD.Maximum = new decimal(new int[] {
             255,
@@ -152,6 +155,7 @@
             // 
             // MapHeightNUD
             // 
+            this.MapHeightNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.MapHeightNUD.Location = new System.Drawing.Point(182, 36);
             this.MapHeightNUD.Maximum = new decimal(new int[] {
             255,
@@ -170,6 +174,7 @@
             // 
             // MapWidthNUD
             // 
+            this.MapWidthNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.MapWidthNUD.Location = new System.Drawing.Point(182, 9);
             this.MapWidthNUD.Maximum = new decimal(new int[] {
             255,
@@ -230,6 +235,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(371, 187);
             this.Controls.Add(this.panel1);
             this.Name = "RSN_LayerPropertiesForm";

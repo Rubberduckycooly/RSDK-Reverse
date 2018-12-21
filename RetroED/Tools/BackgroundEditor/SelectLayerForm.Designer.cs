@@ -59,6 +59,7 @@
             // 
             // LayerList
             // 
+            this.LayerList.BackColor = System.Drawing.SystemColors.Control;
             this.LayerList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.LayerList.FormattingEnabled = true;
             this.LayerList.Location = new System.Drawing.Point(27, 83);
@@ -82,7 +83,7 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(327, 247);
             this.Controls.Add(this.SelLayerLabel);
             this.Controls.Add(this.LayerList);

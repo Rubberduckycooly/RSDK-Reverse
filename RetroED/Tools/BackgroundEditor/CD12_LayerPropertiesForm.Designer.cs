@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.Unknown2NUD = new System.Windows.Forms.NumericUpDown();
+            this.Unknown1NUD = new System.Windows.Forms.NumericUpDown();
+            this.Unknown2Label = new System.Windows.Forms.Label();
+            this.Unknown1Label = new System.Windows.Forms.Label();
             this.RelativeVSPDNUD = new System.Windows.Forms.NumericUpDown();
             this.RelativeVSPDLabel = new System.Windows.Forms.Label();
             this.ConstantVSPDNUD = new System.Windows.Forms.NumericUpDown();
@@ -39,17 +43,13 @@
             this.MapWidthLabel = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
-            this.Unknown2NUD = new System.Windows.Forms.NumericUpDown();
-            this.Unknown1NUD = new System.Windows.Forms.NumericUpDown();
-            this.Unknown2Label = new System.Windows.Forms.Label();
-            this.Unknown1Label = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown2NUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RelativeVSPDNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ConstantVSPDNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown2NUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -74,8 +74,65 @@
             this.panel1.Size = new System.Drawing.Size(371, 243);
             this.panel1.TabIndex = 0;
             // 
+            // Unknown2NUD
+            // 
+            this.Unknown2NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Unknown2NUD.Location = new System.Drawing.Point(182, 148);
+            this.Unknown2NUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.Unknown2NUD.Name = "Unknown2NUD";
+            this.Unknown2NUD.Size = new System.Drawing.Size(153, 22);
+            this.Unknown2NUD.TabIndex = 21;
+            this.Unknown2NUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Unknown2NUD.ValueChanged += new System.EventHandler(this.Unknown2NUD_ValueChanged_1);
+            // 
+            // Unknown1NUD
+            // 
+            this.Unknown1NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Unknown1NUD.Location = new System.Drawing.Point(182, 121);
+            this.Unknown1NUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.Unknown1NUD.Name = "Unknown1NUD";
+            this.Unknown1NUD.Size = new System.Drawing.Size(153, 22);
+            this.Unknown1NUD.TabIndex = 20;
+            this.Unknown1NUD.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.Unknown1NUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged_1);
+            // 
+            // Unknown2Label
+            // 
+            this.Unknown2Label.AutoSize = true;
+            this.Unknown2Label.Location = new System.Drawing.Point(12, 150);
+            this.Unknown2Label.Name = "Unknown2Label";
+            this.Unknown2Label.Size = new System.Drawing.Size(84, 17);
+            this.Unknown2Label.TabIndex = 19;
+            this.Unknown2Label.Text = "Behaviour?:";
+            // 
+            // Unknown1Label
+            // 
+            this.Unknown1Label.AutoSize = true;
+            this.Unknown1Label.Location = new System.Drawing.Point(12, 121);
+            this.Unknown1Label.Name = "Unknown1Label";
+            this.Unknown1Label.Size = new System.Drawing.Size(78, 17);
+            this.Unknown1Label.TabIndex = 18;
+            this.Unknown1Label.Text = "Unknown1:";
+            // 
             // RelativeVSPDNUD
             // 
+            this.RelativeVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RelativeVSPDNUD.Location = new System.Drawing.Point(182, 93);
             this.RelativeVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -103,6 +160,7 @@
             // 
             // ConstantVSPDNUD
             // 
+            this.ConstantVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ConstantVSPDNUD.Location = new System.Drawing.Point(182, 64);
             this.ConstantVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -130,6 +188,7 @@
             // 
             // MapHeightNUD
             // 
+            this.MapHeightNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.MapHeightNUD.Location = new System.Drawing.Point(182, 36);
             this.MapHeightNUD.Maximum = new decimal(new int[] {
             255,
@@ -148,6 +207,7 @@
             // 
             // MapWidthNUD
             // 
+            this.MapWidthNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.MapWidthNUD.Location = new System.Drawing.Point(182, 9);
             this.MapWidthNUD.Maximum = new decimal(new int[] {
             255,
@@ -204,76 +264,23 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // Unknown2NUD
-            // 
-            this.Unknown2NUD.Location = new System.Drawing.Point(182, 148);
-            this.Unknown2NUD.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.Unknown2NUD.Name = "Unknown2NUD";
-            this.Unknown2NUD.Size = new System.Drawing.Size(153, 22);
-            this.Unknown2NUD.TabIndex = 21;
-            this.Unknown2NUD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.Unknown2NUD.ValueChanged += new System.EventHandler(this.Unknown2NUD_ValueChanged_1);
-            // 
-            // Unknown1NUD
-            // 
-            this.Unknown1NUD.Location = new System.Drawing.Point(182, 121);
-            this.Unknown1NUD.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.Unknown1NUD.Name = "Unknown1NUD";
-            this.Unknown1NUD.Size = new System.Drawing.Size(153, 22);
-            this.Unknown1NUD.TabIndex = 20;
-            this.Unknown1NUD.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.Unknown1NUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged_1);
-            // 
-            // Unknown2Label
-            // 
-            this.Unknown2Label.AutoSize = true;
-            this.Unknown2Label.Location = new System.Drawing.Point(12, 150);
-            this.Unknown2Label.Name = "Unknown2Label";
-            this.Unknown2Label.Size = new System.Drawing.Size(84, 17);
-            this.Unknown2Label.TabIndex = 19;
-            this.Unknown2Label.Text = "Behaviour?:";
-            // 
-            // Unknown1Label
-            // 
-            this.Unknown1Label.AutoSize = true;
-            this.Unknown1Label.Location = new System.Drawing.Point(12, 121);
-            this.Unknown1Label.Name = "Unknown1Label";
-            this.Unknown1Label.Size = new System.Drawing.Size(78, 17);
-            this.Unknown1Label.TabIndex = 18;
-            this.Unknown1Label.Text = "Unknown1:";
-            // 
             // CD12_LayerPropertiesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(371, 243);
             this.Controls.Add(this.panel1);
             this.Name = "CD12_LayerPropertiesForm";
             this.Text = "Layer Properties";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown2NUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RelativeVSPDNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ConstantVSPDNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapHeightNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MapWidthNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown2NUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).EndInit();
             this.ResumeLayout(false);
 
         }

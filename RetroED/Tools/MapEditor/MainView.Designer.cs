@@ -58,17 +58,6 @@
             this.PlaceTileButton = new System.Windows.Forms.ToolStripButton();
             this.PlaceObjectButton = new System.Windows.Forms.ToolStripButton();
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_Open = new System.Windows.Forms.MenuItem();
-            this.MenuItem_Save = new System.Windows.Forms.MenuItem();
-            this.MenuItem_SaveAs = new System.Windows.Forms.MenuItem();
-            this.menuItem8 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_FullImgExp = new System.Windows.Forms.MenuItem();
-            this.MenuItem_MapImgExp = new System.Windows.Forms.MenuItem();
-            this.MenuItem_ObjImgExp = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem10 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_Exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapLayer = new System.Windows.Forms.MenuItem();
             this.MenuItem_Objects = new System.Windows.Forms.MenuItem();
@@ -89,6 +78,18 @@
             this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.MenuItem_About = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Open = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Save = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SaveAs = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_FullImgExp = new System.Windows.Forms.MenuItem();
+            this.MenuItem_MapImgExp = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ObjImgExp = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.menuItem10 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Exit = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,7 +100,7 @@
             this.dpMain.Location = new System.Drawing.Point(0, 0);
             this.dpMain.Margin = new System.Windows.Forms.Padding(4);
             this.dpMain.Name = "dpMain";
-            this.dpMain.Size = new System.Drawing.Size(651, 420);
+            this.dpMain.Size = new System.Drawing.Size(651, 394);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -264,86 +265,6 @@
             this.menuItem3,
             this.menuItem4});
             // 
-            // menuItem1
-            // 
-            this.menuItem1.Index = 0;
-            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.MenuItem_Open,
-            this.MenuItem_Save,
-            this.MenuItem_SaveAs,
-            this.menuItem8,
-            this.MenuItem_FullImgExp,
-            this.MenuItem_MapImgExp,
-            this.MenuItem_ObjImgExp,
-            this.menuItem5,
-            this.menuItem10,
-            this.MenuItem_Exit});
-            this.menuItem1.Text = "File";
-            // 
-            // MenuItem_Open
-            // 
-            this.MenuItem_Open.Index = 0;
-            this.MenuItem_Open.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
-            this.MenuItem_Open.Text = "&Open";
-            this.MenuItem_Open.Click += new System.EventHandler(this.MenuItem_Open_Click);
-            // 
-            // MenuItem_Save
-            // 
-            this.MenuItem_Save.Index = 1;
-            this.MenuItem_Save.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
-            this.MenuItem_Save.Text = "&Save";
-            this.MenuItem_Save.Click += new System.EventHandler(this.MenuItem_Save_Click);
-            // 
-            // MenuItem_SaveAs
-            // 
-            this.MenuItem_SaveAs.Index = 2;
-            this.MenuItem_SaveAs.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftS;
-            this.MenuItem_SaveAs.Text = "Save &As";
-            this.MenuItem_SaveAs.Click += new System.EventHandler(this.MenuItem_SaveAs_Click);
-            // 
-            // menuItem8
-            // 
-            this.menuItem8.Index = 3;
-            this.menuItem8.Text = "-";
-            // 
-            // MenuItem_FullImgExp
-            // 
-            this.MenuItem_FullImgExp.Index = 4;
-            this.MenuItem_FullImgExp.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
-            this.MenuItem_FullImgExp.Text = "Export Full &Image";
-            this.MenuItem_FullImgExp.Click += new System.EventHandler(this.MenuItem_ExportFullImage_Click);
-            // 
-            // MenuItem_MapImgExp
-            // 
-            this.MenuItem_MapImgExp.Index = 5;
-            this.MenuItem_MapImgExp.Text = "Export Map Layout As Image";
-            this.MenuItem_MapImgExp.Click += new System.EventHandler(this.MenuItem_ExportMapImage_Click);
-            // 
-            // MenuItem_ObjImgExp
-            // 
-            this.MenuItem_ObjImgExp.Index = 6;
-            this.MenuItem_ObjImgExp.Text = "Export Obj Layout as Image";
-            this.MenuItem_ObjImgExp.Click += new System.EventHandler(this.MenuItem_ExportObjImage_Click);
-            // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 7;
-            this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
-            this.menuItem5.Text = "Select Data Folder";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
-            // 
-            // menuItem10
-            // 
-            this.menuItem10.Index = 8;
-            this.menuItem10.Text = "-";
-            // 
-            // MenuItem_Exit
-            // 
-            this.MenuItem_Exit.Index = 9;
-            this.MenuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
-            this.MenuItem_Exit.Text = "Exit";
-            this.MenuItem_Exit.Click += new System.EventHandler(this.MenuItem_Exit_Click);
-            // 
             // menuItem2
             // 
             this.menuItem2.Index = 1;
@@ -479,11 +400,98 @@
             this.MenuItem_About.Text = "About Retro Engine Map Editor";
             this.MenuItem_About.Click += new System.EventHandler(this.MenuItem_About_Click);
             // 
+            // MenuItem_Open
+            // 
+            this.MenuItem_Open.Index = 0;
+            this.MenuItem_Open.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
+            this.MenuItem_Open.Text = "&Open";
+            this.MenuItem_Open.Click += new System.EventHandler(this.MenuItem_Open_Click);
+            // 
+            // MenuItem_Save
+            // 
+            this.MenuItem_Save.Index = 1;
+            this.MenuItem_Save.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
+            this.MenuItem_Save.Text = "&Save";
+            this.MenuItem_Save.Click += new System.EventHandler(this.MenuItem_Save_Click);
+            // 
+            // MenuItem_SaveAs
+            // 
+            this.MenuItem_SaveAs.Index = 2;
+            this.MenuItem_SaveAs.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftS;
+            this.MenuItem_SaveAs.Text = "Save &As";
+            this.MenuItem_SaveAs.Click += new System.EventHandler(this.MenuItem_SaveAs_Click);
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 3;
+            this.menuItem8.Text = "-";
+            // 
+            // MenuItem_FullImgExp
+            // 
+            this.MenuItem_FullImgExp.Index = 4;
+            this.MenuItem_FullImgExp.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
+            this.MenuItem_FullImgExp.Text = "Export Full &Image";
+            this.MenuItem_FullImgExp.Click += new System.EventHandler(this.MenuItem_ExportFullImage_Click);
+            // 
+            // MenuItem_MapImgExp
+            // 
+            this.MenuItem_MapImgExp.Index = 5;
+            this.MenuItem_MapImgExp.Text = "Export Map Layout As Image";
+            this.MenuItem_MapImgExp.Click += new System.EventHandler(this.MenuItem_ExportMapImage_Click);
+            // 
+            // MenuItem_ObjImgExp
+            // 
+            this.MenuItem_ObjImgExp.Index = 6;
+            this.MenuItem_ObjImgExp.Text = "Export Obj Layout as Image";
+            this.MenuItem_ObjImgExp.Click += new System.EventHandler(this.MenuItem_ExportObjImage_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 7;
+            this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
+            this.menuItem5.Text = "Select Data Folder";
+            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
+            // 
+            // menuItem10
+            // 
+            this.menuItem10.Index = 8;
+            this.menuItem10.Text = "-";
+            // 
+            // MenuItem_Exit
+            // 
+            this.MenuItem_Exit.Index = 9;
+            this.MenuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
+            this.MenuItem_Exit.Text = "Exit";
+            this.MenuItem_Exit.Click += new System.EventHandler(this.MenuItem_Exit_Click);
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_Open,
+            this.MenuItem_Save,
+            this.MenuItem_SaveAs,
+            this.menuItem8,
+            this.MenuItem_FullImgExp,
+            this.MenuItem_MapImgExp,
+            this.MenuItem_ObjImgExp,
+            this.menuItem5,
+            this.menuItem10,
+            this.MenuItem_Exit});
+            this.menuItem1.Text = "File";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 420);
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.ClientSize = new System.Drawing.Size(651, 394);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dpMain);
             this.DoubleBuffered = true;
@@ -513,14 +521,6 @@
         private System.Windows.Forms.ToolStripButton PlaceTileButton;
         private System.Windows.Forms.ToolStripButton PlaceObjectButton;
         private System.Windows.Forms.MainMenu mainMenu1;
-        private System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem MenuItem_Open;
-        private System.Windows.Forms.MenuItem MenuItem_Save;
-        private System.Windows.Forms.MenuItem MenuItem_SaveAs;
-        private System.Windows.Forms.MenuItem menuItem8;
-        private System.Windows.Forms.MenuItem MenuItem_FullImgExp;
-        private System.Windows.Forms.MenuItem menuItem10;
-        private System.Windows.Forms.MenuItem MenuItem_Exit;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MenuItem menuItem4;
@@ -539,11 +539,20 @@
         private System.Windows.Forms.MenuItem MenuItem_ShowGrid;
         private System.Windows.Forms.MenuItem MenuItem_About;
         private System.Windows.Forms.MenuItem MenuItem_AddObjList;
-        private System.Windows.Forms.MenuItem menuItem5;
-        private System.Windows.Forms.MenuItem MenuItem_MapImgExp;
-        private System.Windows.Forms.MenuItem MenuItem_ObjImgExp;
         private System.Windows.Forms.MenuItem MenuItem_CollisionMasksLyrB;
         private System.Windows.Forms.MenuItem MenuItem_LoadObjListFromData;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem MenuItem_Open;
+        private System.Windows.Forms.MenuItem MenuItem_Save;
+        private System.Windows.Forms.MenuItem MenuItem_SaveAs;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem MenuItem_FullImgExp;
+        private System.Windows.Forms.MenuItem MenuItem_MapImgExp;
+        private System.Windows.Forms.MenuItem MenuItem_ObjImgExp;
+        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem menuItem10;
+        private System.Windows.Forms.MenuItem MenuItem_Exit;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 

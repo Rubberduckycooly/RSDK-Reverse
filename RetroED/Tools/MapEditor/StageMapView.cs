@@ -67,19 +67,19 @@ namespace RetroED.Tools.MapEditor
         #region RSDKv1
         public RSDKv1.Scene _RSDK2Scene;
         public RSDKv1.Tiles128x128 _RSDK2Chunks;
-        public RSDKv1.CollisionMask _RSDK2CollisionMask;
+        public RSDKv1.Tileconfig _RSDK2CollisionMask;
         #endregion
 
         #region RSDKv1
         public RSDKv2.Scene _RSDK3Scene;
         public RSDKv2.Tiles128x128 _RSDK3Chunks;
-        public RSDKv2.CollisionMask _RSDK3CollisionMask;
+        public RSDKv2.Tileconfig _RSDK3CollisionMask;
         #endregion
 
         #region RSDKvB
         public RSDKvB.Scene _RSDK4Scene;
         public RSDKvB.Tiles128x128 _RSDK4Chunks;
-        public RSDKvB.CollisionMask _RSDK4CollisionMask;
+        public RSDKvB.Tileconfig _RSDK4CollisionMask;
         #endregion
 
         public StageMapView()
@@ -109,7 +109,7 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX4; x < endX4; x++)
                         {
-                            if (y < _RSDK4Scene.MapLayout.Length && x < _RSDK4Scene.MapLayout[y].Length && _RSDK4Scene.MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                            if (y < _RSDK4Scene.MapLayout.Length && x < _RSDK4Scene.MapLayout[y].Length && _RSDK4Scene.MapLayout[y][x] < _RSDK4Chunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
@@ -349,7 +349,7 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX3; x < endX3; x++)
                         {
-                            if (y < _RSDK3Scene.MapLayout.Length && x < _RSDK3Scene.MapLayout[y].Length && _RSDK3Scene.MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
+                            if (y < _RSDK3Scene.MapLayout.Length && x < _RSDK3Scene.MapLayout[y].Length && _RSDK3Scene.MapLayout[y][x] < _RSDK3Chunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
@@ -589,7 +589,7 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX2; x < endX2; x++)
                         {
-                            if (y < _RSDK2Scene.MapLayout.Length && x < _RSDK2Scene.MapLayout[y].Length && _RSDK2Scene.MapLayout[y][x] < _RSDK2Chunks.BlockList.Count)
+                            if (y < _RSDK2Scene.MapLayout.Length && x < _RSDK2Scene.MapLayout[y].Length && _RSDK2Scene.MapLayout[y][x] < _RSDK2Chunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
@@ -836,7 +836,7 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX1; x < endX1; x++)
                         {
-                            if (y < _RSDK1Scene.MapLayout.Length && x < _RSDK1Scene.MapLayout[y].Length && _RSDK1Scene.MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
+                            if (y < _RSDK1Scene.MapLayout.Length && x < _RSDK1Scene.MapLayout[y].Length && _RSDK1Scene.MapLayout[y][x] < _RSDK1Chunks.BlockList.Length)
                             {
                                 // Draw the map, line by line!
 
@@ -1030,7 +1030,7 @@ namespace RetroED.Tools.MapEditor
             Chunks.Clear();
             if (loadedRSDKver == 0)
             {
-                for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK4Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
@@ -1039,7 +1039,7 @@ namespace RetroED.Tools.MapEditor
             }
             if (loadedRSDKver == 1)
             {
-                for (int i = 0; i < _RSDK3Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK3Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
@@ -1048,7 +1048,7 @@ namespace RetroED.Tools.MapEditor
             }
             if (loadedRSDKver == 2)
             {
-                for (int i = 0; i < _RSDK2Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK2Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
@@ -1057,7 +1057,7 @@ namespace RetroED.Tools.MapEditor
             }
             if (loadedRSDKver == 3)
             {
-                for (int i = 0; i < _RSDK1Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK1Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK1Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 0, 0, 0)); //add transparent colour!
@@ -1131,7 +1131,7 @@ namespace RetroED.Tools.MapEditor
                                     DrawScene();
                                     break;
                                 case 0:
-                                    RSDKvB.Object Obj4 = new RSDKvB.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
+                                    RSDKvB.Object Obj4 = new RSDKvB.Object((byte)frm.Type, (byte)frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
                                     _RSDK4Scene.objects.Add(Obj4); //Add it to the map!
                                     _ChunkView.RefreshObjList(); //Update the list!
                                     DrawScene();

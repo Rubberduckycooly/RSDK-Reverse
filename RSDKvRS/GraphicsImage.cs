@@ -8,7 +8,13 @@ namespace RSDKvRS
 {
     public class gfx
     {
-        
+        public class gfxPalette
+        {
+            public byte[] r = new byte[256];
+            public byte[] g = new byte[256];
+            public byte[] b = new byte[256];
+        }
+
         public Bitmap gfxImage;
         public gfxPalette GFXpal;
         int width;
@@ -269,12 +275,4 @@ namespace RSDKvRS
 	}
 
     }
-
-    public class gfxPalette
-    {
-        public byte[] r = new byte[256];
-        public byte[] g = new byte[256];
-        public byte[] b = new byte[256];
-    }
-
 }

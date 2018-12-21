@@ -8,71 +8,60 @@ namespace RSDKv1
 {
     public class GameConfig
     {
-        public string GameWindowText;
-        public string DataString;
-        public string GameDescriptionText;
-
-
-        public List<string> ScriptFilepaths = new List<string>();
-        public List<WAVConfiguration> SoundFX = new List<WAVConfiguration>();
-        public List<GlobalVariables> globalVariables = new List<GlobalVariables>();
-        public List<PlayerData> playerData = new List<PlayerData>();
-        public List<SceneGroup> SceneCategories = new List<SceneGroup>();
-
-        public class SceneInfo
+        public class Category
         {
-            public byte StageCount;
-            public string SceneFolder;
-            public string Zone;
-            public string Name;
-
-            internal SceneInfo()
+            public class SceneInfo
             {
-                SceneFolder = "";
-                Zone = "";
-                Name = "";
-                StageCount = 0;
+                public byte StageCount;
+                public string SceneFolder = "Folder";
+                public string ActID = "1";
+                public string Name = "Scene";
+
+                internal SceneInfo()
+                {
+                    SceneFolder = "";
+                    ActID = "";
+                    Name = "";
+                    StageCount = 0;
+                }
+
+                internal SceneInfo(Reader reader)
+                {
+                    SceneFolder = reader.ReadRSDKString();
+                    ActID = reader.ReadRSDKString();
+                    Name = reader.ReadRSDKString();
+                    StageCount = reader.ReadByte();
+                    Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder);
+                }
+
+                internal void Write(Writer writer)
+                {
+                    writer.WriteRSDKString(SceneFolder);
+                    writer.WriteRSDKString(ActID);
+                    writer.WriteRSDKString(Name);
+                    writer.Write(StageCount);
+                }
             }
 
-            internal SceneInfo(Reader reader)
-            {
-                SceneFolder = reader.ReadRSDKString();
-                Zone = reader.ReadRSDKString();
-                Name = reader.ReadRSDKString();
-                StageCount = reader.ReadByte();
-                Console.WriteLine("Name = " + Name + " ,Zone = " + Zone + " ,SceneFolder = " + SceneFolder);
-            }
-
-            internal void Write(Writer writer)
-            {
-                writer.WriteRSDKString(SceneFolder);
-                writer.WriteRSDKString(Zone);
-                writer.WriteRSDKString(Name);
-                writer.Write(StageCount);
-            }
-        }
-
-        public class SceneGroup
-        {
             public byte SceneCount;
             public List<SceneInfo> Scenes = new List<SceneInfo>();
 
-            public SceneGroup()
+            public Category()
             {
                 Scenes = new List<SceneInfo>();
             }
 
-            public SceneGroup(string filename) : this(new Reader(filename))
+            public Category(string filename) : this(new Reader(filename))
             {
 
             }
 
-            public SceneGroup(System.IO.Stream stream) : this(new Reader(stream))
+            public Category(System.IO.Stream stream) : this(new Reader(stream))
             {
 
             }
 
-            internal SceneGroup(Reader reader)
+            internal Category(Reader reader)
             {
                 SceneCount = reader.ReadByte();
 
@@ -106,7 +95,7 @@ namespace RSDKv1
 
         }
 
-        public class GlobalVariables
+        public class GlobalVariable
         {
 
             string Name;
@@ -115,7 +104,7 @@ namespace RSDKv1
             byte UnknownValue3;
             byte UnknownValue4;
 
-            public GlobalVariables()
+            public GlobalVariable()
             {
                 Name = "";
                 UnknownValue1 = 0;
@@ -124,7 +113,7 @@ namespace RSDKv1
                 UnknownValue4 = 0;
             }
 
-            internal GlobalVariables(Reader reader)
+            internal GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
                 Console.WriteLine(Name);
@@ -160,9 +149,9 @@ namespace RSDKv1
 
             public PlayerData(Reader reader)
             {
-                    PlayerAnimLocation = reader.ReadRSDKString();
-                    PlayerScriptLocation = reader.ReadRSDKString();
-                    PlayerName = reader.ReadRSDKString();
+                PlayerAnimLocation = reader.ReadRSDKString();
+                PlayerScriptLocation = reader.ReadRSDKString();
+                PlayerName = reader.ReadRSDKString();
             }
 
             public void Write(Writer writer)
@@ -173,6 +162,16 @@ namespace RSDKv1
             }
 
         }
+
+        public string GameWindowText;
+        public string DataFileName;
+        public string GameDescriptionText;
+
+        public List<string> ScriptFilepaths = new List<string>();
+        public List<string> SoundFX = new List<string>();
+        public List<GlobalVariable> GlobalVariables = new List<GlobalVariable>();
+        public List<PlayerData> playerData = new List<PlayerData>();
+        public List<Category> Categories = new List<Category>();
 
         public GameConfig(string filename) : this(new Reader(filename))
         {
@@ -186,12 +185,12 @@ namespace RSDKv1
         private GameConfig(Reader reader)
         {
             GameWindowText = reader.ReadRSDKString();
-            DataString = reader.ReadRSDKString();
+            DataFileName = reader.ReadRSDKString();
             GameDescriptionText = reader.ReadRSDKString();
 
-            Console.WriteLine(GameWindowText);
-            Console.WriteLine(DataString);
-            Console.WriteLine(GameDescriptionText);
+            Console.WriteLine("Game Title: " + GameWindowText);
+            Console.WriteLine("DataFile Name: " + DataFileName);
+            Console.WriteLine("Game Description: " + GameDescriptionText);
 
             this.ReadObjectsNames(reader);
 
@@ -199,7 +198,7 @@ namespace RSDKv1
 
             for (int i = 0; i < Globals_Amount; i++)
             {
-                globalVariables.Add(new GlobalVariables(reader));
+                GlobalVariables.Add(new GlobalVariable(reader));
             }
 
             this.ReadWAVConfiguration(reader);
@@ -211,10 +210,10 @@ namespace RSDKv1
                 playerData.Add(new PlayerData(reader));
             }
 
-            SceneCategories.Add(new SceneGroup(reader)); //Menus
-            SceneCategories.Add(new SceneGroup(reader)); //Stages              
-            SceneCategories.Add(new SceneGroup(reader)); //Special Stages
-            SceneCategories.Add(new SceneGroup(reader)); //Bonus Stages
+            Categories.Add(new Category(reader)); //Menus
+            Categories.Add(new Category(reader)); //Stages              
+            Categories.Add(new Category(reader)); //Special Stages
+            Categories.Add(new Category(reader)); //Bonus Stages
 
             reader.Close();
 
@@ -235,16 +234,16 @@ namespace RSDKv1
         internal void Write(Writer writer)
         {
             writer.WriteRSDKString(GameWindowText);
-            writer.WriteRSDKString(DataString);
+            writer.WriteRSDKString(DataFileName);
             writer.WriteRSDKString(GameDescriptionText);
 
             this.WriteObjectsNames(writer);
 
-            writer.Write((byte)globalVariables.Count);
+            writer.Write((byte)GlobalVariables.Count);
 
-            for (int i = 0; i < globalVariables.Count; i++)
+            for (int i = 0; i < GlobalVariables.Count; i++)
             {
-                globalVariables[i].Write(writer);
+                GlobalVariables[i].Write(writer);
             }
 
             this.WriteWAVConfiguration(writer);
@@ -258,7 +257,7 @@ namespace RSDKv1
 
             for (int i = 0; i < 3; i++)
             {
-                SceneCategories[i].Write(writer);
+                Categories[i].Write(writer);
             }
 
             writer.Close();
@@ -284,14 +283,14 @@ namespace RSDKv1
             byte wavs_count = reader.ReadByte();
 
             for (int i = 0; i < wavs_count; ++i)
-            { SoundFX.Add(new WAVConfiguration(reader)); }
+            { SoundFX.Add(reader.ReadString()); }
         }
 
         internal void WriteWAVConfiguration(Writer writer)
         {
             writer.Write((byte)SoundFX.Count);
-            foreach (WAVConfiguration wav in SoundFX)
-                wav.Write(writer);
+            foreach (string wav in SoundFX)
+                writer.Write(wav);
         }
 
     }

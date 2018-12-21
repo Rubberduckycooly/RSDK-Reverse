@@ -6,7 +6,6 @@ using System.Drawing;
 
 namespace RSDKvRS
 {
-    /* TileConfig Equivelent */
     public class Tileconfig
     {
         public const int TILES_COUNT = 0x400; //1024
@@ -16,6 +15,10 @@ namespace RSDKvRS
         public Tileconfig()
         {
             Collision = new CollisionMask[TILES_COUNT];
+            for (int i = 0; i < Collision.Length; i++)
+            {
+                Collision[i] = new CollisionMask();
+            }
         }
 
         public Tileconfig(string filename, bool DCver) : this(new Reader(filename), DCver)
@@ -90,6 +93,10 @@ namespace RSDKvRS
 
             public byte[] Collision2Down = new byte[16]; //Collision Values for Path B (Down)
             public byte[] Collision2DownSolid = new byte[16]; //Collision Solidity for Path B (Down)
+
+            public CollisionMask(bool DCver = false)
+            {
+            }
 
             public CollisionMask(string filename, bool DCver) : this(new Reader(filename), DCver)
             {

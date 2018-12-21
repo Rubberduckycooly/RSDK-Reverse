@@ -86,6 +86,14 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord.cs" />
+    <Compile Include="Extensions\Map Editing Tools\FolderSelectDialog.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Reflector.cs" />
+    <Compile Include="Extensions\Map Editing Tools\SceneSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Extensions\Map Editing Tools\SceneSelect.Designer.cs">
+      <DependentUpon>SceneSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -94,6 +102,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SelectRSDKForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectRSDKForm.Designer.cs">
+      <DependentUpon>SelectRSDKForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\BackgroundEditor\CD12_LayerPropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -170,6 +184,18 @@
     <Compile Include="Tools\ChunkEditor\TileSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKvBGameconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKvBGameconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\RSDKCollisionEditor\Classic\Angles.cs" />
     <Compile Include="Tools\RSDKCollisionEditor\Classic\CollisionArray.cs" />
     <Compile Include="Tools\RSDKCollisionEditor\Classic\StageCollisions.cs" />
@@ -213,12 +239,6 @@
     <Compile Include="Tools\GFXTool\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tools\BackgroundEditor\AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\BackgroundEditor\AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\BackgroundEditor\Extensions.cs" />
     <Compile Include="Tools\BackgroundEditor\MainView.cs">
       <SubType>Form</SubType>
@@ -252,12 +272,6 @@
     </Compile>
     <Compile Include="Tools\BackgroundEditor\TileSelector.cs">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Tools\MapEditor\AboutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\MapEditor\AboutForm.Designer.cs">
-      <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\MapEditor\Extensions.cs" />
     <Compile Include="Tools\MapEditor\MainView.cs">
@@ -418,8 +432,101 @@
     <Compile Include="Tools\RSDKUnpacker\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Tools\ScriptEditor\Mainform.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\ScriptEditor\Mainform.Designer.cs">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Annotation.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\AutoCSelectionEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\AutomaticFold.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\BeforeModificationEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\CaretStyle.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ChangeAnnotationEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\CharAddedEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Command.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\CopyFormat.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Document.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\DoubleClickEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\DwellEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\EdgeMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Eol.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FlagsEnumConverter.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FoldAction.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FoldDisplayText.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FoldFlags.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FoldLevelFlags.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\FontQuality.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\GapBuffer.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Helpers.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\HotspotClickEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IdleStyling.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ILoader.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndentView.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Indicator.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndicatorClickEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndicatorCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndicatorFlags.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndicatorReleaseEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\IndicatorStyle.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\InsertCheckEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Lexer.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Line.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\LineCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\LineEndType.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ListCompletionMethod.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Loader.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Margin.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarginClickEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarginCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarginCursor.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarginOptions.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarginType.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Marker.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarkerCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarkerHandle.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MarkerSymbol.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ModificationEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ModificationSource.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\MultiPaste.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\NativeMemoryStream.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\NativeMethods.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\NeedShownEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Order.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Phases.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\PopupMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ProjectionEqualityComparer.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\PropertyType.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Scintilla.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\ScintillaReader.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\SCNotificationEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\SearchFlags.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Selection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\SelectionCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Status.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Style.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\StyleCase.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\StyleCollection.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\StyleNeededEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\TabDrawMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Technology.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\Tuple.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\UpdateChange.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\UpdateUIEventArgs.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\VirtualSpace.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\WhitespaceMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapIndentMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapMode.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapVisualFlagLocation.cs" />
+    <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapVisualFlags.cs" />
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\Map Editing Tools\SceneSelect.resx">
+      <DependentUpon>SceneSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -434,6 +541,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="SelectRSDKForm.resx">
+      <DependentUpon>SelectRSDKForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\BackgroundEditor\CD12_LayerPropertiesForm.resx">
       <DependentUpon>CD12_LayerPropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -467,6 +577,12 @@
     <EmbeddedResource Include="Tools\ChunkEditor\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GameconfigEditors\RSDKvBGameconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\RSDKUnpacker\FileOptionsForm.resx">
       <DependentUpon>FileOptionsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -482,9 +598,6 @@
     <EmbeddedResource Include="Tools\GFXTool\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tools\BackgroundEditor\AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\BackgroundEditor\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
@@ -496,9 +609,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\BackgroundEditor\StageMapView.resx">
       <DependentUpon>StageMapView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\MapEditor\AboutForm.resx">
-      <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\MapEditor\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
@@ -536,6 +646,9 @@
     <EmbeddedResource Include="Tools\RSDKUnpacker\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\ScriptEditor\MainForm.resx">
+      <DependentUpon>Mainform.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -552,6 +665,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\file.ico" />
+    <None Include="Resources\folder.ico" />
     <Content Include="Retro_Engine_logo.ico" />
     <Content Include="Tools\BackgroundEditor\Resources.ico" />
     <None Include="Tools\MapEditor\OBJ.png" />
@@ -616,6 +731,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\AnimationEditor\" />
+    <Folder Include="Tools\GameconfigEditors\RSDKv1GameconfigEditor\" />
+    <Folder Include="Tools\GameconfigEditors\RSDKv2GameconfigEditor\" />
+    <Folder Include="Tools\StageconfigEditors\RSDKv1StageconfigEditor\" />
+    <Folder Include="Tools\StageconfigEditors\RSDKv2StageconfigEditor\" />
+    <Folder Include="Tools\StageconfigEditors\RSDKvBStageconfigEditor\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RSDKv1\RSDKv1.csproj">

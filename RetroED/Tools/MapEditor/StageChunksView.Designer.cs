@@ -32,9 +32,9 @@
             this.MousePosStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ChunksPage = new System.Windows.Forms.TabPage();
+            this.BlocksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.ObjectsPage = new System.Windows.Forms.TabPage();
             this.ObjectList = new System.Windows.Forms.ListBox();
-            this.BlocksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.statusStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.ChunksPage.SuspendLayout();
@@ -43,6 +43,7 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MousePosStatusLabel});
@@ -80,32 +81,9 @@
             this.ChunksPage.Text = "Chunks";
             this.ChunksPage.UseVisualStyleBackColor = true;
             // 
-            // ObjectsPage
-            // 
-            this.ObjectsPage.Controls.Add(this.ObjectList);
-            this.ObjectsPage.Location = new System.Drawing.Point(4, 26);
-            this.ObjectsPage.Name = "ObjectsPage";
-            this.ObjectsPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ObjectsPage.Size = new System.Drawing.Size(309, 326);
-            this.ObjectsPage.TabIndex = 1;
-            this.ObjectsPage.Text = "Objects";
-            this.ObjectsPage.UseVisualStyleBackColor = true;
-            // 
-            // ObjectList
-            // 
-            this.ObjectList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectList.FormattingEnabled = true;
-            this.ObjectList.ItemHeight = 17;
-            this.ObjectList.Location = new System.Drawing.Point(3, 3);
-            this.ObjectList.Name = "ObjectList";
-            this.ObjectList.Size = new System.Drawing.Size(303, 320);
-            this.ObjectList.TabIndex = 0;
-            this.ObjectList.SelectedIndexChanged += new System.EventHandler(this.ObjectList_SelectedIndexChanged);
-            this.ObjectList.DoubleClick += new System.EventHandler(this.ObjectList_DoubleClick);
-            // 
             // BlocksList
             // 
-            this.BlocksList.BackColor = System.Drawing.SystemColors.Window;
+            this.BlocksList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BlocksList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BlocksList.ImageHeight = 128;
             this.BlocksList.ImageSize = 128;
@@ -119,11 +97,35 @@
             this.BlocksList.TabIndex = 0;
             this.BlocksList.SelectedIndexChanged += new System.EventHandler(this.BlocksList_SelectedIndexChanged);
             // 
+            // ObjectsPage
+            // 
+            this.ObjectsPage.Controls.Add(this.ObjectList);
+            this.ObjectsPage.Location = new System.Drawing.Point(4, 26);
+            this.ObjectsPage.Name = "ObjectsPage";
+            this.ObjectsPage.Padding = new System.Windows.Forms.Padding(3);
+            this.ObjectsPage.Size = new System.Drawing.Size(309, 326);
+            this.ObjectsPage.TabIndex = 1;
+            this.ObjectsPage.Text = "Objects";
+            this.ObjectsPage.UseVisualStyleBackColor = true;
+            // 
+            // ObjectList
+            // 
+            this.ObjectList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ObjectList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ObjectList.FormattingEnabled = true;
+            this.ObjectList.ItemHeight = 17;
+            this.ObjectList.Location = new System.Drawing.Point(3, 3);
+            this.ObjectList.Name = "ObjectList";
+            this.ObjectList.Size = new System.Drawing.Size(303, 320);
+            this.ObjectList.TabIndex = 0;
+            this.ObjectList.SelectedIndexChanged += new System.EventHandler(this.ObjectList_SelectedIndexChanged);
+            this.ObjectList.DoubleClick += new System.EventHandler(this.ObjectList_DoubleClick);
+            // 
             // StageChunksView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(317, 381);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.statusStrip1);

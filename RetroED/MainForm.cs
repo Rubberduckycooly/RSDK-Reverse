@@ -18,10 +18,13 @@ namespace RetroED
         public SharpPresence.Discord.RichPresence rp = new SharpPresence.Discord.RichPresence();
         public SharpPresence.Discord.EventHandlers eh = new SharpPresence.Discord.EventHandlers();
 
+        public static MainForm Instance;
+
         public MainForm()
         {
             InitializeComponent();
             InitDiscord();
+            Instance = this;
         }
 
         public void InitDiscord()
@@ -309,6 +312,51 @@ namespace RetroED
             return frm;
         } //Opens the RSDK Unpacker (and returns a referece to it)
 
+        Tools.RetroSonicStageListEditor.MainForm OpenRSonicMdfEditor()
+        {
+            var frm = new Tools.RetroSonicStageListEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the Retro Sonic Stage List Editor (and returns a referece to it)
+
+        Tools.ScriptEditor.MainForm OpenScriptEditor()
+        {
+            var frm = new Tools.ScriptEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDK Script List Editor (and returns a referece to it)
+
+        Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm OpenGameconfigBEditor()
+        {
+            var frm = new Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDK Script List Editor (and returns a referece to it)
+
         private void MenuItem_RSDKUnpacker_Click(object sender, EventArgs e)
         {
             OpenRSDKUnpacker();
@@ -428,6 +476,21 @@ namespace RetroED
         private void MainForm_Close(object sender, FormClosingEventArgs e)
         {
             DisposeDiscord();
+        }
+
+        private void MenuItem_RSonicMdfEditor_Click(object sender, EventArgs e)
+        {
+            OpenRSonicMdfEditor();
+        }
+
+        private void MenuItem_ScriptEditor_Click(object sender, EventArgs e)
+        {
+            OpenScriptEditor();
+        }
+
+        private void menuItem16_Click(object sender, EventArgs e)
+        {
+            OpenGameconfigBEditor();
         }
     }
 }

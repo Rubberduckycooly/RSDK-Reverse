@@ -86,12 +86,12 @@
             this.ChunkDisplay = new System.Windows.Forms.Panel();
             this.TileListControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.TileZoomBar = new System.Windows.Forms.TrackBar();
+            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.ChunkZoomBar = new System.Windows.Forms.TrackBar();
-            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.StageChunksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -111,12 +111,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.GotoNUD)).BeginInit();
             this.TileListControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
             this.splitContainer3.Panel1.SuspendLayout();
             this.splitContainer3.Panel2.SuspendLayout();
             this.splitContainer3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TileZoomBar)).BeginInit();
+            this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
             this.splitContainer4.Panel1.SuspendLayout();
             this.splitContainer4.Panel2.SuspendLayout();
@@ -153,6 +153,7 @@
             // 
             // openToolStripMenuItem
             // 
+            this.openToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.openToolStripMenuItem.Text = "Open";
@@ -160,6 +161,7 @@
             // 
             // saveToolStripMenuItem
             // 
+            this.saveToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.saveToolStripMenuItem.Text = "Save";
@@ -167,6 +169,7 @@
             // 
             // saveAsToolStripMenuItem
             // 
+            this.saveAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.saveAsToolStripMenuItem.Text = "Save As...";
@@ -179,6 +182,7 @@
             // 
             // renderEachChunkAsAnImageToolStripMenuItem
             // 
+            this.renderEachChunkAsAnImageToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.renderEachChunkAsAnImageToolStripMenuItem.Name = "renderEachChunkAsAnImageToolStripMenuItem";
             this.renderEachChunkAsAnImageToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
             this.renderEachChunkAsAnImageToolStripMenuItem.Text = "Render Each Chunk as an Image";
@@ -197,29 +201,32 @@
             // 
             // showGridToolStripMenuItem
             // 
+            this.showGridToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.showGridToolStripMenuItem.Checked = true;
             this.showGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.showGridToolStripMenuItem.Text = "Show Grid";
             this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(180, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(213, 6);
             // 
             // refreshTilesToolStripMenuItem
             // 
+            this.refreshTilesToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.refreshTilesToolStripMenuItem.Name = "refreshTilesToolStripMenuItem";
-            this.refreshTilesToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.refreshTilesToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.refreshTilesToolStripMenuItem.Text = "Refresh Tiles";
             this.refreshTilesToolStripMenuItem.Click += new System.EventHandler(this.refreshTilesToolStripMenuItem_Click);
             // 
             // refreshChunksToolStripMenuItem
             // 
+            this.refreshChunksToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.refreshChunksToolStripMenuItem.Name = "refreshChunksToolStripMenuItem";
-            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(183, 26);
+            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.refreshChunksToolStripMenuItem.Text = "Refresh Chunks";
             this.refreshChunksToolStripMenuItem.Click += new System.EventHandler(this.refreshChunksToolStripMenuItem_Click);
             // 
@@ -235,6 +242,7 @@
             // 
             // autoSetToolStripMenuItem
             // 
+            this.autoSetToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.autoSetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.orientationToolStripMenuItem,
             this.visualPlaneToolStripMenuItem,
@@ -248,11 +256,12 @@
             this.setAutoCollisionBToolStripMenuItem,
             this.setAutoTile16x16ToolStripMenuItem});
             this.autoSetToolStripMenuItem.Name = "autoSetToolStripMenuItem";
-            this.autoSetToolStripMenuItem.Size = new System.Drawing.Size(189, 26);
+            this.autoSetToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.autoSetToolStripMenuItem.Text = "\"Auto-Set\"";
             // 
             // orientationToolStripMenuItem
             // 
+            this.orientationToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
             this.orientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.orientationToolStripMenuItem.Text = "Orientation";
@@ -260,6 +269,7 @@
             // 
             // visualPlaneToolStripMenuItem
             // 
+            this.visualPlaneToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.visualPlaneToolStripMenuItem.Name = "visualPlaneToolStripMenuItem";
             this.visualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.visualPlaneToolStripMenuItem.Text = "Visual Plane";
@@ -267,6 +277,7 @@
             // 
             // collisionAToolStripMenuItem
             // 
+            this.collisionAToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.collisionAToolStripMenuItem.Name = "collisionAToolStripMenuItem";
             this.collisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.collisionAToolStripMenuItem.Text = "Collision A";
@@ -274,6 +285,7 @@
             // 
             // collisionBToolStripMenuItem
             // 
+            this.collisionBToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.collisionBToolStripMenuItem.Name = "collisionBToolStripMenuItem";
             this.collisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.collisionBToolStripMenuItem.Text = "Collision B";
@@ -281,6 +293,7 @@
             // 
             // tile16x16ToolStripMenuItem
             // 
+            this.tile16x16ToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.tile16x16ToolStripMenuItem.Name = "tile16x16ToolStripMenuItem";
             this.tile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.tile16x16ToolStripMenuItem.Text = "Tile16x16";
@@ -293,6 +306,7 @@
             // 
             // setAutoOrientationToolStripMenuItem
             // 
+            this.setAutoOrientationToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.setAutoOrientationToolStripMenuItem.Name = "setAutoOrientationToolStripMenuItem";
             this.setAutoOrientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.setAutoOrientationToolStripMenuItem.Text = "Set Auto-Orientation";
@@ -300,6 +314,7 @@
             // 
             // setAutoVisualPlaneToolStripMenuItem
             // 
+            this.setAutoVisualPlaneToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.setAutoVisualPlaneToolStripMenuItem.Name = "setAutoVisualPlaneToolStripMenuItem";
             this.setAutoVisualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.setAutoVisualPlaneToolStripMenuItem.Text = "Set Auto-Visual Plane";
@@ -307,6 +322,7 @@
             // 
             // setAutoCollisionAToolStripMenuItem
             // 
+            this.setAutoCollisionAToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.setAutoCollisionAToolStripMenuItem.Name = "setAutoCollisionAToolStripMenuItem";
             this.setAutoCollisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.setAutoCollisionAToolStripMenuItem.Text = "Set Auto-Collision A";
@@ -314,6 +330,7 @@
             // 
             // setAutoCollisionBToolStripMenuItem
             // 
+            this.setAutoCollisionBToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.setAutoCollisionBToolStripMenuItem.Name = "setAutoCollisionBToolStripMenuItem";
             this.setAutoCollisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.setAutoCollisionBToolStripMenuItem.Text = "Set Auto-Collision B";
@@ -321,6 +338,7 @@
             // 
             // setAutoTile16x16ToolStripMenuItem
             // 
+            this.setAutoTile16x16ToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.setAutoTile16x16ToolStripMenuItem.Name = "setAutoTile16x16ToolStripMenuItem";
             this.setAutoTile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.setAutoTile16x16ToolStripMenuItem.Text = "Set Auto-Tile16x16";
@@ -329,12 +347,13 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(186, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(213, 6);
             // 
             // copyChunkToToolStripMenuItem
             // 
+            this.copyChunkToToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.copyChunkToToolStripMenuItem.Name = "copyChunkToToolStripMenuItem";
-            this.copyChunkToToolStripMenuItem.Size = new System.Drawing.Size(189, 26);
+            this.copyChunkToToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.copyChunkToToolStripMenuItem.Text = "Copy Chunk to...";
             this.copyChunkToToolStripMenuItem.Click += new System.EventHandler(this.copyChunkToToolStripMenuItem_Click);
             // 
@@ -736,18 +755,6 @@
             this.tabPage1.Text = "Tiles";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.splitContainer4);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage2.Size = new System.Drawing.Size(235, 396);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Chunks";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -780,6 +787,34 @@
             this.TileZoomBar.Value = 4;
             this.TileZoomBar.Scroll += new System.EventHandler(this.TileZoomBar_Scroll);
             // 
+            // StageTilesList
+            // 
+            this.StageTilesList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StageTilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StageTilesList.ImageHeight = 64;
+            this.StageTilesList.ImageSize = 64;
+            this.StageTilesList.ImageWidth = 64;
+            this.StageTilesList.Location = new System.Drawing.Point(0, 0);
+            this.StageTilesList.Margin = new System.Windows.Forms.Padding(5);
+            this.StageTilesList.Name = "StageTilesList";
+            this.StageTilesList.ScrollValue = 0;
+            this.StageTilesList.SelectedIndex = -1;
+            this.StageTilesList.Size = new System.Drawing.Size(229, 337);
+            this.StageTilesList.TabIndex = 3;
+            this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageTilesList_SelectedIndexChanged);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.splitContainer4);
+            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.tabPage2.Size = new System.Drawing.Size(235, 396);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Chunks";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // splitContainer4
             // 
             this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -811,22 +846,6 @@
             this.ChunkZoomBar.TabIndex = 1;
             this.ChunkZoomBar.Value = 2;
             this.ChunkZoomBar.Scroll += new System.EventHandler(this.ChunkZoomBar_Scroll);
-            // 
-            // StageTilesList
-            // 
-            this.StageTilesList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.StageTilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StageTilesList.ImageHeight = 64;
-            this.StageTilesList.ImageSize = 64;
-            this.StageTilesList.ImageWidth = 64;
-            this.StageTilesList.Location = new System.Drawing.Point(0, 0);
-            this.StageTilesList.Margin = new System.Windows.Forms.Padding(5);
-            this.StageTilesList.Name = "StageTilesList";
-            this.StageTilesList.ScrollValue = 0;
-            this.StageTilesList.SelectedIndex = -1;
-            this.StageTilesList.Size = new System.Drawing.Size(229, 337);
-            this.StageTilesList.TabIndex = 3;
-            this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageChunksList_SelectedIndexChanged);
             // 
             // StageChunksList
             // 
@@ -878,13 +897,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.GotoNUD)).EndInit();
             this.TileListControl.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
             this.splitContainer3.Panel1.ResumeLayout(false);
             this.splitContainer3.Panel1.PerformLayout();
             this.splitContainer3.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
             this.splitContainer3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TileZoomBar)).EndInit();
+            this.tabPage2.ResumeLayout(false);
             this.splitContainer4.Panel1.ResumeLayout(false);
             this.splitContainer4.Panel1.PerformLayout();
             this.splitContainer4.Panel2.ResumeLayout(false);

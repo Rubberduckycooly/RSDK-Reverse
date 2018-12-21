@@ -9,61 +9,56 @@ namespace RSDKvB
     public class GameConfig
     {
 
-        //NOTE: if you are looking for the option to activate the dev menu, then I hate to say it, but it's not here..
-
-        public String GameName;
-        public String GameSubname;
-        //public String GameSubName2;
-
-        public Palette Palette = new Palette();
-        public List<string> ObjectsNames = new List<string>();
-        public List<string> SourceTxtLocations = new List<string>();
-        public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
-        public List<Global> Globals = new List<Global>();
-        public List<string> WAVnames = new List<string>();
-        public StageList Stages;
-
-        public class SceneInfo
+        public class Category
         {
-            public byte StageCount;
-            public string SceneFolder;
-            public string Zone;
-            public string Name;
-
-            internal SceneInfo(Reader reader)
+            public class SceneInfo
             {
-                SceneFolder = reader.ReadRSDKString();
-                Zone = reader.ReadRSDKString();
-                Name = reader.ReadRSDKString();
-                StageCount = reader.ReadByte();
-                Console.WriteLine("Name = " + Name + " ,Zone = " + Zone + " ,SceneFolder = " + SceneFolder);
+                public byte StageCount;
+                public string SceneFolder = "Folder";
+                public string ActID = "1";
+                public string Name = "Scene";
+
+                public SceneInfo()
+                {
+                }
+
+                internal SceneInfo(Reader reader)
+                {
+                    SceneFolder = reader.ReadRSDKString();
+                    ActID = reader.ReadRSDKString();
+                    Name = reader.ReadRSDKString();
+                    StageCount = reader.ReadByte();
+                    Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder);
+                }
+
+                internal void Write(Writer writer)
+                {
+                    writer.WriteRSDKString(SceneFolder);
+                    writer.WriteRSDKString(ActID);
+                    writer.WriteRSDKString(Name);
+                    writer.Write(StageCount);
+                }
             }
 
-            internal void Write(Writer writer)
-            {
-                writer.WriteRSDKString(SceneFolder);
-                writer.WriteRSDKString(Zone);
-                writer.WriteRSDKString(Name);
-                writer.Write(StageCount);
-            }
-        }
-
-        public class SceneGroup
-        {
             public byte SceneCount;
             public List<SceneInfo> Scenes = new List<SceneInfo>();
 
-            public SceneGroup(string filename) : this(new Reader(filename))
+            public Category()
             {
 
             }
 
-            public SceneGroup(System.IO.Stream stream) : this(new Reader(stream))
+            public Category(string filename) : this(new Reader(filename))
             {
 
             }
 
-            internal SceneGroup(Reader reader)
+            public Category(System.IO.Stream stream) : this(new Reader(stream))
+            {
+
+            }
+
+            internal Category(Reader reader)
             {
                 SceneCount = reader.ReadByte();
 
@@ -96,77 +91,15 @@ namespace RSDKvB
 
         }
 
-        public class StageList
+        public class GlobalVariable
         {
-            public byte playerCount;
-            public List<string> Players = new List<string>();
-            public List<SceneGroup> Scenes = new List<SceneGroup>();
+            public string Name;
+            public byte UnknownValue1;
+            public byte UnknownValue2;
+            public byte UnknownValue3;
+            public byte UnknownValue4;
 
-            public StageList()
-            {
-
-            }
-
-            public StageList(string filename) : this(new Reader(filename))
-            {
-
-            }
-
-            public StageList(System.IO.Stream stream) : this(new Reader(stream))
-            {
-
-            }
-
-            internal StageList(Reader reader)
-            {
-                playerCount = reader.ReadByte();
-                for (int i = 0; i < playerCount; i++)
-                {
-                    Players.Add(reader.ReadRSDKString());
-                }
-
-                Scenes.Add(new SceneGroup(reader)); //Menus
-                Scenes.Add(new SceneGroup(reader)); //Stages
-                Scenes.Add(new SceneGroup(reader)); //Special Stages
-            }
-
-            public void Write(string filename)
-            {
-                using (Writer writer = new Writer(filename))
-                    this.Write(writer);
-            }
-
-            public void Write(System.IO.Stream stream)
-            {
-                using (Writer writer = new Writer(stream))
-                    this.Write(writer);
-            }
-
-            internal void Write(Writer writer)
-            {
-                writer.Write(playerCount);
-                for (int i = 0; i < playerCount; i++)
-                {
-                    writer.Write(Players[i]);
-                }
-
-                for (int i = 0; i < 3; i++)
-                {
-                    Scenes[i].Write(writer);
-                }
-            }
-        }
-
-        public class Global
-        {
-
-            string Name;
-            byte UnknownValue1;
-            byte UnknownValue2;
-            byte UnknownValue3;
-            byte UnknownValue4;
-
-            internal Global(Reader reader)
+            internal GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
                 Console.WriteLine(Name);
@@ -186,6 +119,23 @@ namespace RSDKvB
             }
         }
 
+        public string GameWindowText;
+        public string GameDescriptionText;
+
+        public Palette MasterPalette = new Palette();
+        public List<string> ObjectsNames = new List<string>();
+        public List<string> ScriptFilepaths = new List<string>();
+        public List<string> SoundFX = new List<string>();
+        public List<string> SfxNames = new List<string>();
+        public List<GlobalVariable> GlobalVariables = new List<GlobalVariable>();
+        public List<string> Players = new List<string>();
+        public List<Category> Categories = new List<Category>();
+
+        public GameConfig()
+        {
+
+        }
+
         public GameConfig(string filename) : this(new Reader(filename))
         {
 
@@ -198,24 +148,34 @@ namespace RSDKvB
 
         private GameConfig(Reader reader)
         {
-            GameName = reader.ReadRSDKString();
-            GameSubname = reader.ReadRSDKString();
+            GameWindowText = reader.ReadRSDKString();
+            GameDescriptionText = reader.ReadRSDKString();
 
-            Console.WriteLine(GameName + " \nSN = " + GameSubname);
+            Console.WriteLine("Game Title: " + GameWindowText);
+            Console.WriteLine("Game Description: " + GameDescriptionText);
 
             this.ReadPalettes(reader);
             this.ReadObjectsNames(reader);
 
-            byte Globals_Amount = reader.ReadByte();
+            byte GlobalVariables_Amount = reader.ReadByte();
 
-            for (int i = 0; i < Globals_Amount; i++)
+            for (int i = 0; i < GlobalVariables_Amount; i++)
             {
-                Globals.Add(new Global(reader));
+                GlobalVariables.Add(new GlobalVariable(reader));
             }
 
             this.ReadWAVConfiguration(reader);
 
-            Stages = new StageList(reader);
+            byte playerCount = reader.ReadByte();
+            for (int i = 0; i < playerCount; i++)
+            {
+                Players.Add(reader.ReadRSDKString());
+            }
+
+            Categories.Add(new Category(reader)); //Presentation Stages
+            Categories.Add(new Category(reader)); //Regular Stages
+            Categories.Add(new Category(reader)); //Special Stages
+            Categories.Add(new Category(reader)); //Bonus Stages
 
             reader.Close();
         }
@@ -234,23 +194,31 @@ namespace RSDKvB
 
         internal void Write(Writer writer)
         {
-            writer.WriteRSDKString(GameName);
-            writer.WriteRSDKString(GameSubname);
+            writer.WriteRSDKString(GameWindowText);
+            writer.WriteRSDKString(GameDescriptionText);
 
             this.WritePalettes(writer);
             this.WriteObjectsNames(writer);
 
-            writer.Write((byte)Globals.Count);
+            writer.Write((byte)GlobalVariables.Count);
 
-            for (int i = 0; i < Globals.Count; i++)
+            for (int i = 0; i < GlobalVariables.Count; i++)
             {
-                Globals[i].Write(writer);
+                GlobalVariables[i].Write(writer);
             }
 
             this.WriteWAVConfiguration(writer);
 
-            Stages.Write(writer);
-            writer.Write((byte)0);
+            writer.Write(Players.Count);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                writer.Write(Players[i]);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                Categories[i].Write(writer);
+            }
 
             writer.Close();
         }
@@ -258,47 +226,60 @@ namespace RSDKvB
         internal void ReadObjectsNames(Reader reader)
         {
             byte objects_count = reader.ReadByte();
+
             for (int i = 0; i < objects_count; ++i)
-            { ObjectsNames.Add(reader.ReadRSDKString());}
+            {
+                ObjectsNames.Add(reader.ReadRSDKString());
+            }
+
             for (int i = 0; i < objects_count; ++i)
-            { SourceTxtLocations.Add(reader.ReadRSDKString()); Console.WriteLine(SourceTxtLocations[i]); }
+            {
+                ScriptFilepaths.Add(reader.ReadRSDKString());
+                Console.WriteLine(ScriptFilepaths[i]);
+            }
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
             writer.Write((byte)ObjectsNames.Count);
+
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
-            foreach (string name in SourceTxtLocations)
+
+            foreach (string name in ScriptFilepaths)
                 writer.WriteRSDKString(name);
         }
 
         internal void ReadPalettes(Reader reader)
         {
-            Palette = new Palette(reader, 6);
+            MasterPalette = new Palette(reader, 6);
         }
 
         internal void WritePalettes(Writer writer)
         {
-          Palette.Write(writer);
+            MasterPalette.Write(writer);
         }
 
         internal void ReadWAVConfiguration(Reader reader)
         {
-            byte wavs_count = reader.ReadByte();
-            for (int i = 0; i < wavs_count; ++i)
-            { WAVnames.Add(reader.ReadRSDKString()); }
-            for (int i = 0; i < wavs_count; ++i)
-            { WAVs.Add(new WAVConfiguration(reader)); }
+            byte SoundFX_count = reader.ReadByte();
+
+            for (int i = 0; i < SoundFX_count; ++i)
+            SfxNames.Add(reader.ReadRSDKString());
+
+            for (int i = 0; i < SoundFX_count; ++i)
+            SoundFX.Add(reader.ReadString());
         }
 
         internal void WriteWAVConfiguration(Writer writer)
         {
-            writer.Write((byte)WAVs.Count);
-            foreach (string wav in WAVnames)
+            writer.Write((byte)SoundFX.Count);
+
+            foreach (string wav in SfxNames)
                 writer.WriteRSDKString(wav);
-            foreach (WAVConfiguration wav in WAVs)
-                wav.Write(writer);
+
+            foreach (string wav in SoundFX)
+                writer.Write(wav);
         }
 
     }

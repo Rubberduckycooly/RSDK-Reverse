@@ -11,7 +11,13 @@ namespace RSDKv2
 {
     public class GraphicsImage
     {
-        
+        public class gfxPalette
+        {
+            public byte[] r = new byte[256];
+            public byte[] g = new byte[256];
+            public byte[] b = new byte[256];
+        }
+
         public Bitmap gfxImage;
         public gfxPalette GFXpal;
         int width;
@@ -50,7 +56,7 @@ namespace RSDKv2
 
             ColorPalette cp = gfxImage.Palette;
 
-            // Read & Process palette, ISSUE HERE
+            // Read & Process palette
             for (int i = 0; i < 255; i++)
             {
                 GFXpal.r[i] = reader.ReadByte();
@@ -247,13 +253,6 @@ namespace RSDKv2
 		}
 	}
 
-    }
-
-    public class gfxPalette
-    {
-        public byte[] r = new byte[256];
-        public byte[] g = new byte[256];
-        public byte[] b = new byte[256];
     }
 
 }

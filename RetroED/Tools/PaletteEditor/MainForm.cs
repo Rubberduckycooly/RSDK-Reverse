@@ -101,7 +101,7 @@ namespace RetroED.Tools.PaletteEditor
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "RSDKvRS ZoneConfig Files|Zone.zcf|RSDKv1 StageConfig Files|StageConfig.bin|RSDKv1 StageConfig Files|StageConfig.bin|RSDKvB StageConfig Files|StageConfig.bin|RSDKvB GameConfig Files|GameConfig.bin|Adobe Colour Table Files|*.act";
+            dlg.Filter = "RSDKvRS ZoneConfig Files|Zone.zcf|RSDKv1 StageConfig Files|StageConfig.bin|RSDKv2 StageConfig Files|StageConfig.bin|RSDKvB StageConfig Files|StageConfig.bin|RSDKvB GameConfig Files|GameConfig.bin|Adobe Colour Table Files|*.act";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
@@ -118,7 +118,7 @@ namespace RetroED.Tools.PaletteEditor
                         {
                             for (int w = 0; w < 16; w++)// Get 16 colours...
                             {
-                                Color c = Color.FromArgb(255, sc1.palette.Colors[h][w].R, sc1.palette.Colors[h][w].G, sc1.palette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, sc1.StagePalette.Colors[h][w].R, sc1.StagePalette.Colors[h][w].G, sc1.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
@@ -130,7 +130,7 @@ namespace RetroED.Tools.PaletteEditor
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc2.palette.Colors[h][w].R, sc2.palette.Colors[h][w].G, sc2.palette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, sc2.StagePalette.Colors[h][w].R, sc2.StagePalette.Colors[h][w].G, sc2.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
@@ -142,7 +142,7 @@ namespace RetroED.Tools.PaletteEditor
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc3.palette.Colors[h][w].R, sc3.palette.Colors[h][w].G, sc3.palette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, sc3.StagePalette.Colors[h][w].R, sc3.StagePalette.Colors[h][w].G, sc3.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
@@ -154,7 +154,7 @@ namespace RetroED.Tools.PaletteEditor
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc4.palette.Colors[h][w].R, sc4.palette.Colors[h][w].G, sc4.palette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, sc4.StagePalette.Colors[h][w].R, sc4.StagePalette.Colors[h][w].G, sc4.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
@@ -164,9 +164,9 @@ namespace RetroED.Tools.PaletteEditor
 
                         for (int h = 0; h < 6; h++)// For six rows...
                         {
-                            for (int w = 0; w < gc4.Palette.COLORS_PER_COLUMN; w++) //Get 16 Colours
+                            for (int w = 0; w < gc4.MasterPalette.COLORS_PER_COLUMN; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, gc4.Palette.Colors[h][w].R, gc4.Palette.Colors[h][w].G, gc4.Palette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, gc4.MasterPalette.Colors[h][w].R, gc4.MasterPalette.Colors[h][w].G, gc4.MasterPalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
@@ -192,7 +192,7 @@ namespace RetroED.Tools.PaletteEditor
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "RSDKvRS ZoneConfig Files|Zone.zcf|RSDKv1 StageConfig Files|StageConfig.bin|RSDKv1 StageConfig Files|StageConfig.bin|RSDKvB StageConfig Files|StageConfig.bin|RSDKvB GameConfig Files|GameConfig.bin|Adobe Colour Table Files|*.act";
+            dlg.Filter = "RSDKvRS ZoneConfig Files|Zone.zcf|RSDKv1 StageConfig Files|StageConfig.bin|RSDKv2 StageConfig Files|StageConfig.bin|RSDKvB StageConfig Files|StageConfig.bin|RSDKvB GameConfig Files|GameConfig.bin|Adobe Colour Table Files|*.act";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
@@ -207,9 +207,9 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i1].R, colorGrid.Colors[i1].G, colorGrid.Colors[i1].B);
                                 i1++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc1.palette.Colors[h][w].R = c.R;
-                                sc1.palette.Colors[h][w].G = c.G;
-                                sc1.palette.Colors[h][w].B = c.B;
+                                sc1.StagePalette.Colors[h][w].R = c.R;
+                                sc1.StagePalette.Colors[h][w].G = c.G;
+                                sc1.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
                         sc1.Write(dlg.FileName); //Save that!
@@ -223,9 +223,9 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i2].R, colorGrid.Colors[i2].G, colorGrid.Colors[i2].B);
                                 i2++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc2.palette.Colors[h][w].R = c.R;
-                                sc2.palette.Colors[h][w].G = c.G;
-                                sc2.palette.Colors[h][w].B = c.B;
+                                sc2.StagePalette.Colors[h][w].R = c.R;
+                                sc2.StagePalette.Colors[h][w].G = c.G;
+                                sc2.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
                         sc2.Write(dlg.FileName); //Save that!
@@ -239,9 +239,9 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i3].R, colorGrid.Colors[i3].G, colorGrid.Colors[i3].B);
                                 i3++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc3.palette.Colors[h][w].R = c.R;
-                                sc3.palette.Colors[h][w].G = c.G;
-                                sc3.palette.Colors[h][w].B = c.B;
+                                sc3.StagePalette.Colors[h][w].R = c.R;
+                                sc3.StagePalette.Colors[h][w].G = c.G;
+                                sc3.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
                         sc3.Write(dlg.FileName); //Save that!
@@ -255,9 +255,9 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[is4].R, colorGrid.Colors[is4].G, colorGrid.Colors[is4].B);
                                 is4++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc4.palette.Colors[h][w].R = c.R;
-                                sc4.palette.Colors[h][w].G = c.G;
-                                sc4.palette.Colors[h][w].B = c.B;
+                                sc4.StagePalette.Colors[h][w].R = c.R;
+                                sc4.StagePalette.Colors[h][w].G = c.G;
+                                sc4.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
                         sc3.Write(dlg.FileName); //Save that!
@@ -266,14 +266,14 @@ namespace RetroED.Tools.PaletteEditor
                         int i4 = 0;
                         for (int h = 0; h < 6; h++)
                         {
-                            for (int w = 0; w < gc4.Palette.COLORS_PER_COLUMN; w++)
+                            for (int w = 0; w < gc4.MasterPalette.COLORS_PER_COLUMN; w++)
                             {
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i4].R, colorGrid.Colors[i4].G, colorGrid.Colors[i4].B);
                                 i4++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                gc4.Palette.Colors[h][w].R = c.R;
-                                gc4.Palette.Colors[h][w].G = c.G;
-                                gc4.Palette.Colors[h][w].B = c.B;
+                                gc4.MasterPalette.Colors[h][w].R = c.R;
+                                gc4.MasterPalette.Colors[h][w].G = c.G;
+                                gc4.MasterPalette.Colors[h][w].B = c.B;
                             }
                         }
                         gc4.Write(dlg.FileName); //Save that!
@@ -394,7 +394,7 @@ namespace RetroED.Tools.PaletteEditor
             }
             catch (Exception Ex)
             {
-                MessageBox.Show("Error: " + Ex.Message);
+                MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'RSonic.exe' open!)");
             }
         }
 
@@ -431,7 +431,7 @@ namespace RetroED.Tools.PaletteEditor
             }
             catch (Exception Ex)
             {
-                MessageBox.Show("Error: " + Ex.Message);
+                MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'Nexus.exe' open!)");
             }
         }
 
@@ -468,7 +468,7 @@ namespace RetroED.Tools.PaletteEditor
             }
             catch (Exception Ex)
             {
-                MessageBox.Show("Error: " + Ex.Message);
+                MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'Soniccd.exe' open!)");
             }
         }
 
@@ -488,64 +488,67 @@ namespace RetroED.Tools.PaletteEditor
 
         private void Palette_Update(object sender, EventArgs e)
         {
-            try
+            if (MemoryEditing)
             {
-                if (GameType == 0)
+                try
                 {
-                    Process process = Process.GetProcessesByName("RSonic")[0];
-
-                    IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
-
-                    MemoryEditing = true;
-                    GameType = 0;
-
-                    int bytesRead = 0;
-                    byte[] buffer = new byte[1024]; //3 bytes for RGB and one for... idk lmfao
-
-                    colorGrid.Colors.Clear();
-                    Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
-
-                    int offset = 0x0053FD74;
-
-                    for (int i = 0; i < 256; i++)
+                    if (GameType == 0)
                     {
-                        ReadProcessMemory((int)processHandle, offset + (i * 4), buffer, buffer.Length, ref bytesRead);
+                        Process process = Process.GetProcessesByName("RSonic")[0];
 
-                        Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+                        IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
 
-                        cc.Add(c);
+                        MemoryEditing = true;
+                        GameType = 0;
+
+                        int bytesRead = 0;
+                        byte[] buffer = new byte[1024]; //3 bytes for RGB and one for... idk lmfao
+
+                        colorGrid.Colors.Clear();
+                        Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
+
+                        int offset = 0x0053FD74;
+
+                        for (int i = 0; i < 256; i++)
+                        {
+                            ReadProcessMemory((int)processHandle, offset + (i * 4), buffer, buffer.Length, ref bytesRead);
+
+                            Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+
+                            cc.Add(c);
+                        }
+                        colorGrid.Colors = cc;
                     }
-                    colorGrid.Colors = cc;
-                }
 
-                if (GameType == 1)
+                    if (GameType == 1)
+                    {
+                        Process process = Process.GetProcessesByName("Nexus")[0];
+
+                        IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
+
+                        int bytesRead = 0;
+                        byte[] buffer = new byte[1024]; //3 bytes for RGB and one for... idk lmfao
+
+                        colorGrid.Colors.Clear();
+                        Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
+
+                        int offset = 0x00473408;
+
+                        for (int i = 0; i < 256; i++)
+                        {
+                            ReadProcessMemory((int)processHandle, offset + (i * 4), buffer, buffer.Length, ref bytesRead);
+
+                            Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+
+                            cc.Add(c);
+                        }
+                        colorGrid.Colors = cc;
+                    }
+                }
+                catch (Exception Ex)
                 {
-                    Process process = Process.GetProcessesByName("Nexus")[0];
-
-                    IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
-
-                    int bytesRead = 0;
-                    byte[] buffer = new byte[1024]; //3 bytes for RGB and one for... idk lmfao
-
-                    colorGrid.Colors.Clear();
-                    Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
-
-                    int offset = 0x00473408;
-
-                    for (int i = 0; i < 256; i++)
-                    {
-                        ReadProcessMemory((int)processHandle, offset + (i * 4), buffer, buffer.Length, ref bytesRead);
-
-                        Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
-
-                        cc.Add(c);
-                    }
-                    colorGrid.Colors = cc;
+                    MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'RSonic.exe', 'Nexus.exe' or 'Soniccd.exe' open!)");
                 }
-            }
-            catch (Exception Ex)
-            {
-                MessageBox.Show("Error: " + Ex.Message);
             }
         }
 

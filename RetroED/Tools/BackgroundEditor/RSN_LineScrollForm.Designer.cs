@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.DeformNUD = new System.Windows.Forms.NumericUpDown();
@@ -39,7 +40,6 @@
             this.LineNoLabel = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DeformNUD)).BeginInit();
@@ -49,6 +49,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.numericUpDown1);
             this.panel1.Controls.Add(this.label1);
@@ -66,8 +67,20 @@
             this.panel1.Size = new System.Drawing.Size(371, 187);
             this.panel1.TabIndex = 0;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(78, 161);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(119, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "Remove Value";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // numericUpDown1
             // 
+            this.numericUpDown1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.numericUpDown1.Enabled = false;
             this.numericUpDown1.Location = new System.Drawing.Point(145, 4);
             this.numericUpDown1.Maximum = new decimal(new int[] {
@@ -96,6 +109,7 @@
             // 
             // DeformNUD
             // 
+            this.DeformNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.DeformNUD.Location = new System.Drawing.Point(145, 93);
             this.DeformNUD.Maximum = new decimal(new int[] {
             255,
@@ -114,6 +128,7 @@
             // 
             // SPDNUD
             // 
+            this.SPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.SPDNUD.Location = new System.Drawing.Point(145, 62);
             this.SPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -141,6 +156,7 @@
             // 
             // LineNoNUD
             // 
+            this.LineNoNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.LineNoNUD.Location = new System.Drawing.Point(145, 33);
             this.LineNoNUD.Maximum = new decimal(new int[] {
             255,
@@ -196,17 +212,6 @@
             this.OKButton.Text = "OK";
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
-            // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(78, 161);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 23);
-            this.button1.TabIndex = 18;
-            this.button1.Text = "Remove Value";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // RSN_LineScrollForm
             // 

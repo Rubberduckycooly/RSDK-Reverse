@@ -1,17 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-/*Yes, Nexus has support for the .gfx format*/
+/*Yes, RSDKv1 has support for the .gfx format*/
 
 namespace RSDKv1
 {
     public class GraphicsImage
     {
-        
+        public class gfxPalette
+        {
+            public byte[] r = new byte[256];
+            public byte[] g = new byte[256];
+            public byte[] b = new byte[256];
+        }
+
         public Bitmap gfxImage;
         public gfxPalette GFXpal;
         int width;
@@ -248,12 +251,4 @@ namespace RSDKv1
 	}
 
     }
-
-    public class gfxPalette
-    {
-        public byte[] r = new byte[256];
-        public byte[] g = new byte[256];
-        public byte[] b = new byte[256];
-    }
-
 }

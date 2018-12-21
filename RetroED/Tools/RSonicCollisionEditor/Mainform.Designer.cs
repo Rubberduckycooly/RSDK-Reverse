@@ -37,6 +37,9 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.openSingleCollisionMaskToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportCollisionMaskAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.importRSDKTileconfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportToRSDKTileconfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showPathBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +49,7 @@
             this.splitFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.GlobalActiveNUD = new System.Windows.Forms.NumericUpDown();
             this.cb13 = new System.Windows.Forms.NumericUpDown();
             this.cb12 = new System.Windows.Forms.NumericUpDown();
             this.cb14 = new System.Windows.Forms.NumericUpDown();
@@ -130,17 +134,14 @@
             this.CTileLabel = new System.Windows.Forms.Label();
             this.TilePicBox = new System.Windows.Forms.PictureBox();
             this.CollisionPicBox = new System.Windows.Forms.PictureBox();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.importRSDKTileconfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exportToRSDKTileconfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.CollisionList = new RetroED.Tools.CollisionEditor.TileList();
-            this.GlobalActiveNUD = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GlobalActiveNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb13)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb14)).BeginInit();
@@ -196,11 +197,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.RGBox4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TilePicBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CollisionPicBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GlobalActiveNUD)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -231,6 +232,7 @@
             // 
             // openToolStripMenuItem
             // 
+            this.openToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
@@ -239,6 +241,7 @@
             // 
             // saveToolStripMenuItem
             // 
+            this.saveToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
@@ -247,6 +250,7 @@
             // 
             // saveAsToolStripMenuItem
             // 
+            this.saveAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
             this.saveAsToolStripMenuItem.Text = "Save As...";
@@ -259,6 +263,7 @@
             // 
             // openSingleCollisionMaskToolStripMenuItem
             // 
+            this.openSingleCollisionMaskToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.openSingleCollisionMaskToolStripMenuItem.Name = "openSingleCollisionMaskToolStripMenuItem";
             this.openSingleCollisionMaskToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
             this.openSingleCollisionMaskToolStripMenuItem.Text = "Open Singular CollisionMask";
@@ -266,10 +271,30 @@
             // 
             // exportCollisionMaskAsToolStripMenuItem
             // 
+            this.exportCollisionMaskAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.exportCollisionMaskAsToolStripMenuItem.Name = "exportCollisionMaskAsToolStripMenuItem";
             this.exportCollisionMaskAsToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
             this.exportCollisionMaskAsToolStripMenuItem.Text = "Export CollisionMask As...";
             this.exportCollisionMaskAsToolStripMenuItem.Click += new System.EventHandler(this.exportCollisionMaskAsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(270, 6);
+            // 
+            // importRSDKTileconfigToolStripMenuItem
+            // 
+            this.importRSDKTileconfigToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.importRSDKTileconfigToolStripMenuItem.Name = "importRSDKTileconfigToolStripMenuItem";
+            this.importRSDKTileconfigToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.importRSDKTileconfigToolStripMenuItem.Text = "Import RSDK Tileconfig";
+            // 
+            // exportToRSDKTileconfigToolStripMenuItem
+            // 
+            this.exportToRSDKTileconfigToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.exportToRSDKTileconfigToolStripMenuItem.Name = "exportToRSDKTileconfigToolStripMenuItem";
+            this.exportToRSDKTileconfigToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.exportToRSDKTileconfigToolStripMenuItem.Text = "Export to RSDK Tileconfig";
             // 
             // viewToolStripMenuItem
             // 
@@ -281,6 +306,7 @@
             // 
             // showPathBToolStripMenuItem
             // 
+            this.showPathBToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.showPathBToolStripMenuItem.Name = "showPathBToolStripMenuItem";
             this.showPathBToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
             this.showPathBToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
@@ -300,27 +326,30 @@
             // 
             // copyToOtherPathToolStripMenuItem
             // 
+            this.copyToOtherPathToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.copyToOtherPathToolStripMenuItem.Name = "copyToOtherPathToolStripMenuItem";
-            this.copyToOtherPathToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
+            this.copyToOtherPathToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.copyToOtherPathToolStripMenuItem.Text = "Copy to Other Path";
             this.copyToOtherPathToolStripMenuItem.Click += new System.EventHandler(this.copyToOtherPathToolStripMenuItem_Click);
             // 
             // mirrorPathsToolStripMenuItem
             // 
+            this.mirrorPathsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.mirrorPathsToolStripMenuItem.Name = "mirrorPathsToolStripMenuItem";
-            this.mirrorPathsToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
+            this.mirrorPathsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.mirrorPathsToolStripMenuItem.Text = "Mirror Paths";
             this.mirrorPathsToolStripMenuItem.Click += new System.EventHandler(this.mirrorPathsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(206, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
             // 
             // splitFileToolStripMenuItem
             // 
+            this.splitFileToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.splitFileToolStripMenuItem.Name = "splitFileToolStripMenuItem";
-            this.splitFileToolStripMenuItem.Size = new System.Drawing.Size(209, 26);
+            this.splitFileToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.splitFileToolStripMenuItem.Text = "Split File";
             this.splitFileToolStripMenuItem.Click += new System.EventHandler(this.splitFileToolStripMenuItem_Click);
             // 
@@ -396,8 +425,26 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Tile Collision Data";
             // 
+            // GlobalActiveNUD
+            // 
+            this.GlobalActiveNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.GlobalActiveNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GlobalActiveNUD.Hexadecimal = true;
+            this.GlobalActiveNUD.Location = new System.Drawing.Point(551, 347);
+            this.GlobalActiveNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.GlobalActiveNUD.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.GlobalActiveNUD.Name = "GlobalActiveNUD";
+            this.GlobalActiveNUD.Size = new System.Drawing.Size(47, 22);
+            this.GlobalActiveNUD.TabIndex = 127;
+            this.GlobalActiveNUD.ValueChanged += new System.EventHandler(this.GlobalActiveNUD_ValueChanged);
+            // 
             // cb13
             // 
+            this.cb13.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb13.Location = new System.Drawing.Point(490, 292);
             this.cb13.Maximum = new decimal(new int[] {
             2,
@@ -411,6 +458,7 @@
             // 
             // cb12
             // 
+            this.cb12.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb12.Location = new System.Drawing.Point(450, 292);
             this.cb12.Maximum = new decimal(new int[] {
             2,
@@ -424,6 +472,7 @@
             // 
             // cb14
             // 
+            this.cb14.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb14.Location = new System.Drawing.Point(528, 292);
             this.cb14.Maximum = new decimal(new int[] {
             2,
@@ -437,6 +486,7 @@
             // 
             // cb11
             // 
+            this.cb11.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb11.Location = new System.Drawing.Point(412, 292);
             this.cb11.Maximum = new decimal(new int[] {
             2,
@@ -450,6 +500,7 @@
             // 
             // cb10
             // 
+            this.cb10.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb10.Location = new System.Drawing.Point(374, 292);
             this.cb10.Maximum = new decimal(new int[] {
             2,
@@ -463,6 +514,7 @@
             // 
             // cb09
             // 
+            this.cb09.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb09.Location = new System.Drawing.Point(336, 292);
             this.cb09.Maximum = new decimal(new int[] {
             2,
@@ -476,6 +528,7 @@
             // 
             // cb08
             // 
+            this.cb08.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb08.Location = new System.Drawing.Point(298, 292);
             this.cb08.Maximum = new decimal(new int[] {
             2,
@@ -489,6 +542,7 @@
             // 
             // cb07
             // 
+            this.cb07.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb07.Location = new System.Drawing.Point(260, 292);
             this.cb07.Maximum = new decimal(new int[] {
             2,
@@ -502,6 +556,7 @@
             // 
             // cb06
             // 
+            this.cb06.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb06.Location = new System.Drawing.Point(222, 292);
             this.cb06.Maximum = new decimal(new int[] {
             2,
@@ -515,6 +570,7 @@
             // 
             // cb05
             // 
+            this.cb05.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb05.Location = new System.Drawing.Point(184, 292);
             this.cb05.Maximum = new decimal(new int[] {
             2,
@@ -528,6 +584,7 @@
             // 
             // cb04
             // 
+            this.cb04.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb04.Location = new System.Drawing.Point(146, 292);
             this.cb04.Maximum = new decimal(new int[] {
             2,
@@ -541,6 +598,7 @@
             // 
             // cb03
             // 
+            this.cb03.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb03.Location = new System.Drawing.Point(110, 292);
             this.cb03.Maximum = new decimal(new int[] {
             2,
@@ -554,6 +612,7 @@
             // 
             // cb02
             // 
+            this.cb02.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb02.Location = new System.Drawing.Point(74, 292);
             this.cb02.Maximum = new decimal(new int[] {
             2,
@@ -567,6 +626,7 @@
             // 
             // cb01
             // 
+            this.cb01.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb01.Location = new System.Drawing.Point(38, 292);
             this.cb01.Maximum = new decimal(new int[] {
             2,
@@ -580,6 +640,7 @@
             // 
             // cb00
             // 
+            this.cb00.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb00.Location = new System.Drawing.Point(0, 292);
             this.cb00.Maximum = new decimal(new int[] {
             2,
@@ -593,6 +654,7 @@
             // 
             // cb15
             // 
+            this.cb15.BackColor = System.Drawing.SystemColors.ControlDark;
             this.cb15.Location = new System.Drawing.Point(566, 292);
             this.cb15.Maximum = new decimal(new int[] {
             2,
@@ -606,6 +668,7 @@
             // 
             // lb00
             // 
+            this.lb00.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb00.FormattingEnabled = true;
             this.lb00.ItemHeight = 16;
             this.lb00.Items.AddRange(new object[] {
@@ -634,6 +697,7 @@
             // 
             // lb15
             // 
+            this.lb15.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb15.FormattingEnabled = true;
             this.lb15.ItemHeight = 16;
             this.lb15.Items.AddRange(new object[] {
@@ -662,6 +726,7 @@
             // 
             // lb14
             // 
+            this.lb14.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb14.FormattingEnabled = true;
             this.lb14.ItemHeight = 16;
             this.lb14.Items.AddRange(new object[] {
@@ -690,6 +755,7 @@
             // 
             // lb13
             // 
+            this.lb13.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb13.FormattingEnabled = true;
             this.lb13.ItemHeight = 16;
             this.lb13.Items.AddRange(new object[] {
@@ -718,6 +784,7 @@
             // 
             // lb12
             // 
+            this.lb12.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb12.FormattingEnabled = true;
             this.lb12.ItemHeight = 16;
             this.lb12.Items.AddRange(new object[] {
@@ -746,6 +813,7 @@
             // 
             // lb11
             // 
+            this.lb11.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb11.FormattingEnabled = true;
             this.lb11.ItemHeight = 16;
             this.lb11.Items.AddRange(new object[] {
@@ -774,6 +842,7 @@
             // 
             // lb10
             // 
+            this.lb10.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb10.FormattingEnabled = true;
             this.lb10.ItemHeight = 16;
             this.lb10.Items.AddRange(new object[] {
@@ -802,6 +871,7 @@
             // 
             // lb09
             // 
+            this.lb09.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb09.FormattingEnabled = true;
             this.lb09.ItemHeight = 16;
             this.lb09.Items.AddRange(new object[] {
@@ -830,6 +900,7 @@
             // 
             // lb08
             // 
+            this.lb08.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb08.FormattingEnabled = true;
             this.lb08.ItemHeight = 16;
             this.lb08.Items.AddRange(new object[] {
@@ -858,6 +929,7 @@
             // 
             // lb07
             // 
+            this.lb07.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb07.FormattingEnabled = true;
             this.lb07.ItemHeight = 16;
             this.lb07.Items.AddRange(new object[] {
@@ -886,6 +958,7 @@
             // 
             // lb06
             // 
+            this.lb06.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb06.FormattingEnabled = true;
             this.lb06.ItemHeight = 16;
             this.lb06.Items.AddRange(new object[] {
@@ -914,6 +987,7 @@
             // 
             // lb05
             // 
+            this.lb05.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb05.FormattingEnabled = true;
             this.lb05.ItemHeight = 16;
             this.lb05.Items.AddRange(new object[] {
@@ -942,6 +1016,7 @@
             // 
             // lb04
             // 
+            this.lb04.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb04.FormattingEnabled = true;
             this.lb04.ItemHeight = 16;
             this.lb04.Items.AddRange(new object[] {
@@ -971,6 +1046,7 @@
             // UnknownNUD
             // 
             this.UnknownNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UnknownNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.UnknownNUD.Hexadecimal = true;
             this.UnknownNUD.Location = new System.Drawing.Point(9, 347);
             this.UnknownNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -986,6 +1062,7 @@
             // 
             // lb03
             // 
+            this.lb03.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb03.FormattingEnabled = true;
             this.lb03.ItemHeight = 16;
             this.lb03.Items.AddRange(new object[] {
@@ -1024,6 +1101,7 @@
             // 
             // lb02
             // 
+            this.lb02.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb02.FormattingEnabled = true;
             this.lb02.ItemHeight = 16;
             this.lb02.Items.AddRange(new object[] {
@@ -1052,6 +1130,7 @@
             // 
             // lb01
             // 
+            this.lb01.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb01.FormattingEnabled = true;
             this.lb01.ItemHeight = 16;
             this.lb01.Items.AddRange(new object[] {
@@ -1153,6 +1232,7 @@
             // 
             // GotoNUD
             // 
+            this.GotoNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.GotoNUD.Location = new System.Drawing.Point(253, 33);
             this.GotoNUD.Margin = new System.Windows.Forms.Padding(4);
             this.GotoNUD.Maximum = new decimal(new int[] {
@@ -1643,26 +1723,9 @@
             this.CollisionPicBox.TabIndex = 0;
             this.CollisionPicBox.TabStop = false;
             // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(270, 6);
-            // 
-            // importRSDKTileconfigToolStripMenuItem
-            // 
-            this.importRSDKTileconfigToolStripMenuItem.Name = "importRSDKTileconfigToolStripMenuItem";
-            this.importRSDKTileconfigToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.importRSDKTileconfigToolStripMenuItem.Text = "Import RSDK Tileconfig";
-            // 
-            // exportToRSDKTileconfigToolStripMenuItem
-            // 
-            this.exportToRSDKTileconfigToolStripMenuItem.Name = "exportToRSDKTileconfigToolStripMenuItem";
-            this.exportToRSDKTileconfigToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.exportToRSDKTileconfigToolStripMenuItem.Text = "Export to RSDK Tileconfig";
-            // 
             // CollisionList
             // 
-            this.CollisionList.BackColor = System.Drawing.SystemColors.Window;
+            this.CollisionList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.CollisionList.Dock = System.Windows.Forms.DockStyle.Right;
             this.CollisionList.Location = new System.Drawing.Point(438, 0);
             this.CollisionList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
@@ -1673,26 +1736,11 @@
             this.CollisionList.TabIndex = 36;
             this.CollisionList.SelectedIndexChanged += new System.EventHandler(this.CollisionList_SelectedIndexChanged);
             // 
-            // GlobalActiveNUD
-            // 
-            this.GlobalActiveNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.GlobalActiveNUD.Hexadecimal = true;
-            this.GlobalActiveNUD.Location = new System.Drawing.Point(551, 347);
-            this.GlobalActiveNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.GlobalActiveNUD.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.GlobalActiveNUD.Name = "GlobalActiveNUD";
-            this.GlobalActiveNUD.Size = new System.Drawing.Size(47, 22);
-            this.GlobalActiveNUD.TabIndex = 127;
-            this.GlobalActiveNUD.ValueChanged += new System.EventHandler(this.GlobalActiveNUD_ValueChanged);
-            // 
             // Mainform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1294, 494);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
@@ -1710,6 +1758,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.GlobalActiveNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb13)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.cb14)).EndInit();
@@ -1767,7 +1816,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.RGBox4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TilePicBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CollisionPicBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.GlobalActiveNUD)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

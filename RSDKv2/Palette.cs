@@ -10,11 +10,19 @@ namespace RSDKv2
     {
         public const int COLORS_PER_COLUMN = 0x10;
 
-        public PaletteColor[][] Colors;
+        public PaletteColour[][] Colors;
 
-        public Palette()
+        public Palette(int pc = 2)
         {
-            
+            int palColumns = pc;
+
+            Colors = new PaletteColour[palColumns][];
+            for (int i = 0; i < palColumns; i++)
+            {
+                Colors[i] = new PaletteColour[COLORS_PER_COLUMN];
+                for (int j = 0; j < COLORS_PER_COLUMN; ++j)
+                { Colors[i][j] = new PaletteColour(); }
+            }
         }
 
         public Palette(Reader r)
@@ -31,12 +39,12 @@ namespace RSDKv2
         {
             int palColumns = Columns;
 
-            Colors = new PaletteColor[palColumns][];
+            Colors = new PaletteColour[palColumns][];
             for (int i = 0; i < palColumns; i++)
             {
-                Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
+                Colors[i] = new PaletteColour[COLORS_PER_COLUMN];
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                { Colors[i][j] = new PaletteColor(reader); }//Console.WriteLine(Colors[i][j].R + Colors[i][j].G + Colors[i][j].B); }
+                { Colors[i][j] = new PaletteColour(reader); }//Console.WriteLine(Colors[i][j].R + Colors[i][j].G + Colors[i][j].B); }
             }
         }
 
@@ -44,12 +52,12 @@ namespace RSDKv2
         {
             int palColumns = ((int)reader.BaseStream.Length / 8) / 6;
 
-            Colors = new PaletteColor[palColumns][];
+            Colors = new PaletteColour[palColumns][];
             for (int i = 0; i < palColumns; i++)
             {
-                Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
+                Colors[i] = new PaletteColour[COLORS_PER_COLUMN];
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                { Colors[i][j] = new PaletteColor(reader);}
+                { Colors[i][j] = new PaletteColour(reader);}
             }
         }
 
@@ -69,9 +77,9 @@ namespace RSDKv2
         {
             int palColumns = Colors.Length/16;
             Console.WriteLine(palColumns);
-            foreach (PaletteColor[] column in Colors)
+            foreach (PaletteColour[] column in Colors)
                 if (column != null)
-                    foreach (PaletteColor color in column)
+                    foreach (PaletteColour color in column)
                     { color.Write(writer);}
         }
 

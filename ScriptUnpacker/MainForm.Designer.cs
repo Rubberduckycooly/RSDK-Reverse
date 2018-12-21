@@ -52,7 +52,8 @@
             this.RSDKverBox.FormattingEnabled = true;
             this.RSDKverBox.Items.AddRange(new object[] {
             "RSDKv2 (Sonic CD)",
-            "RSDKvB (Sonic 1/2)"});
+            "RSDKvB (Sonic 1/2)",
+            "RSDKvRS (Retro-Sonic (2007))"});
             this.RSDKverBox.Location = new System.Drawing.Point(169, 47);
             this.RSDKverBox.Name = "RSDKverBox";
             this.RSDKverBox.Size = new System.Drawing.Size(193, 24);

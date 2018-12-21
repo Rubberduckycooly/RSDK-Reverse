@@ -34,6 +34,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         public Point tilePoint;
 
+        public bool DrawLines = false;
+
         #region Retro-Sonic Development Kit
         public RSDKvRS.BGLayout _RSDK1Background;
         public RSDKvRS.Tiles128x128 _RSDK1Chunks;
@@ -85,7 +87,7 @@ namespace RetroED.Tools.BackgroundEditor
                             {
                                 for (int x = startX4; x < endX4; x++)
                                 {
-                                    if (y < _RSDK4Background.Layers[l].MapLayout.Length && x < _RSDK4Background.Layers[l].MapLayout[y].Length && _RSDK4Background.Layers[l].MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                                    if (y < _RSDK4Background.Layers[l].MapLayout.Length && x < _RSDK4Background.Layers[l].MapLayout[y].Length && _RSDK4Background.Layers[l].MapLayout[y][x] < _RSDK4Chunks.BlockList.Length)
                                     {
                                         if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
@@ -106,7 +108,7 @@ namespace RetroED.Tools.BackgroundEditor
                         {
                             for (int x = startX4; x < endX4; x++)
                             {
-                                if (y < _RSDK4Background.Layers[curlayer].MapLayout.Length && x < _RSDK4Background.Layers[curlayer].MapLayout[y].Length && _RSDK4Background.Layers[curlayer].MapLayout[y][x] < _RSDK4Chunks.BlockList.Count)
+                                if (y < _RSDK4Background.Layers[curlayer].MapLayout.Length && x < _RSDK4Background.Layers[curlayer].MapLayout[y].Length && _RSDK4Background.Layers[curlayer].MapLayout[y][x] < _RSDK4Chunks.BlockList.Length)
                                 {
                                     if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                     {
@@ -120,6 +122,15 @@ namespace RetroED.Tools.BackgroundEditor
                             }
                         }
                     }
+
+                    if (DrawLines)
+                    {
+                        for (int i = 0; i < _RSDK4Background.Layers[curlayer].LineIndexes.Count; i++)
+                        {
+                            e.Graphics.DrawLine(p, 0, _RSDK4Background.Layers[curlayer].LineIndexes[i], _RSDK4Background.Layers[curlayer].width * 128, _RSDK4Background.Layers[curlayer].LineIndexes[i]);
+                        }
+                    }
+
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -164,7 +175,7 @@ namespace RetroED.Tools.BackgroundEditor
                             {
                                 for (int x = startX3; x < endX3; x++)
                                 {
-                                    if (y < _RSDK3Background.Layers[l].MapLayout.Length && x < _RSDK3Background.Layers[l].MapLayout[y].Length && _RSDK3Background.Layers[l].MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
+                                    if (y < _RSDK3Background.Layers[l].MapLayout.Length && x < _RSDK3Background.Layers[l].MapLayout[y].Length && _RSDK3Background.Layers[l].MapLayout[y][x] < _RSDK3Chunks.BlockList.Length)
                                     {
                                         if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
@@ -188,7 +199,7 @@ namespace RetroED.Tools.BackgroundEditor
                         {
                             for (int x = startX3; x < endX3; x++)
                             {
-                                if (y < _RSDK3Background.Layers[curlayer].MapLayout.Length && x < _RSDK3Background.Layers[curlayer].MapLayout[y].Length && _RSDK3Background.Layers[curlayer].MapLayout[y][x] < _RSDK3Chunks.BlockList.Count)
+                                if (y < _RSDK3Background.Layers[curlayer].MapLayout.Length && x < _RSDK3Background.Layers[curlayer].MapLayout[y].Length && _RSDK3Background.Layers[curlayer].MapLayout[y][x] < _RSDK3Chunks.BlockList.Length)
                                 {
                                     if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                     {
@@ -205,6 +216,15 @@ namespace RetroED.Tools.BackgroundEditor
                             }
                         }
                     }
+
+                    if (DrawLines)
+                    {
+                        for (int i = 0; i < _RSDK3Background.Layers[curlayer].LineIndexes.Count; i++)
+                        {
+                            e.Graphics.DrawLine(p, 0, _RSDK3Background.Layers[curlayer].LineIndexes[i], _RSDK3Background.Layers[curlayer].width * 128, _RSDK3Background.Layers[curlayer].LineIndexes[i]);
+                        }
+                    }
+
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -245,7 +265,7 @@ namespace RetroED.Tools.BackgroundEditor
                             {
                                 for (int x = startX2; x < endX2; x++)
                                 {
-                                    if (y < _RSDK2Background.Layers[i].MapLayout.Length && x < _RSDK2Background.Layers[i].MapLayout[y].Length && _RSDK2Background.Layers[i].MapLayout[y][x] < _RSDK2Chunks.BlockList.Count)
+                                    if (y < _RSDK2Background.Layers[i].MapLayout.Length && x < _RSDK2Background.Layers[i].MapLayout[y].Length && _RSDK2Background.Layers[i].MapLayout[y][x] < _RSDK2Chunks.BlockList.Length)
                                     {
                                         if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
@@ -269,7 +289,7 @@ namespace RetroED.Tools.BackgroundEditor
                         {
                             for (int x = startX2; x < endX2; x++)
                             {
-                                if (y < _RSDK2Background.Layers[curlayer].MapLayout.Length && x < _RSDK2Background.Layers[curlayer].MapLayout[y].Length && _RSDK2Background.Layers[curlayer].MapLayout[y][x] < _RSDK2Chunks.BlockList.Count)
+                                if (y < _RSDK2Background.Layers[curlayer].MapLayout.Length && x < _RSDK2Background.Layers[curlayer].MapLayout[y].Length && _RSDK2Background.Layers[curlayer].MapLayout[y][x] < _RSDK2Chunks.BlockList.Length)
                                 {
                                     if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                     {
@@ -286,6 +306,15 @@ namespace RetroED.Tools.BackgroundEditor
                             }
                         }
                     }
+
+                    if (DrawLines)
+                    {
+                        for (int i = 0; i < _RSDK2Background.Layers[curlayer].LineIndexes.Count; i++)
+                        {
+                            e.Graphics.DrawLine(p, 0, _RSDK2Background.Layers[curlayer].LineIndexes[i], _RSDK2Background.Layers[curlayer].width * 128, _RSDK2Background.Layers[curlayer].LineIndexes[i]);
+                        }
+                    }
+
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -327,7 +356,7 @@ namespace RetroED.Tools.BackgroundEditor
                             {
                                 for (int x = startX1; x < endX1; x++)
                                 {
-                                    if (y < _RSDK1Background.Layers[l].MapLayout.Length && x < _RSDK1Background.Layers[l].MapLayout[y].Length && _RSDK1Background.Layers[l].MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
+                                    if (y < _RSDK1Background.Layers[l].MapLayout.Length && x < _RSDK1Background.Layers[l].MapLayout[y].Length && _RSDK1Background.Layers[l].MapLayout[y][x] < _RSDK1Chunks.BlockList.Length)
                                     {
                                         if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                         {
@@ -351,7 +380,7 @@ namespace RetroED.Tools.BackgroundEditor
                         {
                             for (int x = startX1; x < endX1; x++)
                             {
-                                if (y < _RSDK1Background.Layers[curlayer].MapLayout.Length && x < _RSDK1Background.Layers[curlayer].MapLayout[y].Length && _RSDK1Background.Layers[curlayer].MapLayout[y][x] < _RSDK1Chunks.BlockList.Count)
+                                if (y < _RSDK1Background.Layers[curlayer].MapLayout.Length && x < _RSDK1Background.Layers[curlayer].MapLayout[y].Length && _RSDK1Background.Layers[curlayer].MapLayout[y][x] < _RSDK1Chunks.BlockList.Length)
                                 {
                                     if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                     {
@@ -368,6 +397,15 @@ namespace RetroED.Tools.BackgroundEditor
                             }
                         }
                     }
+
+                    if (DrawLines)
+                    {
+                        for (int i = 0; i < _RSDK1Background.Layers[curlayer].LineIndexes.Count; i++)
+                        {
+                            e.Graphics.DrawLine(p, 0, _RSDK1Background.Layers[curlayer].LineIndexes[i], _RSDK1Background.Layers[curlayer].width * 128, _RSDK1Background.Layers[curlayer].LineIndexes[i]);
+                        }
+                    }
+
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -445,7 +483,7 @@ namespace RetroED.Tools.BackgroundEditor
             Chunks.Clear();
             if (loadedRSDKver == 0)
             {
-                for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK4Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles);
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -454,7 +492,7 @@ namespace RetroED.Tools.BackgroundEditor
             }
             if (loadedRSDKver == 1)
             {
-                for (int i = 0; i < _RSDK3Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK3Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles);
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -463,7 +501,7 @@ namespace RetroED.Tools.BackgroundEditor
             }
             if (loadedRSDKver == 2)
             {
-                for (int i = 0; i < _RSDK2Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK2Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles);
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -472,7 +510,7 @@ namespace RetroED.Tools.BackgroundEditor
             }
             if (loadedRSDKver == 3)
             {
-                for (int i = 0; i < _RSDK1Chunks.BlockList.Count; i++)
+                for (int i = 0; i < _RSDK1Chunks.BlockList.Length; i++)
                 {
                     Bitmap b = _RSDK1Chunks.BlockList[i].Render(_tiles);
                     b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));

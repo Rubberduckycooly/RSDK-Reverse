@@ -12,35 +12,67 @@ namespace RSDKv1
         public int subtype;
         public int xPos;
         public int yPos;
-        static int cur_obj_id = 0;
-        int id;
+        static int cur_id = 0;
+        public int id;
 
-    public Object(int type, int subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_obj_id++)
-    {            
-    }
+        public Object(int type, int subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_id++)
+        {
+        }
 
-    private Object(int type, int subtype, int xPos, int yPos, int id)
-    {
-        this.type = type;
-        this.subtype = subtype;
-        this.xPos = xPos;
-        this.yPos = yPos;
-        this.id = id;
-    }
+        private Object(int type, int subtype, int xPos, int yPos, int id)
+        {
+            this.type = type;
+            this.subtype = subtype;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.id = id;
+        }
 
-    public int getType() { return this.type; }
-    public void setType(int type) { this.type = type; }
+        public Object(Reader reader)
+        {
+            cur_id++;
+            id = cur_id;
 
-    public int getSubtype() { return this.subtype; }
-    public void setSubtype(int subtype) { this.subtype = subtype; }
+            // Object type, 1 byte, unsigned
+            type = reader.ReadByte();
+            // Object subtype, 1 byte, unsigned
+            subtype = reader.ReadByte();
 
-    public int getXPos() { return this.xPos; }
-    public void setXPos(int xPos) { this.xPos = xPos; }
+            // X Position, 2 bytes, big-endian, signed			
+            xPos = reader.ReadSByte() << 8;
+            xPos |= reader.ReadByte();
 
-    public int getYPos() { return this.yPos; }
-    public void setYPos(int yPos) { this.yPos = yPos; }
+            // Y Position, 2 bytes, big-endian, signed
+            yPos = reader.ReadSByte() << 8;
+            yPos |= reader.ReadByte();
 
+            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
+        }
+
+        public void Write(Writer writer)
+        {
+            if (type > 255)
+                throw new Exception("Cannot save as Type v1. Object type > 255");
+
+            if (subtype > 255)
+                throw new Exception("Cannot save as Type v1. Object subtype > 255");
+
+            if (xPos < -32768 || xPos > 32767)
+                throw new Exception("Cannot save as Type v1. Object X Position can't fit in 16-bits");
+
+            if (yPos < -32768 || yPos > 32767)
+                throw new Exception("Cannot save as Type v1. Object Y Position can't fit in 16-bits");
+
+            writer.Write((byte)(type));
+            writer.Write((byte)(subtype));
+
+            writer.Write((byte)(xPos >> 8));
+            writer.Write((byte)(xPos & 0xFF));
+
+            writer.Write((byte)(yPos >> 8));
+            writer.Write((byte)(yPos & 0xFF));
+
+            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
+        }
 }
-
-
 }

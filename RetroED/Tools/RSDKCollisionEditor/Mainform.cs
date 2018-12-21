@@ -27,7 +27,7 @@ namespace RetroED.Tools.CollisionEditor
 
         bool MirrorPaths = false; //Do we want to activate "Mirror Paths" Mode?
 
-        public RSDKvB.CollisionMask tcf; //The Tileconfig Data
+        public RSDKvB.Tileconfig tcf; //The Tileconfig Data
 
         public RetroED.MainForm Parent;
 
@@ -116,7 +116,7 @@ namespace RetroED.Tools.CollisionEditor
             {
                 curColisionMask = 0; //Set the current collision mask to zero (avoids rare errors)
                 filepath = dlg.FileName;
-                tcf = new RSDKvB.CollisionMask(dlg.FileName);
+                tcf = new RSDKvB.Tileconfig(dlg.FileName);
                 string t = filepath.Replace("CollisionMasks.bin", "16x16tiles.gif"); //get the path to the stage's tileset
                 LoadTileSet(new Bitmap(t)); //load each 16x16 tile into the list
 
@@ -620,7 +620,7 @@ namespace RetroED.Tools.CollisionEditor
             {
                 curColisionMask = 0; //Make sure we start at Collision Mask 0
                 filepath = dlg.FileName; //Set the filepath
-                tcf = new RSDKvB.CollisionMask(dlg.FileName); //Tell it to read an uncompressed tileconfig
+                tcf = new RSDKvB.Tileconfig(dlg.FileName); //Tell it to read an uncompressed tileconfig
                 string t = filepath.Replace("CollisionMasks.bin", "16x16tiles.gif"); //get the path to the stage's tileset
                 LoadTileSet(new Bitmap(t)); //load each 16x16 tile into the list
                 RefreshUI(); //update the UI
@@ -785,7 +785,7 @@ namespace RetroED.Tools.CollisionEditor
         {
             if (!showPathB)
             {
-                RSDKvB.CollisionMask.TileConfig tc = tcf.CollisionPath1[curColisionMask];
+                RSDKvB.Tileconfig.CollisionMask tc = tcf.CollisionPath1[curColisionMask];
                 tcf.CollisionPath2[curColisionMask] = tc;
                 CollisionListImgB[curColisionMask] = CollisionListImgA[curColisionMask];
                 RefreshUI();
@@ -820,7 +820,7 @@ namespace RetroED.Tools.CollisionEditor
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 RSDKv5.TilesConfig tcf5 = new RSDKv5.TilesConfig(dlg.FileName);
-                tcf = new RSDKvB.CollisionMask();
+                tcf = new RSDKvB.Tileconfig();
                 for (int i = 0; i < 1024; i++)
                 {
                     //Path A
@@ -963,7 +963,7 @@ namespace RetroED.Tools.CollisionEditor
                 return;
             }
 
-            tcf = new RSDKvB.CollisionMask();
+            tcf = new RSDKvB.Tileconfig();
 
             for (int i = 0; i < 768; i++)
             {

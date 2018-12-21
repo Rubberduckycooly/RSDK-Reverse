@@ -29,6 +29,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         public RetroED.MainForm Parent;
 
+        public bool DrawLines = false;
+
         //Stack<UndoAction> UndoList;
         //Stack<UndoAction> RedoList;
 
@@ -788,19 +790,19 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 0:
-                    _RSDK4Background.HLines.Add(new RSDKvB.BGLayout.HorizontalParallaxValues());
+                    _RSDK4Background.HLines.Add(new RSDKvB.BGLayout.ParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 1:
-                    _RSDK3Background.HLines.Add(new RSDKv2.BGLayout.HorizontalParallaxValues());
+                    _RSDK3Background.HLines.Add(new RSDKv2.BGLayout.ParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 2:
-                    _RSDK2Background.HLines.Add(new RSDKv1.BGLayout.HorizontalParallaxValues());
+                    _RSDK2Background.HLines.Add(new RSDKv1.BGLayout.ParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
                 case 3:
-                    _RSDK1Background.HLines.Add(new RSDKvRS.BGLayout.HorizontalParallaxValues());
+                    _RSDK1Background.HLines.Add(new RSDKvRS.BGLayout.ParallaxValues());
                     _blocksViewer.RefreshParallaxList();
                     break;
             }
@@ -931,6 +933,7 @@ namespace RetroED.Tools.BackgroundEditor
             {
                 _mapViewer.curlayer = curlayer = SLF.SelLayer;
                 Console.WriteLine(SLF.SelLayer + " " + _mapViewer.curlayer + " " + curlayer);
+                _blocksViewer.RefreshLinePosList();
                 _mapViewer.DrawLevel();
             }
 
@@ -941,20 +944,20 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 0:
-                    _RSDK4Background.VLines.Add(new RSDKvB.BGLayout.VerticalParallaxValues());
-                    _blocksViewer.RefreshParallaxList(1);
+                    _RSDK4Background.VLines.Add(new RSDKvB.BGLayout.ParallaxValues());
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 1:
-                    _RSDK3Background.VLines.Add(new RSDKv2.BGLayout.VerticalParallaxValues());
-                    _blocksViewer.RefreshParallaxList(1);
+                    _RSDK3Background.VLines.Add(new RSDKv2.BGLayout.ParallaxValues());
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 2:
-                    _RSDK2Background.VLines.Add(new RSDKv1.BGLayout.VerticalParallaxValues());
-                    _blocksViewer.RefreshParallaxList(1);
+                    _RSDK2Background.VLines.Add(new RSDKv1.BGLayout.ParallaxValues());
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 3:
-                    _RSDK1Background.VLines.Add(new RSDKvRS.BGLayout.VerticalParallaxValues());
-                    _blocksViewer.RefreshParallaxList(1);
+                    _RSDK1Background.VLines.Add(new RSDKvRS.BGLayout.ParallaxValues());
+                    _blocksViewer.RefreshParallaxList();
                     break;
             }
         }
@@ -965,19 +968,19 @@ namespace RetroED.Tools.BackgroundEditor
             {
                 case 0:
                     _RSDK4Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList(1);
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 1:
                     _RSDK3Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList(1);
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 2:
                     _RSDK2Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList(1);
+                    _blocksViewer.RefreshParallaxList();
                     break;
                 case 3:
                     _RSDK1Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList(1);
+                    _blocksViewer.RefreshParallaxList();
                     break;
             }
         }
@@ -1002,6 +1005,25 @@ namespace RetroED.Tools.BackgroundEditor
                     _RSDK1Background.HLines.Clear();
                     _blocksViewer.RefreshParallaxList();
                     break;
+            }
+        }
+
+        private void menuItem4_Click(object sender, EventArgs e)
+        {
+            
+            if (!menuItem4.Checked)
+            {
+                DrawLines = true;
+                menuItem4.Checked = _mapViewer.DrawLines;
+                _mapViewer.DrawLines = true;
+                _mapViewer.DrawLevel();
+            }
+            else
+            {
+                DrawLines = false;
+                menuItem4.Checked = _mapViewer.DrawLines;
+                _mapViewer.DrawLines = false;
+                _mapViewer.DrawLevel();
             }
         }
     }

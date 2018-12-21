@@ -35,10 +35,13 @@
             this.HpValuesList = new System.Windows.Forms.ListBox();
             this.VpValues = new System.Windows.Forms.TabPage();
             this.VpValuesList = new System.Windows.Forms.ListBox();
+            this.LineNumberPage = new System.Windows.Forms.TabPage();
+            this.LineNumberListBox = new System.Windows.Forms.ListBox();
             this.tabControl.SuspendLayout();
             this.ChunksPage.SuspendLayout();
             this.HpValues.SuspendLayout();
             this.VpValues.SuspendLayout();
+            this.LineNumberPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl
@@ -46,6 +49,7 @@
             this.tabControl.Controls.Add(this.ChunksPage);
             this.tabControl.Controls.Add(this.HpValues);
             this.tabControl.Controls.Add(this.VpValues);
+            this.tabControl.Controls.Add(this.LineNumberPage);
             this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
@@ -66,7 +70,7 @@
             // 
             // BlocksList
             // 
-            this.BlocksList.BackColor = System.Drawing.SystemColors.Window;
+            this.BlocksList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.BlocksList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BlocksList.ImageHeight = 128;
             this.BlocksList.ImageSize = 128;
@@ -92,6 +96,7 @@
             // 
             // HpValuesList
             // 
+            this.HpValuesList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.HpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.HpValuesList.FormattingEnabled = true;
             this.HpValuesList.ItemHeight = 17;
@@ -113,6 +118,7 @@
             // 
             // VpValuesList
             // 
+            this.VpValuesList.BackColor = System.Drawing.SystemColors.ControlDark;
             this.VpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.VpValuesList.FormattingEnabled = true;
             this.VpValuesList.ItemHeight = 17;
@@ -122,11 +128,33 @@
             this.VpValuesList.TabIndex = 1;
             this.VpValuesList.DoubleClick += new System.EventHandler(this.VpValuesList_DoubleClick);
             // 
+            // LineNumberPage
+            // 
+            this.LineNumberPage.Controls.Add(this.LineNumberListBox);
+            this.LineNumberPage.Location = new System.Drawing.Point(4, 26);
+            this.LineNumberPage.Name = "LineNumberPage";
+            this.LineNumberPage.Padding = new System.Windows.Forms.Padding(3);
+            this.LineNumberPage.Size = new System.Drawing.Size(309, 351);
+            this.LineNumberPage.TabIndex = 3;
+            this.LineNumberPage.Text = "Line Numbers";
+            this.LineNumberPage.UseVisualStyleBackColor = true;
+            // 
+            // LineNumberListBox
+            // 
+            this.LineNumberListBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.LineNumberListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LineNumberListBox.FormattingEnabled = true;
+            this.LineNumberListBox.ItemHeight = 17;
+            this.LineNumberListBox.Location = new System.Drawing.Point(3, 3);
+            this.LineNumberListBox.Name = "LineNumberListBox";
+            this.LineNumberListBox.Size = new System.Drawing.Size(303, 345);
+            this.LineNumberListBox.TabIndex = 0;
+            // 
             // StageChunksView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(317, 381);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
@@ -137,6 +165,7 @@
             this.ChunksPage.ResumeLayout(false);
             this.HpValues.ResumeLayout(false);
             this.VpValues.ResumeLayout(false);
+            this.LineNumberPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -150,5 +179,7 @@
         private System.Windows.Forms.ListBox HpValuesList;
         private System.Windows.Forms.TabPage VpValues;
         private System.Windows.Forms.ListBox VpValuesList;
+        private System.Windows.Forms.TabPage LineNumberPage;
+        private System.Windows.Forms.ListBox LineNumberListBox;
     }
 }

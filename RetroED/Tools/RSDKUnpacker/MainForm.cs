@@ -24,6 +24,8 @@ namespace RetroED.Tools.RSDKUnpacker
         RSDKvB.DataFile DatavB;
         RSDKv5.DataFile Datav5;
 
+        byte DirID = 0; //FOR DATA FILE BUILDING, DO NOT USE!!!
+
         public MainForm()
         {
             InitializeComponent();
@@ -32,7 +34,7 @@ namespace RetroED.Tools.RSDKUnpacker
         private void SelectDataFileButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
-            dlg.Filter = "Retro-Sonic Data files|Data.bin|Sonic Nexus Data files|Data.bin|Sonic CD Data files|Data.rsdk|RSDKvB Data files|Data.rsdk|RSDKv5 Data files|Data.rsdk";
+            dlg.Filter = "Retro-Sonic Data files|Data*.bin|Sonic Nexus Data files|Data*.bin|Sonic CD Data files|*.rsdk|RSDKvB Data files|*.rsdk|RSDKv5 Data files|*.rsdk";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
@@ -44,34 +46,22 @@ namespace RetroED.Tools.RSDKUnpacker
                 {
                     case 0:
                         DatavRS = new RSDKvRS.DataFile(filename);
-                        BuildTreeRS();
                         SetFileListRS();
                         break;
                     case 1:
                         Datav1 = new RSDKv1.DataFile(filename);
-                        BuildTreev1();
                         SetFileListv1();
                         break;
                     case 2:
                         Datav2 = new RSDKv2.DataFile(filename);
-                        BuildTreev2();
                         SetFileListv2();
                         break;
                     case 3:
                         if (FileList == null || FileList.Count <= 0)
                         {
-                            if (File.Exists("S1FileList.txt"))
+                            if (File.Exists("RSDKvBFileList.txt"))
                             {
-                                StreamReader reader = new StreamReader(File.OpenRead("S1FileList.txt"));
-                                while (!reader.EndOfStream)
-                                {
-                                    FileList.Add(reader.ReadLine());
-                                }
-                                reader.Close();
-                            }
-                            else if (File.Exists("S2FileList.txt"))
-                            {
-                                StreamReader reader = new StreamReader(File.OpenRead("S2FileList.txt"));
+                                StreamReader reader = new StreamReader(File.OpenRead("RSDKvBFileList.txt"));
                                 while (!reader.EndOfStream)
                                 {
                                     FileList.Add(reader.ReadLine());
@@ -82,7 +72,6 @@ namespace RetroED.Tools.RSDKUnpacker
                         if (FileList != null && FileList.Count > 0)
                         {
                             DatavB = new RSDKvB.DataFile(filename, FileList);
-                            BuildTreevB();
                             SetFileListvB();
                         }
                         break;
@@ -102,7 +91,6 @@ namespace RetroED.Tools.RSDKUnpacker
                         if (FileList != null && FileList.Count > 0)
                         {
                             Datav5 = new RSDKv5.DataFile(filename, FileList);
-                            BuildTreev5();
                             SetFileListv5();
                         }
                         break;
@@ -145,36 +133,71 @@ namespace RetroED.Tools.RSDKUnpacker
         {
             FolderBrowserDialog dlg = new FolderBrowserDialog();
 
-            if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+            SelectRSDKForm selectRSDKForm = new SelectRSDKForm();
+
+            selectRSDKForm.RSDKVerBox.Items.Clear();
+            selectRSDKForm.RSDKVerBox.Items.Add("RSDKvRS");
+            selectRSDKForm.RSDKVerBox.Items.Add("RSDKv1");
+            selectRSDKForm.RSDKVerBox.Items.Add("RSDKv2");
+            selectRSDKForm.RSDKVerBox.Items.Add("RSDKvB");
+            selectRSDKForm.RSDKVerBox.Items.Add("RSDKv5");
+
+            if (selectRSDKForm.ShowDialog(this) == DialogResult.OK)
             {
-                filename = dlg.SelectedPath;
-                DataFolderLocation.Text = filename;
+                dataVer = selectRSDKForm.RSDKver;
+                if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                {
+                    filename = dlg.SelectedPath;
+                    DataFolderLocation.Text = filename;
+
+                    switch (dataVer)
+                    {
+                        case 0:
+                            BuildFromDataFolderVRS(dlg.SelectedPath);
+                            break;
+                        case 1:
+                            BuildFromDataFolderV1(dlg.SelectedPath);
+                            break;
+                        case 2:
+                            BuildFromDataFolderV2(dlg.SelectedPath);
+                            break;
+                        case 3:
+                            BuildFromDataFolderVB(dlg.SelectedPath);
+                            break;
+                        case 4:
+                            BuildFromDataFolderV5(dlg.SelectedPath);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }
             }
         }
 
         private void BuildDataButton_Click(object sender, EventArgs e)
         {
             SaveFileDialog dlg = new SaveFileDialog();
-            dlg.Filter = "Retro-Sonic Data files|Data.bin|Sonic Nexus Data files|Data.bin|Sonic CD Data files|Data.rsdk|RSDKvB Data files|Data.rsdk|RSDKv5 Data files|Data.rsdk";
+            dlg.Filter = "Retro-Sonic Data files|Data*.bin|Sonic Nexus Data files|Data*.bin|Sonic CD Data files|Data*.rsdk|RSDKvB Data files|Data*.rsdk|RSDKv5 Data files|Data*.rsdk";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 switch (dlg.FilterIndex-1)
                 {
                     case 0:
-                        BuildDataVRS(filename, dlg.FileName);
+                        BuildDataVRS(dlg.FileName);
                         break;
                     case 1:
-                        BuildDataV1(filename, dlg.FileName);
+                        BuildDataV1(dlg.FileName);
                         break;
                     case 2:
-                        BuildDataV2(filename, dlg.FileName);
+                        BuildDataV2(dlg.FileName);
                         break;
                     case 3:
-                        BuildDataVB(filename, dlg.FileName);
+                        BuildDataVB(dlg.FileName);
                         break;
                     case 4:
-                        BuildDataV5(filename, dlg.FileName);
+                        BuildDataV5(dlg.FileName);
                         break;
                     default:
                         break;
@@ -219,27 +242,244 @@ namespace RetroED.Tools.RSDKUnpacker
             }
         }
 
-        public void BuildDataVRS(string DataFolder, string DataFilepath)
+        public void BuildDataVRS(string DataFilepath)
         {
-
+            DatavRS.Write(new RSDKvRS.Writer(DataFilepath));
         }
 
-        public void BuildDataV1(string DataFolder, string DataFilepath)
+        public void BuildDataV1(string DataFilepath)
         {
-
+            Datav1.Write(new RSDKv1.Writer(DataFilepath));
         }
-        public void BuildDataV2(string DataFolder, string DataFilepath)
+        public void BuildDataV2(string DataFilepath)
         {
-
+            Datav2.Write(new RSDKv2.Writer(DataFilepath));
         }
-        public void BuildDataVB(string DataFolder, string DataFilepath)
+        public void BuildDataVB(string DataFilepath)
         {
-
+            DatavB.Write(new RSDKvB.Writer(DataFilepath));
         }
-        public void BuildDataV5(string DataFolder, string DataFilepath)
+        public void BuildDataV5(string DataFilepath)
         {
-
+            Datav5.Write(new RSDKv5.Writer(DataFilepath));
         }
+
+        public void BuildFromDataFolderVRS(string folderPath)
+        {
+            DatavRS = new RSDKvRS.DataFile();
+            DirID = 0;
+            BuildDataFromFoldersRS(new DirectoryInfo(folderPath));
+            SetFileListRS();
+            RefreshUI();
+        }
+
+        private void BuildDataFromFoldersRS(DirectoryInfo directoryInfo)
+        {
+            string dir = directoryInfo.FullName.Replace(help.GetUntilOrEmpty(directoryInfo.FullName, "Data"), "");
+
+            RSDKvRS.DataFile.DirInfo dirinfo = new RSDKvRS.DataFile.DirInfo();
+
+            dir.Replace("\\", "/");
+
+            dirinfo.Directory = dir + "/";
+
+            if (directoryInfo.GetFiles().Length > 0)
+            {
+                DatavRS.Directories.Add(dirinfo);
+                DirID++;
+            }
+
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                RSDKvRS.DataFile.FileInfo File = new RSDKvRS.DataFile.FileInfo();
+
+                File.DirID = (byte)(DirID-1);
+                File.FullFileName = file.FullName.Replace(help.GetUntilOrEmpty(file.FullName, "Data"),"");
+
+                RSDKvRS.Reader reader = new RSDKvRS.Reader(file.FullName);
+
+                File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
+                File.fileSize = (ulong)reader.BaseStream.Length;
+
+                reader.Close();
+
+                File.FileName = Path.GetFileName(file.FullName);
+
+                DatavRS.Files.Add(File);
+            }
+
+            foreach (DirectoryInfo subdir in directoryInfo.GetDirectories())
+            {
+                BuildDataFromFoldersRS(subdir);
+            }
+        }
+
+        public void BuildFromDataFolderV1(string folderPath)
+        {
+            Datav1 = new RSDKv1.DataFile();
+            DirID = 0;
+            BuildDataFromFoldersV1(new DirectoryInfo(folderPath));
+            SetFileListv1();
+            RefreshUI();
+        }
+
+        private void BuildDataFromFoldersV1(DirectoryInfo directoryInfo)
+        {
+            string dir = directoryInfo.FullName.Replace(help.GetUntilOrEmpty(directoryInfo.FullName, "Data"), "");
+
+            RSDKv1.DataFile.DirInfo dirinfo = new RSDKv1.DataFile.DirInfo();
+
+            dir.Replace("\\", "/");
+
+            dirinfo.Directory = dir + "/";
+
+            if (directoryInfo.GetFiles().Length > 0)
+            {
+                Datav1.Directories.Add(dirinfo);
+                DirID++;
+            }
+
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                RSDKv1.DataFile.FileInfo File = new RSDKv1.DataFile.FileInfo();
+
+                File.DirID = (byte)(DirID - 1);
+                File.FullFileName = file.FullName.Replace(help.GetUntilOrEmpty(file.FullName, "Data"), "");
+
+                RSDKv1.Reader reader = new RSDKv1.Reader(file.FullName);
+
+                File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
+                File.fileSize = (uint)reader.BaseStream.Length;
+
+                reader.Close();
+
+                File.FileName = Path.GetFileName(file.FullName);
+
+                Datav1.Files.Add(File);
+            }
+
+            foreach (DirectoryInfo subdir in directoryInfo.GetDirectories())
+            {
+                BuildDataFromFoldersV2(subdir);
+            }
+        }
+
+        public void BuildFromDataFolderV2(string folderPath)
+        {
+            Datav2 = new RSDKv2.DataFile();
+            DirID = 0;
+            BuildDataFromFoldersV2(new DirectoryInfo(folderPath));
+            SetFileListv2();
+            RefreshUI();
+        }
+
+        private void BuildDataFromFoldersV2(DirectoryInfo directoryInfo)
+        {
+            string dir = directoryInfo.FullName.Replace(help.GetUntilOrEmpty(directoryInfo.FullName, "Data"), "");
+
+            RSDKv2.DataFile.DirInfo dirinfo = new RSDKv2.DataFile.DirInfo();
+
+            dir.Replace("\\", "/");
+
+            dirinfo.Directory = dir + "/";
+
+            if (directoryInfo.GetFiles().Length > 0)
+            {
+                Datav2.Directories.Add(dirinfo);
+                DirID++;
+            }
+
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                RSDKv2.DataFile.FileInfo File = new RSDKv2.DataFile.FileInfo();
+
+                File.DirID = (ushort)(DirID - 1);
+                File.FullFileName = file.FullName.Replace(help.GetUntilOrEmpty(file.FullName, "Data"), "");
+
+                RSDKv2.Reader reader = new RSDKv2.Reader(file.FullName);
+
+                File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
+                File.fileSize = (uint)reader.BaseStream.Length;
+
+                reader.Close();
+
+                File.FileName = Path.GetFileName(file.FullName);
+
+                Datav2.Files.Add(File);
+            }
+
+            foreach (DirectoryInfo subdir in directoryInfo.GetDirectories())
+            {
+                BuildDataFromFoldersV2(subdir);
+            }
+        }
+
+        public void BuildFromDataFolderVB(string folderPath)
+        {
+            DatavB = new RSDKvB.DataFile();
+            DirID = 0;
+            BuildDataFromFoldersVB(new DirectoryInfo(folderPath));
+            SetFileListvB();
+            RefreshUI();
+        }
+
+        private void BuildDataFromFoldersVB(DirectoryInfo directoryInfo)
+        {
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                RSDKvB.DataFile.FileInfo File = new RSDKvB.DataFile.FileInfo();
+
+                File.FileName = file.FullName.Replace(help.GetUntilOrEmpty(file.FullName, "Data"), "");
+
+                RSDKvB.Reader reader = new RSDKvB.Reader(file.FullName);
+
+                File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
+                File.fileSize = (uint)reader.BaseStream.Length;
+
+                reader.Close();
+
+                DatavB.Files.Add(File);
+            }
+
+            foreach (DirectoryInfo subdir in directoryInfo.GetDirectories())
+            {
+                BuildDataFromFoldersVB(subdir);
+            }
+        }
+
+        public void BuildFromDataFolderV5(string folderPath)
+        {
+            Datav5 = new RSDKv5.DataFile();
+            DirID = 0;
+            BuildDataFromFoldersV5(new DirectoryInfo(folderPath));
+            SetFileListv5();
+            RefreshUI();
+        }
+
+        private void BuildDataFromFoldersV5(DirectoryInfo directoryInfo)
+        {
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                RSDKv5.DataFile.FileInfo File = new RSDKv5.DataFile.FileInfo();
+
+                File.FileName = file.FullName.Replace(help.GetUntilOrEmpty(file.FullName, "Data"), "");
+
+                RSDKv5.Reader reader = new RSDKv5.Reader(file.FullName);
+
+                File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
+                File.fileSize = (uint)reader.BaseStream.Length;
+
+                reader.Close();
+
+                Datav5.Files.Add(File);
+            }
+
+            foreach (DirectoryInfo subdir in directoryInfo.GetDirectories())
+            {
+                BuildDataFromFoldersVB(subdir);
+            }
+        }
+
 
         private void SelectList_Click(object sender, EventArgs e)
         {
@@ -264,82 +504,18 @@ namespace RetroED.Tools.RSDKUnpacker
 
         }
 
-        private void BuildTreeRS()
-        {
-            TreeNodeCollection addInMe = DataView.Nodes;
-            TreeNode curNode = addInMe.Add("Data");
-            DataView.Nodes.Clear();
-            foreach (RSDKvRS.DataFile.DirInfo d in DatavRS.Directories)
-            {
-                if (d.Directory != "Data/")
-                curNode.Nodes.Add(d.Directory.Remove(d.Directory.Length-1,1), d.Directory.Remove(d.Directory.Length - 1, 1));
-            }
-            foreach (RSDKvRS.DataFile.FileInfo subdir in DatavRS.Files)
-            {
-                //BuildTree(subdir.FileName, curNode.Nodes);
-            }
-        }
-
-        private void BuildTreev1()
-        {
-            TreeNodeCollection addInMe = DataView.Nodes;
-            TreeNode curNode = addInMe.Add("Data");
-            DataView.Nodes.Clear();
-            foreach (RSDKv1.DataFile.DirInfo d in Datav1.Directories)
-            {
-                if (d.Directory != "Data/")
-                    curNode.Nodes.Add(d.Directory.Remove(d.Directory.Length - 1, 1), d.Directory.Remove(d.Directory.Length - 1, 1));
-            }
-            foreach (RSDKv1.DataFile.FileInfo subdir in Datav1.Files)
-            {
-                //BuildTree(subdir.FileName, curNode.Nodes);
-            }
-        }
-
-        private void BuildTreev2()
-        {
-            TreeNodeCollection addInMe = DataView.Nodes;
-            TreeNode curNode = addInMe.Add("Data");
-            DataView.Nodes.Clear();
-            foreach (RSDKv2.DataFile.DirInfo d in Datav2.Directories)
-            {
-                if (d.Directory != "Data/")
-                    curNode.Nodes.Add(d.Directory.Remove(d.Directory.Length - 1, 1), d.Directory.Remove(d.Directory.Length - 1, 1));
-            }
-            foreach (RSDKv2.DataFile.FileInfo subdir in Datav2.Files)
-            {
-                //BuildTree(subdir.FileName, curNode.Nodes);
-            }
-        }
-
-        private void BuildTreevB()
-        {
-            TreeNodeCollection addInMe = DataView.Nodes;
-            TreeNode curNode = addInMe.Add("Data");
-            DataView.Nodes.Clear();
-            foreach (RSDKvB.DataFile.FileInfo subdir in DatavB.Files)
-            {
-                //BuildTree(subdir.FileName, curNode.Nodes);
-            }
-        }
-
-        private void BuildTreev5()
-        {
-            TreeNodeCollection addInMe = DataView.Nodes;
-            TreeNode curNode = addInMe.Add("Data");
-            DataView.Nodes.Clear();
-            foreach (RSDKv5.DataFile.FileInfo subdir in Datav5.Files)
-            {
-                //BuildTree(subdir.FileName, curNode.Nodes);
-            }
-        }
-
         void SetFileListRS()
         {
+            DirectoryListBox.Items.Clear();
+            foreach (RSDKvRS.DataFile.DirInfo d in DatavRS.Directories)
+            {
+                DirectoryListBox.Items.Add(d.Directory);
+                DirectoryList.Items.Add(d.Directory);
+            }
             FileListBox.Items.Clear();
             foreach (RSDKvRS.DataFile.FileInfo f in DatavRS.Files)
             {
-                FileListBox.Items.Add(f.FullFileName);
+                FileListBox.Items.Add(DatavRS.Directories[f.DirID].Directory + "\\" + f.FileName);
             }
         }
 
@@ -350,6 +526,11 @@ namespace RetroED.Tools.RSDKUnpacker
             {
                 FileListBox.Items.Add(f.FullFileName);
             }
+            DirectoryListBox.Items.Clear();
+            foreach (RSDKv1.DataFile.DirInfo d in Datav1.Directories)
+            {
+                DirectoryListBox.Items.Add(d.Directory);
+            }
         }
 
         void SetFileListv2()
@@ -358,6 +539,11 @@ namespace RetroED.Tools.RSDKUnpacker
             foreach (RSDKv2.DataFile.FileInfo f in Datav2.Files)
             {
                 FileListBox.Items.Add(f.FullFileName);
+            }
+            DirectoryListBox.Items.Clear();
+            foreach (RSDKv2.DataFile.DirInfo d in Datav2.Directories)
+            {
+                DirectoryListBox.Items.Add(d.Directory);
             }
         }
 
@@ -455,5 +641,132 @@ namespace RetroED.Tools.RSDKUnpacker
                 }
             }
         }
+
+        private void EncryptedCB_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (dataVer)
+            {
+                case 0:
+                    EncryptedCB.Checked = false;
+                    break;
+                case 1:
+                    EncryptedCB.Checked = Datav1.Files[FileListBox.SelectedIndex].encrypted;
+                    break;
+                case 2:
+                    //EncryptedCB.Checked = Datav2.Files[FileListBox.SelectedIndex].encrypted;
+                    EncryptedCB.Checked = true;
+                    break;
+                case 3:
+                    EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].encrypted;
+                    break;
+                case 4:
+                    EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                    break;
+            }
+        }
+
+        void RefreshUI()
+        {
+            switch(dataVer)
+            {
+                case 0: //RSonic '07 (RSDKvRS)
+                    if (FileListBox.SelectedIndex >= 0)
+                    {
+                        FileSizeLabel.Text = "File Size = " + DatavRS.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileNameLabel.Text = "File Name = " + DatavRS.Files[FileListBox.SelectedIndex].FileName;
+                        FullFileNameLabel.Text = "Full File Name = " + DatavRS.Files[FileListBox.SelectedIndex].FullFileName;
+                        FileOffsetLabel.Text = "RSDKvRS doesn't use file offsets!";
+                        EncryptedCB.Checked = false;
+                        DirectoryList.SelectedIndex = DatavRS.Files[FileListBox.SelectedIndex].DirID;
+                    }
+                    break;
+                case 1: //Sonic Nexus (RSDKv1)
+                    if (FileListBox.SelectedIndex >= 0)
+                    {
+                        FileSizeLabel.Text = "File Size = " + Datav1.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileNameLabel.Text = "File Name = " + Datav1.Files[FileListBox.SelectedIndex].FileName;
+                        FullFileNameLabel.Text = "Full File Name = " + Datav1.Files[FileListBox.SelectedIndex].FullFileName;
+                        FileOffsetLabel.Text = "RSDKv1 doesn't use file offsets!";
+                        EncryptedCB.Checked = Datav1.Files[FileListBox.SelectedIndex].encrypted;
+                    }
+                    break;
+                case 2: //Sonic CD (RSDKv2)
+                    if (FileListBox.SelectedIndex >= 0)
+                    {
+                        FileSizeLabel.Text = "File Size = " + Datav2.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileNameLabel.Text = "File Name = " + Datav2.Files[FileListBox.SelectedIndex].FileName;
+                        FullFileNameLabel.Text = "Full File Name = " + Datav2.Files[FileListBox.SelectedIndex].FullFileName;
+                        FileOffsetLabel.Text = "RSDKv2 doesn't use file offsets!";
+                        //EncryptedCB.Checked = Datav2.Files[FileListBox.SelectedIndex].encrypted;
+                        EncryptedCB.Checked = true;
+                    }
+                    break;
+                case 3: //Sonic 1 & 2 (RSDKvB)
+                    if (FileListBox.SelectedIndex >= 0)
+                    {
+                        FileSizeLabel.Text = "File Size = " + DatavB.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileNameLabel.Text = "File Name = " + Path.GetFileName(DatavB.Files[FileListBox.SelectedIndex].FileName);
+                        FullFileNameLabel.Text = "Full File Name = " + DatavB.Files[FileListBox.SelectedIndex].FileName;
+                        FileOffsetLabel.Text = "File Offset = " + DatavB.Files[FileListBox.SelectedIndex].DataOffset + " Bytes";
+                        EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].encrypted;
+                    }
+                    break;
+                case 4: //Sonic Mania (RSDKv5)
+                    if (FileListBox.SelectedIndex >= 0)
+                    {
+                        FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileNameLabel.Text = "File Name = " + Path.GetFileName(Datav5.Files[FileListBox.SelectedIndex].FileName);
+                        FullFileNameLabel.Text = "Full File Name = " + Datav5.Files[FileListBox.SelectedIndex].FileName;
+                        FileOffsetLabel.Text = "File Offset = " + Datav5.Files[FileListBox.SelectedIndex].DataOffset + " Bytes";
+                        EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                    }
+                    break;
+            }
+        }
+
+        private void FileListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshUI();
+        }
+
+        private void DirectoryListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DirectoryList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch(dataVer)
+            {
+                case 0: //RSonic '07 (RSDKvRS)
+                    DatavRS.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
+                    break;
+                case 1: //Sonic Nexus (RSDKv1)
+                    //Datav1.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
+                    break;
+                case 2: //Sonic CD (RSDKv2)
+                    //Datav2.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
+                    break;
+            }
+        }
     }
+
+    static class help
+    {
+        public static string GetUntilOrEmpty(string text, string stopAt = "-")
+        {
+            if (!String.IsNullOrWhiteSpace(text))
+            {
+                int charLocation = text.IndexOf(stopAt, StringComparison.Ordinal);
+
+                if (charLocation > 0)
+                {
+                    return text.Substring(0, charLocation);
+                }
+            }
+
+            return text;
+        }
+    }
+
 }

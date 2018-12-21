@@ -91,6 +91,10 @@
       <Project>{1a58ba31-c9e1-4d18-876e-ec73799e7a9f}</Project>
       <Name>RSDKvB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RSDKvRS\RSDKvRS.csproj">
+      <Project>{aae1bacd-fe6b-4cc6-ad2d-073315f45eaf}</Project>
+      <Name>RSDKvRS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

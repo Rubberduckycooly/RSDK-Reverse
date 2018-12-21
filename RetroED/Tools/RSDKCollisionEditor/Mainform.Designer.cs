@@ -40,6 +40,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.importRSDKv5TileConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToRSDKv5TileConfigToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.importFromGenesisGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showPathBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -105,7 +107,6 @@
             this.CurMaskLabel = new System.Windows.Forms.Label();
             this.OverlayLabel = new System.Windows.Forms.Label();
             this.OverlayPicBox = new System.Windows.Forms.PictureBox();
-            this.CollisionList = new RetroED.Tools.CollisionEditor.TileList();
             this.CollisionVIEW = new System.Windows.Forms.GroupBox();
             this.RGBoxF = new System.Windows.Forms.PictureBox();
             this.Viewer16 = new System.Windows.Forms.PictureBox();
@@ -144,8 +145,7 @@
             this.CTileLabel = new System.Windows.Forms.Label();
             this.TilePicBox = new System.Windows.Forms.PictureBox();
             this.CollisionPicBox = new System.Windows.Forms.PictureBox();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.importFromGenesisGamesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.CollisionList = new RetroED.Tools.CollisionEditor.TileList();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -199,6 +199,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
@@ -291,6 +292,19 @@
             this.exportToRSDKv5TileConfigToolStripMenuItem.Text = "Export to RSDKv5 TileConfig";
             this.exportToRSDKv5TileConfigToolStripMenuItem.Click += new System.EventHandler(this.exportToRSDKv5TileConfigToolStripMenuItem_Click);
             // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(270, 6);
+            // 
+            // importFromGenesisGamesToolStripMenuItem
+            // 
+            this.importFromGenesisGamesToolStripMenuItem.Enabled = false;
+            this.importFromGenesisGamesToolStripMenuItem.Name = "importFromGenesisGamesToolStripMenuItem";
+            this.importFromGenesisGamesToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
+            this.importFromGenesisGamesToolStripMenuItem.Text = "Import from Genesis Games";
+            this.importFromGenesisGamesToolStripMenuItem.Click += new System.EventHandler(this.importFromGenesisGamesToolStripMenuItem_Click);
+            // 
             // viewToolStripMenuItem
             // 
             this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -356,7 +370,7 @@
             // aboutToolStripMenuItem1
             // 
             this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(125, 26);
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(216, 26);
             this.aboutToolStripMenuItem1.Text = "About";
             this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
             // 
@@ -639,6 +653,7 @@
             // 
             // lb00
             // 
+            this.lb00.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb00.FormattingEnabled = true;
             this.lb00.ItemHeight = 16;
             this.lb00.Items.AddRange(new object[] {
@@ -667,6 +682,7 @@
             // 
             // lb15
             // 
+            this.lb15.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb15.FormattingEnabled = true;
             this.lb15.ItemHeight = 16;
             this.lb15.Items.AddRange(new object[] {
@@ -695,6 +711,7 @@
             // 
             // lb14
             // 
+            this.lb14.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb14.FormattingEnabled = true;
             this.lb14.ItemHeight = 16;
             this.lb14.Items.AddRange(new object[] {
@@ -723,6 +740,7 @@
             // 
             // lb13
             // 
+            this.lb13.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb13.FormattingEnabled = true;
             this.lb13.ItemHeight = 16;
             this.lb13.Items.AddRange(new object[] {
@@ -751,6 +769,7 @@
             // 
             // lb12
             // 
+            this.lb12.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb12.FormattingEnabled = true;
             this.lb12.ItemHeight = 16;
             this.lb12.Items.AddRange(new object[] {
@@ -780,6 +799,7 @@
             // SpecialNUD
             // 
             this.SpecialNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SpecialNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.SpecialNUD.Enabled = false;
             this.SpecialNUD.Hexadecimal = true;
             this.SpecialNUD.Location = new System.Drawing.Point(276, 347);
@@ -796,6 +816,7 @@
             // 
             // lb11
             // 
+            this.lb11.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb11.FormattingEnabled = true;
             this.lb11.ItemHeight = 16;
             this.lb11.Items.AddRange(new object[] {
@@ -835,6 +856,7 @@
             // 
             // lb10
             // 
+            this.lb10.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb10.FormattingEnabled = true;
             this.lb10.ItemHeight = 16;
             this.lb10.Items.AddRange(new object[] {
@@ -864,6 +886,7 @@
             // UnknownNUD
             // 
             this.UnknownNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.UnknownNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.UnknownNUD.Hexadecimal = true;
             this.UnknownNUD.Location = new System.Drawing.Point(204, 347);
             this.UnknownNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -879,6 +902,7 @@
             // 
             // lb09
             // 
+            this.lb09.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb09.FormattingEnabled = true;
             this.lb09.ItemHeight = 16;
             this.lb09.Items.AddRange(new object[] {
@@ -917,6 +941,7 @@
             // 
             // lb08
             // 
+            this.lb08.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb08.FormattingEnabled = true;
             this.lb08.ItemHeight = 16;
             this.lb08.Items.AddRange(new object[] {
@@ -946,6 +971,7 @@
             // MomentumNUD
             // 
             this.MomentumNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.MomentumNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.MomentumNUD.Hexadecimal = true;
             this.MomentumNUD.Location = new System.Drawing.Point(121, 348);
             this.MomentumNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -961,6 +987,7 @@
             // 
             // lb07
             // 
+            this.lb07.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb07.FormattingEnabled = true;
             this.lb07.ItemHeight = 16;
             this.lb07.Items.AddRange(new object[] {
@@ -999,6 +1026,7 @@
             // 
             // lb06
             // 
+            this.lb06.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb06.FormattingEnabled = true;
             this.lb06.ItemHeight = 16;
             this.lb06.Items.AddRange(new object[] {
@@ -1028,6 +1056,7 @@
             // PhysicsNUD
             // 
             this.PhysicsNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.PhysicsNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.PhysicsNUD.Hexadecimal = true;
             this.PhysicsNUD.Location = new System.Drawing.Point(59, 347);
             this.PhysicsNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1043,6 +1072,7 @@
             // 
             // lb05
             // 
+            this.lb05.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb05.FormattingEnabled = true;
             this.lb05.ItemHeight = 16;
             this.lb05.Items.AddRange(new object[] {
@@ -1081,6 +1111,7 @@
             // 
             // lb04
             // 
+            this.lb04.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb04.FormattingEnabled = true;
             this.lb04.ItemHeight = 16;
             this.lb04.Items.AddRange(new object[] {
@@ -1110,6 +1141,7 @@
             // SlopeNUD
             // 
             this.SlopeNUD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.SlopeNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.SlopeNUD.Hexadecimal = true;
             this.SlopeNUD.Location = new System.Drawing.Point(9, 347);
             this.SlopeNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -1125,6 +1157,7 @@
             // 
             // lb03
             // 
+            this.lb03.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb03.FormattingEnabled = true;
             this.lb03.ItemHeight = 16;
             this.lb03.Items.AddRange(new object[] {
@@ -1163,6 +1196,7 @@
             // 
             // lb02
             // 
+            this.lb02.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb02.FormattingEnabled = true;
             this.lb02.ItemHeight = 16;
             this.lb02.Items.AddRange(new object[] {
@@ -1191,6 +1225,7 @@
             // 
             // lb01
             // 
+            this.lb01.BackColor = System.Drawing.SystemColors.ControlDark;
             this.lb01.FormattingEnabled = true;
             this.lb01.ItemHeight = 16;
             this.lb01.Items.AddRange(new object[] {
@@ -1265,7 +1300,8 @@
             // 
             // GotoNUD
             // 
-            this.GotoNUD.Location = new System.Drawing.Point(253, 33);
+            this.GotoNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GotoNUD.Location = new System.Drawing.Point(252, 34);
             this.GotoNUD.Margin = new System.Windows.Forms.Padding(4);
             this.GotoNUD.Maximum = new decimal(new int[] {
             1024,
@@ -1339,19 +1375,6 @@
             this.OverlayPicBox.Size = new System.Drawing.Size(128, 128);
             this.OverlayPicBox.TabIndex = 37;
             this.OverlayPicBox.TabStop = false;
-            // 
-            // CollisionList
-            // 
-            this.CollisionList.BackColor = System.Drawing.SystemColors.Window;
-            this.CollisionList.Dock = System.Windows.Forms.DockStyle.Right;
-            this.CollisionList.Location = new System.Drawing.Point(439, 0);
-            this.CollisionList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.CollisionList.Name = "CollisionList";
-            this.CollisionList.ScrollValue = 0;
-            this.CollisionList.SelectedIndex = -1;
-            this.CollisionList.Size = new System.Drawing.Size(196, 466);
-            this.CollisionList.TabIndex = 36;
-            this.CollisionList.SelectedIndexChanged += new System.EventHandler(this.CollisionList_SelectedIndexChanged);
             // 
             // CollisionVIEW
             // 
@@ -1768,22 +1791,24 @@
             this.CollisionPicBox.TabIndex = 0;
             this.CollisionPicBox.TabStop = false;
             // 
-            // toolStripSeparator4
+            // CollisionList
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(270, 6);
-            // 
-            // importFromGenesisGamesToolStripMenuItem
-            // 
-            this.importFromGenesisGamesToolStripMenuItem.Name = "importFromGenesisGamesToolStripMenuItem";
-            this.importFromGenesisGamesToolStripMenuItem.Size = new System.Drawing.Size(273, 26);
-            this.importFromGenesisGamesToolStripMenuItem.Text = "Import from Genesis Games";
-            this.importFromGenesisGamesToolStripMenuItem.Click += new System.EventHandler(this.importFromGenesisGamesToolStripMenuItem_Click);
+            this.CollisionList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.CollisionList.Dock = System.Windows.Forms.DockStyle.Right;
+            this.CollisionList.Location = new System.Drawing.Point(439, 0);
+            this.CollisionList.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CollisionList.Name = "CollisionList";
+            this.CollisionList.ScrollValue = 0;
+            this.CollisionList.SelectedIndex = -1;
+            this.CollisionList.Size = new System.Drawing.Size(196, 466);
+            this.CollisionList.TabIndex = 36;
+            this.CollisionList.SelectedIndexChanged += new System.EventHandler(this.CollisionList_SelectedIndexChanged);
             // 
             // Mainform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(1135, 494);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);

@@ -11,13 +11,6 @@ namespace RSDKvRS
     {
         public class BGLayer
         {
-            public class UnknownValues2
-            {
-                public byte Value1;
-                public byte Value2;
-                public byte Value3;
-            }
-
             public ushort[][] MapLayout { get; set; }
 
             public int width, height = 0;
@@ -25,11 +18,24 @@ namespace RSDKvRS
             public byte RelativeVSpeed;
             public byte ConstantVSpeed;
 
-            public List<UnknownValues2> UnknownVals2 = new List<UnknownValues2>();
+            public List<byte> LineIndexes = new List<byte>();
 
             public BGLayer()
             {
                 width = height = 1;
+                Deform = RelativeVSpeed = ConstantVSpeed = 0;
+
+                MapLayout = new ushort[height][];
+                for (int m = 0; m < height; m++)
+                {
+                    MapLayout[m] = new ushort[width];
+                }
+            }
+
+            public BGLayer(ushort w, ushort h)
+            {
+                width = w;
+                height = h;
                 Deform = RelativeVSpeed = ConstantVSpeed = 0;
 
                 MapLayout = new ushort[height][];
@@ -52,29 +58,27 @@ namespace RSDKvRS
                 int j = 0;
                 while (j < 1)
                 {
-                    UnknownValues2 u2 = new UnknownValues2();
-                    u2.Value1 = reader.ReadByte();
+                    byte b;
 
-                    if (u2.Value1 == 255)
+                    b = reader.ReadByte();
+
+                    if (b == 255)
                     {
-                        u2.Value2 = reader.ReadByte();
+                        byte tmp2 = reader.ReadByte();
 
-                        if (u2.Value2 == 255)
+                        if (tmp2 == 255)
                         {
                             j = 1;
                         }
                         else
                         {
-                            u2.Value3 = reader.ReadByte();
+                            b = reader.ReadByte();
                         }
                     }
-                    else if (u2.Value1 != 255)
-                    {
-                        u2.Value3 = reader.ReadByte();
-                    }
-                    UnknownVals2.Add(u2);
+
+                    LineIndexes.Add(b);
                 }
-                Console.WriteLine(reader.Pos);
+
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
                 {
@@ -85,7 +89,6 @@ namespace RSDKvRS
                     for (int x = 0; x < width; x++)
                     {
                         MapLayout[y][x] = reader.ReadByte();
-                        //Console.WriteLine("Map = " + MapLayout[y][x]);
                     }
                 }
             }
@@ -98,33 +101,11 @@ namespace RSDKvRS
                 writer.Write(RelativeVSpeed);
                 writer.Write(ConstantVSpeed);
 
-                Console.WriteLine(UnknownVals2.Count);
-
-                for (int i = 0; i < UnknownVals2.Count; i++)
+                for (int i = 0; i < LineIndexes.Count; i++)
                 {
-                    writer.Write(UnknownVals2[i].Value1);
-                    Console.WriteLine(UnknownVals2[i].Value1);
-
-                    if (UnknownVals2[i].Value1 == 255)
-                    {
-                        writer.Write(UnknownVals2[i].Value2);
-                        Console.WriteLine(UnknownVals2[i].Value2);
-
-                        if (UnknownVals2[i].Value1 == 255 && UnknownVals2[i].Value2 == 255)
-                        {
-                            break;
-                        }
-
-                        if (UnknownVals2[i].Value2 != 255)
-                        {
-                            writer.Write(UnknownVals2[i].Value3);
-                        }
-                    }
-                    else
-                    {
-                        writer.Write(UnknownVals2[i].Value3);
-                    }
+                    writer.Write(LineIndexes[i]);
                 }
+                writer.Write(0xFF);
 
                 for (int h = 0; h < height; h++)
                 {
@@ -137,20 +118,27 @@ namespace RSDKvRS
 
         }
 
-        public class HorizontalParallaxValues
+        public class ParallaxValues
         {
             public byte RHSpeed; //Known as "Speed" in Taxman's Editor
             public byte CHSpeed; //Known as "Scroll" in Taxman's Editor
             public byte Deform; //Known as "Deform" in Taxman's Editor, Same here!
 
-            public HorizontalParallaxValues()
+            public ParallaxValues()
             {
                 RHSpeed = 0;
                 CHSpeed = 0;
                 Deform = 0;
             }
 
-            public HorizontalParallaxValues(Reader reader)
+            public ParallaxValues(byte r, byte c, byte d)
+            {
+                RHSpeed = r;
+                CHSpeed = c;
+                Deform = d;
+            }
+
+            public ParallaxValues(Reader reader)
             {
                 RHSpeed = reader.ReadByte();
                 CHSpeed = reader.ReadByte();
@@ -166,49 +154,16 @@ namespace RSDKvRS
 
         }
 
-        public class VerticalParallaxValues
-        {
-            public byte RHSpeed; //Known as "Speed" in Taxman's Editor
-            public byte CHSpeed; //Known as "Scroll" in Taxman's Editor
-            public byte Deform; //Known as "Deform" in Taxman's Editor, Same here!
+        public List<ParallaxValues> HLines = new List<ParallaxValues>();
 
-            public VerticalParallaxValues()
-            {
-                RHSpeed = 0;
-                CHSpeed = 0;
-                Deform = 0;
-            }
-
-            public VerticalParallaxValues(Reader reader)
-            {
-                RHSpeed = reader.ReadByte();
-                CHSpeed = reader.ReadByte();
-                Deform = reader.ReadByte();
-            }
-
-            public void Write(Writer writer)
-            {
-                writer.Write(RHSpeed);
-                writer.Write(CHSpeed);
-                writer.Write(Deform);
-            }
-
-        }
-
-        public byte layerCount;
-
-        public List<HorizontalParallaxValues> HLines = new List<HorizontalParallaxValues>();
-
-        public List<VerticalParallaxValues> VLines = new List<VerticalParallaxValues>();
+        public List<ParallaxValues> VLines = new List<ParallaxValues>();
 
         public List<BGLayer> Layers = new List<BGLayer>();
 
-        //NOTES:
-        //Byte 1 are the number of layers
-        //byte 2 is the amount of lines
-        //then there are the line values
-        //then IDK
-        //
+        public BGLayout()
+        {
+
+        }
 
         public BGLayout(string filename) : this(new Reader(filename))
         {
@@ -222,14 +177,14 @@ namespace RSDKvRS
 
         public BGLayout(Reader reader)
         {
-            layerCount = reader.ReadByte();
+            byte layerCount = reader.ReadByte();
 
             byte HLineCount = reader.ReadByte();
 
             //First up is certainly the Horizontal Parallax vallues
             for (int lc = 0; lc < HLineCount; lc++)
             {
-                HLines.Add(new HorizontalParallaxValues(reader));
+                HLines.Add(new ParallaxValues(reader));
             }
 
             byte VLineCount = reader.ReadByte();
@@ -237,7 +192,7 @@ namespace RSDKvRS
             //Then the Vertical Parallax vallues
             for (int lc = 0; lc < VLineCount; lc++)
             {
-                VLines.Add(new VerticalParallaxValues(reader));
+                VLines.Add(new ParallaxValues(reader));
             }
 
             for (int i = 0; i < layerCount; i++) //Next, Read BG Layers
@@ -277,7 +232,7 @@ namespace RSDKvRS
                 VLines[lc].Write(writer);
             }
 
-            for (int i = 0; i < layerCount; i++) //Read BG Layers
+            for (int i = 0; i < Layers.Count; i++) //Read BG Layers
             {
                 Layers[i].Write(writer);
             }

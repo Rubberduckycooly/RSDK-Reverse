@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace RSDKvB
 {
-    class SaveFiles
+    public class SaveFiles
     {
+
     }
 }

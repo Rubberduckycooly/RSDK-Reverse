@@ -23,6 +23,11 @@ namespace RSDKv1
 
         public int width, height;
 
+        public Scene()
+        {
+
+        }
+
         public Scene(string filename) : this(new Reader(filename))
         {
 
@@ -36,7 +41,8 @@ namespace RSDKv1
         public Scene(Reader reader)
         {
             Title = reader.ReadRSDKString();
-            Console.WriteLine(Title);
+            Console.WriteLine("Stage Name: " + Title);
+
             byte[] buffer = new byte[5];
 
             ActiveLayer0 = reader.ReadByte();
@@ -45,13 +51,13 @@ namespace RSDKv1
             ActiveLayer3 = reader.ReadByte();
             Midpoint = reader.ReadByte();
 
-            reader.Read(buffer, 0, 2); //Read size
+            reader.Read(buffer, 0, 2); //Read Width
 
             width = 0; height = 0;
 
 
             // Map width in 128 pixel units
-            // In RSDKv2, it's one byte long
+            // In RSDKv1, it's one byte long
             width = buffer[0];
             height = buffer[1];
 
@@ -66,14 +72,14 @@ namespace RSDKv1
                 for (int x = 0; x < width; x++)
                 {
                     // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv2 and RSDKv3
+                    // Big-Endian in RSDKv1 and RSDKv2
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
                 }
             }
 
 
-            // Read number of object types, Only RSDKv2 and RSDKv3 support this feature		
+            // Read number of object types, Only RSDKv1 and RSDKv2 support this feature		
             int ObjTypeCount = reader.ReadByte();
 
             for (int n = 0; n < ObjTypeCount; n++)
@@ -83,36 +89,18 @@ namespace RSDKv1
                 objectTypeNames.Add(name);
                 Console.WriteLine(name);
             }
-            // Read object data
 
+            // Read object data
             int ObjCount = 0;
 
             // 2 bytes, big-endian, unsigned
             ObjCount = reader.ReadByte() << 8;
             ObjCount |= reader.ReadByte();
 
-            int obj_type = 0;
-            int obj_subtype = 0;
-            int obj_xPos = 0;
-            int obj_yPos = 0;
-
             for (int n = 0; n < ObjCount; n++)
             {
-                // Object type, 1 byte, unsigned
-                obj_type = reader.ReadByte();
-                // Object subtype, 1 byte, unsigned
-                obj_subtype = reader.ReadByte();
-
-                // X Position, 2 bytes, big-endian, signed			
-                obj_xPos = reader.ReadSByte() << 8;
-                obj_xPos |= reader.ReadByte();
-
-                // Y Position, 2 bytes, big-endian, signed
-                obj_yPos = reader.ReadSByte() << 8;
-                obj_yPos |= reader.ReadByte();
-
                 // Add object
-                objects.Add(new Object(obj_type, obj_subtype, obj_xPos, obj_yPos));
+                objects.Add(new Object(reader));
             }
             reader.Close();
         }
@@ -144,28 +132,6 @@ namespace RSDKv1
 
             if (num_of_objects > 65535)
                 throw new Exception("Cannot save as Type v1. Number of objects > 65535");
-
-            for (int n = 0; n < num_of_objects; n++)
-            {
-                Object obj = objects[n];
-
-                int obj_type = obj.getType();
-                int obj_subtype = obj.getSubtype();
-                int obj_xPos = obj.getXPos();
-                int obj_yPos = obj.getYPos();
-
-                if (obj_type > 255)
-                    throw new Exception("Cannot save as Type v1. Object type > 255");
-
-                if (obj_subtype > 255)
-                    throw new Exception("Cannot save as Type v1. Object subtype > 255");
-
-                if (obj_xPos < -32768 || obj_xPos > 32767)
-                    throw new Exception("Cannot save as Type v1. Object X Position can't fit in 16-bits");
-
-                if (obj_yPos < -32768 || obj_yPos > 32767)
-                    throw new Exception("Cannot save as Type v1. Object Y Position can't fit in 16-bits");
-            }
 
             // Write zone name		
             writer.WriteRSDKString(Title);
@@ -203,6 +169,7 @@ namespace RSDKv1
             {
                 writer.WriteRSDKString(objectTypeNames[n]);
             }
+
             // Write number of objects
             writer.Write((byte)(num_of_objects >> 8));
             writer.Write((byte)(num_of_objects & 0xFF));
@@ -212,19 +179,7 @@ namespace RSDKv1
             {
                 Object obj = objects[n];
 
-                int obj_type = obj.type;
-                int obj_subtype = obj.subtype;
-                int obj_xPos = obj.xPos;
-                int obj_yPos = obj.yPos;
-
-                writer.Write((byte)(obj_type));
-                writer.Write((byte)(obj_subtype));
-
-                writer.Write((byte)(obj_xPos >> 8));
-                writer.Write((byte)(obj_xPos & 0xFF));
-
-                writer.Write((byte)(obj_yPos >> 8));
-                writer.Write((byte)(obj_yPos & 0xFF));
+                obj.Write(writer);
             }
             writer.Close();
         }

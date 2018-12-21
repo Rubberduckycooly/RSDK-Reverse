@@ -9,11 +9,16 @@ namespace RSDKv1
     public class StageConfig
     {
 
-        public Palette palette = new Palette();
+        public Palette StagePalette = new Palette();
 
-        public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
+        public List<string> SoundFX = new List<string>();
 
         public List<string> ObjectsNames = new List<string>();
+
+        public StageConfig()
+        {
+
+        }
 
         public StageConfig(string filename) : this(new Reader(filename))
         {
@@ -27,9 +32,7 @@ namespace RSDKv1
 
         public StageConfig(Reader reader)
         {
-            palette.Read(reader, 2);
-
-            reader.ReadByte(); //A byte comes just after the palette but it's use is unknown
+            StagePalette.Read(reader, 2);
 
             this.ReadObjectsNames(reader);
 
@@ -41,6 +44,7 @@ namespace RSDKv1
 
         internal void ReadObjectsNames(Reader reader)
         {
+            byte unknownval = reader.ReadByte();
             byte objects_count = reader.ReadByte();
 
             for (int i = 0; i < objects_count; ++i)
@@ -49,6 +53,7 @@ namespace RSDKv1
 
         internal void WriteObjectsNames(Writer writer)
         {
+            writer.Write((byte)0);
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
@@ -56,17 +61,17 @@ namespace RSDKv1
 
         internal void ReadWAVConfiguration(Reader reader)
         {
-            byte wavs_count = reader.ReadByte();
+            byte SoundFX_count = reader.ReadByte();
 
-            for (int i = 0; i < wavs_count; ++i)
-            { WAVs.Add(new WAVConfiguration(reader)); }
+            for (int i = 0; i < SoundFX_count; ++i)
+            { SoundFX.Add(reader.ReadString()); }
         }
 
         internal void WriteWAVConfiguration(Writer writer)
         {
-            writer.Write((byte)WAVs.Count);
-            foreach (WAVConfiguration wav in WAVs)
-                wav.Write(writer);
+            writer.Write((byte)SoundFX.Count);
+            foreach (string wav in SoundFX)
+                writer.Write(wav);
         }
 
         public void Write(string filename)
@@ -83,9 +88,7 @@ namespace RSDKv1
 
         internal void Write(Writer writer)
         {
-            palette.Write(writer);
-
-            writer.Write((byte)0);
+            StagePalette.Write(writer);
 
             WriteObjectsNames(writer);
 

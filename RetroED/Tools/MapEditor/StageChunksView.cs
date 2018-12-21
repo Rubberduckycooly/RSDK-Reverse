@@ -72,7 +72,7 @@ namespace RetroED.Tools.MapEditor
             {
                 case 0:
                     BlocksList.Images.Clear(); //Chunk zero should be ID Zero
-                    for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK4Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles); //Render chunk using the tileset as a source
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -83,7 +83,7 @@ namespace RetroED.Tools.MapEditor
                     break;
                 case 1:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK3Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK3Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -93,7 +93,7 @@ namespace RetroED.Tools.MapEditor
                     break;
                 case 2:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK2Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK2Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -103,7 +103,7 @@ namespace RetroED.Tools.MapEditor
                     break;
                 case 3:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK1Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK1Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK1Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
@@ -198,7 +198,7 @@ namespace RetroED.Tools.MapEditor
                             objectsV3[ObjectList.SelectedIndex] = Obj3;
                             break;
                         case 0:
-                            RSDKvB.Object Obj4 = new RSDKvB.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                            RSDKvB.Object Obj4 = new RSDKvB.Object((byte)frm.Type, (byte)frm.Subtype, frm.Xpos, frm.Ypos);
                             MapView._RSDK4Scene.objects[ObjectList.SelectedIndex] = Obj4;
                             objectsV4[ObjectList.SelectedIndex] = Obj4;
                             break;
@@ -236,8 +236,8 @@ namespace RetroED.Tools.MapEditor
                     {
                         string Obj;
                         string t = MapView.RSObjects.GetObjectByType(objectsV1[i].type, objectsV1[i].subtype).Name; //Get the object name
-                        if (t != null) { Obj = t + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If the object's definition is found, we use it's name in the list
-                        else { Obj = "Unnamed Object" + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If not, call it "Unnamed Object"
+                        if (t != null) { Obj = objectsV1[i].id + " " + t + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If the object's definition is found, we use it's name in the list
+                        else { Obj = objectsV1[i].id + " Unnamed Object" + ", " + objectsV1[i].xPos + ", " + objectsV1[i].yPos; } //If not, call it "Unnamed Object"
                         ObjectList.Items.Add(Obj);
                     }
                     break;
@@ -246,8 +246,8 @@ namespace RetroED.Tools.MapEditor
                     {
                         string Obj;
                         string t = MapView.NexusObjects.GetObjectByType(objectsV2[i].type, objectsV2[i].subtype).Name;
-                        if (t != null) { Obj = t + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
-                        else { Obj = "Unnamed Object" + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
+                        if (t != null) { Obj = objectsV2[i].id + " " + t + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
+                        else { Obj = objectsV2[i].id + " Unnamed Object" + ", " + objectsV2[i].xPos + ", " + objectsV2[i].yPos; }
                         ObjectList.Items.Add(Obj);
                     }
                     break;
@@ -256,8 +256,8 @@ namespace RetroED.Tools.MapEditor
                     {
                         string Obj;
                         string t = MapView.CDObjects.GetObjectByType(objectsV3[i].type, objectsV3[i].subtype).Name;
-                        if (t != null) { Obj = t + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
-                        else { Obj = "Unnamed Object" + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
+                        if (t != null) { Obj = objectsV3[i].id + " " + t + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
+                        else { Obj = objectsV3[i].id + " Unnamed Object" + ", " + objectsV3[i].xPos + ", " + objectsV3[i].yPos; }
                         ObjectList.Items.Add(Obj);
                     }
                     break;
@@ -266,8 +266,8 @@ namespace RetroED.Tools.MapEditor
                     {
                         string Obj;
                         string t = MapView.S1Objects.GetObjectByType(objectsV4[i].type, objectsV4[i].subtype).Name;
-                        if (t != null) { Obj = t + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
-                        else { Obj = "Unnamed Object" + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
+                        if (t != null) { Obj = objectsV4[i].id + " " + t + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
+                        else { Obj = objectsV4[i].id + " Unnamed Object" + ", " + objectsV4[i].xPos + ", " + objectsV4[i].yPos; }
                         ObjectList.Items.Add(Obj);
                     }
                     break;

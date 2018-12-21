@@ -44,32 +44,24 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Animation.AnimationEntry.cs" />
     <Compile Include="Animation.cs" />
-    <Compile Include="Animation.Frame.cs" />
-    <Compile Include="Animation.HitboxEntry.cs" />
     <Compile Include="BackgroundLayout.cs" />
     <Compile Include="Bytecode.cs" />
-    <Compile Include="CollisionMask.cs" />
+    <Compile Include="Script.cs" />
+    <Compile Include="Tileconfig.cs" />
     <Compile Include="DataFile.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="GraphicsImage.cs" />
-    <Compile Include="Hitbox.cs" />
-    <Compile Include="IAnimation.cs" />
-    <Compile Include="IBinarySerializable.cs" />
-    <Compile Include="IHitbox.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />
-    <Compile Include="PaletteColor.cs" />
+    <Compile Include="PaletteColour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="SaveFiles.cs" />
     <Compile Include="StageConfig.cs" />
-    <Compile Include="StringEncoding.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Video.cs" />
-    <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace RSDKv2
@@ -58,12 +55,17 @@ namespace RSDKv2
             public int jumpTablePtr;
             public int scriptSub;
             public int deep;
+            public int SwitchDeep;
             public bool isSwitchEnd;
             public bool error;
+            public bool SwitchCheck;
+            public bool EndFlag;
+            public bool LoopBreakFlag;
+            public bool SwitchBreakFlag;
 
             public StateScriptEngine IncDeep()
             {
-                deep++;
+                this.deep+= 1;
                 return this;
             }
         };
@@ -73,8 +75,6 @@ namespace RSDKv2
             public int[] operands;
             public int[] tempValue;
             public int[] arrayPosition;
-            public int checkResult;
-            public int sRegister;
         };
 
         string[] VARIABLE_NAME = new string[]
@@ -448,6 +448,19 @@ namespace RSDKv2
 	"EngineCallback"
 };
 
+        readonly byte[] scriptOpcodeSizes = new byte[]
+{
+    0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2,
+    2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3,
+    3, 0, 2, 0, 0, 2, 2, 2, 2, 2, 5, 5, 3, 4, 7, 1,
+    1, 1, 3, 3, 4, 7, 7, 3, 6, 6, 5, 3, 4, 3, 7, 2,
+    1, 4, 4, 1, 4, 3, 4, 0, 8, 5, 5, 4, 2, 0, 0, 0,
+    0, 0, 3, 1, 0, 2, 1, 3, 4, 4, 1, 0, 2, 1, 1, 0,
+    1, 2, 4, 4, 2, 2, 2, 4, 3, 1, 0, 6, 4, 4, 4, 3,
+    3, 0, 0, 1, 2, 3, 3, 4, 2, 4, 2, 0, 0, 1, 3, 7,
+    5, 2, 2, 2, 1, 1, 4
+};
+
         #region Misc
         public string[] functionNames = new string[0x200];
         public string[] typeNames = new string[0x100];
@@ -459,18 +472,6 @@ namespace RSDKv2
         public string[] sfxNames = new string[0x100];
 
         int m_stageVarsIndex;
-        readonly byte[] scriptOpcodeSizes = new byte[]
-    {
-	0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-	2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3,
-	3, 0, 2, 0, 0, 2, 2, 2, 2, 2, 5, 5, 3, 4, 7, 1,
-	1, 1, 3, 3, 4, 7, 7, 3, 6, 6, 5, 3, 4, 3, 7, 2,
-	1, 4, 4, 1, 4, 3, 4, 0, 8, 5, 5, 4, 2, 0, 0, 0,
-	0, 0, 3, 1, 0, 2, 1, 3, 4, 4, 1, 0, 2, 1, 1, 0,
-	1, 2, 4, 4, 2, 2, 2, 4, 3, 1, 0, 6, 4, 4, 4, 3,
-	3, 0, 0, 1, 2, 3, 3, 4, 2, 4, 2, 0, 0, 1, 3, 7,
-	5, 2, 2, 2, 1, 1, 4
-    };
 
         #endregion
 
@@ -483,92 +484,94 @@ namespace RSDKv2
         int[] functionStack = new int[0x400];
 
         ScriptEngine scriptEng;
+        StateScriptEngine state = new StateScriptEngine();
         ObjectScript[] objectScriptList =new ObjectScript[0x100];
         FunctionScript[] functionScriptList = new FunctionScript[0x200];
         #endregion
 
-        public Bytecode(Reader reader, int scriptNum = 0)
+        int Read32(Reader reader)
+        {
+            return reader.ReadInt32();
+        }
+        int Read16(Reader reader)
+        {
+            return reader.ReadInt16();
+        }
+        int Read8(Reader reader)
+        {
+            return reader.ReadByte();
+        }
+
+        public Bytecode(Reader reader, int ScriptCount = 0)
         {
             //ClearScriptData();
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
             scriptEng.arrayPosition = new int[3];
-            int cnt = reader.ReadInt32();
-            while (cnt > 0)
+
+            for (int opcount = Read32(reader); opcount > 0;)
             {
-                byte data = reader.ReadByte();
+                int data = Read8(reader);
                 int blocksCount = data & 0x7F;
 
                 if ((data & 0x80) == 0)
                 {
                     for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = reader.ReadByte(); }
-                    cnt -= blocksCount;
+                    { scriptData[scriptDataPos++] = Read8(reader); }
+                    opcount -= blocksCount;
                 }
                 else
                 {
                     for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = reader.ReadInt32(); }
-                    cnt -= blocksCount;
+                    { scriptData[scriptDataPos++] = Read32(reader); }
+                    opcount -= blocksCount;
                 }
             }
 
-            for (int opcount = reader.ReadInt32(); opcount > 0;)
+            for (int opcount = Read32(reader); opcount > 0;)
             {
-                byte data = reader.ReadByte();
+                int data = Read8(reader);
                 int blocksCount = data & 0x7F;
                 if ((data & 0x80) == 0)
                 {
                     for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = reader.ReadByte();
+                        jumpTableData[jumpTableDataPos++] = Read8(reader);
                     opcount -= blocksCount;
                 }
                 else
                 {
                     for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = reader.ReadInt32();
+                        jumpTableData[jumpTableDataPos++] = Read32(reader);
                     opcount -= blocksCount;
                 }
             }
 
-            m_stageVarsIndex = scriptNum;
+            m_stageVarsIndex = ScriptCount;
 
-            int count = reader.ReadInt16();
+            int count = Read16(reader);
+
             for (int i = 0; i < count; i++)
             {
-                objectScriptList[scriptNum + i].mainScript = reader.ReadInt32();
-                objectScriptList[scriptNum + i].playerScript = reader.ReadInt32();
-                objectScriptList[scriptNum + i].drawScript = reader.ReadInt32();
-                objectScriptList[scriptNum + i].startupScript = reader.ReadInt32();
+                objectScriptList[m_stageVarsIndex + i].mainScript = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].playerScript = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].drawScript = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].startupScript = Read32(reader);
             }
             for (int i = 0; i < count; i++)
             {
-                objectScriptList[scriptNum + i].mainJumpTable = reader.ReadInt32();
-                objectScriptList[scriptNum + i].playerJumpTable = reader.ReadInt32();
-                objectScriptList[scriptNum + i].drawJumpTable = reader.ReadInt32();
-                objectScriptList[scriptNum + i].startupJumpTable = reader.ReadInt32();
+                objectScriptList[m_stageVarsIndex + i].mainJumpTable = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].playerJumpTable = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].drawJumpTable = Read32(reader);
+                objectScriptList[m_stageVarsIndex + i].startupJumpTable = Read32(reader);
             }
 
-            count = reader.ReadInt16();
+            count = Read16(reader);
             for (int i = 0; i < count; i++)
-                functionScriptList[i].mainScript = reader.ReadInt32();
+                functionScriptList[i].mainScript = Read32(reader);
             for (int i = 0; i < count; i++)
-                functionScriptList[i].mainJumpTable = reader.ReadInt32();
+                functionScriptList[i].mainJumpTable = Read32(reader);
+
             Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
-
-        }
-
-        public void LoadStageFile(string stageconfig, string script)
-        {
-            StageConfig sc = new StageConfig(stageconfig);
-
-            int scriptNum = sc.ObjectsNames.Count;
-
-            for (int i = 1; i < sc.SourceTxtLocations.Count; i++)
-            {
-                SetObjectTypeName(sc.SourceTxtLocations[i], i + scriptNum);
-                SetObjectTypeName(sc.ObjectsNames[i], i + scriptNum);
-            }
 
         }
 
@@ -576,10 +579,13 @@ namespace RSDKv2
         {
             for (int i = 0; i < 0x40000; i++)
                 scriptData[i] = 0;
+
             for (int i = 0; i < 0x4000; i++)
                 jumpTableData[i] = 0;
+
             scriptDataPos = 0;
             jumpTableDataPos = 0;
+
             for (int i = 0; i < 256; i++)
             {
                 objectScriptList[i].mainScript = 0x3FFFF;
@@ -599,110 +605,187 @@ namespace RSDKv2
                 typeNames[i] = "";
             }
 
-            SetObjectTypeName("BlankObject", 0);
+            //SetObjectTypeName("BlankObject", 0);
         }
 
-        public void SetObjectTypeName(string typeName, int scriptNum)
+        string _SetArrayValue(string strIn, int index)
         {
-            int count = 0;
-            int length = typeName.Length;
-            for (int i = 0; i < length; i++)
-            {
-                if (typeName[i] != '\0')
-                {
-                    if (typeName[i] != ' ')
-                    { typeNames[scriptNum] = typeNames[scriptNum] + typeName[i]; }
-                }
-                else
-                    break;
-            }
-            if (count >= typeNames.Length)
-		return;
-            typeNames[scriptNum] = "";
-        }
-
-        public void SetObjectSourceName(string typeName, int scriptNum)
-        {
-            int count = 0;
-            int length = typeName.Length;
-            for (int i = 0; i < length; i++)
-            {
-                if (typeName[i] != '\0')
-                {
-                    if (typeName[i] != ' ')
-                    { sourceNames[scriptNum] = sourceNames[scriptNum] + typeName[i]; }
-                }
-                else
-                    break;
-            }
-            if (count >= sourceNames.Length)
-                return;
-            sourceNames[scriptNum] = "";
-        }
-
-        /*void _SetArrayValue(byte strOut, string strIn, int index)
-        {
+            string strOut = strIn;
             int point = -1;
-            for (int i = 0; i < strIn.Length; i++)
+
+            if (strIn == "Global")
             {
-                if (strIn[i] == '.')
-                {
-                    point = i;
-                    break;
-                }
-            }
-            if (point >= 0)
-            {
-                //memcpy(strOut, strIn, point);
-                //sConsole.WriteLine(strOut + point, "[%i]%s", index, strIn + point);
+                strOut = globalVariableNames[index];
+                if (strOut == "") return strIn;
+                return strOut;
             }
             else
             {
-                //sConsole.WriteLine(strOut, "%s[%i]", strIn, index);
-            }
-        }*/
-
-        void _SetArrayValue(ref string strOut, string strIn, int index)
-        {
-            int point = -1;
-            for (int i = 0; i < strIn.Length; i++)
-            {
-                if (strIn[i] == '.')
+                for (int i = 0; i < strIn.Length; i++)
                 {
-                    point = i;
-                    break;
+                    if (strIn[i] == '.')
+                    {
+                        point = i;
+                        break;
+                    }
                 }
-            }
-            if (point >= 0)
-            {
-                //memcpy(strOut, strIn, point);
-                strOut = strIn;
-                //Console.WriteLine(strOut);
-            }
-            else
-            {
-                //Console.WriteLine(strOut);
+                if (point >= 0)
+                {
+                    string[] split = strIn.Split('.');
+                    strOut = split[0] + "[" + index + "]." + split[1];
+                    return strOut;
+                }
+                else
+                {
+                    strOut = strOut + "[" + index + "]";
+                    return strOut;
+                }
             }
         }
 
-        public void DecompileStatement(StreamWriter writer, StateScriptEngine state)
+        public void Decompile(string DestPath = "")
+        {
+            for (int i = m_stageVarsIndex; i < sourceNames.Length; i++)
+            {
+                string path = "";
+                if (DestPath != "")
+                {
+                    if (!Directory.Exists(DestPath + "/Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), "")))
+                    {
+                        DirectoryInfo d = new DirectoryInfo(DestPath + "/Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), ""));
+                        d.Create();
+                    }
+                    Console.WriteLine(DestPath + "/Scripts/" + sourceNames[i]);
+
+                    path = DestPath + "/Scripts/" + sourceNames[i];
+                }
+                else
+                {
+                    if (!Directory.Exists("Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), "")))
+                    {
+                        DirectoryInfo d = new DirectoryInfo("Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), ""));
+                        d.Create();
+                    }
+                    Console.WriteLine("Scripts/" + sourceNames[i]);
+                    path = "Scripts/" + sourceNames[i];
+                }
+
+                StreamWriter writer = new StreamWriter(path);
+
+                Console.WriteLine("Decompiling: " + typeNames[i]);
+
+                writer.WriteLine("//------------Sonic CD "+ typeNames[i] + " Script-------------//");
+                writer.WriteLine("//--------Scripted by Christian Whitehead 'The Taxman'--------//");
+                writer.WriteLine("//-------Unpacked By Rubberduckycooly's Script Unpacker-------//");
+
+                writer.Write(Environment.NewLine);
+
+                writer.WriteLine("//-------Object Definitions-------//");
+
+                for (int j = 0; j < typeNames.Length; j++)
+                    writer.Write("#define " + typeNames[j] + " " + j + Environment.NewLine);
+
+                ObjectScript objectScript = objectScriptList[i];
+
+
+                FunctionScript functionScript = functionScriptList[i];
+
+                writer.Write(Environment.NewLine);
+                writer.Write(Environment.NewLine);
+
+                try
+                {
+                    Console.Write("Main script, ");
+                    writer.WriteLine("//---------------------------Main Sub---------------------------//");
+                    writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
+                    DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0);
+
+                    writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
+                    writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
+                    Console.Write("Player script, ");
+                    DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1);
+
+                    writer.WriteLine("//----------------------Drawing Sub-------------------//");
+                    writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
+                    Console.Write("Draw script, ");
+                    DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2);
+
+                    writer.WriteLine("//--------------------Startup Sub---------------------//");
+                    writer.WriteLine("//-------Called once when the object is spawned-------//");
+                    Console.WriteLine("Startup script.");
+                    DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3);
+
+
+                    DecompileScript(writer, functionScript.mainScript, functionScript.mainJumpTable, 4);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                writer.Write(Environment.NewLine);
+                writer.Close();
+            }
+        }
+
+        public void DecompileScript(StreamWriter writer, int scriptCodePtr, int jumpTablePtr, int scriptSub)
+        {
+            string strFuncName = "";
+            switch (scriptSub)
+            {
+                case 0:
+                    strFuncName = "ObjectMain";
+                    break;
+                case 1:
+                    strFuncName = "ObjectPlayerInteraction";
+                    break;
+                case 2:
+                    strFuncName = "ObjectDraw";
+                    break;
+                case 3:
+                    strFuncName = "ObjectStartup";
+                    break;
+                default:
+                    strFuncName = "Function";
+                    break;
+            }
+
+            writer.Write("sub" + strFuncName + Environment.NewLine);
+
+            state = new StateScriptEngine();
+            state.scriptCodePtr = scriptCodePtr;
+            state.jumpTablePtr = jumpTablePtr;
+            state.scriptSub = scriptSub;
+            state.deep = 1;
+            state.isSwitchEnd = false;
+            state.error = false;
+
+            DecompileSub(writer);
+            writer.Write(Environment.NewLine);
+        }
+
+        public void DecompileSub(StreamWriter writer)
         {
             int objectLoop = 0;
             int index1 = 0;
-            bool flag = false;
+            state.EndFlag = false;
+            state.LoopBreakFlag = false;
+            state.SwitchBreakFlag = false;
             writer.Write(Environment.NewLine);
-            
-            while(!flag)
+
+            while (!state.EndFlag)
             {
                 int num2 = 0;
                 int opcode = scriptData[state.scriptCodePtr++];
                 int paramsCount = scriptOpcodeSizes[opcode];
 
+                //state.isSwitchEnd = false;
+
                 string[] variableName = new string[10];
 
                 for (int i = 0; i < variableName.Length; i++)
                 {
-                    variableName[i] = "UNASSIGNED VARIABLE";
+                    variableName[i] = "UNKNOWN VARIABLE";
                 }
 
                 for (int i = 0; i < paramsCount; i++)
@@ -723,7 +806,7 @@ namespace RSDKv2
                                     else
                                         index1 = scriptData[state.scriptCodePtr++];
                                     num2 += 2;
-                                    _SetArrayValue(ref variableName[i], VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1);
+                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1);
                                     break;
                                 case 2:
                                     if (scriptData[state.scriptCodePtr++] == 1)
@@ -746,27 +829,28 @@ namespace RSDKv2
                             break;
                         case 2: // Read constant value from bytecode
                             scriptEng.operands[i] = scriptData[state.scriptCodePtr++];
-                            for (int s = 0; s < scriptEng.operands.Length; s++)
-                            {
-                                variableName[i] = variableName[i] + Convert.ToChar(scriptEng.operands[i]);
-                            }
+                            variableName[i] = "";
+                            variableName[i] = variableName[i] + scriptEng.operands[i]; //it's an int!!
                             num2 += 2;
                             break;
                         case 3: // Read string
                             string tmp = "";
                             num2++;
                             int strLen = scriptData[state.scriptCodePtr];
-                            for (int j = 0; j < strLen; j += 4)
+                            for (int j = 0; j < strLen;)
                             {
                                 state.scriptCodePtr++;
                                 num2++;
-                                tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] >> 24));
-                                tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16));
-                                tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8));
-                                tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] & 0x000000FF));
+                                if (j < strLen) tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] >> 24));
+                                j++;
+                                if (j < strLen) tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16));
+                                j++;
+                                if (j < strLen) tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8));
+                                j++;
+                                if (j < strLen) tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] & 0x000000FF));
+                                j++;
                             }
-                            tmp = tmp + '\0';
-                            variableName[i] = "\\" + tmp + "\\";
+                            variableName[i] = '"' + tmp + '"';
                             if ((strLen & 3) == 0)
                             {
                                 state.scriptCodePtr += 2;
@@ -779,253 +863,273 @@ namespace RSDKv2
                     }
                 }
 
-            // Check what opcodes terminates a statement
-            switch (opcode)
-            {
-                case 0x00: // endsub
-                case 0x1A: // endif
-                case 0x21: // loop
-                    state.deep--;
-                    for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                    flag = true;
-                    break;
-                case 0x23: // break
-                    flag = true;
-                    for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                    state.deep--;
-                    // do a peek if the next statement is an endswitch
-                    if (scriptData[state.scriptCodePtr] == 0x24)
-                    {
+                // Check what opcodes terminates a statement
+                switch (opcode)
+                {
+                    case 0x00: // end sub
+                        break;
+                    case 0x19: // else
+                        for (int i = 0; i < state.deep-1; i++) writer.Write("\t");
+                        break;
+                    case 0x1A: // end if
+                        state.deep--;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                    case 0x21: // loop 
+                        state.LoopBreakFlag = true;
+                        state.deep--;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                    case 0x23: // break
+                        state.SwitchBreakFlag = true;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        state.deep--;
+                        // do a peek if the next statement is an endswitch
+                        if (scriptData[state.scriptCodePtr] == 0x24)
+                        {
+                            //state.isSwitchEnd = true;
+                        }
+                        break;
+                    case 0x24: // end switch
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        //state.deep--;
                         state.isSwitchEnd = true;
-                    }
-                    break;
-                case 0x19: // else
-                    for (int i = 0; i < state.deep - 1; i++) writer.Write( "\t");
-                    break;
-                default:
-                    for (int i = 0; i < state.deep; i++) writer.Write( "\t");
-                    break;
-            }
+                        break;
+                    default:
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                }
 
-            // Use specific operands in some situation
-            switch (opcode)
-            {
-                case 0x55: // PlaySfx
-                case 0x56: // StopSfx
-                           //sprintf_s(variableName[0], "\"%s\"", sfxNames[scriptEng.operands[0]]);
-                    break;
-            }
+                // Use specific operands in some situation
+                switch (opcode)
+                {
+                    case 0x55: // PlaySfx
+                    case 0x56: // StopSfx
+                        break;
+                }
 
 
-            if (opcode >= 134)
-            {
-                writer.Write( "ERROR AT: " + state.scriptCodePtr + " : " + opcode);
-                state.error = true;
-                return;
-            }
-            string operand = opcodeList[opcode];
+                if (opcode >= 134)
+                {
+                    writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
+                    Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
+                    state.error = true;
+                    return;
+                }
 
-            switch (opcode)
-            {
-                case 0x00: writer.Write("end sub"); flag = true; break;
-                case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
-                case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
-                case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
-                case 0x04: writer.Write(variableName[0] + "++"); break;
-                case 0x05: writer.Write(variableName[0] + "--" ); break;
-                case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
-                case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
-                case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
-                case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
-                case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
-                case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
-                case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
-                case 0x0D: writer.Write(variableName[0] + "%%=" + variableName[1]); break;
-                case 0x0E: writer.Write(variableName[0] + "=-" + variableName[0]); break;
-                case 0x0F: writer.Write(variableName[0] + "!=" + variableName[1]); break;
-                case 0x10: writer.Write(variableName[0] + "<=" + variableName[1]); break;
-                case 0x11: writer.Write(variableName[0] + ">=" + variableName[1]); break;
-                case 0x12: writer.Write(variableName[0] + "==" + variableName[1]); break;
-                case 0x13:
-                    writer.Write("if " + variableName[1] + "==" +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x14:
-                    writer.Write("if " + variableName[1] + ">"  +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x15:
-                    writer.Write("if "+  variableName[1] + ">=" +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x16:
-                    writer.Write("if "+  variableName[1] + "<" +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x17:
-                    writer.Write("if " + variableName[1] + "<=" +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x18:
-                    writer.Write("if " + variableName[1] + "!=" + variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x19: writer.Write("else"); break;
-                case 0x1A: writer.Write("endif"); break;
-                case 0x1B:
-                    writer.Write( "while " + variableName[1] + "=="  +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x1C:
-                    writer.Write("while " + variableName[1] + ">"  + variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x1D:
-                    writer.Write("while " + variableName[1] + ">="  +  variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x1E:
-                    writer.Write("while " +  variableName[1] + "<" + variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x1F:
-                    writer.Write("while " + variableName[1] + "<="  + variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x20:
-                    writer.Write("while " + variableName[1] + "!=" + variableName[2]);
-                    DecompileStatement(writer,  state.IncDeep());
-                    break;
-                case 0x21: writer.Write("loop"); break;
-                case 0x22:
-                    writer.Write("switch " + variableName[1] + Environment.NewLine);
-                    for (int i = 0; !state.isSwitchEnd; i++)
+                string operand = opcodeList[opcode];
+
+
+                for (int i = 0; i < variableName.Length; i++)
+                {
+                    if (variableName[i] == "" || variableName[i] == null)
                     {
-                        for (int j = 0; j < state.deep; j++) writer.Write("\t");
-                        writer.Write("case " + i);
-                        DecompileStatement(writer,  state.IncDeep());
+                        variableName[i] = "Object.Value0";
                     }
-                    state.isSwitchEnd = false;
-                    break;
-                case 0x23: writer.Write("break"); break;
-                case 0x24: writer.Write("endswitch"); break;
-                default:
-                    writer.Write(operand + "(");
-                    switch (paramsCount)
-                    {
-                        case 1:
-                            writer.Write(variableName[0]);
-                            break;
-                        case 2:
-                            writer.Write(variableName[0] + "," + variableName[1]);
-                            break;
-                        case 3:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
-                            break;
-                        case 4:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
-                            break;
-                        case 5:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
-                            break;
-                        case 6:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
-                            break;
-                        case 7:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
-                            break;
-                        case 8:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
-                            break;
-                        case 9:
-                            writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
-                            break;
-                    }
-                    writer.Write(")");
-                    break;
-            }
-                if (!state.isSwitchEnd)
+                }
+
+                switch (opcode)
+                {
+                    case 0x00:
+                        writer.Write("endsub");
+                        state.EndFlag = true;
+                        state.deep = 0;
+                        break;
+                    case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
+                    case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
+                    case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
+                    case 0x04: writer.Write(variableName[0] + "++"); break;
+                    case 0x05: writer.Write(variableName[0] + "--"); break;
+                    case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
+                    case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
+                    case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
+                    case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
+                    case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
+                    case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
+                    case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
+                    case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
+                    case 0x0E: writer.Write(variableName[0] + "-=" + variableName[0]); break;
+                    case 0x0F:
+                        writer.Write("if " + variableName[0] + "!=" + variableName[1]);
+                        state.deep += 1;
+                        break;
+                    case 0x10:
+                        writer.Write("if " + variableName[0] + "<=" + variableName[1]);
+                        state.deep += 1;
+                        break;
+                    case 0x11:
+                        writer.Write("if " + variableName[0] + ">=" + variableName[1]);
+                        state.deep += 1;
+                        break;
+                    case 0x12:
+                        writer.Write("if " + variableName[0] + "==" + variableName[1]);
+                        state.deep += 1;
+                        break;
+                    case 0x13:
+                        writer.Write("if " + variableName[1] + "==" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x14:
+                        writer.Write("if " + variableName[1] + ">" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x15:
+                        writer.Write("if " + variableName[1] + ">=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x16:
+                        writer.Write("if " + variableName[1] + "<" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x17:
+                        writer.Write("if " + variableName[1] + "<=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x18:
+                        writer.Write("if " + variableName[1] + "!=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x19:
+                        writer.Write("else");
+                        break;
+                    case 0x1A:
+                        writer.Write("endif");
+                        break;
+                    case 0x1B:
+                        writer.Write("while " + variableName[1] + "==" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x1C:
+                        writer.Write("while " + variableName[1] + ">" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x1D:
+                        writer.Write("while " + variableName[1] + ">=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x1E:
+                        writer.Write("while " + variableName[1] + "<" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x1F:
+                        writer.Write("while " + variableName[1] + "<=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x20:
+                        writer.Write("while " + variableName[1] + "!=" + variableName[2]);
+                        state.deep += 1;
+                        //DecompileSub(writer);
+                        break;
+                    case 0x21:
+                        writer.Write("loop");
+                        break;
+                    case 0x22:
+                        writer.Write("switch " + variableName[1] + Environment.NewLine);
+                        state.SwitchCheck = false;
+                        state.SwitchDeep++;
+                        
+                        for (int i = 0; !state.isSwitchEnd;)
+                        {
+                            //LABEL_1:
+                            if (!state.SwitchCheck)
+                            {
+                                for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
+                                writer.Write("case " + i);
+                                state.SwitchCheck = true;
+                                state.deep += 1;
+                                i++;
+                            }
+                            DecompileSub(writer);
+                            /*if (state.SwitchDeep >= 1 && state.isSwitchEnd)
+                            {
+                                state.isSwitchEnd = false;
+                                //goto LABEL_1;
+                                return;
+                            }*/
+                        }
+                        state.isSwitchEnd = false;
+                        break;
+                    case 0x23:
+                        writer.Write("break");
+                        if (scriptData[state.scriptCodePtr] == 0x24)
+                        {
+                            state.scriptCodePtr++;
+                            writer.Write(Environment.NewLine);
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            writer.Write("endswitch");
+                            state.SwitchDeep--;
+                            state.SwitchCheck = false;
+                            state.isSwitchEnd = true;
+                        }
+                        state.SwitchCheck = false;
+                        break;
+                    case 0x24:
+                        writer.Write("endswitch");
+                        state.SwitchDeep--;
+                        state.SwitchCheck = false;
+                        state.isSwitchEnd = true;
+                        return;
+                    default:
+                        writer.Write(operand + "(");
+                        switch (paramsCount)
+                        {
+                            case 1:
+                                writer.Write(variableName[0]);
+                                break;
+                            case 2:
+                                writer.Write(variableName[0] + "," + variableName[1]);
+                                break;
+                            case 3:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
+                                break;
+                            case 4:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
+                                break;
+                            case 5:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
+                                break;
+                            case 6:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
+                                break;
+                            case 7:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
+                                break;
+                            case 8:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
+                                break;
+                            case 9:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
+                                break;
+                        }
+                        writer.Write(")");
+                        break;
+                }
+
+                //if (!state.isSwitchEnd && !state.EndFlag)
                     writer.Write(Environment.NewLine);
 
-            }
-        }
-
-        public void DecompileScript(StreamWriter writer, int scriptCodePtr, int jumpTablePtr, int scriptSub)
-        {
-            string strFuncName = "";
-            switch (scriptSub)
-            {
-                case 0:
-                    strFuncName = "ObjectMain";
-                    break;
-                case 1:
-                    strFuncName = "ObjectPlayer";
-                    break;
-                case 2:
-                    strFuncName = "ObjectDraw";
-                    break;
-                case 3:
-                    strFuncName = "ObjectStartup";
-                    break;
-                default:
-                    strFuncName = "Function";
-                    break;
-            }
-
-            writer.Write("sub " + strFuncName + Environment.NewLine);
-
-            StateScriptEngine state;
-            state.scriptCodePtr = scriptCodePtr;
-            state.jumpTablePtr = jumpTablePtr;
-            state.scriptSub = scriptSub;
-            state.deep = 1;
-            state.isSwitchEnd = false;
-            state.error = false;
-
-            DecompileStatement(writer, state);
-            writer.Write(Environment.NewLine);
-        }
-
-        public void Decompile()
-        {
-            for (int i = 1; i < sourceNames.Length; i++)
-            {
-                if (!Directory.Exists("Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]),"")))
+                if (state.SwitchBreakFlag)
                 {
-                    DirectoryInfo d = new DirectoryInfo("Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), ""));
-                    d.Create();
-                }
-                Console.WriteLine("Scripts/" + sourceNames[i]);
-
-                StreamWriter writer = new StreamWriter("Scripts/" + sourceNames[i]);
-
-                if (i < m_stageVarsIndex)
-                {
-                    for (int j = 0; j < m_stageVarsIndex; j++)
-                        writer.Write("#define " + typeNames[j] + " " + j + Environment.NewLine);
-                }
-                else
-                {
-                    for (int j = 0; i > typeNames.Length; j++)
-                        writer.Write("#define " + typeNames[j] + " " + j + Environment.NewLine);
+                    state.SwitchBreakFlag = false;
+                    return;
                 }
 
-                ObjectScript objectScript = objectScriptList[i];
-
-                writer.Write(Environment.NewLine);
-                writer.Write(Environment.NewLine);
-
-                Console.WriteLine("Main script, ");
-                DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0);
-                Console.WriteLine("Player script, ");
-                DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1);
-                Console.WriteLine("Draw script, ");
-                DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2);
-                Console.WriteLine("Startup script.\n");
-                DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3);
-
-                writer.Write(Environment.NewLine);
-                writer.Close();
+                if (state.LoopBreakFlag)
+                {
+                    state.LoopBreakFlag = false;
+                    //return;
+                }
             }
         }
 

@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.IMG2GFXLabel = new System.Windows.Forms.Label();
+            this.GFX2IMGLabel = new System.Windows.Forms.Label();
             this.ExportToGFX = new System.Windows.Forms.Button();
             this.SourceIMGLocation = new System.Windows.Forms.TextBox();
             this.SelectGIFButton = new System.Windows.Forms.Button();
             this.ExportIMGButton = new System.Windows.Forms.Button();
             this.SourceGFXLocation = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.GFX2IMGLabel = new System.Windows.Forms.Label();
-            this.IMG2GFXLabel = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,6 +56,26 @@
             this.panel1.Size = new System.Drawing.Size(453, 310);
             this.panel1.TabIndex = 0;
             // 
+            // IMG2GFXLabel
+            // 
+            this.IMG2GFXLabel.AutoSize = true;
+            this.IMG2GFXLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IMG2GFXLabel.Location = new System.Drawing.Point(4, 176);
+            this.IMG2GFXLabel.Name = "IMG2GFXLabel";
+            this.IMG2GFXLabel.Size = new System.Drawing.Size(181, 25);
+            this.IMG2GFXLabel.TabIndex = 7;
+            this.IMG2GFXLabel.Text = "Import image to .gfx";
+            // 
+            // GFX2IMGLabel
+            // 
+            this.GFX2IMGLabel.AutoSize = true;
+            this.GFX2IMGLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GFX2IMGLabel.Location = new System.Drawing.Point(13, 13);
+            this.GFX2IMGLabel.Name = "GFX2IMGLabel";
+            this.GFX2IMGLabel.Size = new System.Drawing.Size(183, 25);
+            this.GFX2IMGLabel.TabIndex = 6;
+            this.GFX2IMGLabel.Text = "Export .gfx to image";
+            // 
             // ExportToGFX
             // 
             this.ExportToGFX.Location = new System.Drawing.Point(9, 257);
@@ -68,6 +88,7 @@
             // 
             // SourceIMGLocation
             // 
+            this.SourceIMGLocation.BackColor = System.Drawing.SystemColors.ControlDark;
             this.SourceIMGLocation.Location = new System.Drawing.Point(132, 209);
             this.SourceIMGLocation.Name = "SourceIMGLocation";
             this.SourceIMGLocation.ReadOnly = true;
@@ -96,6 +117,7 @@
             // 
             // SourceGFXLocation
             // 
+            this.SourceGFXLocation.BackColor = System.Drawing.SystemColors.ControlDark;
             this.SourceGFXLocation.Location = new System.Drawing.Point(132, 53);
             this.SourceGFXLocation.Name = "SourceGFXLocation";
             this.SourceGFXLocation.ReadOnly = true;
@@ -112,30 +134,11 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // GFX2IMGLabel
-            // 
-            this.GFX2IMGLabel.AutoSize = true;
-            this.GFX2IMGLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.GFX2IMGLabel.Location = new System.Drawing.Point(13, 13);
-            this.GFX2IMGLabel.Name = "GFX2IMGLabel";
-            this.GFX2IMGLabel.Size = new System.Drawing.Size(183, 25);
-            this.GFX2IMGLabel.TabIndex = 6;
-            this.GFX2IMGLabel.Text = "Export .gfx to image";
-            // 
-            // IMG2GFXLabel
-            // 
-            this.IMG2GFXLabel.AutoSize = true;
-            this.IMG2GFXLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IMG2GFXLabel.Location = new System.Drawing.Point(4, 176);
-            this.IMG2GFXLabel.Name = "IMG2GFXLabel";
-            this.IMG2GFXLabel.Size = new System.Drawing.Size(181, 25);
-            this.IMG2GFXLabel.TabIndex = 7;
-            this.IMG2GFXLabel.Text = "Import image to .gfx";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(453, 310);
             this.Controls.Add(this.panel1);
             this.Name = "MainForm";

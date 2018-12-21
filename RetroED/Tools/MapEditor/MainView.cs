@@ -48,6 +48,21 @@ namespace RetroED.Tools.MapEditor
         bool showgrid = false;
         int PlacementMode = 0;
 
+        public string FilePath;
+
+        public string DataDirectory = null;
+        public bool DataDirLoaded = false;
+
+        //Why is Retro-Sonic so bad lmao
+        public RSDKvRS.ZoneList _RStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList _CStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList _SStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList _BStagesvRS = new RSDKvRS.ZoneList();
+
+        public RSDKv1.GameConfig _GameConfigv1;
+        public RSDKv2.GameConfig _GameConfigv2;
+        public RSDKvB.GameConfig _GameConfigvB;
+
         #region Retro-Sonic Development Kit
         RSDKvRS.Scene _RSDK1Scene;
         RSDKvRS.Tiles128x128 _RSDK1Chunks;
@@ -57,19 +72,19 @@ namespace RetroED.Tools.MapEditor
         #region RSDKv1
         RSDKv1.Scene _RSDK2Scene;
         RSDKv1.Tiles128x128 _RSDK2Chunks;
-        RSDKv1.CollisionMask _RSDK2CollisionMask;
+        RSDKv1.Tileconfig _RSDK2CollisionMask;
         #endregion
 
         #region RSDKv1
         RSDKv2.Scene _RSDK3Scene;
         RSDKv2.Tiles128x128 _RSDK3Chunks;
-        RSDKv2.CollisionMask _RSDK3CollisionMask;
+        RSDKv2.Tileconfig _RSDK3CollisionMask;
         #endregion
 
         #region RSDKvB
         RSDKvB.Scene _RSDK4Scene;
         RSDKvB.Tiles128x128 _RSDK4Chunks;
-        RSDKvB.CollisionMask _RSDK4CollisionMask;
+        RSDKvB.Tileconfig _RSDK4CollisionMask;
         #endregion
 
         public MainView()
@@ -101,7 +116,7 @@ namespace RetroED.Tools.MapEditor
                     }
                     using (Stream strm = File.OpenRead(CollisionMasks))
                     {
-                        _RSDK4CollisionMask = new RSDKvB.CollisionMask(strm);
+                        _RSDK4CollisionMask = new RSDKvB.Tileconfig(strm);
                         strm.Close();
                     }
                     _loadedTiles = (Bitmap)Image.FromFile(tiles).Clone();
@@ -132,7 +147,7 @@ namespace RetroED.Tools.MapEditor
                     }
                     using (Stream strm = File.OpenRead(CollisionMasks))
                     {
-                        _RSDK3CollisionMask = new RSDKv2.CollisionMask(strm);
+                        _RSDK3CollisionMask = new RSDKv2.Tileconfig(strm);
                         strm.Close();
                     }
                     _loadedTiles = (Bitmap)Image.FromFile(tiles).Clone();
@@ -163,7 +178,7 @@ namespace RetroED.Tools.MapEditor
                     }
                     using (Stream strm = File.OpenRead(CollisionMasks))
                     {
-                        _RSDK2CollisionMask = new RSDKv1.CollisionMask(strm);
+                        _RSDK2CollisionMask = new RSDKv1.Tileconfig(strm);
                         strm.Close();
                     }
                     _loadedTiles = (Bitmap)Image.FromFile(tiles).Clone();
@@ -392,8 +407,259 @@ namespace RetroED.Tools.MapEditor
             }
         }
 
+        /// <summary>
+        /// Sets the GameConfig property in relation to the DataDirectory property.
+        /// </summary>
+        private void SetGameConfig()
+        {
+            switch (LoadedRSDKver)
+            {
+                case 0:
+                    _GameConfigvB = new RSDKvB.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
+                    break;
+                case 1:
+                    _GameConfigv2 = new RSDKv2.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
+                    break;
+                case 2:
+                    _GameConfigv1 = new RSDKv1.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
+                    break;
+                case 3:
+                    _RStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "Zones.mdf"));
+                    _CStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "CZones.mdf"));
+                    _SStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "SStages.mdf"));
+                    _BStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "BStages.mdf"));
+                    break;
+            }
+        }
+
+        private string GetDataDirectory()
+        {
+            using (var folderBrowserDialog = new RetroED.Extensions.DataSelect.FolderSelectDialog())
+            {
+                folderBrowserDialog.Title = "Select Data Folder";
+
+                if (!folderBrowserDialog.ShowDialog())
+                    return null;
+
+                return folderBrowserDialog.FileName;
+            }
+        }
+
+        private bool IsDataDirectoryValid()
+        {
+            return IsDataDirectoryValid(DataDirectory);
+        }
+
+        private bool IsDataDirectoryValid(string directoryToCheck)
+        {
+            bool exists = false;
+            switch(LoadedRSDKver)
+            {
+                case 0:
+                    exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
+                    break;
+                case 1:
+                    exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
+                    break;
+                case 2:
+                    exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
+                    break;
+                case 3:
+                    exists = File.Exists(Path.Combine(directoryToCheck, "TitleScr", "Zones.mdf"));
+                    break;
+            }
+            return exists;
+        }
+
+        private void ResetDataDirectoryToAndResetScene(string newDataDirectory)
+        {
+            DataDirectory = newDataDirectory;
+            //AddRecentDataFolder(newDataDirectory);
+            SetGameConfig();
+            OpenScene();
+        }
+
+        public void OpenDataDirectory()
+        {
+
+            //if (DataDirLoaded == false)
+            //{
+                string newDataDirectory = GetDataDirectory();
+                if (null == newDataDirectory) return;
+                if (newDataDirectory.Equals(DataDirectory)) return;
+
+                if (IsDataDirectoryValid(newDataDirectory))
+                { ResetDataDirectoryToAndResetScene(newDataDirectory); DataDirLoaded = true; }
+                else
+                    MessageBox.Show($@"{newDataDirectory} is nota valid Data Directory.",
+                                    "Invalid Data Directory!",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+            //}
+            //else
+            //{
+            //    return;
+            //}
+        }
+
+        void OpenScene()
+        {
+
+            switch(LoadedRSDKver)
+            {
+                case 0:
+                    RetroED.Extensions.DataSelect.SceneSelect dlgB = new RetroED.Extensions.DataSelect.SceneSelect(_GameConfigvB);
+
+                    dlgB.ShowDialog();
+                    if (dlgB.Result != null)
+                    {
+                        string SelectedScene = Path.GetFileName(dlgB.Result);
+                        string SelectedZone = dlgB.Result.Replace(SelectedScene, "");
+
+                        FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
+                        string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
+                        Console.WriteLine("Scene Path = " + FilePath);
+                        //try
+                        //{
+                        if (File.Exists(FilePath))
+                        {
+                            Open(FilePath);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
+                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
+                        //    return;
+                        //}
+                        
+                    }
+                    break;
+                case 1:
+                    RetroED.Extensions.DataSelect.SceneSelect dlg2 = new RetroED.Extensions.DataSelect.SceneSelect(_GameConfigv2);
+
+                    dlg2.ShowDialog();
+                    if (dlg2.Result != null)
+                    {
+                        string SelectedScene = Path.GetFileName(dlg2.Result);
+                        string SelectedZone = dlg2.Result.Replace(SelectedScene, "");
+
+                        FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
+                        string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
+                        Console.WriteLine("Scene Path = " + FilePath);
+                        //try
+                        //{
+                        if (File.Exists(FilePath))
+                        {
+                            Open(FilePath);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
+                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
+                        //    return;
+                        //}
+                    }
+                    break;
+                case 2:
+                    RetroED.Extensions.DataSelect.SceneSelect dlg1 = new RetroED.Extensions.DataSelect.SceneSelect(_GameConfigv1);
+
+                    dlg1.ShowDialog();
+                    if (dlg1.Result != null)
+                    {
+                        string SelectedScene = Path.GetFileName(dlg1.Result);
+                        string SelectedZone = dlg1.Result.Replace(SelectedScene, "");
+
+                        FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
+                        string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
+                        Console.WriteLine("Scene Path = " + FilePath);
+                        //try
+                        //{
+                        if (File.Exists(FilePath))
+                        {
+                            Open(FilePath);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
+                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
+                        //    return;
+                        //}
+                    }
+                    break;
+                case 3:
+                    RetroED.Extensions.DataSelect.SceneSelect dlgRS = new RetroED.Extensions.DataSelect.SceneSelect(_RStagesvRS,_CStagesvRS,_SStagesvRS,_BStagesvRS);
+
+                    dlgRS.ShowDialog();
+                    if (dlgRS.Result != null)
+                    {
+                        string SelectedScene = Path.GetFileName(dlgRS.Result);
+                        string SelectedZone = dlgRS.Result.Replace(SelectedScene, "");
+
+                        FilePath = Path.Combine(DataDirectory, "Levels", SelectedZone, SelectedScene);
+                        string stageDir = Path.Combine(DataDirectory, "Levels", SelectedZone);
+                        Console.WriteLine("Scene Path = " + FilePath);
+                        //try
+                        //{
+                        if (File.Exists(FilePath))
+                        {
+                            Open(FilePath);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
+                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
+                        //    return;
+                        //}
+                    }
+                    break;
+            }
+        }
+
         private void MenuItem_Open_Click(object sender, EventArgs e)
         {
+
+            switch (MessageBox.Show(this, "Do you want to save the current file?", "RetroED Map Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+            {
+                case System.Windows.Forms.DialogResult.Cancel:
+                    return;
+                case System.Windows.Forms.DialogResult.Yes:
+                    saveAsToolStripMenuItem_Click(this, EventArgs.Empty);
+                    break;
+            }
+
+            SelectRSDKForm dlg = new SelectRSDKForm();
+
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                LoadedRSDKver = dlg.RSDKver;
+                //if (DataDirectory == null || !DataDirLoaded)
+                //{
+                    OpenDataDirectory();
+                //}
+                //else
+                //{
+                //    SetGameConfig();
+                //  OpenScene();
+                //}
+            }
+
+            /*
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "Sonic 1/Sonic 2 Act#.bin files (Act*.bin)|Act*.bin|Sonic CD Act#.bin files (Act*.bin)|Act*.bin|Sonic Nexus Act#.bin files (Act*.bin)|Act*.bin|Retro-Sonic Act#.map files (Act*.map)|Act*.map";
 
@@ -412,76 +678,83 @@ namespace RetroED.Tools.MapEditor
             {
                 LoadedRSDKver = ofd.FilterIndex - 1;
 
-                if (LoadedRSDKver == 3) //Are We displaying a Retro-Sonic Map?
-                {
-                    //Load the files needed to show the map
-                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.gfx");
-                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.til");
-                    Map = ofd.FileName;
-                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.tcf");
-                    Stageconfig = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.zcf");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
-                    {
-                        LoadScene(ofd.FileName, LoadedRSDKver);
-                        Parent.rp.state = "RetroED - " + this.Text;
-                        switch (LoadedRSDKver)
-                        {
-                            case 0:
-                                Parent.rp.details = "Editing: " + _RSDK4Scene.Title;
-                                break;
-                            case 1:
-                                Parent.rp.details = "Editing: " + _RSDK3Scene.Title;
-                                break;
-                            case 2:
-                                Parent.rp.details = "Editing: " + _RSDK2Scene.Title;
-                                break;
-                            case 3:
-                                Parent.rp.details = "Editing: " + _RSDK1Scene.Title;
-                                break;
-                        }
-                        SharpPresence.Discord.RunCallbacks();
-                        SharpPresence.Discord.UpdatePresence(Parent.rp);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
-                    }
-                }
 
-                if (LoadedRSDKver != 3) //Are we NOT displaying a Retro-Sonic Map?
+        }*/
+        }
+
+        public void Open(string folderpath)
+        {
+            if (LoadedRSDKver == 3) //Are We displaying a Retro-Sonic Map?
+            {
+                //Load the files needed to show the map
+                tiles = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.gfx");
+                mappings = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.til");
+                Map = folderpath;
+                CollisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.tcf");
+                Stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.zcf");
+                if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
                 {
-                    //Load Map Data
-                    tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "16x16Tiles.gif");
-                    mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "128x128Tiles.bin");
-                    Map = ofd.FileName;
-                    CollisionMasks = Path.Combine(Path.GetDirectoryName(ofd.FileName), "CollisionMasks.bin");
-                    Stageconfig = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Stageconfig.bin");
-                    if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
+                    LoadScene(folderpath, LoadedRSDKver);
+                    LoadObjectsFromDataFolder(DataDirectory);
+                    Parent.rp.state = "RetroED - " + this.Text;
+                    switch (LoadedRSDKver)
                     {
-                        LoadScene(ofd.FileName, LoadedRSDKver);
-                        Parent.rp.state = "RetroED - " + this.Text;
-                        switch (LoadedRSDKver)
-                        {
-                            case 0:
-                                Parent.rp.details = "Editing: " + _RSDK4Scene.Title;
-                                break;
-                            case 1:
-                                Parent.rp.details = "Editing: " + _RSDK3Scene.Title;
-                                break;
-                            case 2:
-                                Parent.rp.details = "Editing: " + _RSDK2Scene.Title;
-                                break;
-                            case 3:
-                                Parent.rp.details = "Editing: " + _RSDK1Scene.Title;
-                                break;
-                        }
-                        SharpPresence.Discord.RunCallbacks();
-                        SharpPresence.Discord.UpdatePresence(Parent.rp);
+                        case 0:
+                            Parent.rp.details = "Editing: " + _RSDK4Scene.Title;
+                            break;
+                        case 1:
+                            Parent.rp.details = "Editing: " + _RSDK3Scene.Title;
+                            break;
+                        case 2:
+                            Parent.rp.details = "Editing: " + _RSDK2Scene.Title;
+                            break;
+                        case 3:
+                            Parent.rp.details = "Editing: " + _RSDK1Scene.Title;
+                            break;
                     }
-                    else
+                    SharpPresence.Discord.RunCallbacks();
+                    SharpPresence.Discord.UpdatePresence(Parent.rp);
+                }
+                else
+                {
+                    MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
+                }
+            }
+
+            if (LoadedRSDKver != 3) //Are we NOT displaying a Retro-Sonic Map?
+            {
+                //Load Map Data
+                tiles = Path.Combine(Path.GetDirectoryName(folderpath), "16x16Tiles.gif");
+                mappings = Path.Combine(Path.GetDirectoryName(folderpath), "128x128Tiles.bin");
+                Map = folderpath;
+                CollisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "CollisionMasks.bin");
+                Stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Stageconfig.bin");
+                if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks))
+                {
+                    LoadScene(folderpath, LoadedRSDKver);
+                    LoadObjectsFromDataFolder(DataDirectory);
+                    Parent.rp.state = "RetroED - " + this.Text;
+                    switch (LoadedRSDKver)
                     {
-                        MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
+                        case 0:
+                            Parent.rp.details = "Editing: " + _RSDK4Scene.Title;
+                            break;
+                        case 1:
+                            Parent.rp.details = "Editing: " + _RSDK3Scene.Title;
+                            break;
+                        case 2:
+                            Parent.rp.details = "Editing: " + _RSDK2Scene.Title;
+                            break;
+                        case 3:
+                            Parent.rp.details = "Editing: " + _RSDK1Scene.Title;
+                            break;
                     }
+                    SharpPresence.Discord.RunCallbacks();
+                    SharpPresence.Discord.UpdatePresence(Parent.rp);
+                }
+                else
+                {
+                    MessageBox.Show("Tiles, Mappings and Collision Masks need to exist in the same folder as act data, just like the game.");
                 }
             }
         }
@@ -1046,7 +1319,7 @@ namespace RetroED.Tools.MapEditor
                         _mapViewer._RSDK3Scene.objects.Add(Obj3);
                         break;
                     case 0:
-                        RSDKvB.Object Obj4 = new RSDKvB.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos);
+                        RSDKvB.Object Obj4 = new RSDKvB.Object((byte)frm.Type, (byte)frm.Subtype, frm.Xpos, frm.Ypos);
                         _mapViewer._RSDK4Scene.objects.Add(Obj4);
                         break;
                 }
@@ -1383,7 +1656,7 @@ namespace RetroED.Tools.MapEditor
                     RSDKvRS.Zoneconfig scRS = new RSDKvRS.Zoneconfig(Stageconfig);
                     for (int i = 30; i < scRS.Objects.Count + 30; i++)
                     {
-                        _mapViewer.NexusObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(scRS.Objects[i - 30].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        //_mapViewer.RSObjects.Objects.Add(new Point((i), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(scRS.Objects[i - 30].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
                     }
 
                     break;

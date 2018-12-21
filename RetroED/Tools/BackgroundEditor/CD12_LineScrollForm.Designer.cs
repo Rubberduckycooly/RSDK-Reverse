@@ -29,22 +29,22 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button1 = new System.Windows.Forms.Button();
             this.UnknownNUD = new System.Windows.Forms.NumericUpDown();
             this.UnknownLabel = new System.Windows.Forms.Label();
             this.CSPDNUD = new System.Windows.Forms.NumericUpDown();
             this.RSPDNUD = new System.Windows.Forms.NumericUpDown();
             this.CSPDLabel = new System.Windows.Forms.Label();
-            this.LineNoNUD = new System.Windows.Forms.NumericUpDown();
+            this.Unknown1NUD = new System.Windows.Forms.NumericUpDown();
             this.RSPDLabel = new System.Windows.Forms.Label();
-            this.LineNoLabel = new System.Windows.Forms.Label();
+            this.Unknown1Label = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.UnknownNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CSPDNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPDNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LineNoNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -55,9 +55,9 @@
             this.panel1.Controls.Add(this.CSPDNUD);
             this.panel1.Controls.Add(this.RSPDNUD);
             this.panel1.Controls.Add(this.CSPDLabel);
-            this.panel1.Controls.Add(this.LineNoNUD);
+            this.panel1.Controls.Add(this.Unknown1NUD);
             this.panel1.Controls.Add(this.RSPDLabel);
-            this.panel1.Controls.Add(this.LineNoLabel);
+            this.panel1.Controls.Add(this.Unknown1Label);
             this.panel1.Controls.Add(this.CancelButton);
             this.panel1.Controls.Add(this.OKButton);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -66,8 +66,20 @@
             this.panel1.Size = new System.Drawing.Size(371, 187);
             this.panel1.TabIndex = 0;
             // 
+            // button1
+            // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.button1.Location = new System.Drawing.Point(78, 161);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(119, 23);
+            this.button1.TabIndex = 12;
+            this.button1.Text = "Remove Value";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // UnknownNUD
             // 
+            this.UnknownNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.UnknownNUD.Location = new System.Drawing.Point(145, 103);
             this.UnknownNUD.Maximum = new decimal(new int[] {
             255,
@@ -95,6 +107,7 @@
             // 
             // CSPDNUD
             // 
+            this.CSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.CSPDNUD.Location = new System.Drawing.Point(145, 70);
             this.CSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -113,6 +126,7 @@
             // 
             // RSPDNUD
             // 
+            this.RSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
             this.RSPDNUD.Location = new System.Drawing.Point(145, 36);
             this.RSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -138,23 +152,24 @@
             this.CSPDLabel.TabIndex = 8;
             this.CSPDLabel.Text = "Constant H Speed:";
             // 
-            // LineNoNUD
+            // Unknown1NUD
             // 
-            this.LineNoNUD.Location = new System.Drawing.Point(145, 8);
-            this.LineNoNUD.Maximum = new decimal(new int[] {
+            this.Unknown1NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Unknown1NUD.Location = new System.Drawing.Point(145, 8);
+            this.Unknown1NUD.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.LineNoNUD.Name = "LineNoNUD";
-            this.LineNoNUD.Size = new System.Drawing.Size(153, 22);
-            this.LineNoNUD.TabIndex = 6;
-            this.LineNoNUD.Value = new decimal(new int[] {
+            this.Unknown1NUD.Name = "Unknown1NUD";
+            this.Unknown1NUD.Size = new System.Drawing.Size(153, 22);
+            this.Unknown1NUD.TabIndex = 6;
+            this.Unknown1NUD.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.LineNoNUD.ValueChanged += new System.EventHandler(this.LineNoNUD_ValueChanged);
+            this.Unknown1NUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged);
             // 
             // RSPDLabel
             // 
@@ -165,14 +180,14 @@
             this.RSPDLabel.TabIndex = 5;
             this.RSPDLabel.Text = "Relative H Speed:";
             // 
-            // LineNoLabel
+            // Unknown1Label
             // 
-            this.LineNoLabel.AutoSize = true;
-            this.LineNoLabel.Location = new System.Drawing.Point(12, 9);
-            this.LineNoLabel.Name = "LineNoLabel";
-            this.LineNoLabel.Size = new System.Drawing.Size(93, 17);
-            this.LineNoLabel.TabIndex = 4;
-            this.LineNoLabel.Text = "Line Number:";
+            this.Unknown1Label.AutoSize = true;
+            this.Unknown1Label.Location = new System.Drawing.Point(12, 9);
+            this.Unknown1Label.Name = "Unknown1Label";
+            this.Unknown1Label.Size = new System.Drawing.Size(93, 17);
+            this.Unknown1Label.TabIndex = 4;
+            this.Unknown1Label.Text = "Line Number:";
             // 
             // CancelButton
             // 
@@ -196,21 +211,11 @@
             this.OKButton.UseVisualStyleBackColor = true;
             this.OKButton.Click += new System.EventHandler(this.OKButton_Click);
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(78, 161);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Remove Value";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // CD12_LineScrollForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(371, 187);
             this.Controls.Add(this.panel1);
             this.Name = "CD12_LineScrollForm";
@@ -220,7 +225,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.UnknownNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CSPDNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPDNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.LineNoNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -231,9 +236,9 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.NumericUpDown RSPDNUD;
-        private System.Windows.Forms.NumericUpDown LineNoNUD;
+        private System.Windows.Forms.NumericUpDown Unknown1NUD;
         private System.Windows.Forms.Label RSPDLabel;
-        private System.Windows.Forms.Label LineNoLabel;
+        private System.Windows.Forms.Label Unknown1Label;
         private System.Windows.Forms.NumericUpDown CSPDNUD;
         private System.Windows.Forms.Label CSPDLabel;
         private System.Windows.Forms.NumericUpDown UnknownNUD;

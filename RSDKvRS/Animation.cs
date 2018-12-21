@@ -1,153 +1,230 @@
-﻿// MIT License
-// 
-// Copyright(c) 2017 Luciano (Xeeynamo) Ciccariello
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RSDKvRS
 {
-    public class Animation : IAnimation
+    [Serializable]
+    public class Animation : ICloneable
     {
-        public int Version => 1;
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
-        public List<string> SpriteSheets { get; }
+        public readonly string PathMod = "";
 
+        
+        public byte Unknown = 0;
         public byte PlayerType = 0;
 
-        public List<AnimationEntry> Animations { get; }
+        public List<string> SpriteSheets = new List<string>();
 
-        public List<HitboxEntry> Hitboxes { get; }
+        public List<sprAnimation> Animations = new List<sprAnimation>();
 
-        public IEnumerable<string> HitboxTypes => null;
-
-        public Animation(BinaryReader reader, bool RSDC)
+        [Serializable]
+        public class sprAnimation : ICloneable
         {
-            reader.ReadByte(); //skip this byte, as it seems unused
-            PlayerType = reader.ReadByte(); //Tells the engine what player is selected; It is 0 for sonic, 1 for tails & 2 for Knux, so maybe it specifies a player value?
-            int spriteSheetsCount = 3;
-            if (RSDC) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
+            public object Clone()
             {
-                spriteSheetsCount = 2;
+                return this.MemberwiseClone();
             }
-            else //But the PC demo has 3 spritesheets per animation! so we set that here!
+            [Serializable]
+            public class sprFrame : ICloneable
             {
-                spriteSheetsCount = 3;
+                public object Clone()
+                {
+                    return this.MemberwiseClone();
+                }
+
+                public byte SpriteSheet = 0;
+                public byte[] CollisionBox = new byte[4];
+                public readonly short Delay = 256;
+                public byte X = 0;
+                public byte Y = 0;
+                public byte Width = 0;
+                public byte Height = 0;
+                public byte PivotX = 0;
+                public byte PivotY = 0;
+
+                public sprFrame()
+                {
+
+                }
+
+                public sprFrame(Reader reader, Animation anim = null)
+                {
+                    X = reader.ReadByte();
+                    Y = reader.ReadByte();
+                    Width = reader.ReadByte();
+                    Height = reader.ReadByte();
+                    SpriteSheet = reader.ReadByte();
+
+                    for (int k = 0; k < 4; k++)
+                    CollisionBox[k] = reader.ReadByte();
+
+                    byte[] PivotVals = new byte[2];
+
+                    PivotVals[0] = reader.ReadByte();
+                    PivotVals[1] = reader.ReadByte();
+
+                    PivotX = (byte)(CollisionBox[2] - PivotVals[0]); //PivotVal[0] is the true Value, this calculation is just done so the animation looks right upon playback
+                    PivotY = (byte)(CollisionBox[3] - PivotVals[1]); //PivotVal[1] is the true Value, this calculation is just done so the animation looks right upon playback
+                }
+
+                public void Write(Writer writer)
+                {
+                    writer.Write(X);
+                    writer.Write(Y);
+                    writer.Write(Width);
+                    writer.Write(Height);
+                    writer.Write(SpriteSheet);
+                    for (int c = 0; c < 4; ++c)
+                    {
+                        writer.Write(CollisionBox[c]);
+                    }
+                    writer.Write(PivotX);
+                    writer.Write(PivotY);
+                }
+
             }
-            var animationsCount = reader.ReadByte();
 
-            SpriteSheets = new List<string>(spriteSheetsCount);
+            public List<sprFrame> Frames = new List<sprFrame>();
+            public byte LoopIndex;
+            public byte SpeedMultiplyer;
 
-            byte[] byteBuf = null;
-
-            for (int i = 0; i < spriteSheetsCount; i++)
+            public sprAnimation()
             {
-                int sLen = reader.ReadByte();
-                byteBuf = new byte[sLen];
 
-                byteBuf = reader.ReadBytes(sLen);
-
-                string result = System.Text.Encoding.UTF8.GetString(byteBuf);
-
-                SpriteSheets.Add(result);
-                Console.WriteLine(result);
             }
-            byteBuf = null;
 
-            // Read number of animations		
-            Animations = new List<AnimationEntry>(animationsCount);
-
-            for (int i = 0; i < animationsCount; i++)
+            public sprAnimation(Reader reader)
             {
-                // In the 3 bytes:
-                // byte 1 - Number of frames
-                // byte 2 - Animation speed
-                // byte 3 - Frame to start looping from, when looping
-
-                // read frame count	
-                int frameCount = reader.ReadByte();
-                //read Animation Speed
-                int animationSpeed = reader.ReadByte() * 4;
-                //read Loop Index
-                int loopFrom = reader.ReadByte();
-
-                //The Retro Sonic Animation Files Don't Have Names, so let's give them "ID's" instead
-                Animations.Add(new AnimationEntry(("Retro Sonic Animation #" + (i+1)), frameCount, animationSpeed,
-                    loopFrom, false, false, reader));
+                byte frameCount = reader.ReadByte();
+                SpeedMultiplyer = reader.ReadByte();
+                LoopIndex = reader.ReadByte();
+                for (int i = 0; i < frameCount; ++i)
+                {
+                    Frames.Add(new sprFrame(reader));
                 }
             }
 
-        public void Factory(out IAnimationEntry o) { o = new AnimationEntry(); }
-        public void Factory(out IFrame o) { o = new Frame(); }
-        public void Factory(out IHitboxEntry o) { o = new HitboxEntry(); }
-
-        public IEnumerable<IAnimationEntry> GetAnimations()
-        {
-            return Animations.Select(x => (IAnimationEntry)x);
-        }
-
-        public void SetAnimations(IEnumerable<IAnimationEntry> animations)
-        {
-            Animations.Clear();
-            Animations.AddRange(animations
-                .Select(x => x as AnimationEntry)
-                .Where(x => x != null));
-        }
-
-        public IEnumerable<IHitboxEntry> GetHitboxes()
-        {
-            //return Hitboxes.Select(x => (IHitboxEntry)x);
-            return null;
-        }
-
-        public void SetHitboxes(IEnumerable<IHitboxEntry> hitboxes)
-        {           
-            /*Hitboxes.Clear();
-            Hitboxes.AddRange(hitboxes
-                .Select(x => x as HitboxEntry)
-                .Where(x => x != null));*/
-        }
-        public void SetHitboxTypes(IEnumerable<string> hitboxTypes)
-        { }
-
-        public void SaveChanges(BinaryWriter writer)
-        {
-            writer.Write((byte)0);
-            writer.Write((byte)0);
-            var animationsCount = (byte)Math.Min(Animations.Count, byte.MaxValue);
-            writer.Write(animationsCount);
-
-            var spriteSheetsCount = (byte)Math.Min(SpriteSheets.Count, byte.MaxValue);
-            for (int i = 0; i < spriteSheetsCount; i++)
+            public void Write(Writer writer)
             {
-                var item = SpriteSheets[i];
-                writer.Write(StringEncoding.GetBytes(item));
+                writer.Write((byte)Frames.Count);
+                writer.Write(SpeedMultiplyer);
+                writer.Write(LoopIndex);
+
+                for (int i = 0; i < Frames.Count; ++i)
+                {
+                    Frames[i].Write(writer);
+                }
             }
 
-            for (int i = 0; i < animationsCount; i++)
+            public void NewFrame()
             {
-                Animations[i].SaveChanges(writer);
+                Frames.Add(new sprFrame());
             }
+
+            public void CloneFrame(int frame)
+            {
+                Frames.Add((sprFrame)Frames[frame].Clone());
+            }
+
+            public void DeleteFrame(int frame)
+            {
+                if (Frames.Count > 0)
+                {
+                    Frames.RemoveAt(frame);
+                }
+            }
+
         }
+
+        public Animation()
+        {
+
+        }
+
+        public Animation(Reader reader, bool DreamcastVer = false)
+        {
+            Unknown = reader.ReadByte();
+            PlayerType = reader.ReadByte();
+
+            int spriteSheetCount = 3;
+            if (DreamcastVer) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
+            {
+                spriteSheetCount = 2;
+            }
+            else //But the PC demo has 3 spritesheets per animation! so we set that here!
+            {
+                spriteSheetCount = 3;
+            }
+
+            var animationCount = reader.ReadByte();
+
+            for (int i = 0; i < spriteSheetCount; ++i)
+                SpriteSheets.Add(reader.ReadString());
+
+            for (int i = 0; i < animationCount; ++i)
+                Animations.Add(new sprAnimation(reader));
+
+        }
+
+        public void Write(Writer writer)
+        {
+            writer.Write(Unknown);
+            writer.Write(PlayerType);
+
+            writer.Write((byte)Animations.Count);
+
+            for (int i = 0; i < SpriteSheets.Count; ++i)
+            {
+                writer.WriteRSDKString(SpriteSheets[i]);
+            }
+
+            for (int i = 0; i < Animations.Count; ++i)
+            {
+                Write(writer);
+            }
+
+        }
+
+        public void NewAnimation()
+        {
+            sprAnimation a = new sprAnimation();
+            Animations.Add(a);
+        }
+
+        public void CloneAnimation(int anim)
+        {
+            sprAnimation a = new sprAnimation();
+
+            byte FrameAmount = (byte)Animations[anim].Frames.Count;
+            a.LoopIndex = Animations[anim].LoopIndex;
+            a.SpeedMultiplyer = Animations[anim].SpeedMultiplyer;
+
+            a.Frames.Clear();
+
+            for (int i = 0; i < FrameAmount; i++)
+            {
+                a.Frames.Add((sprAnimation.sprFrame)Animations[anim].Frames[i].Clone());
+            }
+
+            Animations.Add(a);
+        }
+
+        public void DeleteAnimation(int frame)
+        {
+            Animations.RemoveAt(frame);
+        }
+
+        public void DeleteEndAnimation()
+        {
+            Animations.RemoveAt(Animations.Count - 1);
+        }
+
     }
 }

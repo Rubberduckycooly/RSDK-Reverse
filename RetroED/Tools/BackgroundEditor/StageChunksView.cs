@@ -60,7 +60,7 @@ namespace RetroED.Tools.BackgroundEditor
             {
                 case 0:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK4Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK4Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -71,7 +71,7 @@ namespace RetroED.Tools.BackgroundEditor
                     break;
                 case 1:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK3Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK3Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -81,7 +81,7 @@ namespace RetroED.Tools.BackgroundEditor
                     break;
                 case 2:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK2Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK2Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
@@ -91,7 +91,7 @@ namespace RetroED.Tools.BackgroundEditor
                     break;
                 case 3:
                     BlocksList.Images.Clear();
-                    for (int i = 0; i < _RSDK1Chunks.BlockList.Count; i++)
+                    for (int i = 0; i < _RSDK1Chunks.BlockList.Length; i++)
                     {
                         Bitmap b = _RSDK1Chunks.BlockList[i].Render(_tiles);
                         //b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
@@ -113,7 +113,7 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void HpValuesList_DoubleClick(object sender, EventArgs e)
         {
-            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, HpValuesList.SelectedIndex,0);
+            RSN_LineScrollForm frm1 = new RSN_LineScrollForm(loadedRSDKver, HpValuesList.SelectedIndex, 0);
             CD12_LineScrollForm frm2 = new CD12_LineScrollForm(loadedRSDKver, HpValuesList.SelectedIndex, 0);
 
             switch (loadedRSDKver)
@@ -236,7 +236,7 @@ namespace RetroED.Tools.BackgroundEditor
                                 _RSDK4Background = frm2.Mapv4;
                                 break;
                         }
-                        RefreshParallaxList(1);
+                        RefreshParallaxList();
                     }
                     else if (frm2.RemoveVal)
                     {
@@ -249,7 +249,7 @@ namespace RetroED.Tools.BackgroundEditor
                                 _RSDK4Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
                                 break;
                         }
-                        RefreshParallaxList(1);
+                        RefreshParallaxList();
                     }
                 }
             }
@@ -269,7 +269,7 @@ namespace RetroED.Tools.BackgroundEditor
                                 _RSDK2Background = frm1.Mapv2;
                                 break;
                         }
-                        RefreshParallaxList(1);
+                        RefreshParallaxList();
                     }
                     else if (frm1.RemoveVal)
                     {
@@ -282,86 +282,111 @@ namespace RetroED.Tools.BackgroundEditor
                                 _RSDK2Background.VLines.RemoveAt(VpValuesList.SelectedIndex);
                                 break;
                         }
-                        RefreshParallaxList(1);
+                        RefreshParallaxList();
                     }
                 }
             }
 
         }
 
-        public void RefreshParallaxList(int HV = 0)
+        public void RefreshParallaxList()
         {
-            if (HV == 0)
+            HpValuesList.Items.Clear();
+            VpValuesList.Items.Clear();
+
+            switch (loadedRSDKver)
             {
-                HpValuesList.Items.Clear();
-                switch (loadedRSDKver)
-                {
-                    case 3:
-                        for (int i = 0; i < _RSDK1Background.HLines.Count; i++)
-                        {
-                            string line = _RSDK1Background.HLines[i].RHSpeed + " - " + _RSDK1Background.HLines[i].CHSpeed + " - " + _RSDK1Background.HLines[i].Deform;
-                            HpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 2:
-                        for (int i = 0; i < _RSDK2Background.HLines.Count; i++)
-                        {
-                            string line = _RSDK2Background.HLines[i].RHSpeed + " - " + _RSDK2Background.HLines[i].CHSpeed + " - " + _RSDK2Background.HLines[i].Deform;
-                            HpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 1:
-                        for (int i = 0; i < _RSDK3Background.HLines.Count; i++)
-                        {
-                            string line = _RSDK3Background.HLines[i].LineNo + " - " + _RSDK3Background.HLines[i].RelativeSpeed + " - " + _RSDK3Background.HLines[i].ConstantSpeed + " - " + _RSDK3Background.HLines[i].Unknown;
-                            HpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 0:
-                        for (int i = 0; i < _RSDK4Background.HLines.Count; i++)
-                        {
-                            string line = _RSDK4Background.HLines[i].LineNo + " - " + _RSDK4Background.HLines[i].RelativeSpeed + " - " + _RSDK4Background.HLines[i].ConstantSpeed + " - " + _RSDK4Background.HLines[i].Unknown;
-                            HpValuesList.Items.Add(line);
-                        }
-                        break;
-                }
+                case 3:
+                    for (int i = 0; i < _RSDK1Background.HLines.Count; i++)
+                    {
+                        string line = _RSDK1Background.HLines[i].RHSpeed + " - " + _RSDK1Background.HLines[i].CHSpeed + " - " + _RSDK1Background.HLines[i].Deform;
+                        HpValuesList.Items.Add(line);
+                    }
+                    for (int i = 0; i < _RSDK1Background.VLines.Count; i++)
+                    {
+                        string line = _RSDK1Background.VLines[i].RHSpeed + " - " + _RSDK1Background.VLines[i].CHSpeed + " - " + _RSDK1Background.VLines[i].Deform;
+                        VpValuesList.Items.Add(line);
+                    }
+                    RefreshLinePosList();
+                    break;
+                case 2:
+                    for (int i = 0; i < _RSDK2Background.HLines.Count; i++)
+                    {
+                        string line = _RSDK2Background.HLines[i].RHSpeed + " - " + _RSDK2Background.HLines[i].CHSpeed + " - " + _RSDK2Background.HLines[i].Deform;
+                        HpValuesList.Items.Add(line);
+                    }
+                    for (int i = 0; i < _RSDK2Background.VLines.Count; i++)
+                    {
+                        string line = _RSDK2Background.VLines[i].RHSpeed + " - " + _RSDK2Background.VLines[i].CHSpeed + " - " + _RSDK2Background.VLines[i].Deform;
+                        VpValuesList.Items.Add(line);
+                    }
+                    RefreshLinePosList();
+                    break;
+                case 1:
+                    for (int i = 0; i < _RSDK3Background.HLines.Count; i++)
+                    {
+                        string line = _RSDK3Background.HLines[i].RelativeSpeed + " - " + _RSDK3Background.HLines[i].ConstantSpeed + _RSDK3Background.HLines[i].Unknown1 + " - " + _RSDK3Background.HLines[i].Unknown;
+                        HpValuesList.Items.Add(line);
+                    }
+                    for (int i = 0; i < _RSDK3Background.VLines.Count; i++)
+                    {
+                        string line = _RSDK3Background.VLines[i].RelativeSpeed + " - " + _RSDK3Background.VLines[i].ConstantSpeed + " - " + _RSDK3Background.VLines[i].Unknown1 + " - " + _RSDK3Background.HLines[i].Unknown;
+                        VpValuesList.Items.Add(line);
+                    }
+                    RefreshLinePosList();
+                    break;
+                case 0:
+                    for (int i = 0; i < _RSDK4Background.HLines.Count; i++)
+                    {
+                        string line = _RSDK4Background.HLines[i].RelativeSpeed + " - " + _RSDK4Background.HLines[i].ConstantSpeed + " - " + _RSDK4Background.HLines[i].Unknown1 + " - " + _RSDK4Background.HLines[i].Unknown;
+                        HpValuesList.Items.Add(line);
+                    }
+                    for (int i = 0; i < _RSDK4Background.VLines.Count; i++)
+                    {
+                        string line = _RSDK4Background.VLines[i].RelativeSpeed + " - " + _RSDK4Background.VLines[i].ConstantSpeed + " - " + _RSDK4Background.VLines[i].Unknown1 + " - " + _RSDK4Background.VLines[i].Unknown;
+                        VpValuesList.Items.Add(line);
+                    }
+                    RefreshLinePosList();
+                    break;
+            }
+        }
+
+        public void RefreshLinePosList()
+        {
+            LineNumberListBox.Items.Clear();
+
+            switch (loadedRSDKver)
+            {
+                case 3:
+                    for (int i = 0; i < _RSDK1Background.Layers[MapView.curlayer].LineIndexes.Count; i++)
+                    {
+                        string line = "Line: " + _RSDK1Background.Layers[MapView.curlayer].LineIndexes[i];
+                        LineNumberListBox.Items.Add(line);
+                    }
+                    break;
+                case 2:
+                    for (int i = 0; i < _RSDK2Background.Layers[MapView.curlayer].LineIndexes.Count; i++)
+                    {
+                        string line = "Line: " + _RSDK2Background.Layers[MapView.curlayer].LineIndexes[i];
+                        LineNumberListBox.Items.Add(line);
+                    }
+                    break;
+                case 1:
+                    for (int i = 0; i < _RSDK3Background.Layers[MapView.curlayer].LineIndexes.Count; i++)
+                    {
+                        string line = "Line: " + _RSDK3Background.Layers[MapView.curlayer].LineIndexes[i];
+                        LineNumberListBox.Items.Add(line);
+                    }
+                    break;
+                case 0:
+                    for (int i = 0; i < _RSDK4Background.Layers[MapView.curlayer].LineIndexes.Count; i++)
+                    {
+                        string line = "Line: " + _RSDK4Background.Layers[MapView.curlayer].LineIndexes[i];
+                        LineNumberListBox.Items.Add(line);
+                    }
+                    break;
             }
 
-            if (HV == 1)
-            {
-                VpValuesList.Items.Clear();
-                switch (loadedRSDKver)
-                {
-                    case 3:
-                        for (int i = 0; i < _RSDK1Background.VLines.Count; i++)
-                        {
-                            string line = _RSDK1Background.VLines[i].RHSpeed + " - " + _RSDK1Background.VLines[i].CHSpeed + " - " + _RSDK1Background.VLines[i].Deform;
-                            VpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 2:
-                        for (int i = 0; i < _RSDK2Background.VLines.Count; i++)
-                        {
-                            string line = _RSDK2Background.VLines[i].RHSpeed + " - " + _RSDK2Background.VLines[i].CHSpeed + " - " + _RSDK2Background.VLines[i].Deform;
-                            VpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 1:
-                        for (int i = 0; i < _RSDK3Background.VLines.Count; i++)
-                        {
-                            string line = _RSDK3Background.VLines[i].LineNo + " - " + _RSDK3Background.VLines[i].RelativeSpeed + " - " + _RSDK3Background.VLines[i].ConstantSpeed + " - " + _RSDK3Background.HLines[i].Unknown;
-                            VpValuesList.Items.Add(line);
-                        }
-                        break;
-                    case 0:
-                        for (int i = 0; i < _RSDK4Background.VLines.Count; i++)
-                        {
-                            string line = _RSDK4Background.VLines[i].LineNo + " - " + _RSDK4Background.VLines[i].RelativeSpeed + " - " + _RSDK4Background.VLines[i].ConstantSpeed + " - " + _RSDK4Background.VLines[i].Unknown;
-                            VpValuesList.Items.Add(line);
-                        }
-                        break;
-                }
-            }
         }
     }
 }

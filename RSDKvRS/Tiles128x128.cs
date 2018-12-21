@@ -8,10 +8,17 @@ namespace RSDKvRS
 {
     public class Tiles128x128
     {
+        public Tile128[] BlockList = new Tile128[256];
 
-        public List<Tile128> BlockList { get; set; }
+        public Tiles128x128()
+        {
+            for (int i = 0; i < BlockList.Length; i++)
+            {
+                BlockList[i] = new Tile128();
+            }
+        }
 
-        public Tiles128x128(string filepath) : this(new Reader(filepath))
+        public Tiles128x128(string filename) : this(new Reader(filename))
         {
 
         }
@@ -23,7 +30,7 @@ namespace RSDKvRS
 
         public Tiles128x128(Reader strm)
         {
-            BlockList = new List<Tile128>();
+            BlockList = new Tile128[256];
             byte[] mappingEntry = new byte[3];
             Tile128 currentBlock = new Tile128();
 
@@ -44,7 +51,7 @@ namespace RSDKvRS
                         currentBlock.Mapping[y][x].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
                     }
                 }
-                BlockList.Add(currentBlock);
+                BlockList[c] = currentBlock;
                 currentBlock = new Tile128();
             }
             strm.Close();
