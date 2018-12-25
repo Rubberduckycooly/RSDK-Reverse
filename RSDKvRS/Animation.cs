@@ -14,9 +14,15 @@ namespace RSDKvRS
             return this.MemberwiseClone();
         }
 
-        public readonly string PathMod = "";
+        public string PathMod
+        {
+            get
+            {
+                return "";
+            }
+        }
 
-        
+
         public byte Unknown = 0;
         public byte PlayerType = 0;
 
@@ -89,6 +95,14 @@ namespace RSDKvRS
                     writer.Write(PivotY);
                 }
 
+            }
+
+            public string AnimationName
+            {
+                get
+                {
+                    return "RSDKvRS Animation ";
+                }
             }
 
             public List<sprFrame> Frames = new List<sprFrame>();
@@ -170,7 +184,7 @@ namespace RSDKvRS
 
             for (int i = 0; i < animationCount; ++i)
                 Animations.Add(new sprAnimation(reader));
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
@@ -180,16 +194,31 @@ namespace RSDKvRS
 
             writer.Write((byte)Animations.Count);
 
-            for (int i = 0; i < SpriteSheets.Count; ++i)
+            byte SheetCnt = (byte)SpriteSheets.Count;
+
+            if (SpriteSheets.Count > 3)
+            {
+                SheetCnt = 3;
+            }
+
+            for (int i = 0; i < SheetCnt; ++i)
             {
                 writer.WriteRSDKString(SpriteSheets[i]);
             }
 
-            for (int i = 0; i < Animations.Count; ++i)
+            if (SpriteSheets.Count < 3)
             {
-                Write(writer);
+                for (int i = 0; i < 3 - SpriteSheets.Count; ++i)
+                {
+                    writer.WriteRSDKString("NULL");
+                }
             }
 
+            for (int i = 0; i < Animations.Count; ++i)
+            {
+                Animations[i].Write(writer);
+            }
+            writer.Close();
         }
 
         public void NewAnimation()

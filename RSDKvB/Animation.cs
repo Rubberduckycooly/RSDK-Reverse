@@ -14,7 +14,13 @@ namespace RSDKvB
             return this.MemberwiseClone();
         }
 
-        public readonly string PathMod = "..\\sprites";
+        public string PathMod
+        {
+            get
+            {
+                return "..\\sprites\\";
+            }
+        }
 
         public List<string> SpriteSheets = new List<string>();
 
@@ -184,7 +190,7 @@ namespace RSDKvB
             int collisionBoxCount = reader.ReadByte();
             for (int i = 0; i < collisionBoxCount; ++i)
                 CollisionBoxes.Add(new sprHitbox(reader));
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
@@ -198,7 +204,7 @@ namespace RSDKvB
             writer.Write((byte)Animations.Count);
             for (int i = 0; i < Animations.Count; ++i)
             {
-                Write(writer);
+                Animations[i].Write(writer);
             }
 
             writer.Write((byte)CollisionBoxes.Count);
@@ -206,6 +212,7 @@ namespace RSDKvB
             {
                 CollisionBoxes[i].Write(writer);
             }
+            writer.Close();
         }
 
         public void NewAnimation()

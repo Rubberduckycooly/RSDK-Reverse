@@ -103,7 +103,7 @@ namespace RSDKv2
                 for (int i = 0; i < ss; i++)
                 {
                     byte b = reader.ReadByte();
-                    int bufInt = (int)b;
+                    int bufInt = b;
 
                     bufInt ^= 0xFF;
 
@@ -308,7 +308,7 @@ namespace RSDKv2
 
             for (int d = 0; d < dircount; d++)
             {
-                Directories[d] = new DirInfo(reader);
+                Directories.Add(new DirInfo(reader));
             }
 
             for (int d = 0; d < dircount; d++)

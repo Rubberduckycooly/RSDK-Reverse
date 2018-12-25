@@ -106,7 +106,33 @@ namespace Test
 
                 //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
 
-                //RSDKvRS.Script rsf = new RSDKvRS.Script(filepath);
+                RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+                RSDKvRS.Script rsf = new RSDKvRS.Script();
+
+                string destName = Path.GetFileNameWithoutExtension(filepath);
+                string destName2 = Path.GetFileName(filepath);
+
+                string dirpath = filepath.Replace(destName2, "");
+                DirectoryInfo dir = new DirectoryInfo(dirpath);
+                DirectoryInfo dir2 = new DirectoryInfo(dirpath + "//Scripts");
+                dir2.Create();
+
+                foreach (FileInfo f in dir.GetFiles())
+                {
+                    destName = Path.GetFileNameWithoutExtension(f.FullName);
+                    string destpath = dirpath + "//Scripts//" + destName + ".txt";
+                    reader = new RSDKvRS.Reader(f.FullName);
+                    try
+                    {
+                        rsf = new RSDKvRS.Script(reader);
+                        rsf.Decompile(destpath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        reader.Close();
+                    }
+                }
 
                 //Models
                 //RSDKv5.Model MDL = new RSDKv5.Model(filepath);
@@ -117,7 +143,7 @@ namespace Test
                 //MDL.WriteMTL(new RSDKv5.Writer(tmp + ".mtl"));
 
 
-                RSDKvB.Model MDL = new RSDKvB.Model(filepath);
+                //RSDKvB.Model MDL = new RSDKvB.Model(filepath);
                 //RSDKvB.BitmapFont BMF = new RSDKvB.BitmapFont(new StreamReader(File.OpenRead(filepath)));
 
                 /* Palettes
@@ -133,7 +159,229 @@ namespace Test
 
                 ushort paltest = (ushort)(((ushort)(r >> 3) << 11) | ((ushort)(g >> 3) << 6) | 1 | 2 * (b >> 3));
                 Console.WriteLine(paltest);*/
+
+                #region Exe Scanning
+
+                /*
+                    StreamReader reader = new StreamReader(File.OpenRead(dlg.FileName));
+
+                    List<string> DataNames = new List<string>();
+
+                    //string buffer = reader.ReadToEnd();
+
+                    string buffer = "";
+
+                    bool isChar(char a)
+                    {
+
+                        if (a == 'a' || a == 'A')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'b' || a == 'B')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'c' || a == 'C')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'd' || a == 'D')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'e' || a == 'E')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'f' || a == 'F')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'g' || a == 'G')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'h' || a == 'H')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'i' || a == 'I')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'j' || a == 'J')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'k' || a == 'K')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'l' || a == 'L')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'm' || a == 'M')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'n' || a == 'N')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'o' || a == 'O')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'p' || a == 'P')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'q' || a == 'Q')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'r' || a == 'R')
+                        {
+                            return true;
+                        }
+
+                        if (a == 's' || a == 'S')
+                        {
+                            return true;
+                        }
+
+                        if (a == 't' || a == 'T')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'u' || a == 'U')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'v' || a == 'V')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'w' || a == 'W')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'x' || a == 'X')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'y' || a == 'Y')
+                        {
+                            return true;
+                        }
+
+                        if (a == 'z' || a == 'Z')
+                        {
+                            return true;
+                        }
+
+                        if (a == '/' || a == '\\')
+                        {
+                            return true;
+                        }
+
+                        if (a == '.')
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+
+                    while (!reader.EndOfStream)
+                    {
+                        char d = (char)reader.Read();
+                        if (d == 'd' || d == 'D')
+                        {
+                            char a1 = (char)reader.Read();
+                            if (a1 == 'a' || a1 == 'A')
+                            {
+                                char t = (char)reader.Read();
+                                if (t == 't' || t == 'T')
+                                {
+                                    char a2 = (char)reader.Read();
+                                    if (a2 == 'a' || a2 == 'A')
+                                    {
+                                        char sl = (char)reader.Read();
+                                        if (sl == '/' || sl == '/')
+                                        {
+                                            buffer = buffer + "Data/";
+
+                                            char c;
+
+                                            while (reader.Peek() != (char)0)
+                                            {
+                                                c = (char)reader.Read();
+                                                buffer = buffer + c;
+                                            }
+                                            DataNames.Add(buffer);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                    StreamWriter writer = new StreamWriter(File.OpenWrite("Paths.txt"));
+
+                    for (int i = 0; i < DataNames.Count; i++)
+                    {
+                        writer.Write(DataNames[i] + Environment.NewLine);
+                    }
+                    */
+
+                #endregion
             }
         }
     }
+
+    static class stringhelper
+    {
+        public static string GetUntilOrEmpty(string text, string stopAt = "-")
+        {
+            if (!String.IsNullOrWhiteSpace(text))
+            {
+                int charLocation = text.IndexOf(stopAt, StringComparison.Ordinal);
+
+                if (charLocation > 0)
+                {
+                    return text.Substring(0, charLocation);
+                }
+            }
+
+            return text;
+        }
+    }
+
 }

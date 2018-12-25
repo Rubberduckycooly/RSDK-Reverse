@@ -381,7 +381,7 @@ namespace RetroED.Tools.RSDKUnpacker
 
             dir.Replace("\\", "/");
 
-            dirinfo.Directory = dir + "/";
+            dirinfo.Directory = dir + "\\";
 
             if (directoryInfo.GetFiles().Length > 0)
             {

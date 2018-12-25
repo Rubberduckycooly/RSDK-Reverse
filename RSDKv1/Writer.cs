@@ -47,7 +47,7 @@ namespace RSDKv1
         public void WriteRSDKString(string val)
         {
             base.Write((byte)val.Length);
-            base.Write(new UTF8Encoding().GetBytes(val));
+            if (val.Length > 0) base.Write(new UTF8Encoding().GetBytes(val));
         }
 
         public void WriteRSDKUnicodeString(string val)

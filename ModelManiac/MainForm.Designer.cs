@@ -56,6 +56,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.MeshColourEditor = new Cyotek.Windows.Forms.ColorEditor();
+            this.MeshColourGrid = new Cyotek.Windows.Forms.ColorGrid();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,8 +69,6 @@
             this.exportColoursToactToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importModelFromstlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.MeshColourEditor = new Cyotek.Windows.Forms.ColorEditor();
-            this.MeshColourGrid = new Cyotek.Windows.Forms.ColorGrid();
             this.HeaderBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -179,7 +179,7 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.DeleteColourButton);
             this.groupBox3.Controls.Add(this.AddColourButton);
@@ -475,7 +475,8 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.MeshColourEditor);
             this.groupBox2.Controls.Add(this.MeshColourGrid);
@@ -485,6 +486,27 @@
             this.groupBox2.TabIndex = 0;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Colour Data";
+            // 
+            // MeshColourEditor
+            // 
+            this.MeshColourEditor.Dock = System.Windows.Forms.DockStyle.Right;
+            this.MeshColourEditor.Location = new System.Drawing.Point(392, 18);
+            this.MeshColourEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.MeshColourEditor.Name = "MeshColourEditor";
+            this.MeshColourEditor.Size = new System.Drawing.Size(200, 185);
+            this.MeshColourEditor.TabIndex = 1;
+            this.MeshColourEditor.ColorChanged += new System.EventHandler(this.MeshColourEditor_ColorChanged);
+            // 
+            // MeshColourGrid
+            // 
+            this.MeshColourGrid.Dock = System.Windows.Forms.DockStyle.Left;
+            this.MeshColourGrid.Location = new System.Drawing.Point(3, 18);
+            this.MeshColourGrid.Name = "MeshColourGrid";
+            this.MeshColourGrid.Palette = Cyotek.Windows.Forms.ColorPalette.None;
+            this.MeshColourGrid.ShowCustomColors = false;
+            this.MeshColourGrid.Size = new System.Drawing.Size(295, 25);
+            this.MeshColourGrid.TabIndex = 0;
+            this.MeshColourGrid.ColorChanged += new System.EventHandler(this.MeshColourGrid_ColorChanged);
             // 
             // menuStrip1
             // 
@@ -574,27 +596,6 @@
             this.exportToToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
             this.exportToToolStripMenuItem.Text = "Export Model To...";
             this.exportToToolStripMenuItem.Click += new System.EventHandler(this.exportToToolStripMenuItem_Click);
-            // 
-            // MeshColourEditor
-            // 
-            this.MeshColourEditor.Dock = System.Windows.Forms.DockStyle.Right;
-            this.MeshColourEditor.Location = new System.Drawing.Point(392, 18);
-            this.MeshColourEditor.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.MeshColourEditor.Name = "MeshColourEditor";
-            this.MeshColourEditor.Size = new System.Drawing.Size(200, 185);
-            this.MeshColourEditor.TabIndex = 1;
-            this.MeshColourEditor.ColorChanged += new System.EventHandler(this.MeshColourEditor_ColorChanged);
-            // 
-            // MeshColourGrid
-            // 
-            this.MeshColourGrid.Dock = System.Windows.Forms.DockStyle.Left;
-            this.MeshColourGrid.Location = new System.Drawing.Point(3, 18);
-            this.MeshColourGrid.Name = "MeshColourGrid";
-            this.MeshColourGrid.Palette = Cyotek.Windows.Forms.ColorPalette.None;
-            this.MeshColourGrid.ShowCustomColors = false;
-            this.MeshColourGrid.Size = new System.Drawing.Size(295, 25);
-            this.MeshColourGrid.TabIndex = 0;
-            this.MeshColourGrid.ColorChanged += new System.EventHandler(this.MeshColourGrid_ColorChanged);
             // 
             // MainForm
             // 

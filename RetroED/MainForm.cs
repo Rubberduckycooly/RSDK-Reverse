@@ -29,7 +29,7 @@ namespace RetroED
 
         public void InitDiscord()
         {
-            SharpPresence.Discord.Initialize("477031085788626947", eh);
+            //SharpPresence.Discord.Initialize("477031085788626947", eh);
 
             rp.state = "RetroED";
             rp.details = "Chillin' out without any tools open";
@@ -43,13 +43,13 @@ namespace RetroED
 
             rp.startTimestamp = secondsSinceEpoch;
 
-            SharpPresence.Discord.RunCallbacks();
-            SharpPresence.Discord.UpdatePresence(rp);
+            //SharpPresence.Discord.RunCallbacks();
+            //SharpPresence.Discord.UpdatePresence(rp);
         }
 
         public void UpdateDiscord()
         {
-            SharpPresence.Discord.RunCallbacks();
+            //SharpPresence.Discord.RunCallbacks();
             if (TabControl.SelectedTab != null)
             {
                 rp.details = TabControl.TabPages[TabControl.SelectedIndex].Text;
@@ -59,13 +59,13 @@ namespace RetroED
             {
                 rp.details = "Chillin' out without any tools open";
             }
-            SharpPresence.Discord.UpdatePresence(rp);
+            //SharpPresence.Discord.UpdatePresence(rp);
         }
 
         public void DisposeDiscord()
         {
             rp.startTimestamp = 0;
-            SharpPresence.Discord.Shutdown();
+            //SharpPresence.Discord.Shutdown();
         }
 
         /// <summary>

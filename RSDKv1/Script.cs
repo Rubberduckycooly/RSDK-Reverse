@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace RSDK_Script_Parser
+namespace RSDKv1
 {
     public class Script
     {
@@ -32,6 +32,21 @@ namespace RSDK_Script_Parser
             public List<Function> Functions = new List<Function>();
 
             public List<string> Comments = new List<string>();
+
+            public List<Function> GetFunctionByName(string name)
+            {
+                List<Function> Funcs = new List<Sub.Function>();
+
+                for (int i = 0; i < Functions.Count; i++)
+                {
+                    if (Functions[i].Name == name)
+                    {
+                        Funcs.Add(Functions[i]);
+                    }
+                }
+                return Funcs;
+            }
+
         }
 
         public List<Sub> Subs = new List<Sub>();
@@ -48,6 +63,8 @@ namespace RSDK_Script_Parser
             try
             {
                 SubType Sub = SubType.NULL; //set it as null
+                Sub sub = new Sub();
+
                 while (!reader.EndOfStream)
                 {
                     string Line; //hold our line data
@@ -55,8 +72,6 @@ namespace RSDK_Script_Parser
 
                     Line = reader.ReadLine();
                     Line = Line.Replace('\t'.ToString(), ""); //tell the tabs to fuck right off
-
-                    Script.Sub sub = new Sub();
 
                     if (Line.Contains("sub")) // ok so it's a sub/endsub
                     {
@@ -143,6 +158,58 @@ namespace RSDK_Script_Parser
                                     }
                                     else //else, read the param into a string
                                     {
+                                        if (Line[i] != '\"')
+                                        Param = Param + Line[i];
+                                    }
+                                }
+
+                                Param.Replace("\"", "");
+
+                                Func.Paramaters.Add(Param); //Add the Last Parameter
+
+                                //////Console.WriteLine(FuncName); //Write the func name
+
+                                Func.Name = FuncName; //set our func name
+
+                                sub.Functions.Add(Func); //add our func
+                            }
+                            break;
+                        case SubType.Main:
+                            if (!Line.Contains("sub") && !Line.Contains("Main"))
+                            {
+                                Sub.Function Func = new Sub.Function(); //set our new Function Data
+
+                                for (int i = 0; i < Line.Length; i++) //read the string, char by char
+                                {
+                                    if (Line[i] == '(') //if we get to the first parenthesis, break
+                                    {
+                                        break;
+                                    }
+                                    else //else, keep reading the func name
+                                    {
+                                        FuncName = FuncName + Line[i];
+                                    }
+                                }
+
+                                int a = Line.IndexOf("("); //Get Parameter start
+
+                                int b = Line.IndexOf(")"); //Get Parameter end
+
+                                string Param = ""; //Parameter Buffer
+
+                                for (int i = a + 1; i < b; i++) //read the parameters
+                                {
+                                    if (Line[i] == ',') //check if parameter end
+                                    {
+                                        if (Param.Contains("\"")) //get rid of this shit
+                                        {
+                                            Param.Replace("\"", "");
+                                        }
+                                        Func.Paramaters.Add(Param);
+                                        Param = "";
+                                    }
+                                    else //else, read the param into a string
+                                    {
                                         Param = Param + Line[i];
                                     }
                                 }
@@ -154,23 +221,233 @@ namespace RSDK_Script_Parser
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
 
-                                Console.WriteLine(FuncName); //Write the func name
+                                ////Console.WriteLine(FuncName); //Write the func name
 
                                 Func.Name = FuncName; //set our func name
 
                                 sub.Functions.Add(Func); //add our func
                             }
                             break;
-                        case SubType.Main:
-                            break;
                         case SubType.Draw:
+                            if (!Line.Contains("sub") && !Line.Contains("Draw"))
+                            {
+                                Sub.Function Func = new Sub.Function(); //set our new Function Data
+
+                                for (int i = 0; i < Line.Length; i++) //read the string, char by char
+                                {
+                                    if (Line[i] == '(') //if we get to the first parenthesis, break
+                                    {
+                                        break;
+                                    }
+                                    else //else, keep reading the func name
+                                    {
+                                        FuncName = FuncName + Line[i];
+                                    }
+                                }
+
+                                int a = Line.IndexOf("("); //Get Parameter start
+
+                                int b = Line.IndexOf(")"); //Get Parameter end
+
+                                string Param = ""; //Parameter Buffer
+
+                                for (int i = a + 1; i < b; i++) //read the parameters
+                                {
+                                    if (Line[i] == ',') //check if parameter end
+                                    {
+                                        if (Param.Contains("\"")) //get rid of this shit
+                                        {
+                                            Param.Replace("\"", "");
+                                        }
+                                        Func.Paramaters.Add(Param);
+                                        Param = "";
+                                    }
+                                    else //else, read the param into a string
+                                    {
+                                        Param = Param + Line[i];
+                                    }
+                                }
+
+                                if (Param.Contains("\"")) //fuck off with this last bit of shit
+                                {
+                                    Param.Replace("\"", "");
+                                }
+
+                                Func.Paramaters.Add(Param); //Add the Last Parameter
+
+                                ////Console.WriteLine(FuncName); //Write the func name
+
+                                Func.Name = FuncName; //set our func name
+
+                                sub.Functions.Add(Func); //add our func
+                            }
                             break;
                         case SubType.PlayerInteraction:
+                            if (!Line.Contains("sub") && !Line.Contains("PlayerInteraction"))
+                            {
+                                Sub.Function Func = new Sub.Function(); //set our new Function Data
+
+                                for (int i = 0; i < Line.Length; i++) //read the string, char by char
+                                {
+                                    if (Line[i] == '(') //if we get to the first parenthesis, break
+                                    {
+                                        break;
+                                    }
+                                    else //else, keep reading the func name
+                                    {
+                                        FuncName = FuncName + Line[i];
+                                    }
+                                }
+
+                                int a = Line.IndexOf("("); //Get Parameter start
+
+                                int b = Line.IndexOf(")"); //Get Parameter end
+
+                                string Param = ""; //Parameter Buffer
+
+                                for (int i = a + 1; i < b; i++) //read the parameters
+                                {
+                                    if (Line[i] == ',') //check if parameter end
+                                    {
+                                        if (Param.Contains("\"")) //get rid of this shit
+                                        {
+                                            Param.Replace("\"", "");
+                                        }
+                                        Func.Paramaters.Add(Param);
+                                        Param = "";
+                                    }
+                                    else //else, read the param into a string
+                                    {
+                                        Param = Param + Line[i];
+                                    }
+                                }
+
+                                if (Param.Contains("\"")) //fuck off with this last bit of shit
+                                {
+                                    Param.Replace("\"", "");
+                                }
+
+                                Func.Paramaters.Add(Param); //Add the Last Parameter
+
+                                ////Console.WriteLine(FuncName); //Write the func name
+
+                                Func.Name = FuncName; //set our func name
+
+                                sub.Functions.Add(Func); //add our func
+                            }
                             break;
                         case SubType.Startup:
+                            if (!Line.Contains("sub") && !Line.Contains("Startup"))
+                            {
+                                Sub.Function Func = new Sub.Function(); //set our new Function Data
+
+                                for (int i = 0; i < Line.Length; i++) //read the string, char by char
+                                {
+                                    if (Line[i] == '(') //if we get to the first parenthesis, break
+                                    {
+                                        break;
+                                    }
+                                    else //else, keep reading the func name
+                                    {
+                                        FuncName = FuncName + Line[i];
+                                    }
+                                }
+
+                                int a = Line.IndexOf("("); //Get Parameter start
+
+                                int b = Line.IndexOf(")"); //Get Parameter end
+
+                                string Param = ""; //Parameter Buffer
+
+                                for (int i = a + 1; i < b; i++) //read the parameters
+                                {
+                                    if (Line[i] == ',') //check if parameter end
+                                    {
+                                        if (Param.Contains("\"")) //get rid of this shit
+                                        {
+                                            Param.Replace("\"", "");
+                                        }
+                                        Func.Paramaters.Add(Param);
+                                        Param = "";
+                                    }
+                                    else //else, read the param into a string
+                                    {
+                                        if (Line[i] != '\"')
+                                            Param = Param + Line[i];
+                                    }
+                                }
+
+                                Param.Replace("\"", "");
+
+                                Func.Paramaters.Add(Param); //Add the Last Parameter
+
+                                //////Console.WriteLine(FuncName); //Write the func name
+
+                                Func.Name = FuncName; //set our func name
+
+                                sub.Functions.Add(Func); //add our func
+                            }
                             break;
                         case SubType.Function:
+                            if (!Line.Contains("sub") && !Line.Contains("Function"))
+                            {
+                                Sub.Function Func = new Sub.Function(); //set our new Function Data
+
+                                for (int i = 0; i < Line.Length; i++) //read the string, char by char
+                                {
+                                    if (Line[i] == '(') //if we get to the first parenthesis, break
+                                    {
+                                        break;
+                                    }
+                                    else //else, keep reading the func name
+                                    {
+                                        FuncName = FuncName + Line[i];
+                                    }
+                                }
+
+                                int a = Line.IndexOf("("); //Get Parameter start
+
+                                int b = Line.IndexOf(")"); //Get Parameter end
+
+                                string Param = ""; //Parameter Buffer
+
+                                for (int i = a + 1; i < b; i++) //read the parameters
+                                {
+                                    if (Line[i] == ',') //check if parameter end
+                                    {
+                                        if (Param.Contains("\"")) //get rid of this shit
+                                        {
+                                            Param.Replace("\"", "");
+                                        }
+                                        Func.Paramaters.Add(Param);
+                                        Param = "";
+                                    }
+                                    else //else, read the param into a string
+                                    {
+                                        Param = Param + Line[i];
+                                    }
+                                }
+
+                                if (Param.Contains("\"")) //fuck off with this last bit of shit
+                                {
+                                    Param.Replace("\"", "");
+                                }
+
+                                Func.Paramaters.Add(Param); //Add the Last Parameter
+
+                                ////Console.WriteLine(FuncName); //Write the func name
+
+                                Func.Name = FuncName; //set our func name
+
+                                sub.Functions.Add(Func); //add our func
+                            }
                             break;
+                    }
+
+                    if (Line.Contains("end") && Line.Contains("sub"))
+                    {
+                        Subs.Add(sub);
+                        sub = new Sub();
                     }
 
                 }
@@ -179,35 +456,6 @@ namespace RSDK_Script_Parser
             {
 
             }
-        }
-
-        public List<Sub.Function> GetFunctionByName(string name, string SubName)
-        {
-            List<Sub.Function> Funcs = new List<Sub.Function>();
-
-            Sub s = new Sub();
-
-            bool found = false;
-
-            for (int i = 0; i < Subs.Count; i++)
-            {
-                if (Subs[i].Name == SubName)
-                {
-                    s = Subs[i];
-                    found = true;
-                }
-            }
-
-            if (!found) return null;
-
-            for (int i = 0; i < s.Functions.Count; i++)
-            {
-                if (s.Functions[i].Name == name)
-                {
-                    Funcs.Add(s.Functions[i]);
-                }
-            }
-            return Funcs;
         }
     }
 

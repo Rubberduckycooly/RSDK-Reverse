@@ -122,21 +122,20 @@ namespace RSDKv5
 
                 fileSize = (tmp & 0x7FFFFFFF);
 
+                long tmp2 = reader.BaseStream.Position;
+                reader.BaseStream.Position = DataOffset;
+
                 if (!encrypted)
                 {
-                    long tmp2 = reader.BaseStream.Position;
-                    reader.BaseStream.Position = DataOffset;
                     Filedata = reader.ReadBytes(fileSize);
-                    reader.BaseStream.Position = tmp2;
                 }
                 else
                 {
-                    long tmp2 = reader.BaseStream.Position;
-                    reader.BaseStream.Position = DataOffset;
                     byte[] tmpbuf = reader.ReadBytes(fileSize);
                     Filedata = Decrypt(tmpbuf);
-                    reader.BaseStream.Position = tmp2;
                 }
+
+                reader.BaseStream.Position = tmp2;
 
                 Extension = GetExtensionFromData();
 

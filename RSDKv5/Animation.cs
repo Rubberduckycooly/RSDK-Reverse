@@ -16,7 +16,13 @@ namespace RSDKv5
 
         public static readonly byte[] MAGIC = new byte[] { (byte)'S', (byte)'P', (byte)'R', (byte)'\0' };
 
-        public readonly string PathMod = "..";
+        public string PathMod
+        {
+            get
+            {
+                return "..//";
+            }
+        }
 
         //Why Taxman, why
         public int TotalFrameCount = 0;
@@ -188,7 +194,7 @@ namespace RSDKv5
             var animationCount = reader.ReadInt16();
             for (int i = 0; i < animationCount; ++i)
                 Animations.Add(new sprAnimation(reader, this));
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
@@ -211,9 +217,9 @@ namespace RSDKv5
             writer.Write((ushort)Animations.Count);
             for (int i = 0; i < Animations.Count; ++i)
             {
-                Write(writer);
+                Animations[i].Write(writer);
             }
-
+            writer.Close();
         }
 
         public void NewAnimation()

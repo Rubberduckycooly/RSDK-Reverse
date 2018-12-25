@@ -14,7 +14,13 @@ namespace RSDKv1
             return this.MemberwiseClone();
         }
 
-        public readonly string PathMod = "..\\sprites";
+        public string PathMod
+        {
+            get
+            {
+                return "..\\sprites\\";
+            }
+        }
 
         //Why Taxman, why
         public byte[] Unknown = new byte[5];
@@ -42,6 +48,14 @@ namespace RSDKv1
                 public struct HitBox
                 {
                     public short Left, Right, Top, Bottom;
+                }
+
+                public string AnimationName
+                {
+                    get
+                    {
+                        return "RSDKv1 Animation ";
+                    }
                 }
 
                 public List<HitBox> HitBoxes = new List<HitBox>();
@@ -191,16 +205,31 @@ namespace RSDKv1
             int collisionBoxCount = reader.ReadByte();
             for (int i = 0; i < collisionBoxCount; ++i)
                 CollisionBoxes.Add(new sprHitbox(reader));
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
         {
-            writer.Write(Unknown);
+            writer.Write(Unknown); //No idea what these are chief
+
+            byte SheetCnt = (byte)SpriteSheets.Count;
+
+            if (SpriteSheets.Count > 3)
+            {
+                SheetCnt = 3;
+            }
 
             for (int i = 0; i < SpriteSheets.Count; ++i)
             {
                 writer.WriteRSDKString(SpriteSheets[i]);
+            }
+
+            if (SpriteSheets.Count < 3)
+            {
+                for (int i = 0; i < 3 - SpriteSheets.Count; ++i)
+                {
+                    writer.WriteRSDKString("NULL");
+                }
             }
 
             writer.Write(EndTexFlag);
@@ -208,7 +237,7 @@ namespace RSDKv1
             writer.Write((byte)Animations.Count);
             for (int i = 0; i < Animations.Count; ++i)
             {
-                Write(writer);
+                Animations[i].Write(writer);
             }
 
             writer.Write((byte)CollisionBoxes.Count);
@@ -216,7 +245,7 @@ namespace RSDKv1
             {
                 CollisionBoxes[i].Write(writer);
             }
-
+            writer.Close();
         }
 
         public void NewAnimation()

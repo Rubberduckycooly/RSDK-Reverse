@@ -548,7 +548,7 @@ namespace RSDKv2
 
             m_stageVarsIndex = ScriptCount;
 
-            int count = Read16(reader);
+            int count = Read16(reader); //File count
 
             for (int i = 0; i < count; i++)
             {
@@ -714,9 +714,6 @@ namespace RSDKv2
                     writer.WriteLine("//-------Called once when the object is spawned-------//");
                     Console.WriteLine("Startup script.");
                     DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3);
-
-
-                    DecompileScript(writer, functionScript.mainScript, functionScript.mainJumpTable, 4);
                 }
                 catch (Exception ex)
                 {
@@ -1136,6 +1133,95 @@ namespace RSDKv2
         public void Write(Writer writer)
         {
 
+            //int opcount = Read32(reader)
+            int opcount = 0;
+            writer.Write(opcount);
+
+            for (; opcount > 0;)
+            {
+                //int data = Read8(reader);
+                int data = 0;
+                writer.Write((byte)data);
+                int blocksCount = data & 0x7F;
+
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    {
+                        writer.Write((byte)scriptData[scriptDataPos++]);
+                    }
+                    opcount -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    {
+                        writer.Write(scriptData[scriptDataPos++]);
+                    }
+                    opcount -= blocksCount;
+                }
+            }
+
+            //int opcount = Read32(reader)
+            int opcount2 = 0;
+            writer.Write(opcount2);
+
+            for (;opcount2 > 0;)
+            {
+                //int data = Read8(reader);
+                int data = 0;
+                writer.Write((byte)data);
+
+                int blocksCount = data & 0x7F;
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    {
+                        writer.Write((byte)jumpTableData[jumpTableDataPos++]);
+                    }
+                    opcount2 -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    {
+                        writer.Write(jumpTableData[jumpTableDataPos++]);
+                    }
+                    opcount2 -= blocksCount;
+                }
+            }
+
+            //int count = Read16(reader);
+            int count = 0;
+            writer.Write((ushort)count);
+
+            for (int i = 0; i < count; i++)
+            {
+                writer.Write(objectScriptList[m_stageVarsIndex + i].mainScript);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].playerScript);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].drawScript);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].startupScript);
+            }
+            for (int i = 0; i < count; i++)
+            {
+                writer.Write(objectScriptList[m_stageVarsIndex + i].mainJumpTable);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].playerJumpTable);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].drawJumpTable);
+                writer.Write(objectScriptList[m_stageVarsIndex + i].startupJumpTable);
+            }
+
+            //count = Read16(reader);
+            int count2 = 0;
+            writer.Write((ushort)count);
+
+            for (int i = 0; i < count2; i++)
+            {
+                writer.Write(functionScriptList[i].mainScript);
+            }
+            for (int i = 0; i < count2; i++)
+            {
+                writer.Write(functionScriptList[i].mainJumpTable);
+            }
         }
 
     }

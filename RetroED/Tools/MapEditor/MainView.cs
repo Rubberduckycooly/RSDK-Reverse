@@ -484,13 +484,20 @@ namespace RetroED.Tools.MapEditor
 
             //if (DataDirLoaded == false)
             //{
-                string newDataDirectory = GetDataDirectory();
-                if (null == newDataDirectory) return;
-                if (newDataDirectory.Equals(DataDirectory)) return;
+            string newDataDirectory = GetDataDirectory();
+            if (null == newDataDirectory) return;
+            if (newDataDirectory.Equals(DataDirectory)) return;
 
-                if (IsDataDirectoryValid(newDataDirectory))
-                { ResetDataDirectoryToAndResetScene(newDataDirectory); DataDirLoaded = true; }
-                else
+            if (IsDataDirectoryValid(newDataDirectory))
+            {
+                DataDirectory = newDataDirectory;
+                //AddRecentDataFolder(newDataDirectory);
+                SetGameConfig();
+                OpenScene();
+                //ResetDataDirectoryToAndResetScene(newDataDirectory);
+                DataDirLoaded = true;
+            }
+            else
                     MessageBox.Show($@"{newDataDirectory} is nota valid Data Directory.",
                                     "Invalid Data Directory!",
                                     MessageBoxButtons.OK,
@@ -648,6 +655,8 @@ namespace RetroED.Tools.MapEditor
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
                 LoadedRSDKver = dlg.RSDKver;
+                DataDirectory = null;
+                DataDirLoaded = false;
                 //if (DataDirectory == null || !DataDirLoaded)
                 //{
                     OpenDataDirectory();
@@ -749,8 +758,8 @@ namespace RetroED.Tools.MapEditor
                             Parent.rp.details = "Editing: " + _RSDK1Scene.Title;
                             break;
                     }
-                    SharpPresence.Discord.RunCallbacks();
-                    SharpPresence.Discord.UpdatePresence(Parent.rp);
+                    //SharpPresence.Discord.RunCallbacks();
+                    //SharpPresence.Discord.UpdatePresence(Parent.rp);
                 }
                 else
                 {
@@ -1623,46 +1632,201 @@ namespace RetroED.Tools.MapEditor
                     }
                     break;
                 case 1:
-                    RSDKv2.GameConfig gc2 = new RSDKv2.GameConfig(datapath + "//Game//Gameconfig.bin");
-                    _mapViewer.CDObjects.Objects.Clear();
-                    _mapViewer.CDObjects.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("Blank Object", 0, 0, "", 0, 0, 0, 0));
-                    for (int i = 0; i < gc2.ObjectsNames.Count; i++)
-                    {
-                        _mapViewer.CDObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(gc2.ObjectsNames[i], (i + 1), 0, "", 0, 0, 0, 0));
-                    }
-                    RSDKv2.StageConfig sc2 = new RSDKv2.StageConfig(Stageconfig);
-                    for (int i = gc2.ObjectsNames.Count; i < sc2.ObjectsNames.Count + gc2.ObjectsNames.Count; i++)
-                    {
-                        _mapViewer.CDObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(sc2.ObjectsNames[i - gc2.ObjectsNames.Count], (i + 1), 0, "", 0, 0, 0, 0));
-                    }
+                    LoadRSDK2ObjectsFromStageconfig(datapath);
                     break;
                 case 2:
-                    RSDKv1.GameConfig gc1 = new RSDKv1.GameConfig(datapath + "//Game//Gameconfig.bin");
-                    _mapViewer.NexusObjects.Objects.Clear();
-                    _mapViewer.NexusObjects.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("Blank Object", 0, 0, "", 0, 0, 0, 0));
-                    for (int i = 0; i < gc1.ScriptFilepaths.Count; i++)
-                    {
-                        _mapViewer.NexusObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(gc1.ScriptFilepaths[i]), (i + 1), 0, "", 0, 0, 0, 0));
-                    }
-                    RSDKv1.StageConfig sc1 = new RSDKv1.StageConfig(Stageconfig);
-                    for (int i = gc1.ScriptFilepaths.Count; i < sc1.ObjectsNames.Count + gc1.ScriptFilepaths.Count; i++)
-                    {
-                        _mapViewer.NexusObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(sc1.ObjectsNames[i - gc1.ScriptFilepaths.Count]), (i + 1), 0, "", 0, 0, 0, 0));
-                    }
+                    LoadRSDK1ObjectsFromStageconfig(datapath);
                     break;
                 case 3:
-                    Console.WriteLine("the Retro-Sonic Engine doesn't have global objects in a file lol");
+                    Console.WriteLine("the Retro-Sonic Engine (2007 Build) has 30 hardcoded global objects");
 
                     RSDKvRS.Zoneconfig scRS = new RSDKvRS.Zoneconfig(Stageconfig);
-                    for (int i = 30; i < scRS.Objects.Count + 30; i++)
+                    for (int i = 31; i < scRS.Objects.Count + 30; i++)
                     {
-                        //_mapViewer.RSObjects.Objects.Add(new Point((i), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(scRS.Objects[i - 30].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        _mapViewer.RSObjects.Objects.Add(new Point((i), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(scRS.Objects[i - 30].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
                     }
 
                     break;
             }
+            _blocksViewer.RefreshObjList();
         }
 
+        public void LoadRSDK1ObjectsFromStageconfig(string datapath)
+        {
+            RSDKv1.GameConfig gc1 = new RSDKv1.GameConfig(datapath + "//Game//Gameconfig.bin");
+            RSDKv1.StageConfig sc1 = new RSDKv1.StageConfig(Stageconfig);
+            _mapViewer.NexusObjects.Objects.Clear();
+            _mapViewer.NexusObjects.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("Blank Object", 0, 0, "", 0, 0, 0, 0));
+            _mapViewer.NexusObjects.Objects.Add(new Point(1, 0), new Object_Definitions.MapObject("Player Spawn", 0, 0, "", 0, 0, 0, 0));
+
+
+
+            for (int i = 1; i <= gc1.ScriptFilepaths.Count; i++)
+            {
+                try
+                {
+                    RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + gc1.ScriptFilepaths[i - 1]));
+
+                    RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
+
+                    for (int ii = 0; ii < Script.Subs.Count; ii++)
+                    {
+                        if (Script.Subs[ii].Name == "SubRSDK")
+                        {
+                            subv1 = Script.Subs[ii];
+                            break;
+                        }
+                    }
+
+                    List<RSDKv1.Script.Sub.Function> LoadSprites = subv1.GetFunctionByName("LoadSpriteSheet");
+
+                    string Sheet = LoadSprites[0].Paramaters[0];
+
+                    List<RSDKv1.Script.Sub.Function> SetEditorIcon = subv1.GetFunctionByName("SetEditorIcon");
+
+                    int PivotX = Convert.ToInt32(SetEditorIcon[0].Paramaters[2]);
+                    int PivotY = Convert.ToInt32(SetEditorIcon[0].Paramaters[3]);
+                    int Width = Convert.ToInt32(SetEditorIcon[0].Paramaters[4]);
+                    int Height = Convert.ToInt32(SetEditorIcon[0].Paramaters[5]);
+                    int X = Convert.ToInt32(SetEditorIcon[0].Paramaters[6]);
+                    int Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
+
+                    _mapViewer.NexusObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(gc1.ScriptFilepaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height,PivotX,PivotX,0));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    _mapViewer.NexusObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(gc1.ScriptFilepaths[i-1]), (i + 1), 0, "", 0, 0, 0, 0));
+                }
+            }
+            for (int i = 1; i <= sc1.ObjectsNames.Count; i++)
+            {
+                try
+                {
+                    RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + sc1.ObjectsNames[i - 1]));
+
+                    RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
+
+                    for (int ii = 0; ii < Script.Subs.Count; ii++)
+                    {
+                        if (Script.Subs[ii].Name == "SubRSDK")
+                        {
+                            subv1 = Script.Subs[ii];
+                            break;
+                        }
+                    }
+
+                    List<RSDKv1.Script.Sub.Function> LoadSprites = subv1.GetFunctionByName("LoadSpriteSheet");
+
+                    string Sheet = LoadSprites[0].Paramaters[0];
+
+                    List<RSDKv1.Script.Sub.Function> SetEditorIcon = subv1.GetFunctionByName("SetEditorIcon");
+
+                    int PivotX = Convert.ToInt32(SetEditorIcon[0].Paramaters[2]);
+                    int PivotY = Convert.ToInt32(SetEditorIcon[0].Paramaters[3]);
+                    int Width = Convert.ToInt32(SetEditorIcon[0].Paramaters[4]);
+                    int Height = Convert.ToInt32(SetEditorIcon[0].Paramaters[5]);
+                    int X = Convert.ToInt32(SetEditorIcon[0].Paramaters[6]);
+                    int Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
+
+                    _mapViewer.NexusObjects.Objects.Add(new Point((i + gc1.ScriptFilepaths.Count+1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(sc1.ObjectsNames[i - 1]), (i + gc1.ScriptFilepaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotX, 0));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    _mapViewer.NexusObjects.Objects.Add(new Point((i + gc1.ScriptFilepaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(sc1.ObjectsNames[i - 1]), (i + gc1.ScriptFilepaths.Count + 1), 0, "", 0, 0, 0, 0));
+                }
+            }
+        }
+
+        public void LoadRSDK2ObjectsFromStageconfig(string datapath)
+        {
+            RSDKv1.GameConfig gc2 = new RSDKv1.GameConfig(datapath + "//Game//Gameconfig.bin");
+            RSDKv1.StageConfig sc2 = new RSDKv1.StageConfig(Stageconfig);
+            _mapViewer.CDObjects.Objects.Clear();
+            _mapViewer.CDObjects.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("Blank Object", 0, 0, "", 0, 0, 0, 0));
+            _mapViewer.CDObjects.Objects.Add(new Point(1, 0), new Object_Definitions.MapObject("Player Spawn", 0, 0, "", 0, 0, 0, 0));
+
+            bool UsingBytecode = Directory.Exists(datapath + "//Scripts//Bytecode");
+
+
+            for (int i = 1; i <= gc2.ScriptFilepaths.Count; i++)
+            {
+                try
+                {
+                    RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + gc2.ScriptFilepaths[i - 1]));
+
+                    RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
+
+                    for (int ii = 0; ii < Script.Subs.Count; ii++)
+                    {
+                        if (Script.Subs[ii].Name == "SubRSDK")
+                        {
+                            subv1 = Script.Subs[ii];
+                            break;
+                        }
+                    }
+
+                    List<RSDKv1.Script.Sub.Function> LoadSprites = subv1.GetFunctionByName("LoadSpriteSheet");
+
+                    string Sheet = LoadSprites[0].Paramaters[0];
+
+                    List<RSDKv1.Script.Sub.Function> SetEditorIcon = subv1.GetFunctionByName("SetEditorIcon");
+
+                    int PivotX = Convert.ToInt32(SetEditorIcon[0].Paramaters[2]);
+                    int PivotY = Convert.ToInt32(SetEditorIcon[0].Paramaters[3]);
+                    int Width = Convert.ToInt32(SetEditorIcon[0].Paramaters[4]);
+                    int Height = Convert.ToInt32(SetEditorIcon[0].Paramaters[5]);
+                    int X = Convert.ToInt32(SetEditorIcon[0].Paramaters[6]);
+                    int Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
+
+                    _mapViewer.CDObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(gc2.ScriptFilepaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotX, 0));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    _mapViewer.CDObjects.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(gc2.ScriptFilepaths[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
+                }
+            }
+            for (int i = 1; i <= sc2.ObjectsNames.Count; i++)
+            {
+                try
+                {
+                    RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + sc2.ObjectsNames[i - 1]));
+
+                    RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
+
+                    for (int ii = 0; ii < Script.Subs.Count; ii++)
+                    {
+                        if (Script.Subs[ii].Name == "SubRSDK")
+                        {
+                            subv1 = Script.Subs[ii];
+                            break;
+                        }
+                    }
+
+                    List<RSDKv1.Script.Sub.Function> LoadSprites = subv1.GetFunctionByName("LoadSpriteSheet");
+
+                    string Sheet = LoadSprites[0].Paramaters[0];
+
+                    List<RSDKv1.Script.Sub.Function> SetEditorIcon = subv1.GetFunctionByName("SetEditorIcon");
+
+                    int PivotX = Convert.ToInt32(SetEditorIcon[0].Paramaters[2]);
+                    int PivotY = Convert.ToInt32(SetEditorIcon[0].Paramaters[3]);
+                    int Width = Convert.ToInt32(SetEditorIcon[0].Paramaters[4]);
+                    int Height = Convert.ToInt32(SetEditorIcon[0].Paramaters[5]);
+                    int X = Convert.ToInt32(SetEditorIcon[0].Paramaters[6]);
+                    int Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
+
+                    _mapViewer.CDObjects.Objects.Add(new Point((i + gc2.ScriptFilepaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(sc2.ObjectsNames[i - 1]), (i + gc2.ScriptFilepaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotX, 0));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    _mapViewer.CDObjects.Objects.Add(new Point((i + gc2.ScriptFilepaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(sc2.ObjectsNames[i - 1]), (i + gc2.ScriptFilepaths.Count + 1), 0, "", 0, 0, 0, 0));
+                }
+            }
+        }
     }
 
 }
