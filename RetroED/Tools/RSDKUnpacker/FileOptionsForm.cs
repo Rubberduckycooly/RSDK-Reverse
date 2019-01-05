@@ -144,7 +144,7 @@ namespace RetroED.Tools.RSDKUnpacker
                         break;
                     case 4:
                         FileDatav5.FileName = Path.GetFileName(dlg.FileName);
-                        FileDatav5.fileSize = (uint)reader.BaseStream.Length;
+                        FileDatav5.FileSize = (uint)reader.BaseStream.Length;
                         FileDatav5.Filedata = reader.ReadBytes((int)reader.BaseStream.Length);
                         FileNameBox.Text = Path.GetFileName(dlg.FileName);
                         break;

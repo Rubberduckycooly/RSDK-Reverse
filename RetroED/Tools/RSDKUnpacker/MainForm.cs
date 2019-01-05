@@ -41,7 +41,7 @@ namespace RetroED.Tools.RSDKUnpacker
                 dataVer = dlg.FilterIndex - 1;
                 filename = dlg.FileName;
                 DataFileLocation.Text = filename;
-
+                
                 switch (dataVer)
                 {
                     case 0:
@@ -467,7 +467,7 @@ namespace RetroED.Tools.RSDKUnpacker
                 RSDKv5.Reader reader = new RSDKv5.Reader(file.FullName);
 
                 File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
-                File.fileSize = (uint)reader.BaseStream.Length;
+                File.FileSize = (uint)reader.BaseStream.Length;
 
                 reader.Close();
 
@@ -660,7 +660,7 @@ namespace RetroED.Tools.RSDKUnpacker
                     EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].encrypted;
                     break;
                 case 4:
-                    EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                    EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].Encrypted;
                     break;
             }
         }
@@ -714,11 +714,11 @@ namespace RetroED.Tools.RSDKUnpacker
                 case 4: //Sonic Mania (RSDKv5)
                     if (FileListBox.SelectedIndex >= 0)
                     {
-                        FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].FileSize + " Bytes";
                         FileNameLabel.Text = "File Name = " + Path.GetFileName(Datav5.Files[FileListBox.SelectedIndex].FileName);
                         FullFileNameLabel.Text = "Full File Name = " + Datav5.Files[FileListBox.SelectedIndex].FileName;
                         FileOffsetLabel.Text = "File Offset = " + Datav5.Files[FileListBox.SelectedIndex].DataOffset + " Bytes";
-                        EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                        EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].Encrypted;
                     }
                     break;
             }
