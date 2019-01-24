@@ -12,7 +12,7 @@ namespace RSDKv5
 
         public class Header
         {
-            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K',(byte)'v', (byte)'5'};
+            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
             public ushort FileCount;
 
             public Header(Reader reader)
@@ -52,8 +52,8 @@ namespace RSDKv5
             byte[] md5Hash = new byte[16];
 
             public uint DataOffset;
-            public uint fileSize;
-            public bool encrypted;
+            public uint FileSize;
+            public bool Encrypted;
 
             public byte[] Filedata;
 
@@ -83,28 +83,27 @@ namespace RSDKv5
                 }
                 MD5FileName = ConvertByteArrayToString(md5Hash);
 
-                MD5 MD5Tool = MD5.Create();
+                var md5 = MD5.Create();
 
                 FileName = (cnt + 1) + ".bin"; //Make a base name
 
                 for (int i = 0; i < FileList.Count; i++)
                 {
-                    //the string has to be in lowercase
+                    // Mania Hashes all Strings at Lower Case
                     string fp = FileList[i].ToLower();
 
-                    int ok = 1;
+                    bool match = true;
 
                     for (int z = 0; z < 16; z++)
                     {
                         if (CalculateMD5Hash(fp)[z] != md5Hash[z])
                         {
-                            ok = 0;
+                            match = false;
                             break;
                         }
-                        
                     }
 
-                    if (ok == 1)
+                    if (match)
                     {
                         FileName = FileList[i];
                         break;
@@ -115,25 +114,17 @@ namespace RSDKv5
                 DataOffset = reader.ReadUInt32();
                 uint tmp = reader.ReadUInt32();
 
-                if ((tmp & 0x80000000) == 0x80000000)
-                {
-                    encrypted = true;
-                }
-
-                fileSize = (tmp & 0x7FFFFFFF);
+                Encrypted = (tmp & 0x80000000) != 0;
+                FileSize = (tmp & 0x7FFFFFFF);
 
                 long tmp2 = reader.BaseStream.Position;
                 reader.BaseStream.Position = DataOffset;
 
-                if (!encrypted)
-                {
-                    Filedata = reader.ReadBytes(fileSize);
-                }
-                else
-                {
-                    byte[] tmpbuf = reader.ReadBytes(fileSize);
-                    Filedata = Decrypt(tmpbuf);
-                }
+                Filedata = reader.ReadBytes(FileSize);
+
+                // Decrypt File if Encrypted
+                if (Encrypted)
+                    Filedata = Decrypt(Filedata);
 
                 reader.BaseStream.Position = tmp2;
 
@@ -144,151 +135,89 @@ namespace RSDKv5
                     switch (Extension)
                     {
                         case ExtensionTypes.CFG:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Config[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "Config" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.GIF:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Sprite[Encrypted]" + (cnt + 1) + ".gif";
-                            }
                             else
-                            {
                                 FileName = "Sprite" + (cnt + 1) + ".gif";
-                            }
                             break;
                         case ExtensionTypes.MDL:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Model[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "Model" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.OBJ:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "StaticObject[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "StaticObject" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.OGG:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Music[Encrypted]" + (cnt + 1) + ".ogg";
-                            }
                             else
-                            {
                                 FileName = "Music" + (cnt + 1) + ".ogg";
-                            }
                             break;
                         case ExtensionTypes.PNG:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Image[Encrypted]" + (cnt + 1) + ".png";
-                            }
                             else
-                            {
                                 FileName = "Image" + (cnt + 1) + ".png";
-                            }
                             break;
                         case ExtensionTypes.SCN:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Scene[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "Scene" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.SPR:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "SpriteMappings[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "SpriteMappings" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.TIL:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "Tileconfig[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "Tileconfig" + (cnt + 1) + ".bin";
-                            }
                             break;
                         case ExtensionTypes.WAV:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "SoundEffect[Encrypted]" + (cnt + 1) + ".wav";
-                            }
                             else
-                            {
                                 FileName = "SoundEffect" + (cnt + 1) + ".wav";
-                            }
                             break;
                         case ExtensionTypes.UNKNOWN:
-                            if (encrypted)
-                            {
+                            if (Encrypted)
                                 FileName = "UnknownFileType[Encrypted]" + (cnt + 1) + ".bin";
-                            }
                             else
-                            {
                                 FileName = "UnknownFileType" + (cnt + 1) + ".bin";
-                            }
                             break;
                     }
                 }
+                md5.Dispose();
             }
 
             public void WriteFileHeader(Writer writer)
             {
                 writer.Write(CalculateMD5Hash(FileName.ToLower()));
                 writer.Write(DataOffset);
-
-                uint tmp = fileSize;
-
-                if (!encrypted)
-                {
-                    tmp = fileSize;
-                }
-                else if (encrypted)
-                {
-                    tmp = fileSize & 0x1;
-                }
-
-                writer.Write(tmp);
-
+                writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }
 
             public void WriteFileData(Writer writer)
             {
-                if (!encrypted)
-                {
-                    writer.Write(Filedata);
-                }
+                if (Encrypted)
+                    writer.Write(Decrypt(Filedata));
                 else
-                {
-                    byte[] tmpbuf = Filedata;
-                    Filedata = Decrypt(tmpbuf);
                     writer.Write(Filedata);
-                }
             }
 
             public void Write(string Datadirectory)
@@ -298,29 +227,22 @@ namespace RSDKv5
                 {
                     tmpcheck = tmpcheck + FileName[i];
                 }
-                System.IO.DirectoryInfo di;
 
                 //Do we know the filename of the file?
                 if (tmpcheck != "Data" && tmpcheck != "Byte")
                 {
-                    di = new System.IO.DirectoryInfo(Datadirectory + "//Unknown Files");
-                    if (!di.Exists) di.Create();
-                    Writer writer = new Writer(Datadirectory + "//Unknown Files//" + FileName);
-
-                    if (Filedata != null)
-                        writer.Write(Filedata);
-
-                    writer.Close();
+                    string directory = Path.Combine(Datadirectory, "Unknown Files");
+                    if (!Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
+                    File.WriteAllBytes(Path.Combine(directory, FileName), Filedata);
                 }
                 else //We do! now do normal stuff!
                 {
-                    string dir = FileName.Replace(Path.GetFileName(FileName), "");
-                    di = new System.IO.DirectoryInfo(Datadirectory + "//" + dir);
-                    if (!di.Exists) di.Create();
-                    Writer writer = new Writer(Datadirectory + "//" + FileName);
-                    if (Filedata != null)
-                        writer.Write(Filedata);
-                    writer.Close();
+
+                    string dir = Path.Combine(Datadirectory, FileName.Replace(Path.GetFileName(FileName), ""));
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+                    File.WriteAllBytes(Path.Combine(Datadirectory, FileName), Filedata);
                 }
             }
 
@@ -328,10 +250,7 @@ namespace RSDKv5
             {
                 var sb = new StringBuilder();
                 foreach (var b in bytes)
-                {
                     sb.Append(b.ToString("X2"));
-                }
-
                 return sb.ToString();
             }
 
@@ -365,27 +284,15 @@ namespace RSDKv5
                 // Create a StringComparer an compare the hashes.
                 StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
-                if (0 == comparer.Compare(hashOfInput, hash))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return comparer.Compare(hashOfInput, hash) == 0;
             }
 
             public byte[] CalculateMD5Hash(string input)
             {
-
-                MD5 md5 = System.Security.Cryptography.MD5.Create();
-
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-
-                byte[] hash = md5.ComputeHash(inputBytes);
-
+                byte[] hash;
+                using (var md5 = MD5.Create())
+                    hash = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
                 return hash;
-
             }
 
             void GenerateELoadKeys(string FileName, uint VSize)
@@ -429,7 +336,7 @@ namespace RSDKv5
                 // Note: Since only XOr is used, this function does both,
                 //       decryption and encryption.
 
-                GenerateELoadKeys(FileName, fileSize);
+                GenerateELoadKeys(FileName, FileSize);
 
                 int TempByt;
 
@@ -598,7 +505,7 @@ namespace RSDKv5
             foreach (FileInfo f in Files) //Write "Filler Data"
             {
                 f.DataOffset = (uint)writer.BaseStream.Position; //get our file data offset
-                byte[] b = new byte[f.fileSize]; //load up a set of blanks with the same size as the original set
+                byte[] b = new byte[f.FileSize]; //load up a set of blanks with the same size as the original set
                 writer.Write(b); //fill the file up with blank data
             }
 
@@ -631,6 +538,17 @@ namespace RSDKv5
                 if (f.FileName == fileName)
                 {
                     f.Write(NewFileName);
+                }
+            }
+        }
+
+        public void GetFileinfoFromDataFile(string filename)
+        {
+            for (int i = 0; i < Files.Count; i++)
+            {
+                if (string.Equals(Files[i].FileName, filename))
+                {
+
                 }
             }
         }

@@ -11,19 +11,42 @@ namespace RSDKvRS
     {
         public class BGLayer
         {
+            /// <summary>
+            /// the array of Chunks IDs for the Layer
+            /// </summary>
             public ushort[][] MapLayout { get; set; }
 
-            public int width, height = 0;
-            public byte Deform; //1 for parallax, 2 for no parallax, 3 for "3D Sky", anything else for nothing
-            public byte RelativeVSpeed;
-            public byte ConstantVSpeed;
+            /// <summary>
+            /// Layer Width
+            /// </summary>
+            public byte width = 0;
+            /// <summary>
+            /// Layer Height
+            /// </summary>
+            public byte height = 0;
+            /// <summary>
+            /// the deform value
+            /// set it to 1 for Horizontal parallax, 2 for Vertical parallax, 3 for "3D Sky", anything else for nothing
+            /// </summary>
+            public byte Deform;
+            /// <summary>
+            /// how fast the Layer moves while the player is moving
+            /// </summary>
+            public byte RelativeSpeed;
+            /// <summary>
+            /// how fast the layer moves while the player isn't moving
+            /// </summary>
+            public byte ConstantSpeed;
 
+            /// <summary>
+            /// a list of Line positions
+            /// </summary>
             public List<byte> LineIndexes = new List<byte>();
 
             public BGLayer()
             {
                 width = height = 1;
-                Deform = RelativeVSpeed = ConstantVSpeed = 0;
+                Deform = RelativeSpeed = ConstantSpeed = 0;
 
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -32,11 +55,11 @@ namespace RSDKvRS
                 }
             }
 
-            public BGLayer(ushort w, ushort h)
+            public BGLayer(byte w, byte h)
             {
                 width = w;
                 height = h;
-                Deform = RelativeVSpeed = ConstantVSpeed = 0;
+                Deform = RelativeSpeed = ConstantSpeed = 0;
 
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -50,10 +73,8 @@ namespace RSDKvRS
                 width = reader.ReadByte();
                 height = reader.ReadByte();
                 Deform = reader.ReadByte();
-                RelativeVSpeed = reader.ReadByte();
-                ConstantVSpeed = reader.ReadByte();
-
-                //Console.WriteLine("Width = " + width + " Height = " + height + " Unknown 1 = " + Unknown1 + " Unknown 2 = " + Unknown2 + " Unknown 3 = " + Unknown3);
+                RelativeSpeed = reader.ReadByte();
+                ConstantSpeed = reader.ReadByte();
 
                 int j = 0;
                 while (j < 1)
@@ -98,8 +119,8 @@ namespace RSDKvRS
                 writer.Write((byte)width);
                 writer.Write((byte)height);
                 writer.Write(Deform);
-                writer.Write(RelativeVSpeed);
-                writer.Write(ConstantVSpeed);
+                writer.Write(RelativeSpeed);
+                writer.Write(ConstantSpeed);
 
                 for (int i = 0; i < LineIndexes.Count; i++)
                 {
@@ -118,46 +139,65 @@ namespace RSDKvRS
 
         }
 
-        public class ParallaxValues
+        public class ScrollInfo
         {
-            public byte RHSpeed; //Known as "Speed" in Taxman's Editor
-            public byte CHSpeed; //Known as "Scroll" in Taxman's Editor
-            public byte Deform; //Known as "Deform" in Taxman's Editor, Same here!
+            /// <summary>
+            /// how fast the line moves while the player is moving
+            /// (Known as "Speed" in Taxman's Editor)
+            /// </summary>
+            public byte RelativeSpeed;
+            /// <summary>
+            /// How fast the line moves without the player moving
+            /// (Known as "Scroll" in Taxman's Editor)
+            /// </summary>
+            public byte ConstantSpeed;
+            /// <summary>
+            /// Behaviour Value, controls special line FX
+            /// (aka behaviour, Known as "Deform" in Taxman's Editor)
+            /// </summary>
+            public byte Deform;
 
-            public ParallaxValues()
+            public ScrollInfo()
             {
-                RHSpeed = 0;
-                CHSpeed = 0;
+                RelativeSpeed = 0;
+                ConstantSpeed = 0;
                 Deform = 0;
             }
 
-            public ParallaxValues(byte r, byte c, byte d)
+            public ScrollInfo(byte r, byte c, byte d)
             {
-                RHSpeed = r;
-                CHSpeed = c;
+                RelativeSpeed = r;
+                ConstantSpeed = c;
                 Deform = d;
             }
 
-            public ParallaxValues(Reader reader)
+            public ScrollInfo(Reader reader)
             {
-                RHSpeed = reader.ReadByte();
-                CHSpeed = reader.ReadByte();
+                RelativeSpeed = reader.ReadByte();
+                ConstantSpeed = reader.ReadByte();
                 Deform = reader.ReadByte();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(RHSpeed);
-                writer.Write(CHSpeed);
+                writer.Write(RelativeSpeed);
+                writer.Write(ConstantSpeed);
                 writer.Write(Deform);
             }
 
         }
 
-        public List<ParallaxValues> HLines = new List<ParallaxValues>();
-
-        public List<ParallaxValues> VLines = new List<ParallaxValues>();
-
+        /// <summary>
+        /// A list of Horizontal Line Scroll Values
+        /// </summary>
+        public List<ScrollInfo> HLines = new List<ScrollInfo>();
+        /// <summary>
+        /// A list of Vertical Line Scroll Values
+        /// </summary>
+        public List<ScrollInfo> VLines = new List<ScrollInfo>();
+        /// <summary>
+        /// A list of Background layers
+        /// </summary>
         public List<BGLayer> Layers = new List<BGLayer>();
 
         public BGLayout()
@@ -184,7 +224,7 @@ namespace RSDKvRS
             //First up is certainly the Horizontal Parallax vallues
             for (int lc = 0; lc < HLineCount; lc++)
             {
-                HLines.Add(new ParallaxValues(reader));
+                HLines.Add(new ScrollInfo(reader));
             }
 
             byte VLineCount = reader.ReadByte();
@@ -192,7 +232,7 @@ namespace RSDKvRS
             //Then the Vertical Parallax vallues
             for (int lc = 0; lc < VLineCount; lc++)
             {
-                VLines.Add(new ParallaxValues(reader));
+                VLines.Add(new ScrollInfo(reader));
             }
 
             for (int i = 0; i < layerCount; i++) //Next, Read BG Layers

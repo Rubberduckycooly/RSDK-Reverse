@@ -78,15 +78,15 @@ namespace ScriptUnpacker
             DirectoryInfo dir = new DirectoryInfo("Scripts");
             dir.Create();
             bytecodev2.Clear();
-            for (int i = 0; i < gc.ScriptFilepaths.Count; i++)
+            for (int i = 0; i < gc.ScriptPaths.Count; i++)
             {
-                if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(gc.ScriptFilepaths[i])))
+                if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(gc.ScriptPaths[i])))
                 {
-                    Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(gc.ScriptFilepaths[i]));
+                    Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(gc.ScriptPaths[i]));
                 }
-                if (!File.Exists("Scripts//" + gc.ScriptFilepaths[i]))
+                if (!File.Exists("Scripts//" + gc.ScriptPaths[i]))
                 {
-                    File.CreateText("Scripts//" + gc.ScriptFilepaths[i]);
+                    File.CreateText("Scripts//" + gc.ScriptPaths[i]);
                 }
             }
 
@@ -94,17 +94,24 @@ namespace ScriptUnpacker
             {
                 foreach (RSDKv2.GameConfig.Category.SceneInfo si in sg.Scenes)
                 {
-                    RSDKv2.StageConfig sc = new RSDKv2.StageConfig(datafolderpath + "//Stages//" + si.SceneFolder + "//Stageconfig.bin");
+                    bool filefound = true;
 
-                    for (int i = 0; i < sc.ScriptFilepaths.Count; i++)
+                    filefound = File.Exists(datafolderpath + "//Stages//" + si.SceneFolder + "//Stageconfig.bin");
+
+                    if (filefound)
                     {
-                        if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(sc.ScriptFilepaths[i])))
+                        RSDKv2.StageConfig sc = new RSDKv2.StageConfig(datafolderpath + "//Stages//" + si.SceneFolder + "//Stageconfig.bin");
+
+                        for (int i = 0; i < sc.ScriptPaths.Count; i++)
                         {
-                            Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(sc.ScriptFilepaths[i]));
-                        }
-                        if (!File.Exists("Scripts//" + sc.ScriptFilepaths[i]))
-                        {
-                            File.CreateText("Scripts//" + sc.ScriptFilepaths[i]);
+                            if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(sc.ScriptPaths[i])))
+                            {
+                                Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(sc.ScriptPaths[i]));
+                            }
+                            if (!File.Exists("Scripts//" + sc.ScriptPaths[i]))
+                            {
+                                File.CreateText("Scripts//" + sc.ScriptPaths[i]);
+                            }
                         }
                     }
                 }
@@ -122,9 +129,9 @@ namespace ScriptUnpacker
                 MobileVer = true;
             }
 
-            RSDKv2.Bytecode GlobalCode = new RSDKv2.Bytecode(new RSDKv2.Reader(GlobalPath), 1);
+            RSDKv2.Bytecode GlobalCode = new RSDKv2.Bytecode(new RSDKv2.Reader(GlobalPath), 1,MobileVer);
 
-            GlobalCode.sourceNames = new string[gcv2.ScriptFilepaths.Count + 1];
+            GlobalCode.sourceNames = new string[gcv2.ScriptPaths.Count + 1];
             GlobalCode.typeNames = new string[gcv2.ObjectsNames.Count + 1];
 
             GlobalCode.sourceNames[0] = "BlankObject";
@@ -137,8 +144,8 @@ namespace ScriptUnpacker
 
             for (int i = 1; i < gcv2.ObjectsNames.Count + 1; i++)
             {
-                GlobalCode.sourceNames[i] = gcv2.ScriptFilepaths[i - 1];
-                GlobalCode.typeNames[i] = gcv2.ObjectsNames[i - 1];
+                GlobalCode.sourceNames[i] = gcv2.ScriptPaths[i - 1];
+                GlobalCode.typeNames[i] = Path.GetFileNameWithoutExtension(gcv2.ScriptPaths[i - 1]);
             }
 
             bytecodev2.Add(GlobalCode);
@@ -199,38 +206,82 @@ namespace ScriptUnpacker
                         BytecodeName = datafolderpath + "//Scripts//Bytecode//" + gcv2.Categories[c].Scenes[s].SceneFolder + ".bin";
                     }
 
-                    RSDKv2.StageConfig scv2 = new RSDKv2.StageConfig(DataFolderPath + "//Stages//" + gc.Categories[c].Scenes[s].SceneFolder + "//Stageconfig.bin");
+                    bool filefound = true;
 
-                    RSDKv2.Bytecode bytecode = new RSDKv2.Bytecode(new RSDKv2.Reader(BytecodeName), gcv2.ObjectsNames.Count+1);
+                    filefound = File.Exists(DataFolderPath + "//Stages//" + gc.Categories[c].Scenes[s].SceneFolder + "//Stageconfig.bin");
 
-                    bytecode.sourceNames = new string[gcv2.ObjectsNames.Count + scv2.ScriptFilepaths.Count + 1];
-                    bytecode.typeNames = new string[gcv2.ObjectsNames.Count + scv2.ObjectsNames.Count + 1];
-
-                    bytecode.sourceNames[0] = "BlankObject";
-                    bytecode.typeNames[0] = "BlankObject";
-
-                    for (int i = 1; i < gcv2.GlobalVariables.Count; i++)
+                    if (filefound)
                     {
-                        bytecode.globalVariableNames[i] = gcv2.GlobalVariables[i].Name;
+                        filefound = File.Exists(BytecodeName);
                     }
 
-                    int ID = 1;
-
-                    for (int i = 0; i < gcv2.ObjectsNames.Count; i++)
+                    if (filefound)
                     {
-                        bytecode.sourceNames[ID] = gcv2.ScriptFilepaths[i];
-                        bytecode.typeNames[ID] = gcv2.ObjectsNames[i];
-                        ID++;
-                    }
+                        RSDKv2.StageConfig scv2 = new RSDKv2.StageConfig(DataFolderPath + "//Stages//" + gc.Categories[c].Scenes[s].SceneFolder + "//Stageconfig.bin");
 
-                    for (int i = 0; i < scv2.ObjectsNames.Count; i++)
-                    {
-                        bytecode.sourceNames[ID] = scv2.ScriptFilepaths[i];
-                        bytecode.typeNames[ID] = scv2.ObjectsNames[i];
-                        ID++;
-                    }
+                        RSDKv2.Bytecode bytecode = new RSDKv2.Bytecode(new RSDKv2.Reader(BytecodeName), gcv2.ObjectsNames.Count + 1,MobileVer);
 
-                    bytecodev2.Add(bytecode);
+                        if (scv2.LoadGlobalScripts)
+                        {
+                            bytecode = new RSDKv2.Bytecode(new RSDKv2.Reader(GlobalPath), 1, MobileVer);
+                            bytecode.LoadStageBytecodeData(new RSDKv2.Reader(BytecodeName), gcv2.ObjectsNames.Count + 1, MobileVer);
+
+                            bytecode.sourceNames = new string[gcv2.ObjectsNames.Count + scv2.ScriptPaths.Count + 1];
+                            bytecode.typeNames = new string[gcv2.ObjectsNames.Count + scv2.ObjectsNames.Count + 1];
+
+                            bytecode.sourceNames[0] = "BlankObject";
+                            bytecode.typeNames[0] = "BlankObject";
+
+                            for (int i = 1; i < gcv2.GlobalVariables.Count; i++)
+                            {
+                                bytecode.globalVariableNames[i] = gcv2.GlobalVariables[i].Name;
+                            }
+
+                            int ID = 1;
+
+                            for (int i = 0; i < gcv2.ObjectsNames.Count; i++)
+                            {
+                                bytecode.sourceNames[ID] = gcv2.ScriptPaths[i];
+                                //bytecode.typeNames[ID] = gcv2.ObjectsNames[i];
+                                bytecode.typeNames[ID] = Path.GetFileNameWithoutExtension(gcv2.ScriptPaths[i]);
+                                ID++;
+                            }
+
+                            for (int i = 0; i < scv2.ObjectsNames.Count; i++)
+                            {
+                                bytecode.sourceNames[ID] = scv2.ScriptPaths[i];
+                                //bytecode.typeNames[ID] = scv2.ObjectsNames[i];
+                                bytecode.typeNames[ID] = Path.GetFileNameWithoutExtension(scv2.ScriptPaths[i]);
+                                ID++;
+                            }
+                        }
+                        else
+                        {
+                            bytecode = new RSDKv2.Bytecode(new RSDKv2.Reader(BytecodeName), 1, MobileVer);
+
+                            bytecode.sourceNames = new string[scv2.ScriptPaths.Count + 1];
+                            bytecode.typeNames = new string[scv2.ObjectsNames.Count + 1];
+
+                            bytecode.sourceNames[0] = "BlankObject";
+                            bytecode.typeNames[0] = "BlankObject";
+
+                            for (int i = 1; i < gcv2.GlobalVariables.Count; i++)
+                            {
+                                bytecode.globalVariableNames[i] = gcv2.GlobalVariables[i].Name;
+                            }
+
+                            int ID = 1;
+
+                            for (int i = 0; i < scv2.ObjectsNames.Count; i++)
+                            {
+                                bytecode.sourceNames[ID] = scv2.ScriptPaths[i];
+                                bytecode.typeNames[ID] = Path.GetFileNameWithoutExtension(scv2.ScriptPaths[i]);
+                                ID++;
+                            }
+                        }
+
+                        bytecodev2.Add(bytecode);
+                    }
                 }
             }
         }
@@ -241,15 +292,15 @@ namespace ScriptUnpacker
             DirectoryInfo dir = new DirectoryInfo("Scripts");
             dir.Create();
             bytecodevB.Clear();
-            for (int i = 0; i < gc.ScriptFilepaths.Count; i++)
+            for (int i = 0; i < gc.ScriptPaths.Count; i++)
             {
-                if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(gc.ScriptFilepaths[i])))
+                if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(gc.ScriptPaths[i])))
                 {
-                    Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(gc.ScriptFilepaths[i]));
+                    Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(gc.ScriptPaths[i]));
                 }
-                if (!File.Exists("Scripts//" + gc.ScriptFilepaths[i]))
+                if (!File.Exists("Scripts//" + gc.ScriptPaths[i]))
                 {
-                    File.CreateText("Scripts//" + gc.ScriptFilepaths[i]);
+                    File.CreateText("Scripts//" + gc.ScriptPaths[i]);
                 }
             }
 
@@ -259,15 +310,15 @@ namespace ScriptUnpacker
                 {
                     RSDKvB.StageConfig sc = new RSDKvB.StageConfig(datafolderpath + "//Stages//" + si.SceneFolder + "//Stageconfig.bin");
 
-                    for (int i = 0; i < sc.ScriptFilepaths.Count; i++)
+                    for (int i = 0; i < sc.ScriptPaths.Count; i++)
                     {
-                        if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(sc.ScriptFilepaths[i])))
+                        if (!Directory.Exists("Scripts//" + Path.GetDirectoryName(sc.ScriptPaths[i])))
                         {
-                            Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(sc.ScriptFilepaths[i]));
+                            Directory.CreateDirectory("Scripts//" + Path.GetDirectoryName(sc.ScriptPaths[i]));
                         }
-                        if (!File.Exists("Scripts//" + sc.ScriptFilepaths[i]))
+                        if (!File.Exists("Scripts//" + sc.ScriptPaths[i]))
                         {
-                            File.CreateText("Scripts//" + sc.ScriptFilepaths[i]);
+                            File.CreateText("Scripts//" + sc.ScriptPaths[i]);
                         }
                     }
                 }
@@ -277,7 +328,7 @@ namespace ScriptUnpacker
 
             RSDKvB.Bytecode GlobalCode = new RSDKvB.Bytecode(new RSDKvB.Reader(datafolderpath + "..//Bytecode//GlobalCode.bin"), 1);
 
-            GlobalCode.sourceNames = new string[gcvB.ScriptFilepaths.Count + 1];
+            GlobalCode.sourceNames = new string[gcvB.ScriptPaths.Count + 1];
             GlobalCode.typeNames = new string[gcvB.ObjectsNames.Count + 1];
 
             GlobalCode.sourceNames[0] = "BlankObject";
@@ -290,7 +341,7 @@ namespace ScriptUnpacker
 
             for (int i = 1; i < gcvB.ObjectsNames.Count + 1; i++)
             {
-                GlobalCode.sourceNames[i] = gcvB.ScriptFilepaths[i - 1];
+                GlobalCode.sourceNames[i] = gcvB.ScriptPaths[i - 1];
                 GlobalCode.typeNames[i] = gcvB.ObjectsNames[i - 1];
             }
 
@@ -305,36 +356,68 @@ namespace ScriptUnpacker
 
                     RSDKvB.StageConfig scvB = new RSDKvB.StageConfig(DataFolderPath + "//Stages//" + gc.Categories[c].Scenes[s].SceneFolder + "//Stageconfig.bin");
 
-                    RSDKvB.Bytecode bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(BytecodeName), gcvB.ObjectsNames.Count+1);
+                    RSDKvB.Bytecode bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(BytecodeName), gcvB.ObjectsNames.Count + 1);
 
-                    bytecode.sourceNames = new string[gcvB.ScriptFilepaths.Count + scvB.ScriptFilepaths.Count + 1];
-                    bytecode.typeNames = new string[gcvB.ObjectsNames.Count + scvB.ObjectsNames.Count + 1];
-
-                    bytecode.sourceNames[0] = "BlankObject";
-                    bytecode.typeNames[0] = "BlankObject";
-
-                    for (int i = 1; i < gcvB.GlobalVariables.Count; i++)
+                    if (scvB.LoadGlobalScripts)
                     {
-                        bytecode.globalVariableNames[i] = gcvB.GlobalVariables[i].Name;
+                        bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(datafolderpath + "..//Bytecode//GlobalCode.bin"), 1);
+                        bytecode.LoadStageBytecodeData(new RSDKvB.Reader(BytecodeName), gcvB.ObjectsNames.Count + 1);
+
+                        bytecode.sourceNames = new string[gcvB.ScriptPaths.Count + scvB.ScriptPaths.Count + 1];
+                        bytecode.typeNames = new string[gcvB.ObjectsNames.Count + scvB.ObjectsNames.Count + 1];
+
+                        bytecode.sourceNames[0] = "BlankObject";
+                        bytecode.typeNames[0] = "BlankObject";
+
+                        for (int i = 1; i < gcvB.GlobalVariables.Count; i++)
+                        {
+                            bytecode.globalVariableNames[i] = gcvB.GlobalVariables[i].Name;
+                        }
+
+                        int ID = 1;
+
+                        for (int i = 0; i < gcvB.ObjectsNames.Count; i++)
+                        {
+                            bytecode.sourceNames[ID] = gcvB.ScriptPaths[i];
+                            bytecode.typeNames[ID] = gcvB.ObjectsNames[i];
+                            ID++;
+                        }
+
+                        for (int i = 0; i < scvB.ObjectsNames.Count; i++)
+                        {
+                            bytecode.sourceNames[ID] = scvB.ScriptPaths[i];
+                            bytecode.typeNames[ID] = scvB.ObjectsNames[i];
+                            ID++;
+                        }
+
+                        bytecodevB.Add(bytecode);
                     }
-
-                    int ID = 1;
-
-                    for (int i = 0; i < gcvB.ObjectsNames.Count; i++)
+                    else
                     {
-                        bytecode.sourceNames[ID] = gcvB.ScriptFilepaths[i];
-                        bytecode.typeNames[ID] = gcvB.ObjectsNames[i];
-                        ID++;
-                    }
+                        bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(BytecodeName), 1);
 
-                    for (int i = 0; i < scvB.ObjectsNames.Count; i++)
-                    {
-                        bytecode.sourceNames[ID] = scvB.ScriptFilepaths[i];
-                        bytecode.typeNames[ID] = scvB.ObjectsNames[i];
-                        ID++;
-                    }
+                        bytecode.sourceNames = new string[scvB.ScriptPaths.Count + 1];
+                        bytecode.typeNames = new string[scvB.ObjectsNames.Count + 1];
 
-                    bytecodevB.Add(bytecode);
+                        bytecode.sourceNames[0] = "BlankObject";
+                        bytecode.typeNames[0] = "BlankObject";
+
+                        for (int i = 1; i < gcvB.GlobalVariables.Count; i++)
+                        {
+                            bytecode.globalVariableNames[i] = gcvB.GlobalVariables[i].Name;
+                        }
+
+                        int ID = 1;
+
+                        for (int i = 0; i < scvB.ObjectsNames.Count; i++)
+                        {
+                            bytecode.sourceNames[ID] = scvB.ScriptPaths[i];
+                            bytecode.typeNames[ID] = scvB.ObjectsNames[i];
+                            ID++;
+                        }
+
+                        bytecodevB.Add(bytecode);
+                    }
                 }
             }
         }
@@ -343,14 +426,14 @@ namespace ScriptUnpacker
         {
             for (int i = 0; i < bytecodev2.Count; i++)
             {
-                try
-                {
+                //try
+                //{
                     bytecodev2[i].Decompile(folderpath);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
             }
         }
 
@@ -386,6 +469,8 @@ namespace ScriptUnpacker
             {
                 string tmp = Path.GetFileNameWithoutExtension(dlg.FileName);
                 bool IsGlobal = tmp == "GS000" || tmp == "GlobalCode";
+
+                bool mobile = tmp == "GlobalCode";
 
                 if (IsGlobal)
                 {
@@ -430,9 +515,9 @@ namespace ScriptUnpacker
                             {
                                 case true:
                                     gcv2 = new RSDKv2.GameConfig(dlg2.FileName);
-                                    bytecodev2.Add(new RSDKv2.Bytecode(new RSDKv2.Reader(dlg.FileName), 1));
+                                    bytecodev2.Add(new RSDKv2.Bytecode(new RSDKv2.Reader(dlg.FileName), 1,mobile));
 
-                                    bytecodev2[0].sourceNames = new string[gcv2.ScriptFilepaths.Count + 1];
+                                    bytecodev2[0].sourceNames = new string[gcv2.ScriptPaths.Count + 1];
                                     bytecodev2[0].typeNames = new string[gcv2.ObjectsNames.Count + 1];
 
                                     bytecodev2[0].sourceNames[0] = "BlankObject";
@@ -445,16 +530,31 @@ namespace ScriptUnpacker
 
                                     for (int i = 1; i < gcv2.ObjectsNames.Count + 1; i++)
                                     {
-                                        bytecodev2[0].sourceNames[i] = gcv2.ScriptFilepaths[i - 1];
+                                        bytecodev2[0].sourceNames[i] = gcv2.ScriptPaths[i - 1];
                                         bytecodev2[0].typeNames[i] = gcv2.ObjectsNames[i - 1];
                                     }
                                     break;
                                 case false:
-                                    RSDKv2.StageConfig scv2 = new RSDKv2.StageConfig(dlg2.FileName);
-                                    bytecodev2.Add(new RSDKv2.Bytecode(new RSDKv2.Reader(dlg.FileName), gcv2.ScriptFilepaths.Count+1));
 
-                                    bytecodev2[0].sourceNames = new string[gcv2.ScriptFilepaths.Count + scv2.ScriptFilepaths.Count + 1];
-                                    bytecodev2[0].typeNames = new string[gcv2.ScriptFilepaths.Count + scv2.ObjectsNames.Count + 1];
+                                    string fle = Path.GetFileName(dlg.FileName);
+                                    string dir = dlg.FileName.Replace(fle, "");
+                                    string globalcode = dir + "//GS000.bin";
+                                    if (!File.Exists(globalcode))
+                                    {
+                                        globalcode = dir + "//GlobalCode.bin";
+                                        if (!File.Exists(globalcode))
+                                        {
+                                            return;
+                                        }
+                                    }
+
+                                    RSDKv2.StageConfig scv2 = new RSDKv2.StageConfig(dlg2.FileName);
+                                    RSDKv2.Bytecode SCbytecode = new RSDKv2.Bytecode(new RSDKv2.Reader(globalcode), 1, mobile);
+                                    SCbytecode.LoadStageBytecodeData(new RSDKv2.Reader(dlg.FileName), gcv2.ScriptPaths.Count + 1,mobile);
+                                    bytecodev2.Add(SCbytecode);
+
+                                    bytecodev2[0].sourceNames = new string[gcv2.ScriptPaths.Count + scv2.ScriptPaths.Count + 1];
+                                    bytecodev2[0].typeNames = new string[gcv2.ScriptPaths.Count + scv2.ObjectsNames.Count + 1];
 
                                     bytecodev2[0].sourceNames[0] = "BlankObject";
                                     bytecodev2[0].typeNames[0] = "BlankObject";
@@ -468,14 +568,14 @@ namespace ScriptUnpacker
 
                                     for (int i = 0; i < gcv2.ObjectsNames.Count; i++)
                                     {
-                                        bytecodev2[0].sourceNames[ID] = gcv2.ScriptFilepaths[i];
+                                        bytecodev2[0].sourceNames[ID] = gcv2.ScriptPaths[i];
                                         bytecodev2[0].typeNames[ID] = gcv2.ObjectsNames[i];
                                         ID++;
                                     }
 
                                     for (int i = 0; i < scv2.ObjectsNames.Count; i++)
                                     {
-                                        bytecodev2[0].sourceNames[ID] = scv2.ScriptFilepaths[i];
+                                        bytecodev2[0].sourceNames[ID] = scv2.ScriptPaths[i];
                                         bytecodev2[0].typeNames[ID] = scv2.ObjectsNames[i];
                                         ID++;
                                     }
@@ -491,7 +591,7 @@ namespace ScriptUnpacker
                                     gcvB = new RSDKvB.GameConfig(dlg2.FileName);
                                     bytecodevB.Add(new RSDKvB.Bytecode(new RSDKvB.Reader(dlg.FileName), 1));
 
-                                    bytecodevB[0].sourceNames = new string[gcvB.ScriptFilepaths.Count + 1];
+                                    bytecodevB[0].sourceNames = new string[gcvB.ScriptPaths.Count + 1];
                                     bytecodevB[0].typeNames = new string[gcvB.ObjectsNames.Count + 1];
 
                                     bytecodevB[0].sourceNames[0] = "BlankObject";
@@ -504,16 +604,17 @@ namespace ScriptUnpacker
 
                                     for (int i = 1; i < gcv2.ObjectsNames.Count + 1; i++)
                                     {
-                                        bytecodevB[0].sourceNames[i] = gcvB.ScriptFilepaths[i - 1];
+                                        bytecodevB[0].sourceNames[i] = gcvB.ScriptPaths[i - 1];
                                         bytecodevB[0].typeNames[i] = gcvB.ObjectsNames[i - 1];
                                     }
                                     break;
                                 case false:
-                                    RSDKv2.StageConfig scvB = new RSDKv2.StageConfig(dlg2.FileName);
-                                    bytecodevB.Add(new RSDKvB.Bytecode(new RSDKvB.Reader(dlg.FileName), gcvB.ScriptFilepaths.Count + 1));
 
-                                    bytecodev2[0].sourceNames = new string[gcvB.ScriptFilepaths.Count + scvB.ScriptFilepaths.Count + 1];
-                                    bytecodev2[0].typeNames = new string[gcvB.ScriptFilepaths.Count + scvB.ObjectsNames.Count + 1];
+                                    RSDKv2.StageConfig scvB = new RSDKv2.StageConfig(dlg2.FileName);
+                                    bytecodevB.Add(new RSDKvB.Bytecode(new RSDKvB.Reader(dlg.FileName), gcvB.ScriptPaths.Count + 1));
+
+                                    bytecodev2[0].sourceNames = new string[gcvB.ScriptPaths.Count + scvB.ScriptPaths.Count + 1];
+                                    bytecodev2[0].typeNames = new string[gcvB.ScriptPaths.Count + scvB.ObjectsNames.Count + 1];
 
                                     bytecodev2[0].sourceNames[0] = "BlankObject";
                                     bytecodev2[0].typeNames[0] = "BlankObject";
@@ -527,14 +628,14 @@ namespace ScriptUnpacker
 
                                     for (int i = 0; i < gcvB.ObjectsNames.Count; i++)
                                     {
-                                        bytecodevB[0].sourceNames[ID] = gcvB.ScriptFilepaths[i];
+                                        bytecodevB[0].sourceNames[ID] = gcvB.ScriptPaths[i];
                                         bytecodevB[0].typeNames[ID] = gcvB.ObjectsNames[i];
                                         ID++;
                                     }
 
                                     for (int i = 0; i < scvB.ObjectsNames.Count; i++)
                                     {
-                                        bytecodevB[0].sourceNames[ID] = scvB.ScriptFilepaths[i];
+                                        bytecodevB[0].sourceNames[ID] = scvB.ScriptPaths[i];
                                         bytecodevB[0].typeNames[ID] = scvB.ObjectsNames[i];
                                         ID++;
                                     }
@@ -562,7 +663,7 @@ namespace ScriptUnpacker
                         bytecodev2[0].Decompile(dlg.SelectedPath);
                         break;
                     case 1:
-                        bytecodevB[0].Decompile();
+                        bytecodevB[0].Decompile(dlg.SelectedPath);
                         break;
                     case 2:
                         break;

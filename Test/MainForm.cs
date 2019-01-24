@@ -104,9 +104,14 @@ namespace Test
 
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
+                //Videos
                 //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
 
-                RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+
+                //Scripts
+                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+
+                /*RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
                 RSDKvRS.Script rsf = new RSDKvRS.Script();
 
                 string destName = Path.GetFileNameWithoutExtension(filepath);
@@ -122,17 +127,18 @@ namespace Test
                     destName = Path.GetFileNameWithoutExtension(f.FullName);
                     string destpath = dirpath + "//Scripts//" + destName + ".txt";
                     reader = new RSDKvRS.Reader(f.FullName);
-                    try
-                    {
-                        rsf = new RSDKvRS.Script(reader);
-                        rsf.Decompile(destpath);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine(ex.Message);
-                        reader.Close();
-                    }
-                }
+                    //try
+                    //{
+                        //rsf = new RSDKvRS.Script(reader);
+                        //rsf.Decompile(destpath);
+                    ///}
+                    //catch (Exception ex)
+                    //{
+                    //    Console.WriteLine(ex.Message);
+                    //    reader.Close();
+                    //}
+                }*/
+
 
                 //Models
                 //RSDKv5.Model MDL = new RSDKv5.Model(filepath);
@@ -144,14 +150,27 @@ namespace Test
 
 
                 //RSDKvB.Model MDL = new RSDKvB.Model(filepath);
-                //RSDKvB.BitmapFont BMF = new RSDKvB.BitmapFont(new StreamReader(File.OpenRead(filepath)));
 
+                //Text/Font stuff
+                //RSDKvB.BitmapFont BMF = new RSDKvB.BitmapFont(new StreamReader(File.OpenRead(filepath)));
+                //RSDKvB.StringList Strings = new RSDKvB.StringList(new StreamReader(File.OpenRead(filepath)));
+                //Strings.Write(new StreamWriter(File.OpenWrite(filepath + "2")));
+                //Console.WriteLine();
                 /* Palettes
                 RSDKvB.Palette p = new RSDKvB.Palette();
                 RSDKvB.Reader r = new RSDKvB.Reader(File.Open("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Palettes\\SYZ_PalCycle.act", FileMode.Open));
                 p.Read(r);
                 RSDKvB.Writer w = new RSDKvB.Writer(File.Open("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Palettes\\SYZ_PalCycle2.act", FileMode.Create));
                 p.Write(w);*/
+
+                //RSDKv2.StringSet ss = new RSDKv2.StringSet(new RSDKv2.Reader(filepath));
+
+                //ushort c = 2 * (160 >> 3) | ((ushort)(192 >> 3) << 11) | 1 | ((ushort)(224 >> 3) << 6);
+                //ushort c = 2 * (224 >> 3) | ((ushort)(192 >> 3) << 11) | 1 | ((ushort)(160 >> 3) << 6);
+                //ushort c = ((ushort)(R >> 3) << 11) | ((ushort)(G >> 3) << 6) | 2 * (B >> 3);
+                //ushort c = ((ushort)(160 >> 3) << 11) | ((ushort)(192 >> 3) << 6) | 2 * (224 >> 3);
+
+                //Console.WriteLine(c);
 
                 /*int r = 0x20;
                 int g = 0x20;
@@ -160,6 +179,12 @@ namespace Test
                 ushort paltest = (ushort)(((ushort)(r >> 3) << 11) | ((ushort)(g >> 3) << 6) | 1 | 2 * (b >> 3));
                 Console.WriteLine(paltest);*/
 
+                //MATH
+                //MANIA HEADER CHECKER
+                /*BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
+                int value = reader.ReadInt32();
+                Console.WriteLine(value);
+                reader.Close();*/
                 #region Exe Scanning
 
                 /*

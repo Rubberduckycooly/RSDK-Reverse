@@ -69,7 +69,7 @@ namespace ModelManiac
                     Modelv5.Write(new RSDKv5.Writer(filepath));
                     break;
                 case 1:
-                    //ModelvB.Write(new RSDKvB.Writer(filepath));
+                    ModelvB.Write(new RSDKvB.Writer(filepath));
                     break;
             }
         }
@@ -79,12 +79,24 @@ namespace ModelManiac
             switch(ModelType)
             {
                 case 0:
+                    ColoursCB.Enabled = true;
+                    NormalsCB.Enabled = true;
+                    UnknownCB.Enabled = true;
+                    QuadsCB.Enabled = true;
                     ColoursCB.Checked = Modelv5.HasColours;
                     NormalsCB.Checked = Modelv5.HasNormals;
                     UnknownCB.Checked = Modelv5.HasUnknown;
                     QuadsCB.Checked = Modelv5.FaceVerticiesCount == 4;
                     break;
                 case 1:
+                    ColoursCB.Checked = false;
+                    NormalsCB.Checked = false;
+                    UnknownCB.Checked = false;
+                    QuadsCB.Checked = false;
+                    ColoursCB.Enabled = false;
+                    NormalsCB.Enabled = false;
+                    UnknownCB.Enabled = false;
+                    QuadsCB.Enabled = false;
                     break;
             }
         }
@@ -159,6 +171,13 @@ namespace ModelManiac
 
                     break;
                 case 1:
+                    VertexXNUD.Value = (decimal)ModelvB.Vertices[CurVertex].x;
+                    VertexYNUD.Value = (decimal)ModelvB.Vertices[CurVertex].y;
+                    VertexZNUD.Value = (decimal)ModelvB.Vertices[CurVertex].z;
+
+                    NormalXNUD.Value = (decimal)ModelvB.Vertices[CurVertex].normal.x;
+                    NormalYNUD.Value = (decimal)ModelvB.Vertices[CurVertex].normal.y;
+                    NormalZNUD.Value = (decimal)ModelvB.Vertices[CurVertex].normal.z;
                     break;
             }
         }
@@ -174,6 +193,12 @@ namespace ModelManiac
                         VerticiesBox.Items.Add(Modelv5.Frames[CurFrame].Vertices[i].x + " " + Modelv5.Frames[CurFrame].Vertices[i].y + " " + Modelv5.Frames[CurFrame].Vertices[i].z);
                     }
                     break;
+                case 1:
+                    for (int i = 0; i < ModelvB.Vertices.Count; i++)
+                    {
+                        VerticiesBox.Items.Add(ModelvB.Vertices[i].x + " " + ModelvB.Vertices[i].y + " " + ModelvB.Vertices[i].z);
+                    }
+                    break;
             }
         }
 
@@ -187,6 +212,9 @@ namespace ModelManiac
                     {
                         FramesBox.Items.Add("Frame " + (i + 1));
                     }
+                    break;
+                case 1:
+                    FramesBox.Items.Add("Model Data");
                     break;
             }
         }
@@ -239,8 +267,6 @@ namespace ModelManiac
                 case 0:
                     Modelv5.HasNormals = NormalsCB.Checked;
                     break;
-                case 1:
-                    break;
             }
             RefreshUI();
         }
@@ -259,8 +285,6 @@ namespace ModelManiac
                             Modelv5.Unknowns.Add(new RSDKv5.Model.Unknown());
                         }
                     }
-                    break;
-                case 1:
                     break;
             }
             RefreshUI();
@@ -281,8 +305,6 @@ namespace ModelManiac
                         }
                     }
                     break;
-                case 1:
-                    break;
             }
             RefreshUI();
         }
@@ -296,8 +318,6 @@ namespace ModelManiac
                     case 0:
                         Modelv5.FaceVerticiesCount = 4;
                         break;
-                    case 1:
-                        break;
                 }
             }
             else
@@ -306,8 +326,6 @@ namespace ModelManiac
                 {
                     case 0:
                         Modelv5.FaceVerticiesCount = 3;
-                        break;
-                    case 1:
                         break;
                 }
             }
@@ -415,10 +433,14 @@ namespace ModelManiac
                         switch (dlg.FilterIndex - 1)
                         {
                             case 0:
+                                ModelvB.WriteAsOBJ(dlg.FileName + ".obj", System.IO.Path.GetFileNameWithoutExtension(dlg.FileName));
+                                ModelvB.WriteMTL(new RSDKvB.Writer(dlg.FileName + ".mtl"));
                                 break;
                             case 1:
+                                ModelvB.WriteAsSTL(dlg.FileName + ".stl");
                                 break;
                             case 2:
+                                ModelvB.WriteAsSTLBinary(new RSDKvB.Writer(dlg.FileName + ".stl"));
                                 break;
                         }
                         break;
@@ -435,6 +457,7 @@ namespace ModelManiac
                     Modelv5.VertexCount++;
                     break;
                 case 1:
+                    ModelvB.Vertices.Add(new RSDKvB.Model.Vertex());
                     break;
             }
             RefreshVertexList();
@@ -451,6 +474,7 @@ namespace ModelManiac
                     if (CurVertex > 0) CurVertex--;
                     break;
                 case 1:
+                    ModelvB.Vertices.RemoveAt(CurVertex);
                     break;
             }
             RefreshVertexList();
@@ -463,8 +487,6 @@ namespace ModelManiac
             {
                 case 0:
                     Modelv5.AddFrame();                    
-                    break;
-                case 1:
                     break;
             }
             RefreshFrameList();
@@ -479,8 +501,6 @@ namespace ModelManiac
                 case 0:
                     Modelv5.DeleteFrame(CurFrame);
                     if (CurFrame > 0) CurFrame--;
-                    break;
-                case 1:
                     break;
             }
             RefreshFrameList();
@@ -620,8 +640,6 @@ namespace ModelManiac
                     Modelv5.Colours.Add(c);
                     MeshColourGrid.Colors.Add(Color.FromArgb(255, 255, 0, 255));
                     break;
-                case 1:
-                    break;
             }
         }
 
@@ -632,8 +650,6 @@ namespace ModelManiac
                 case 0:
                     Modelv5.Colours.RemoveAt(CurColour);
                     MeshColourGrid.Colors.RemoveAt(CurColour);
-                    break;
-                case 1:
                     break;
             }
         }

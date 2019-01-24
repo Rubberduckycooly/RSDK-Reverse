@@ -17,8 +17,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         public int CurLayer = 0;
 
-        public RSDKv2.BGLayout Mapv3;
-        public RSDKvB.BGLayout Mapv4;
+        public RSDKv2.BGLayout Mapv2;
+        public RSDKvB.BGLayout MapvB;
 
         public CD12_LayerPropertiesForm(int RSDKver)
         {
@@ -31,20 +31,20 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    MapWidthNUD.Value = Mapv3.Layers[CurLayer].width;
-                    MapHeightNUD.Value = Mapv3.Layers[CurLayer].height;
-                    Unknown1NUD.Value = Mapv3.Layers[CurLayer].Unknown1;
-                    Unknown2NUD.Value = Mapv3.Layers[CurLayer].Unknown2;
-                    RelativeVSPDNUD.Value = Mapv3.Layers[CurLayer].RelativeVSpeed;
-                    ConstantVSPDNUD.Value = Mapv3.Layers[CurLayer].ConstantVSpeed;
+                    MapWidthNUD.Value = Mapv2.Layers[CurLayer].width;
+                    MapHeightNUD.Value = Mapv2.Layers[CurLayer].height;
+                    DrawLayerNUD.Value = Mapv2.Layers[CurLayer].DrawLayer;
+                    BehaviourNUD.Value = Mapv2.Layers[CurLayer].Behaviour;
+                    RelativeVSPDNUD.Value = Mapv2.Layers[CurLayer].RelativeSpeed;
+                    ConstantVSPDNUD.Value = Mapv2.Layers[CurLayer].ConstantSpeed;
                     break;
                 case 0:
-                    MapWidthNUD.Value = Mapv4.Layers[CurLayer].width;
-                    MapHeightNUD.Value = Mapv4.Layers[CurLayer].height;
-                    Unknown1NUD.Value = Mapv4.Layers[CurLayer].Unknown1;
-                    Unknown2NUD.Value = Mapv4.Layers[CurLayer].Unknown2;
-                    RelativeVSPDNUD.Value = Mapv4.Layers[CurLayer].RelativeVSpeed;
-                    ConstantVSPDNUD.Value = Mapv4.Layers[CurLayer].ConstantVSpeed;
+                    MapWidthNUD.Value = MapvB.Layers[CurLayer].width;
+                    MapHeightNUD.Value = MapvB.Layers[CurLayer].height;
+                    DrawLayerNUD.Value = MapvB.Layers[CurLayer].DrawLayer;
+                    BehaviourNUD.Value = MapvB.Layers[CurLayer].Behaviour;
+                    RelativeVSPDNUD.Value = MapvB.Layers[CurLayer].RelativeSpeed;
+                    ConstantVSPDNUD.Value = MapvB.Layers[CurLayer].ConstantSpeed;
                     break;
                 default:
                     break;
@@ -67,10 +67,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].width = (int)MapWidthNUD.Value;
+                    Mapv2.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].width = (int)MapWidthNUD.Value;
+                    MapvB.Layers[CurLayer].width = (ushort)MapWidthNUD.Value;
                     break;
                 default:
                     break;
@@ -82,10 +82,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].height = (int)MapHeightNUD.Value;
+                    Mapv2.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].height = (int)MapHeightNUD.Value;
+                    MapvB.Layers[CurLayer].height = (ushort)MapHeightNUD.Value;
                     break;
                 default:
                     break;
@@ -97,10 +97,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    Mapv2.Layers[CurLayer].DrawLayer = (byte)DrawLayerNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    MapvB.Layers[CurLayer].DrawLayer = (byte)DrawLayerNUD.Value;
                     break;
                 default:
                     break;
@@ -112,10 +112,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
+                    Mapv2.Layers[CurLayer].Behaviour = (byte)BehaviourNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
+                    MapvB.Layers[CurLayer].Behaviour = (byte)BehaviourNUD.Value;
                     break;
                 default:
                     break;
@@ -127,10 +127,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].ConstantVSpeed = (byte)ConstantVSPDNUD.Value;
+                    Mapv2.Layers[CurLayer].ConstantSpeed = (byte)ConstantVSPDNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].ConstantVSpeed = (byte)ConstantVSPDNUD.Value;
+                    MapvB.Layers[CurLayer].ConstantSpeed = (byte)ConstantVSPDNUD.Value;
                     break;
                 default:
                     break;
@@ -142,10 +142,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].RelativeVSpeed = (byte)RelativeVSPDNUD.Value;
+                    Mapv2.Layers[CurLayer].RelativeSpeed = (byte)RelativeVSPDNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].RelativeVSpeed = (byte)RelativeVSPDNUD.Value;
+                    MapvB.Layers[CurLayer].RelativeSpeed = (byte)RelativeVSPDNUD.Value;
                     break;
                 default:
                     break;
@@ -157,10 +157,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    Mapv2.Layers[CurLayer].DrawLayer = (byte)DrawLayerNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].Unknown1 = (byte)Unknown1NUD.Value;
+                    MapvB.Layers[CurLayer].DrawLayer = (byte)DrawLayerNUD.Value;
                     break;
                 default:
                     break;
@@ -172,10 +172,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 1:
-                    Mapv3.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
+                    Mapv2.Layers[CurLayer].Behaviour = (byte)BehaviourNUD.Value;
                     break;
                 case 0:
-                    Mapv4.Layers[CurLayer].Unknown2 = (byte)Unknown2NUD.Value;
+                    MapvB.Layers[CurLayer].Behaviour = (byte)BehaviourNUD.Value;
                     break;
                 default:
                     break;

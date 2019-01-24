@@ -4,31 +4,122 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*
-This Loader uses code from the programs: "Retro Engine Map Viewer" and TaxEd by -- and Nextvolume respectivley 
-*/
-
 namespace RSDKvB
 {
     public class Scene
     {
-        public string Title { get; set; }
-        public ushort[][] MapLayout { get; set; }
+        /// <summary>
+        /// the Stage Name (what the titlecard displays)
+        /// </summary>
+        public string Title = "Stage";
+
+        /// <summary>
+        /// the array of Chunk IDs for the stage
+        /// </summary>
+        public ushort[][] MapLayout;
 
         /* Values for the "Display Bytes" */
+        /// <summary>
+        /// Active Layer 0, does ???
+        /// </summary>
         public byte ActiveLayer0 = 1; //Usually BG Layer
+        /// <summary>
+        /// Active Layer 0, does ???
+        /// </summary>
         public byte ActiveLayer1 = 9; //Unknown
+        /// <summary>
+        /// Active Layer 0, does ???
+        /// </summary>
         public byte ActiveLayer2 = 0; //Usually Foreground (Map) Layer
+        /// <summary>
+        /// Active Layer 0, does ???
+        /// </summary>
         public byte ActiveLayer3 = 0; //Usually Foreground (Map) Layer
+        /// <summary>
+        /// The Midpoint Layer does ???
+        /// </summary>
         public byte Midpoint = 3;
 
-        public List<Object> objects = new List<Object>(); 
+        /// <summary>
+        /// the starting X Boundary, it's always 0 though
+        /// </summary>
+        public int xBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// the starting Y Boundary, it's always 0 though
+        /// </summary>
+        public int yBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// the ending X Boundary, it's the value (in pixels) for the stage width
+        /// </summary>
+        public int xBoundary2
+        {
+            get
+            {
+                return width << 7;
+            }
+        }
+        /// <summary>
+        /// the ending Y Boundary, it's the value (in pixels) for the stage height
+        /// </summary>
+        public int yBoundary2
+        {
+            get
+            {
+                return height << 7;
+            }
+        }
+        /// <summary>
+        /// The water level for the stage, by default it will be below the stage, so it's kinda useless lol
+        /// </summary>
+        public int WaterLevel
+        {
+            get
+            {
+                return yBoundary2 + 128;
+            }
+        }
 
-        public int width, height;
+        /// <summary>
+        /// the list of objects in the stage
+        /// </summary>
+        public List<Object> objects = new List<Object>();
+
+        /// <summary>
+        /// stage width (in chunks)
+        /// </summary>
+        public ushort width;
+        /// <summary>
+        /// stage height (in chunks)
+        /// </summary>
+        public ushort height;
+
+        /// <summary>
+        /// the Max amount of objects that can be in a single stage
+        /// </summary>
+        public int MaxObjectCount
+        {
+            get
+            {
+                return 1056;
+            }
+        }
 
         public Scene()
         {
-
+            MapLayout = new ushort[1][];
+            MapLayout[0] = new ushort[1];
         }
 
         public Scene(string filename) : this(new Reader(filename))
@@ -59,10 +150,10 @@ namespace RSDKvB
             // In RSDKvB it's two bytes long, little-endian
 
             reader.Read(buffer, 0, 2); //Read Map Width
-            width = buffer[0] + (buffer[1] << 8);
+            width = (ushort)(buffer[0] + (buffer[1] << 8));
 
             reader.Read(buffer, 0, 2); //Read Height
-            height = buffer[0] + (buffer[1] << 8);
+            height = (ushort)(buffer[0] + (buffer[1] << 8));
 
             Console.WriteLine("Width " + width + " Height " + height);
 
@@ -93,6 +184,8 @@ namespace RSDKvB
             ObjCount = (t2 << 8) + t1;
 
             Console.WriteLine("Object Count = " + ObjCount);
+
+            Object.cur_id = 0;
 
             int n = 0;
 
@@ -165,12 +258,20 @@ namespace RSDKvB
             // Write number of objects
             int num_of_obj = objects.Count;
 
+            if (num_of_obj >= MaxObjectCount)
+            {
+                Console.WriteLine("Object Count > Max Objects!");
+                return;
+            }
+
             writer.Write((byte)(num_of_obj & 0xff));
             writer.Write((byte)((num_of_obj >> 8) & 0xff));
             writer.Write((byte)((num_of_obj >> 16) & 0xff));
             writer.Write((byte)((num_of_obj >> 24) & 0xff));
 
             // Write objects
+
+            objects = objects.OrderBy(o => o.id).ToList();
 
             for (int n = 0; n < num_of_obj; n++)
             {

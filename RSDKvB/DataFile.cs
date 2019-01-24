@@ -32,6 +32,9 @@ namespace RSDKvB
         public class FileInfo
         {
 
+            /// <summary>
+            /// A list of extension types (used if the filename is unknown)
+            /// </summary>
             public enum ExtensionTypes
             {
                 UNKNOWN,
@@ -42,19 +45,49 @@ namespace RSDKvB
                 GIF,
             }
 
+            /// <summary>
+            /// filename of the file
+            /// </summary>
             public string FileName;
+            /// <summary>
+            /// filename of the file (but as an MD5 string)
+            /// </summary>
             public string MD5FileName;
+            /// <summary>
+            /// stored MD5 hash
+            /// </summary>
             byte[] md5Hash = new byte[16];
 
+            /// <summary>
+            /// the offset of the file data
+            /// </summary>
             public uint DataOffset;
-            public uint fileSize;
-            public bool encrypted;
+            /// <summary>
+            /// the filesize of the file (in bytes)
+            /// </summary>
+            public uint FileSize;
+            /// <summary>
+            /// whether the file is encrypted or not
+            /// </summary>
+            public bool Encrypted;
 
+            /// <summary>
+            /// an array of the filedata
+            /// </summary>
             public byte[] Filedata;
 
+            /// <summary>
+            /// the extension of the file
+            /// </summary>
             public ExtensionTypes Extension = ExtensionTypes.UNKNOWN;
 
+            /// <summary>
+            /// a string  of bytes used for decryption/encryption
+            /// </summary>
             static byte[] encryptionStringA = new byte[16];
+            /// <summary>
+            /// another string  of bytes used for decryption/encryption
+            /// </summary>
             static byte[] encryptionStringB = new byte[16];
 
             static int eStringNo;
@@ -69,40 +102,36 @@ namespace RSDKvB
 
             public FileInfo(Reader reader, List<string> FileList, int cnt)
             {
-                //FileName = reader.ReadString();
-
                 for (int y = 0; y < 16; y += 4)
                 {
                     md5Hash[y + 3] = reader.ReadByte();
                     md5Hash[y + 2] = reader.ReadByte();
                     md5Hash[y + 1] = reader.ReadByte();
                     md5Hash[y] = reader.ReadByte();
-                    //Console.WriteLine(md5Hash[y] + " " + md5Hash[y + 1] + " " + md5Hash[y + 2] + " " + md5Hash[y + 3]);
                 }
                 MD5FileName = ConvertByteArrayToString(md5Hash);
 
-                MD5 MD5Tool = MD5.Create();
+                var md5 = MD5.Create();
 
-                FileName = (cnt + 1) + ".bin"; //MD5FileName;
+                FileName = (cnt + 1) + ".bin"; //Make a base name
 
                 for (int i = 0; i < FileList.Count; i++)
                 {
-                    //the string has to be in lowercase
+                    // Mania Hashes all Strings at Lower Case
                     string fp = FileList[i].ToLower();
 
-                    int ok = 1;
+                    bool match = true;
 
                     for (int z = 0; z < 16; z++)
                     {
                         if (CalculateMD5Hash(fp)[z] != md5Hash[z])
                         {
-                            ok = 0;
+                            match = false;
                             break;
                         }
-
                     }
 
-                    if (ok == 1)
+                    if (match)
                     {
                         FileName = FileList[i];
                         break;
@@ -113,28 +142,19 @@ namespace RSDKvB
                 DataOffset = reader.ReadUInt32();
                 uint tmp = reader.ReadUInt32();
 
-                if ((tmp & 0x80000000) == 0x80000000)
-                {
-                    encrypted = true;
-                }
+                Encrypted = (tmp & 0x80000000) != 0;
+                FileSize = (tmp & 0x7FFFFFFF);
 
-                fileSize = (tmp & 0x7FFFFFFF);
+                long tmp2 = reader.BaseStream.Position;
+                reader.BaseStream.Position = DataOffset;
 
-                if (!encrypted)
-                {
-                    long tmp2 = reader.BaseStream.Position;
-                    reader.BaseStream.Position = DataOffset;
-                    Filedata = reader.ReadBytes(fileSize);
-                    reader.BaseStream.Position = tmp2;
-                }
-                else
-                {
-                    long tmp2 = reader.BaseStream.Position;
-                    reader.BaseStream.Position = DataOffset;
-                    byte[] tmpbuf = reader.ReadBytes(fileSize);
-                    Filedata = Decrypt(tmpbuf);
-                    reader.BaseStream.Position = tmp2;
-                }
+                Filedata = reader.ReadBytes(FileSize);
+
+                // Decrypt File if Encrypted
+                if (Encrypted)
+                    Filedata = Decrypt(Filedata);
+
+                reader.BaseStream.Position = tmp2;
 
                 Extension = GetExtensionFromData();
 
@@ -162,40 +182,22 @@ namespace RSDKvB
                             break;
                     }
                 }
+                md5.Dispose();
             }
 
             public void WriteFileHeader(Writer writer)
             {
                 writer.Write(CalculateMD5Hash(FileName.ToLower()));
                 writer.Write(DataOffset);
-
-                uint tmp = fileSize;
-
-                if (!encrypted)
-                {
-                    tmp = fileSize;
-                }
-                else if (encrypted)
-                {
-                    tmp = fileSize & 0x1;
-                }
-
-                writer.Write(tmp);
-
+                writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }
 
             public void WriteFileData(Writer writer)
             {
-                if (!encrypted)
-                {
-                    writer.Write(Filedata);
-                }
+                if (Encrypted)
+                    writer.Write(Decrypt(Filedata));
                 else
-                {
-                    byte[] tmpbuf = Filedata;
-                    Filedata = Decrypt(tmpbuf);
                     writer.Write(Filedata);
-                }
             }
 
             public void Write(string Datadirectory)
@@ -205,29 +207,22 @@ namespace RSDKvB
                 {
                     tmpcheck = tmpcheck + FileName[i];
                 }
-                System.IO.DirectoryInfo di;
 
                 //Do we know the filename of the file?
                 if (tmpcheck != "Data" && tmpcheck != "Byte")
                 {
-                    di = new System.IO.DirectoryInfo(Datadirectory + "//Unknown Files");
-                    if (!di.Exists) di.Create();
-                    Writer writer = new Writer(Datadirectory + "//Unknown Files//" + FileName);
-
-                    if (Filedata != null)
-                        writer.Write(Filedata);
-
-                    writer.Close();
+                    string directory = Path.Combine(Datadirectory, "Unknown Files");
+                    if (!Directory.Exists(directory))
+                        Directory.CreateDirectory(directory);
+                    File.WriteAllBytes(Path.Combine(directory, FileName), Filedata);
                 }
                 else //We do! now do normal stuff!
                 {
-                    string dir = FileName.Replace(Path.GetFileName(FileName), "");
-                    di = new System.IO.DirectoryInfo(Datadirectory + "//" + dir);
-                    if (!di.Exists) di.Create();
-                    Writer writer = new Writer(Datadirectory + "//" + FileName);
-                    if (Filedata != null)
-                        writer.Write(Filedata);
-                    writer.Close();
+
+                    string dir = Path.Combine(Datadirectory, FileName.Replace(Path.GetFileName(FileName), ""));
+                    if (!Directory.Exists(dir))
+                        Directory.CreateDirectory(dir);
+                    File.WriteAllBytes(Path.Combine(Datadirectory, FileName), Filedata);
                 }
             }
 
@@ -333,7 +328,7 @@ namespace RSDKvB
                 // Note: Since only XOr is used, this function does both,
                 //       decryption and encryption.
 
-                GenerateELoadKeys(fileSize, (fileSize >> 1) + 1, fileSize);
+                GenerateELoadKeys(FileSize, (FileSize >> 1) + 1, FileSize);
 
                 const uint ENC_KEY_2 = 0x24924925;
                 const uint ENC_KEY_1 = 0xAAAAAAAB;
@@ -493,7 +488,7 @@ namespace RSDKvB
             foreach (FileInfo f in Files) //Write "Filler Data"
             {
                 f.DataOffset = (uint)writer.BaseStream.Position; //get our file data offset
-                byte[] b = new byte[f.fileSize]; //load up a set of blanks with the same size as the original set
+                byte[] b = new byte[f.FileSize]; //load up a set of blanks with the same size as the original set
                 writer.Write(b); //fill the file up with blank data
             }
 

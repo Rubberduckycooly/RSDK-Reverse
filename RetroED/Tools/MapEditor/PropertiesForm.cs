@@ -129,16 +129,16 @@ namespace RetroED.Tools.MapEditor
             switch (LoadedRSDKver) //Change Map Width
             {
                 case 3:
-                    Mapv1.width = (int)MapWidthNUD.Value;
+                    Mapv1.width = (ushort)MapWidthNUD.Value;
                     break;
                 case 2:
-                    Mapv2.width = (int)MapWidthNUD.Value;
+                    Mapv2.width = (ushort)MapWidthNUD.Value;
                     break;
                 case 1:
-                    Mapv3.width = (int)MapWidthNUD.Value;
+                    Mapv3.width = (ushort)MapWidthNUD.Value;
                     break;
                 case 0:
-                    Mapv4.width = (int)MapWidthNUD.Value;
+                    Mapv4.width = (ushort)MapWidthNUD.Value;
                     break;
                 default:
                     break;
@@ -150,16 +150,16 @@ namespace RetroED.Tools.MapEditor
             switch (LoadedRSDKver) //Change Map Height
             {
                 case 3:
-                    Mapv1.height = (int)MapHeightNUD.Value;
+                    Mapv1.height = (ushort)MapHeightNUD.Value;
                     break;
                 case 2:
-                    Mapv2.height = (int)MapHeightNUD.Value;
+                    Mapv2.height = (ushort)MapHeightNUD.Value;
                     break;
                 case 1:
-                    Mapv3.height = (int)MapHeightNUD.Value;
+                    Mapv3.height = (ushort)MapHeightNUD.Value;
                     break;
                 case 0:
-                    Mapv4.height = (int)MapHeightNUD.Value;
+                    Mapv4.height = (ushort)MapHeightNUD.Value;
                     break;
                 default:
                     break;

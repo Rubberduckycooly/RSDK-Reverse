@@ -7,6 +7,8 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
         public string Name, SpriteSheet;
         public int ID, SubType, X, Y, Width, Height, PivotX, PivotY, Flip;
 
+        public Bitmap GFXHolder;
+
         public MapObject()
         {
 
@@ -37,6 +39,12 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             PivotX = pivotX;
             PivotY = pivotY;
             Flip = flip;
+
+            if (System.IO.Path.GetExtension(sheet) == ".gfx")
+            {
+                RSDKvRS.gfx g = new RSDKvRS.gfx(SpriteSheet, false);
+                GFXHolder = g.gfxImage;
+            }
         }
 
         public Bitmap RenderObject(int RSDKver, string DataPath)
@@ -50,10 +58,13 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             switch (RSDKver)
             {
                 case 3:
-                    RSDKvRS.gfx g = new RSDKvRS.gfx(DataPath + SpriteSheet, false);
-                    b = CropImage(g.gfxImage, new Rectangle(X, Y, Width, Height));
-                    b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
-                        break;
+                    if (GFXHolder != null)
+                    {
+                        b = GFXHolder;
+                        b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                        b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+                    }
+                    break;
                 case 2:
                     b = new Bitmap(DataPath + SpriteSheet, false);
                     b = CropImage(b, new Rectangle(X, Y, Width, Height));

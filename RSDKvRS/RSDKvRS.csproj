@@ -50,6 +50,8 @@
     <Compile Include="DataFile.cs" />
     <Compile Include="GraphicsImage.cs" />
     <Compile Include="Scene.cs" />
+    <Compile Include="CharacterList.cs" />
+    <Compile Include="Script - OLD.cs" />
     <Compile Include="ZoneList.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />

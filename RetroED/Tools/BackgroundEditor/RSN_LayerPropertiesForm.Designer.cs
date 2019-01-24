@@ -66,7 +66,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(371, 187);
+            this.panel1.Size = new System.Drawing.Size(299, 187);
             this.panel1.TabIndex = 0;
             // 
             // CVSPDNUD
@@ -79,7 +79,7 @@
             0,
             0});
             this.CVSPDNUD.Name = "CVSPDNUD";
-            this.CVSPDNUD.Size = new System.Drawing.Size(153, 22);
+            this.CVSPDNUD.Size = new System.Drawing.Size(96, 22);
             this.CVSPDNUD.TabIndex = 13;
             this.CVSPDNUD.Value = new decimal(new int[] {
             1,
@@ -107,7 +107,7 @@
             0,
             0});
             this.RVSPDNUD.Name = "RVSPDNUD";
-            this.RVSPDNUD.Size = new System.Drawing.Size(153, 22);
+            this.RVSPDNUD.Size = new System.Drawing.Size(96, 22);
             this.RVSPDNUD.TabIndex = 11;
             this.RVSPDNUD.Value = new decimal(new int[] {
             1,
@@ -126,7 +126,7 @@
             0,
             0});
             this.DeformNUD.Name = "DeformNUD";
-            this.DeformNUD.Size = new System.Drawing.Size(153, 22);
+            this.DeformNUD.Size = new System.Drawing.Size(96, 22);
             this.DeformNUD.TabIndex = 10;
             this.DeformNUD.Value = new decimal(new int[] {
             1,
@@ -163,7 +163,7 @@
             0,
             0});
             this.MapHeightNUD.Name = "MapHeightNUD";
-            this.MapHeightNUD.Size = new System.Drawing.Size(153, 22);
+            this.MapHeightNUD.Size = new System.Drawing.Size(96, 22);
             this.MapHeightNUD.TabIndex = 7;
             this.MapHeightNUD.Value = new decimal(new int[] {
             1,
@@ -182,7 +182,7 @@
             0,
             0});
             this.MapWidthNUD.Name = "MapWidthNUD";
-            this.MapWidthNUD.Size = new System.Drawing.Size(153, 22);
+            this.MapWidthNUD.Size = new System.Drawing.Size(96, 22);
             this.MapWidthNUD.TabIndex = 6;
             this.MapWidthNUD.Value = new decimal(new int[] {
             1,
@@ -212,7 +212,7 @@
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(203, 161);
+            this.CancelButton.Location = new System.Drawing.Point(131, 161);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 1;
@@ -223,7 +223,7 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Location = new System.Drawing.Point(284, 161);
+            this.OKButton.Location = new System.Drawing.Point(212, 161);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 0;
@@ -236,7 +236,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(371, 187);
+            this.ClientSize = new System.Drawing.Size(299, 187);
             this.Controls.Add(this.panel1);
             this.Name = "RSN_LayerPropertiesForm";
             this.Text = "Layer Properties";

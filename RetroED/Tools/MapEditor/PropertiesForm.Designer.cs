@@ -105,15 +105,15 @@
             this.groupBox2.Controls.Add(this.MidpointLabel);
             this.groupBox2.Location = new System.Drawing.Point(282, 95);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(201, 164);
+            this.groupBox2.Size = new System.Drawing.Size(235, 164);
             this.groupBox2.TabIndex = 24;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Display Properties";
+            this.groupBox2.Text = "Retro Engine Display Properties";
             // 
             // Layer3NUD
             // 
             this.Layer3NUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Layer3NUD.Location = new System.Drawing.Point(109, 136);
+            this.Layer3NUD.Location = new System.Drawing.Point(142, 136);
             this.Layer3NUD.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -136,7 +136,7 @@
             // Layer2NUD
             // 
             this.Layer2NUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Layer2NUD.Location = new System.Drawing.Point(109, 110);
+            this.Layer2NUD.Location = new System.Drawing.Point(142, 110);
             this.Layer2NUD.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -150,7 +150,7 @@
             // Layer1NUD
             // 
             this.Layer1NUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Layer1NUD.Location = new System.Drawing.Point(109, 83);
+            this.Layer1NUD.Location = new System.Drawing.Point(142, 83);
             this.Layer1NUD.Maximum = new decimal(new int[] {
             5000,
             0,
@@ -182,7 +182,7 @@
             // Layer0NUD
             // 
             this.Layer0NUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Layer0NUD.Location = new System.Drawing.Point(109, 55);
+            this.Layer0NUD.Location = new System.Drawing.Point(142, 55);
             this.Layer0NUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -196,7 +196,7 @@
             // MidpointNUD
             // 
             this.MidpointNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.MidpointNUD.Location = new System.Drawing.Point(109, 28);
+            this.MidpointNUD.Location = new System.Drawing.Point(142, 28);
             this.MidpointNUD.Maximum = new decimal(new int[] {
             255,
             0,

@@ -8,8 +8,14 @@ namespace RSDKv2
 {
     public class Palette
     {
+        /// <summary>
+        /// how many colours for each row (always 16)
+        /// </summary>
         public const int COLORS_PER_COLUMN = 0x10;
 
+        /// <summary>
+        /// an array of the colours
+        /// </summary>
         public PaletteColour[][] Colors;
 
         public Palette(int pc = 2)
@@ -44,7 +50,7 @@ namespace RSDKv2
             {
                 Colors[i] = new PaletteColour[COLORS_PER_COLUMN];
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                { Colors[i][j] = new PaletteColour(reader); }//Console.WriteLine(Colors[i][j].R + Colors[i][j].G + Colors[i][j].B); }
+                { Colors[i][j] = new PaletteColour(reader); }
             }
         }
 

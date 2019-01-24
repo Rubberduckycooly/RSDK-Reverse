@@ -34,11 +34,9 @@
             this.ChunksPage = new System.Windows.Forms.TabPage();
             this.BlocksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.ObjectsPage = new System.Windows.Forms.TabPage();
-            this.ObjectList = new System.Windows.Forms.ListBox();
             this.statusStrip1.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.ChunksPage.SuspendLayout();
-            this.ObjectsPage.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -99,27 +97,12 @@
             // 
             // ObjectsPage
             // 
-            this.ObjectsPage.Controls.Add(this.ObjectList);
+            this.ObjectsPage.BackColor = System.Drawing.SystemColors.ControlDark;
             this.ObjectsPage.Location = new System.Drawing.Point(4, 26);
             this.ObjectsPage.Name = "ObjectsPage";
-            this.ObjectsPage.Padding = new System.Windows.Forms.Padding(3);
             this.ObjectsPage.Size = new System.Drawing.Size(309, 326);
-            this.ObjectsPage.TabIndex = 1;
+            this.ObjectsPage.TabIndex = 2;
             this.ObjectsPage.Text = "Objects";
-            this.ObjectsPage.UseVisualStyleBackColor = true;
-            // 
-            // ObjectList
-            // 
-            this.ObjectList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.ObjectList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ObjectList.FormattingEnabled = true;
-            this.ObjectList.ItemHeight = 17;
-            this.ObjectList.Location = new System.Drawing.Point(3, 3);
-            this.ObjectList.Name = "ObjectList";
-            this.ObjectList.Size = new System.Drawing.Size(303, 320);
-            this.ObjectList.TabIndex = 0;
-            this.ObjectList.SelectedIndexChanged += new System.EventHandler(this.ObjectList_SelectedIndexChanged);
-            this.ObjectList.DoubleClick += new System.EventHandler(this.ObjectList_DoubleClick);
             // 
             // StageChunksView
             // 
@@ -132,12 +115,11 @@
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "StageChunksView";
-            this.Text = "128x128 Chunks";
+            this.Text = "Chunks & Objects";
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.tabControl.ResumeLayout(false);
             this.ChunksPage.ResumeLayout(false);
-            this.ObjectsPage.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,10 +129,9 @@
 
         private System.Windows.Forms.StatusStrip statusStrip1;
         public System.Windows.Forms.ToolStripStatusLabel MousePosStatusLabel;
-        private System.Windows.Forms.TabControl tabControl;
+        public System.Windows.Forms.TabControl tabControl;
         private System.Windows.Forms.TabPage ChunksPage;
         public ChunkMappingsEditor.TileList BlocksList;
         private System.Windows.Forms.TabPage ObjectsPage;
-        public System.Windows.Forms.ListBox ObjectList;
     }
 }

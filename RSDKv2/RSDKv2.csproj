@@ -45,9 +45,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
+    <Compile Include="ArcContainer.cs" />
     <Compile Include="BackgroundLayout.cs" />
     <Compile Include="Bytecode.cs" />
     <Compile Include="Script.cs" />
+    <Compile Include="StringSet.cs" />
     <Compile Include="TextFont.cs" />
     <Compile Include="Tileconfig.cs" />
     <Compile Include="DataFile.cs" />

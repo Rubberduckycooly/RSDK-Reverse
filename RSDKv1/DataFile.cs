@@ -10,8 +10,13 @@ namespace RSDKv1
     {
         public class DirInfo
         {
+            /// <summary>
+            /// the directory path
+            /// </summary>
             public string Directory;
-
+            /// <summary>
+            /// the file offset for the directory
+            /// </summary>
             public int Address;
 
             public DirInfo()
@@ -44,15 +49,32 @@ namespace RSDKv1
 
         public class FileInfo
         {
+            /// <summary>
+            /// the filename of the file
+            /// </summary>
             public string FileName;
+            /// <summary>
+            /// the combined filename and directory of the file
+            /// </summary>
             public string FullFileName;
+            /// <summary>
+            /// how many bytes the file contains
+            /// </summary>
+            public ulong fileSize;
 
+            /// <summary>
+            /// is the file bitflipped?
+            /// </summary>
             public bool encrypted = false;
 
-            public uint fileSize;
-
+            /// <summary>
+            /// an array of bytes in the file
+            /// </summary>
             public byte[] Filedata;
 
+            /// <summary>
+            /// what directory the file is in
+            /// </summary>
             public byte DirID = 0;
 
             public FileInfo()
@@ -145,8 +167,13 @@ namespace RSDKv1
             }
         }
 
+        /// <summary>
+        /// a list of directories for the datafile
+        /// </summary>
         public List<DirInfo> Directories = new List<DirInfo>();
-
+        /// <summary>
+        /// the list of fileinfo data for the file
+        /// </summary>
         public List<FileInfo> Files = new List<FileInfo>();
         /** Sequentially, a file description block for every file stored inside the data file. */
 

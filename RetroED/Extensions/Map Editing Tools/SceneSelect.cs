@@ -13,6 +13,13 @@ namespace RetroED.Extensions.DataSelect
 {
     public partial class SceneSelect : Form
     {
+
+        public struct returnData
+        {
+            public string FilePath;
+            public int Category;
+        }
+
         public List<Tuple<string, List<Tuple<string, string>>>> Categories = new List<Tuple<string, List<Tuple<string, string>>>>();
         public Dictionary<string, List<string>> Directories = new Dictionary<string, List<string>>();
 
@@ -26,7 +33,7 @@ namespace RetroED.Extensions.DataSelect
         public RSDKv2.GameConfig _GameConfigv2;
         public RSDKvB.GameConfig _GameConfigvB;
 
-        public string Result = null;
+        public returnData Result = new returnData();
 
         int RSDKver = 0;
 
@@ -369,7 +376,8 @@ namespace RetroED.Extensions.DataSelect
 
         private void selectButton_Click(object sender, EventArgs e)
         {
-            Result = scenesTree.SelectedNode.Tag as string;
+            Result.FilePath = scenesTree.SelectedNode.Tag as string;
+            Result.Category = scenesTree.SelectedNode.Parent.Index;
             Close();
         }
 
@@ -483,10 +491,10 @@ namespace RetroED.Extensions.DataSelect
         private void browse_Click(object sender, EventArgs e)
         {
             OpenFileDialog open = new OpenFileDialog();
-            open.Filter = "Scene File|*.scn";
+            open.Filter = "Scene File|*.bin";
             if (open.ShowDialog() != DialogResult.Cancel)
             {
-                Result = open.FileName;
+                Result.FilePath = open.FileName;
                 Close();
             }
         }

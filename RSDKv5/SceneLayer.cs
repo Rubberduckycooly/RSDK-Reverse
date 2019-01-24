@@ -7,28 +7,62 @@ using System.IO;
 
 namespace RSDKv5
 {
+    [Serializable]
     public class SceneLayer
     {
+        /// <summary>
+        /// ok taxman retar
+        /// </summary>
         byte IgnoredByte;
         private string _name;
 
+        /// <summary>
+        /// a special byte that tells the game if this layer has any special properties
+        /// </summary>
         public byte Behaviour;
+        /// <summary>
+        /// what drawlayer this layer is on
+        /// </summary>
         public byte DrawingOrder;
 
         private ushort _width;
         private ushort _height;
 
-        public short RelativeVSpeed;
-        public short ConstantVSpeed;
+        /// <summary>
+        /// the Speed of the layer when the player is moving
+        /// </summary>
+        public short RelativeSpeed;
+        /// <summary>
+        /// the Speed of the layer when the player isn't moving
+        /// </summary>
+        public short ConstantSpeed;
 
+        /// <summary>
+        /// the line scroll data
+        /// </summary>
         public List<ScrollInfo> ScrollingInfo = new List<ScrollInfo>();
 
+        /// <summary>
+        /// the line scroll indexes
+        /// </summary>
         public byte[] ScrollIndexes;
 
+        /// <summary>
+        /// the tile array for the map
+        /// </summary>
         public ushort[][] Tiles;
 
+        /// <summary>
+        /// the layer's name
+        /// </summary>
         public string Name { get => _name; set => _name = value; }
+        /// <summary>
+        /// the layer's width (in tiles)
+        /// </summary>
         public ushort Width { get => _width; private set => _width = value; }
+        /// <summary>
+        /// the layer's height (in tiles)
+        /// </summary>
         public ushort Height { get => _height; private set => _height = value; }
 
         public SceneLayer(string name, ushort width, ushort height)
@@ -61,8 +95,8 @@ namespace RSDKv5
             Width = reader.ReadUInt16();
             Height = reader.ReadUInt16();
 
-            RelativeVSpeed = reader.ReadInt16();
-            ConstantVSpeed = reader.ReadInt16();
+            RelativeSpeed = reader.ReadInt16();
+            ConstantSpeed = reader.ReadInt16();
 
             ushort scrolling_info_count = reader.ReadUInt16();
             for (int i = 0; i < scrolling_info_count; ++i)
@@ -94,8 +128,8 @@ namespace RSDKv5
             writer.Write(Width);
             writer.Write(Height);
 
-            writer.Write(RelativeVSpeed);
-            writer.Write(ConstantVSpeed);
+            writer.Write(RelativeSpeed);
+            writer.Write(ConstantSpeed);
 
             writer.Write((ushort)ScrollingInfo.Count);
             foreach (ScrollInfo info in ScrollingInfo)

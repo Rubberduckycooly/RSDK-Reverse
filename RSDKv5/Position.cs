@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
 
 namespace RSDKv5
 {
@@ -11,22 +10,33 @@ namespace RSDKv5
     public struct Position
     {
         [Serializable]
-        public struct Value 
+        public struct Value
         {
             public Value(short high = 0, ushort low = 0)
             {
                 Low = low;
                 High = high;
             }
-
+            /// <summary>
+            /// High value
+            /// </summary>
             public short High;
+            /// <summary>
+            /// Low value
+            /// </summary>
             public ushort Low;
         };
 
+        /// <summary>
+        /// Xpos values
+        /// </summary>
         public Value X;
+        /// <summary>
+        /// Ypos values
+        /// </summary>
         public Value Y;
 
-        public Position(short x=0, short y=0)
+        public Position(short x = 0, short y = 0)
         {
             X = new Value(x);
             Y = new Value(y);
@@ -53,6 +63,17 @@ namespace RSDKv5
 
             writer.Write(Y.Low);
             writer.Write(Y.High);
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder("X: ");
+            sb.Append(X.High);
+            if (0 != X.Low) sb.Append($"[{X.Low}]");
+            sb.Append(", Y: ");
+            sb.Append(Y.High);
+            if (0 != Y.Low) sb.Append($"[{Y.Low}]");
+            return sb.ToString();
         }
     }
 }

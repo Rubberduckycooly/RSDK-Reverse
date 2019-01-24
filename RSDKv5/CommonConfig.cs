@@ -9,12 +9,27 @@ namespace RSDKv5
 {
     public class CommonConfig
     {
+        /// <summary>
+        /// the file'ss signature
+        /// </summary>
         public static readonly byte[] MAGIC = new byte[] { (byte)'C', (byte)'F', (byte)'G', (byte)'\0' };
 
+        /// <summary>
+        /// how many palettes are in the file
+        /// </summary>
         const int PALETTES_COUNT = 8;
 
+        /// <summary>
+        /// a list of all the object names
+        /// </summary>
         public List<string> ObjectsNames = new List<string>();
+        /// <summary>
+        /// the palettes in the file
+        /// </summary>
         public Palette[] Palettes = new Palette[PALETTES_COUNT];
+        /// <summary>
+        /// the soundFX data
+        /// </summary>
         public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
 
         internal void ReadMagic(Reader reader)

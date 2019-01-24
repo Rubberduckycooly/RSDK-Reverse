@@ -32,6 +32,8 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ExportToAnimButton = new System.Windows.Forms.Button();
             this.OpenScriptButton = new System.Windows.Forms.Button();
+            this.OpenDataFolderButton = new System.Windows.Forms.Button();
+            this.ExportDataFolderButton = new System.Windows.Forms.Button();
             this.TabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.SuspendLayout();
@@ -49,6 +51,8 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.tabPage1.Controls.Add(this.ExportDataFolderButton);
+            this.tabPage1.Controls.Add(this.OpenDataFolderButton);
             this.tabPage1.Controls.Add(this.ExportToAnimButton);
             this.tabPage1.Controls.Add(this.OpenScriptButton);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
@@ -60,7 +64,7 @@
             // 
             // ExportToAnimButton
             // 
-            this.ExportToAnimButton.Location = new System.Drawing.Point(190, 255);
+            this.ExportToAnimButton.Location = new System.Drawing.Point(110, 255);
             this.ExportToAnimButton.Name = "ExportToAnimButton";
             this.ExportToAnimButton.Size = new System.Drawing.Size(150, 47);
             this.ExportToAnimButton.TabIndex = 1;
@@ -70,13 +74,33 @@
             // 
             // OpenScriptButton
             // 
-            this.OpenScriptButton.Location = new System.Drawing.Point(190, 89);
+            this.OpenScriptButton.Location = new System.Drawing.Point(110, 86);
             this.OpenScriptButton.Name = "OpenScriptButton";
             this.OpenScriptButton.Size = new System.Drawing.Size(150, 47);
             this.OpenScriptButton.TabIndex = 0;
             this.OpenScriptButton.Text = "Open TaxReceipt Script";
             this.OpenScriptButton.UseVisualStyleBackColor = true;
             this.OpenScriptButton.Click += new System.EventHandler(this.OpenScriptButton_Click);
+            // 
+            // OpenDataFolderButton
+            // 
+            this.OpenDataFolderButton.Location = new System.Drawing.Point(286, 86);
+            this.OpenDataFolderButton.Name = "OpenDataFolderButton";
+            this.OpenDataFolderButton.Size = new System.Drawing.Size(150, 47);
+            this.OpenDataFolderButton.TabIndex = 2;
+            this.OpenDataFolderButton.Text = "Open Data Folder";
+            this.OpenDataFolderButton.UseVisualStyleBackColor = true;
+            this.OpenDataFolderButton.Click += new System.EventHandler(this.OpenDataFolderButton_Click);
+            // 
+            // ExportDataFolderButton
+            // 
+            this.ExportDataFolderButton.Location = new System.Drawing.Point(286, 255);
+            this.ExportDataFolderButton.Name = "ExportDataFolderButton";
+            this.ExportDataFolderButton.Size = new System.Drawing.Size(150, 47);
+            this.ExportDataFolderButton.TabIndex = 3;
+            this.ExportDataFolderButton.Text = "Export Data Folder";
+            this.ExportDataFolderButton.UseVisualStyleBackColor = true;
+            this.ExportDataFolderButton.Click += new System.EventHandler(this.ExportDataFolderButton_Click);
             // 
             // MainForm
             // 
@@ -99,6 +123,8 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button ExportToAnimButton;
         private System.Windows.Forms.Button OpenScriptButton;
+        private System.Windows.Forms.Button OpenDataFolderButton;
+        private System.Windows.Forms.Button ExportDataFolderButton;
     }
 }
 

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.TransparentCB = new System.Windows.Forms.CheckBox();
             this.IMG2GFXLabel = new System.Windows.Forms.Label();
             this.GFX2IMGLabel = new System.Windows.Forms.Label();
             this.ExportToGFX = new System.Windows.Forms.Button();
@@ -37,11 +38,14 @@
             this.ExportIMGButton = new System.Windows.Forms.Button();
             this.SourceGFXLocation = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.SelectPaletteButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.SelectPaletteButton);
+            this.panel1.Controls.Add(this.TransparentCB);
             this.panel1.Controls.Add(this.IMG2GFXLabel);
             this.panel1.Controls.Add(this.GFX2IMGLabel);
             this.panel1.Controls.Add(this.ExportToGFX);
@@ -53,8 +57,18 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(453, 310);
+            this.panel1.Size = new System.Drawing.Size(420, 306);
             this.panel1.TabIndex = 0;
+            // 
+            // TransparentCB
+            // 
+            this.TransparentCB.AutoSize = true;
+            this.TransparentCB.Location = new System.Drawing.Point(133, 82);
+            this.TransparentCB.Name = "TransparentCB";
+            this.TransparentCB.Size = new System.Drawing.Size(243, 21);
+            this.TransparentCB.TabIndex = 8;
+            this.TransparentCB.Text = "Make Transparent Colour FF00FF";
+            this.TransparentCB.UseVisualStyleBackColor = true;
             // 
             // IMG2GFXLabel
             // 
@@ -134,12 +148,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // SelectPaletteButton
+            // 
+            this.SelectPaletteButton.Location = new System.Drawing.Point(133, 109);
+            this.SelectPaletteButton.Name = "SelectPaletteButton";
+            this.SelectPaletteButton.Size = new System.Drawing.Size(264, 33);
+            this.SelectPaletteButton.TabIndex = 9;
+            this.SelectPaletteButton.Text = "Select Palette file";
+            this.SelectPaletteButton.UseVisualStyleBackColor = true;
+            this.SelectPaletteButton.Click += new System.EventHandler(this.SelectPaletteButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(453, 310);
+            this.ClientSize = new System.Drawing.Size(420, 306);
             this.Controls.Add(this.panel1);
             this.Name = "MainForm";
             this.Text = "GFX Tool";
@@ -160,6 +184,8 @@
         private System.Windows.Forms.Button SelectGIFButton;
         private System.Windows.Forms.Label IMG2GFXLabel;
         private System.Windows.Forms.Label GFX2IMGLabel;
+        private System.Windows.Forms.CheckBox TransparentCB;
+        private System.Windows.Forms.Button SelectPaletteButton;
     }
 }
 

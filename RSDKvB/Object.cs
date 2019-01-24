@@ -8,23 +8,89 @@ namespace RSDKvB
 {
     public class Object
     {
-        public byte type;
-        public byte subtype;
-        public int xPos;
-        public int yPos;
+        /// <summary>
+        /// the Object's Name (used for entity list)
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// The Type of the object
+        /// </summary>
+        public int type;
+        /// <summary>
+        /// The Object's SubType/PropertyValue
+        /// </summary>
+        public int subtype;
+        /// <summary>
+        /// a quick way to get the true X position
+        /// </summary>
+        public int xPos
+        {
+            get
+            {
+                return position.X.High + (position.X.Low / 0x10000);
+            }
+            set
+            {
+
+            }
+        }
+        /// <summary>
+        /// a quick way to get the true Y position
+        /// </summary>
+        public int yPos
+        {
+            get
+            {
+                return position.Y.High + (position.Y.Low / 0x10000);
+            }
+            set
+            {
+
+            }
+        }
+        /// <summary>
+        /// how to load the "attribute"?
+        /// </summary>
         public ushort AttributeType;
+        /// <summary>
+        /// the attribute?
+        /// </summary>
         public int attribute;
+        /// <summary>
+        /// the raw position values
+        /// </summary>
+        public Position position;
 
-
-        static int cur_id = 0;
+        /// <summary>
+        /// How Many Objects have been loaded
+        /// </summary>
+        public static int cur_id = 0;
+        /// <summary>
+        /// the Index of the object in the loaded Object List
+        /// </summary>
         public int id;
 
         public Object(byte type, byte subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_id++)
         {
         }
 
-        private Object(byte type, byte subtype, int xPos, int yPos, int id)
+        public Object(byte type, byte subtype, int xPos, int yPos, int id)
         {
+            Name = "Unknown Object";
+            this.type = type;
+            this.subtype = subtype;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.id = id;
+        }
+
+        public Object(byte type, byte subtype, int xPos, int yPos, int id, string name)
+        {
+            this.Name = name;
             this.type = type;
             this.subtype = subtype;
             this.xPos = xPos;
@@ -37,46 +103,16 @@ namespace RSDKvB
             cur_id++;
             id = cur_id;
 
-            /*
-            type = reader.ReadByte();
-            subtype = reader.ReadByte();
-
-		
-            xPos = reader.ReadSByte() << 8;
-            xPos |= reader.ReadByte();
-
-            yPos = reader.ReadSByte() << 8;
-            yPos |= reader.ReadByte();*/
-
             AttributeType = reader.ReadUInt16();
 
             // Object type, 1 byte, unsigned
             type = reader.ReadByte(); //Type
 
             // Object subtype, 1 byte, unsigned
-            subtype = reader.ReadByte(); //SubType
+            subtype = reader.ReadByte(); //SubType/PropertyValue
 
-            //4 Position "Buffer" Bytes
-            byte v15;
-            byte v16;
-            byte v17;
-            byte v18;
-
-            v15 = reader.ReadByte();
-            v16 = reader.ReadByte();
-            v17 = reader.ReadByte();
-            v18 = reader.ReadByte();
-
-            // X Position, 4 bytes, big-endian, unsigned	
-            xPos = (v17 << 16) + (v16 << 8) + v15 + (v18 << 24);
-
-            v15 = reader.ReadByte();
-            v16 = reader.ReadByte();
-            v17 = reader.ReadByte();
-            v18 = reader.ReadByte();
-
-            // Y Position, 4 bytes, big-endian, unsigned
-            yPos = (v17 << 16) + (v16 << 8) + v15 + (v18 << 24);
+            //a position, made of 8 bytes, 4 for X, 4 for Y
+            position = new Position(reader);
 
             //Console.WriteLine("ATTRIBUTE COUNT:" + Pad(AttributeType,16));
 
@@ -188,40 +224,12 @@ namespace RSDKvB
                 return;
             }
 
-            if (xPos < Int32.MinValue || xPos > Int32.MaxValue)
-            {
-                //throw new Exception("Cannot save as Type vB. Object X Position can't fit in 32-bits");
-                Console.WriteLine("Cannot save as Type vB. Object X Position can't fit in 32-bits");
-                writer.Write(type);
-                writer.Write(subtype);
-                writer.Write(0);
-                writer.Write(0);
-                return;
-            }
-
-            if (yPos < Int32.MinValue || yPos > Int32.MaxValue)
-            {
-                //throw new Exception("Cannot save as Type vB. Object Y Position can't fit in 32-bits");
-                Console.WriteLine("Cannot save as Type vB. Object Y Position can't fit in 32-bits");
-                writer.Write(type);
-                writer.Write(subtype);
-                writer.Write(xPos);
-                writer.Write(0);
-                return;
-            }
-
             writer.Write(AttributeType);
 
             writer.Write(type);
             writer.Write(subtype);
 
-            //writer.Write((byte)(xPos >> 8));
-            //writer.Write((byte)(xPos & 0xFF));
-            writer.Write(xPos);
-
-            //writer.Write((byte)(yPos >> 8));
-            //writer.Write((byte)(yPos & 0xFF));
-            writer.Write(yPos);
+            position.Write(writer);
 
             if ((AttributeType & 1) != 0)
             {
@@ -312,46 +320,46 @@ namespace RSDKvB
             switch(ID)
             {
                 case 0:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 1:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 2:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 3:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 4:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 5:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 6:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 7:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 8:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 9:
-                    attribute = (int)reader.ReadByte();
+                    attribute = reader.ReadByte();
                     break;
                 case 10:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 11:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 12:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
                 case 13:
-                    attribute = (int)reader.ReadInt32();
+                    attribute = reader.ReadInt32();
                     break;
             }
         }

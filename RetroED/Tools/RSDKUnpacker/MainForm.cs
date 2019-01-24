@@ -434,7 +434,7 @@ namespace RetroED.Tools.RSDKUnpacker
                 RSDKvB.Reader reader = new RSDKvB.Reader(file.FullName);
 
                 File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
-                File.fileSize = (uint)reader.BaseStream.Length;
+                File.FileSize = (uint)reader.BaseStream.Length;
 
                 reader.Close();
 
@@ -467,7 +467,7 @@ namespace RetroED.Tools.RSDKUnpacker
                 RSDKv5.Reader reader = new RSDKv5.Reader(file.FullName);
 
                 File.Filedata = reader.ReadBytes(reader.BaseStream.Length);
-                File.fileSize = (uint)reader.BaseStream.Length;
+                File.FileSize = (uint)reader.BaseStream.Length;
 
                 reader.Close();
 
@@ -657,10 +657,10 @@ namespace RetroED.Tools.RSDKUnpacker
                     EncryptedCB.Checked = true;
                     break;
                 case 3:
-                    EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].encrypted;
+                    EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].Encrypted;
                     break;
                 case 4:
-                    EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                    EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].Encrypted;
                     break;
             }
         }
@@ -704,21 +704,21 @@ namespace RetroED.Tools.RSDKUnpacker
                 case 3: //Sonic 1 & 2 (RSDKvB)
                     if (FileListBox.SelectedIndex >= 0)
                     {
-                        FileSizeLabel.Text = "File Size = " + DatavB.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileSizeLabel.Text = "File Size = " + DatavB.Files[FileListBox.SelectedIndex].FileSize + " Bytes";
                         FileNameLabel.Text = "File Name = " + Path.GetFileName(DatavB.Files[FileListBox.SelectedIndex].FileName);
                         FullFileNameLabel.Text = "Full File Name = " + DatavB.Files[FileListBox.SelectedIndex].FileName;
                         FileOffsetLabel.Text = "File Offset = " + DatavB.Files[FileListBox.SelectedIndex].DataOffset + " Bytes";
-                        EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].encrypted;
+                        EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].Encrypted;
                     }
                     break;
                 case 4: //Sonic Mania (RSDKv5)
                     if (FileListBox.SelectedIndex >= 0)
                     {
-                        FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
+                        FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].FileSize + " Bytes";
                         FileNameLabel.Text = "File Name = " + Path.GetFileName(Datav5.Files[FileListBox.SelectedIndex].FileName);
                         FullFileNameLabel.Text = "Full File Name = " + Datav5.Files[FileListBox.SelectedIndex].FileName;
                         FileOffsetLabel.Text = "File Offset = " + Datav5.Files[FileListBox.SelectedIndex].DataOffset + " Bytes";
-                        EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].encrypted;
+                        EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].Encrypted;
                     }
                     break;
             }

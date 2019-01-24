@@ -8,8 +8,14 @@ namespace RSDKvRS
 {
     public class Palette
     {
+        /// <summary>
+        /// how many colours for each row (always 16)
+        /// </summary>
         public const int COLORS_PER_COLUMN = 0x10;
 
+        /// <summary>
+        /// an array of the colours
+        /// </summary>
         public PaletteColour[][] Colors;
 
         public Palette(int pc = 2)

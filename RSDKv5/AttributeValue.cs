@@ -4,31 +4,108 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RSDKv5
 {
     [Serializable]
     public class AttributeValue
     {
+        /// <summary>
+        /// the uint8 value of the attribute
+        /// </summary>
         byte value_uint8;
+        /// <summary>
+        /// the uint16 value of the attribute
+        /// </summary>
         ushort value_uint16;
+        /// <summary>
+        /// the uint32 value of the attribute
+        /// </summary>
         uint value_uint32;
+        /// <summary>
+        /// the int8 value of the attribute
+        /// </summary>
         sbyte value_int8;
+        /// <summary>
+        /// the int16 value of the attribute
+        /// </summary>
         short value_int16;
+        /// <summary>
+        /// the int32 value of the attribute
+        /// </summary>
         int value_int32;
+        /// <summary>
+        /// the var value of the attribute
+        /// </summary>
         uint value_var;
+        /// <summary>
+        /// the bool value of the attribute
+        /// </summary>
         bool value_bool;
+        /// <summary>
+        /// the string value of the attribute
+        /// </summary>
         string value_string = string.Empty; // default to empty string, null causes many problems
+        /// <summary>
+        /// the position value of the attribute
+        /// </summary>
         Position value_position;
+        /// <summary>
+        /// the colour value of the attribute
+        /// </summary>
         Color value_color;
 
         public readonly AttributeTypes Type;
+
+        Position no_position = new Position(0, 0);
 
         private void CheckType(AttributeTypes type)
         {
             if (type != Type)
             {
-                throw new Exception("Unexpected value type.");
+                //throw new Exception("Unexpected value type.");
+
+                switch (type)
+                {
+                    case AttributeTypes.UINT8:
+                        value_uint8 = 0;
+                        break;
+                    case AttributeTypes.UINT16:
+                        value_uint16 = 0;
+                        break;
+                    case AttributeTypes.UINT32:
+                        value_uint32 = 0;
+                        break;
+                    case AttributeTypes.INT8:
+                        value_int8 = 0;
+                        break;
+                    case AttributeTypes.INT16:
+                        value_int16 = 0;
+                        break;
+                    case AttributeTypes.INT32:
+                        value_int32 = 0;
+                        break;
+                    case AttributeTypes.VAR:
+                        value_var = 0;
+                        break;
+                    case AttributeTypes.BOOL:
+                        value_bool = false;
+                        break;
+                    case AttributeTypes.COLOR:
+                        value_color = Color.EMPTY;
+                        break;
+                    case AttributeTypes.POSITION:
+                        value_position = no_position;
+                        break;
+                    case AttributeTypes.STRING:
+                        value_string = string.Empty;
+                        break;
+                    default:
+                        throw new Exception("Unexpected value type.");
+
+                }
             }
         }
         public byte ValueUInt8
@@ -194,6 +271,37 @@ namespace RSDKv5
                 case AttributeTypes.COLOR:
                     value_color.Write(writer);
                     break;
+            }
+        }
+
+        public override string ToString()
+        {
+            switch (Type)
+            {
+                case AttributeTypes.UINT8:
+                    return value_uint8.ToString();
+                case AttributeTypes.UINT16:
+                    return value_uint16.ToString();
+                case AttributeTypes.UINT32:
+                    return value_uint32.ToString();
+                case AttributeTypes.INT8:
+                    return value_int8.ToString();
+                case AttributeTypes.INT16:
+                    return value_int16.ToString();
+                case AttributeTypes.INT32:
+                    return value_int32.ToString();
+                case AttributeTypes.VAR:
+                    return value_var.ToString();
+                case AttributeTypes.BOOL:
+                    return value_bool.ToString();
+                case AttributeTypes.STRING:
+                    return value_string.ToString();
+                case AttributeTypes.POSITION:
+                    return value_position.ToString();
+                case AttributeTypes.COLOR:
+                    return value_color.ToString();
+                default:
+                    return "Unhandled Type for ToString()";
             }
         }
     }

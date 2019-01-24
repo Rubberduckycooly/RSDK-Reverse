@@ -10,6 +10,7 @@ namespace RSDKv5
 {
     public class Reader : BinaryReader
     {
+
         public Reader(Stream stream) : base(stream)
         {
         }

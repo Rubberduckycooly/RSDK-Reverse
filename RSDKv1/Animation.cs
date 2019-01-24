@@ -14,6 +14,9 @@ namespace RSDKv1
             return this.MemberwiseClone();
         }
 
+        /// <summary>
+        /// a string to be added to the start of the path
+        /// </summary>
         public string PathMod
         {
             get
@@ -23,12 +26,28 @@ namespace RSDKv1
         }
 
         //Why Taxman, why
+        /// <summary>
+        /// Unknown Values, who knows what they do
+        /// </summary>
         public byte[] Unknown = new byte[5];
+
+        /// <summary>
+        /// I don't really know tbh, might be a flag to stop loading textures?
+        /// </summary>
         byte EndTexFlag;
 
-        public List<string> SpriteSheets = new List<string>();
+        /// <summary>
+        /// a List of paths to the spritesheets, relative to "Data/Sprites"
+        /// </summary>
+        public string[] SpriteSheets = new string[3];
 
+        /// <summary>
+        /// a list of the hitboxes that the animations can use
+        /// </summary>
         public List<sprHitbox> CollisionBoxes = new List<sprHitbox>();
+        /// <summary>
+        /// a list of Animations in the file
+        /// </summary>
         public List<sprAnimation> Animations = new List<sprAnimation>();
 
         [Serializable]
@@ -50,23 +69,42 @@ namespace RSDKv1
                     public short Left, Right, Top, Bottom;
                 }
 
-                public string AnimationName
-                {
-                    get
-                    {
-                        return "RSDKv1 Animation ";
-                    }
-                }
-
                 public List<HitBox> HitBoxes = new List<HitBox>();
+                /// <summary>
+                /// the spritesheet index
+                /// </summary>
                 public byte SpriteSheet = 0;
+                /// <summary>
+                /// the collision box
+                /// </summary>
                 public byte CollisionBox = 0;
+                /// <summary>
+                /// the delay of each frame before advancing to the next one in frames (always 256)
+                /// </summary>
                 public readonly short Delay = 256;
+                /// <summary>
+                /// the Xpos on the sheet
+                /// </summary>
                 public byte X = 0;
+                /// <summary>
+                /// the YPos on the sheet
+                /// </summary>
                 public byte Y = 0;
+                /// <summary>
+                /// the frame's width
+                /// </summary>
                 public byte Width = 0;
+                /// <summary>
+                /// the frame's height
+                /// </summary>
                 public byte Height = 0;
+                /// <summary>
+                /// the offsetX of the frame
+                /// </summary>
                 public SByte PivotX = 0;
+                /// <summary>
+                /// the offsetY of the frame
+                /// </summary>
                 public SByte PivotY = 0;
 
                 public sprFrame()
@@ -100,8 +138,27 @@ namespace RSDKv1
 
             }
 
+            /// <summary>
+            /// the name of the animation (RSDKvRS doesn't have one, so we use a "Plain one")
+            /// </summary>
+            public string AnimationName
+            {
+                get
+                {
+                    return "RSDKvRS Animation ";
+                }
+            }
+            /// <summary>
+            /// a list of frames in the animation
+            /// </summary>
             public List<sprFrame> Frames = new List<sprFrame>();
+            /// <summary>
+            /// what frame to loop back from
+            /// </summary>
             public byte LoopIndex;
+            /// <summary>
+            /// the speed multiplyer of the animation
+            /// </summary>
             public byte SpeedMultiplyer;
 
             public sprAnimation()
@@ -191,7 +248,7 @@ namespace RSDKv1
             int spriteSheetCount = 3; //always 3
 
             for (int i = 0; i < spriteSheetCount; ++i)
-                SpriteSheets.Add(reader.ReadString());
+                SpriteSheets[i] = reader.ReadString();
 
             EndTexFlag = reader.ReadByte(); //Seems to tell the RSDK's reader when to stop reading textures???
 
@@ -212,24 +269,11 @@ namespace RSDKv1
         {
             writer.Write(Unknown); //No idea what these are chief
 
-            byte SheetCnt = (byte)SpriteSheets.Count;
+            byte SheetCnt = (byte)SpriteSheets.Length;
 
-            if (SpriteSheets.Count > 3)
-            {
-                SheetCnt = 3;
-            }
-
-            for (int i = 0; i < SpriteSheets.Count; ++i)
+            for (int i = 0; i < SpriteSheets.Length; ++i)
             {
                 writer.WriteRSDKString(SpriteSheets[i]);
-            }
-
-            if (SpriteSheets.Count < 3)
-            {
-                for (int i = 0; i < 3 - SpriteSheets.Count; ++i)
-                {
-                    writer.WriteRSDKString("NULL");
-                }
             }
 
             writer.Write(EndTexFlag);

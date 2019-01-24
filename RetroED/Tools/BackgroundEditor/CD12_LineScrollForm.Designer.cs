@@ -30,32 +30,32 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
-            this.UnknownNUD = new System.Windows.Forms.NumericUpDown();
+            this.DrawLayerNUD = new System.Windows.Forms.NumericUpDown();
             this.UnknownLabel = new System.Windows.Forms.Label();
             this.CSPDNUD = new System.Windows.Forms.NumericUpDown();
             this.RSPDNUD = new System.Windows.Forms.NumericUpDown();
             this.CSPDLabel = new System.Windows.Forms.Label();
-            this.Unknown1NUD = new System.Windows.Forms.NumericUpDown();
+            this.BehaviourNUD = new System.Windows.Forms.NumericUpDown();
             this.RSPDLabel = new System.Windows.Forms.Label();
             this.Unknown1Label = new System.Windows.Forms.Label();
             this.CancelButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.UnknownNUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DrawLayerNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CSPDNUD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPDNUD)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BehaviourNUD)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.button1);
-            this.panel1.Controls.Add(this.UnknownNUD);
+            this.panel1.Controls.Add(this.DrawLayerNUD);
             this.panel1.Controls.Add(this.UnknownLabel);
             this.panel1.Controls.Add(this.CSPDNUD);
             this.panel1.Controls.Add(this.RSPDNUD);
             this.panel1.Controls.Add(this.CSPDLabel);
-            this.panel1.Controls.Add(this.Unknown1NUD);
+            this.panel1.Controls.Add(this.BehaviourNUD);
             this.panel1.Controls.Add(this.RSPDLabel);
             this.panel1.Controls.Add(this.Unknown1Label);
             this.panel1.Controls.Add(this.CancelButton);
@@ -63,13 +63,13 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(371, 187);
+            this.panel1.Size = new System.Drawing.Size(327, 167);
             this.panel1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(78, 161);
+            this.button1.Location = new System.Drawing.Point(34, 141);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(119, 23);
             this.button1.TabIndex = 12;
@@ -77,38 +77,38 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // UnknownNUD
+            // DrawLayerNUD
             // 
-            this.UnknownNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.UnknownNUD.Location = new System.Drawing.Point(145, 103);
-            this.UnknownNUD.Maximum = new decimal(new int[] {
+            this.DrawLayerNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.DrawLayerNUD.Location = new System.Drawing.Point(145, 72);
+            this.DrawLayerNUD.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.UnknownNUD.Name = "UnknownNUD";
-            this.UnknownNUD.Size = new System.Drawing.Size(153, 22);
-            this.UnknownNUD.TabIndex = 11;
-            this.UnknownNUD.Value = new decimal(new int[] {
+            this.DrawLayerNUD.Name = "DrawLayerNUD";
+            this.DrawLayerNUD.Size = new System.Drawing.Size(153, 22);
+            this.DrawLayerNUD.TabIndex = 11;
+            this.DrawLayerNUD.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.UnknownNUD.ValueChanged += new System.EventHandler(this.UnknownNUD_ValueChanged);
+            this.DrawLayerNUD.ValueChanged += new System.EventHandler(this.UnknownNUD_ValueChanged);
             // 
             // UnknownLabel
             // 
             this.UnknownLabel.AutoSize = true;
-            this.UnknownLabel.Location = new System.Drawing.Point(12, 103);
+            this.UnknownLabel.Location = new System.Drawing.Point(12, 72);
             this.UnknownLabel.Name = "UnknownLabel";
-            this.UnknownLabel.Size = new System.Drawing.Size(70, 17);
+            this.UnknownLabel.Size = new System.Drawing.Size(85, 17);
             this.UnknownLabel.TabIndex = 10;
-            this.UnknownLabel.Text = "Unknown:";
+            this.UnknownLabel.Text = "Draw Order:";
             // 
             // CSPDNUD
             // 
             this.CSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.CSPDNUD.Location = new System.Drawing.Point(145, 70);
+            this.CSPDNUD.Location = new System.Drawing.Point(145, 44);
             this.CSPDNUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -127,7 +127,7 @@
             // RSPDNUD
             // 
             this.RSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.RSPDNUD.Location = new System.Drawing.Point(145, 36);
+            this.RSPDNUD.Location = new System.Drawing.Point(145, 16);
             this.RSPDNUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -146,53 +146,53 @@
             // CSPDLabel
             // 
             this.CSPDLabel.AutoSize = true;
-            this.CSPDLabel.Location = new System.Drawing.Point(12, 72);
+            this.CSPDLabel.Location = new System.Drawing.Point(12, 46);
             this.CSPDLabel.Name = "CSPDLabel";
-            this.CSPDLabel.Size = new System.Drawing.Size(127, 17);
+            this.CSPDLabel.Size = new System.Drawing.Size(113, 17);
             this.CSPDLabel.TabIndex = 8;
-            this.CSPDLabel.Text = "Constant H Speed:";
+            this.CSPDLabel.Text = "Constant Speed:";
             // 
-            // Unknown1NUD
+            // BehaviourNUD
             // 
-            this.Unknown1NUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.Unknown1NUD.Location = new System.Drawing.Point(145, 8);
-            this.Unknown1NUD.Maximum = new decimal(new int[] {
+            this.BehaviourNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BehaviourNUD.Location = new System.Drawing.Point(145, 100);
+            this.BehaviourNUD.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.Unknown1NUD.Name = "Unknown1NUD";
-            this.Unknown1NUD.Size = new System.Drawing.Size(153, 22);
-            this.Unknown1NUD.TabIndex = 6;
-            this.Unknown1NUD.Value = new decimal(new int[] {
+            this.BehaviourNUD.Name = "BehaviourNUD";
+            this.BehaviourNUD.Size = new System.Drawing.Size(153, 22);
+            this.BehaviourNUD.TabIndex = 6;
+            this.BehaviourNUD.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.Unknown1NUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged);
+            this.BehaviourNUD.ValueChanged += new System.EventHandler(this.Unknown1NUD_ValueChanged);
             // 
             // RSPDLabel
             // 
             this.RSPDLabel.AutoSize = true;
-            this.RSPDLabel.Location = new System.Drawing.Point(12, 38);
+            this.RSPDLabel.Location = new System.Drawing.Point(12, 18);
             this.RSPDLabel.Name = "RSPDLabel";
-            this.RSPDLabel.Size = new System.Drawing.Size(122, 17);
+            this.RSPDLabel.Size = new System.Drawing.Size(108, 17);
             this.RSPDLabel.TabIndex = 5;
-            this.RSPDLabel.Text = "Relative H Speed:";
+            this.RSPDLabel.Text = "Relative Speed:";
             // 
             // Unknown1Label
             // 
             this.Unknown1Label.AutoSize = true;
-            this.Unknown1Label.Location = new System.Drawing.Point(12, 9);
+            this.Unknown1Label.Location = new System.Drawing.Point(12, 101);
             this.Unknown1Label.Name = "Unknown1Label";
-            this.Unknown1Label.Size = new System.Drawing.Size(93, 17);
+            this.Unknown1Label.Size = new System.Drawing.Size(76, 17);
             this.Unknown1Label.TabIndex = 4;
-            this.Unknown1Label.Text = "Line Number:";
+            this.Unknown1Label.Text = "Behaviour:";
             // 
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(203, 161);
+            this.CancelButton.Location = new System.Drawing.Point(159, 141);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 1;
@@ -203,7 +203,7 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Location = new System.Drawing.Point(284, 161);
+            this.OKButton.Location = new System.Drawing.Point(240, 141);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 0;
@@ -216,16 +216,16 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(371, 187);
+            this.ClientSize = new System.Drawing.Size(327, 167);
             this.Controls.Add(this.panel1);
             this.Name = "CD12_LineScrollForm";
             this.Text = "Line-Scroll Properties";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.UnknownNUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DrawLayerNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CSPDNUD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RSPDNUD)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Unknown1NUD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BehaviourNUD)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -236,12 +236,12 @@
         private System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Button OKButton;
         private System.Windows.Forms.NumericUpDown RSPDNUD;
-        private System.Windows.Forms.NumericUpDown Unknown1NUD;
+        private System.Windows.Forms.NumericUpDown BehaviourNUD;
         private System.Windows.Forms.Label RSPDLabel;
         private System.Windows.Forms.Label Unknown1Label;
         private System.Windows.Forms.NumericUpDown CSPDNUD;
         private System.Windows.Forms.Label CSPDLabel;
-        private System.Windows.Forms.NumericUpDown UnknownNUD;
+        private System.Windows.Forms.NumericUpDown DrawLayerNUD;
         private System.Windows.Forms.Label UnknownLabel;
         private System.Windows.Forms.Button button1;
     }

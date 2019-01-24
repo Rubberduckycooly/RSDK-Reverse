@@ -51,7 +51,9 @@
     <Compile Include="DataFile.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Object.cs" />
+    <Compile Include="Position.cs" />
     <Compile Include="SaveFiles.cs" />
+    <Compile Include="StringList.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Tileconfig.cs" />
     <Compile Include="GameConfig.cs" />

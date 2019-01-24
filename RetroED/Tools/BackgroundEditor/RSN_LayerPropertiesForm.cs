@@ -34,15 +34,15 @@ namespace RetroED.Tools.BackgroundEditor
                     MapWidthNUD.Value = Mapv1.Layers[CurLayer].width;
                     MapHeightNUD.Value = Mapv1.Layers[CurLayer].height;
                     DeformNUD.Value = Mapv1.Layers[CurLayer].Deform;
-                    RVSPDNUD.Value = Mapv1.Layers[CurLayer].RelativeVSpeed;
-                    CVSPDNUD.Value = Mapv1.Layers[CurLayer].ConstantVSpeed;
+                    RVSPDNUD.Value = Mapv1.Layers[CurLayer].RelativeSpeed;
+                    CVSPDNUD.Value = Mapv1.Layers[CurLayer].ConstantSpeed;
                     break;
                 case 2:
                     MapWidthNUD.Value = Mapv2.Layers[CurLayer].width;
                     MapHeightNUD.Value = Mapv2.Layers[CurLayer].height;
                     DeformNUD.Value = Mapv2.Layers[CurLayer].Deform;
-                    RVSPDNUD.Value = Mapv2.Layers[CurLayer].RelativeVSpeed;
-                    CVSPDNUD.Value = Mapv2.Layers[CurLayer].ConstantVSpeed;
+                    RVSPDNUD.Value = Mapv2.Layers[CurLayer].RelativeSpeed;
+                    CVSPDNUD.Value = Mapv2.Layers[CurLayer].ConstantSpeed;
                     break;
                 default:
                     break;
@@ -65,10 +65,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Layers[CurLayer].width = (int)MapWidthNUD.Value;
+                    Mapv1.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
                     break;
                 case 2:
-                    Mapv2.Layers[CurLayer].width = (int)MapWidthNUD.Value;
+                    Mapv2.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
                     break;
                 default:
                     break;
@@ -80,10 +80,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Layers[CurLayer].height = (int)MapHeightNUD.Value;
+                    Mapv1.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
                     break;
                 case 2:
-                    Mapv2.Layers[CurLayer].height = (int)MapHeightNUD.Value;
+                    Mapv2.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
                     break;
                 default:
                     break;
@@ -110,10 +110,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Layers[CurLayer].RelativeVSpeed = (byte)RVSPDNUD.Value;
+                    Mapv1.Layers[CurLayer].RelativeSpeed = (byte)RVSPDNUD.Value;
                     break;
                 case 2:
-                    Mapv2.Layers[CurLayer].RelativeVSpeed = (byte)RVSPDNUD.Value;
+                    Mapv2.Layers[CurLayer].RelativeSpeed = (byte)RVSPDNUD.Value;
                     break;
                 default:
                     break;
@@ -125,10 +125,10 @@ namespace RetroED.Tools.BackgroundEditor
             switch (LoadedRSDKver)
             {
                 case 3:
-                    Mapv1.Layers[CurLayer].ConstantVSpeed = (byte)CVSPDNUD.Value;
+                    Mapv1.Layers[CurLayer].ConstantSpeed = (byte)CVSPDNUD.Value;
                     break;
                 case 2:
-                    Mapv2.Layers[CurLayer].ConstantVSpeed = (byte)CVSPDNUD.Value;
+                    Mapv2.Layers[CurLayer].ConstantSpeed = (byte)CVSPDNUD.Value;
                     break;
                 default:
                     break;

@@ -56,7 +56,6 @@
             this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.PlaceTileButton = new System.Windows.Forms.ToolStripButton();
-            this.PlaceObjectButton = new System.Windows.Forms.ToolStripButton();
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.MenuItem_Open = new System.Windows.Forms.MenuItem();
@@ -66,25 +65,24 @@
             this.MenuItem_FullImgExp = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapImgExp = new System.Windows.Forms.MenuItem();
             this.MenuItem_ObjImgExp = new System.Windows.Forms.MenuItem();
-            this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.menuItem10 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_Exit = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapLayer = new System.Windows.Forms.MenuItem();
             this.MenuItem_Objects = new System.Windows.Forms.MenuItem();
             this.MenuItem_CollisionMasksLyrA = new System.Windows.Forms.MenuItem();
             this.MenuItem_CollisionMasksLyrB = new System.Windows.Forms.MenuItem();
             this.menuItem13 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ReloadMap = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ReloadTileset = new System.Windows.Forms.MenuItem();
             this.MenuItem_RefreshChunks = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ReloadTileconfig = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ReloadStageconfig = new System.Windows.Forms.MenuItem();
+            this.menuItem_RedrawMap = new System.Windows.Forms.MenuItem();
             this.menuItem15 = new System.Windows.Forms.MenuItem();
             this.MenuItem_ShowGrid = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
             this.MenuItem_ClearChunks = new System.Windows.Forms.MenuItem();
             this.MenuItem_ClearObjects = new System.Windows.Forms.MenuItem();
-            this.menuItem7 = new System.Windows.Forms.MenuItem();
-            this.MenuItem_AddObject = new System.Windows.Forms.MenuItem();
-            this.MenuItem_AddObjList = new System.Windows.Forms.MenuItem();
-            this.MenuItem_LoadObjListFromData = new System.Windows.Forms.MenuItem();
+            this.menuItem_deleteObject = new System.Windows.Forms.MenuItem();
             this.menuItem11 = new System.Windows.Forms.MenuItem();
             this.MenuItem_MapProp = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
@@ -161,8 +159,7 @@
             this.copyToolStripButton,
             this.pasteToolStripButton,
             this.toolStripSeparator3,
-            this.PlaceTileButton,
-            this.PlaceObjectButton});
+            this.PlaceTileButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(651, 27);
@@ -247,16 +244,6 @@
             this.PlaceTileButton.Text = "PlaceTile";
             this.PlaceTileButton.Click += new System.EventHandler(this.PlaceTileButton_Click);
             // 
-            // PlaceObjectButton
-            // 
-            this.PlaceObjectButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.PlaceObjectButton.Image = ((System.Drawing.Image)(resources.GetObject("PlaceObjectButton.Image")));
-            this.PlaceObjectButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.PlaceObjectButton.Name = "PlaceObjectButton";
-            this.PlaceObjectButton.Size = new System.Drawing.Size(24, 24);
-            this.PlaceObjectButton.Text = "PlaceObj";
-            this.PlaceObjectButton.Click += new System.EventHandler(this.PlaceObject_Click);
-            // 
             // mainMenu1
             // 
             this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -275,10 +262,7 @@
             this.menuItem8,
             this.MenuItem_FullImgExp,
             this.MenuItem_MapImgExp,
-            this.MenuItem_ObjImgExp,
-            this.menuItem5,
-            this.menuItem10,
-            this.MenuItem_Exit});
+            this.MenuItem_ObjImgExp});
             this.menuItem1.Text = "File";
             // 
             // MenuItem_Open
@@ -326,25 +310,6 @@
             this.MenuItem_ObjImgExp.Text = "Export Obj Layout as Image";
             this.MenuItem_ObjImgExp.Click += new System.EventHandler(this.MenuItem_ExportObjImage_Click);
             // 
-            // menuItem5
-            // 
-            this.menuItem5.Index = 7;
-            this.menuItem5.Shortcut = System.Windows.Forms.Shortcut.CtrlD;
-            this.menuItem5.Text = "Select Data Folder";
-            this.menuItem5.Click += new System.EventHandler(this.menuItem5_Click);
-            // 
-            // menuItem10
-            // 
-            this.menuItem10.Index = 8;
-            this.menuItem10.Text = "-";
-            // 
-            // MenuItem_Exit
-            // 
-            this.MenuItem_Exit.Index = 9;
-            this.MenuItem_Exit.Shortcut = System.Windows.Forms.Shortcut.AltF4;
-            this.MenuItem_Exit.Text = "Exit";
-            this.MenuItem_Exit.Click += new System.EventHandler(this.MenuItem_Exit_Click);
-            // 
             // menuItem2
             // 
             this.menuItem2.Index = 1;
@@ -354,7 +319,12 @@
             this.MenuItem_CollisionMasksLyrA,
             this.MenuItem_CollisionMasksLyrB,
             this.menuItem13,
+            this.MenuItem_ReloadMap,
+            this.MenuItem_ReloadTileset,
             this.MenuItem_RefreshChunks,
+            this.MenuItem_ReloadTileconfig,
+            this.MenuItem_ReloadStageconfig,
+            this.menuItem_RedrawMap,
             this.menuItem15,
             this.MenuItem_ShowGrid});
             this.menuItem2.Text = "View";
@@ -389,21 +359,51 @@
             this.menuItem13.Index = 4;
             this.menuItem13.Text = "-";
             // 
+            // MenuItem_ReloadMap
+            // 
+            this.MenuItem_ReloadMap.Index = 5;
+            this.MenuItem_ReloadMap.Text = "Reload Map";
+            this.MenuItem_ReloadMap.Click += new System.EventHandler(this.MenuItem_ReloadMap_Click);
+            // 
+            // MenuItem_ReloadTileset
+            // 
+            this.MenuItem_ReloadTileset.Index = 6;
+            this.MenuItem_ReloadTileset.Text = "Reload Tileset";
+            this.MenuItem_ReloadTileset.Click += new System.EventHandler(this.MenuItem_ReloadTileset_Click);
+            // 
             // MenuItem_RefreshChunks
             // 
-            this.MenuItem_RefreshChunks.Index = 5;
+            this.MenuItem_RefreshChunks.Index = 7;
             this.MenuItem_RefreshChunks.Shortcut = System.Windows.Forms.Shortcut.CtrlR;
-            this.MenuItem_RefreshChunks.Text = "Refresh Chunks";
+            this.MenuItem_RefreshChunks.Text = "Reload Chunks";
             this.MenuItem_RefreshChunks.Click += new System.EventHandler(this.MenuItem_RefreshChunks_Click);
+            // 
+            // MenuItem_ReloadTileconfig
+            // 
+            this.MenuItem_ReloadTileconfig.Index = 8;
+            this.MenuItem_ReloadTileconfig.Text = "Reload Tileconfig";
+            this.MenuItem_ReloadTileconfig.Click += new System.EventHandler(this.MenuItem_ReloadTileconfig_Click);
+            // 
+            // MenuItem_ReloadStageconfig
+            // 
+            this.MenuItem_ReloadStageconfig.Index = 9;
+            this.MenuItem_ReloadStageconfig.Text = "Reload Stageconfig";
+            this.MenuItem_ReloadStageconfig.Click += new System.EventHandler(this.MenuItem_ReloadStageconfig_Click);
+            // 
+            // menuItem_RedrawMap
+            // 
+            this.menuItem_RedrawMap.Index = 10;
+            this.menuItem_RedrawMap.Text = "Redraw Map";
+            this.menuItem_RedrawMap.Click += new System.EventHandler(this.menuItem_RedrawMap_Click);
             // 
             // menuItem15
             // 
-            this.menuItem15.Index = 6;
+            this.menuItem15.Index = 11;
             this.menuItem15.Text = "-";
             // 
             // MenuItem_ShowGrid
             // 
-            this.MenuItem_ShowGrid.Index = 7;
+            this.MenuItem_ShowGrid.Index = 12;
             this.MenuItem_ShowGrid.Text = "Show Grid";
             this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
             // 
@@ -413,10 +413,7 @@
             this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
             this.MenuItem_ClearChunks,
             this.MenuItem_ClearObjects,
-            this.menuItem7,
-            this.MenuItem_AddObject,
-            this.MenuItem_AddObjList,
-            this.MenuItem_LoadObjListFromData,
+            this.menuItem_deleteObject,
             this.menuItem11,
             this.MenuItem_MapProp});
             this.menuItem3.Text = "Tools";
@@ -433,37 +430,20 @@
             this.MenuItem_ClearObjects.Text = "Clear &Objects";
             this.MenuItem_ClearObjects.Click += new System.EventHandler(this.MenuItem_ClearObjects_Click);
             // 
-            // menuItem7
+            // menuItem_deleteObject
             // 
-            this.menuItem7.Index = 2;
-            this.menuItem7.Text = "-";
-            // 
-            // MenuItem_AddObject
-            // 
-            this.MenuItem_AddObject.Index = 3;
-            this.MenuItem_AddObject.Text = "&Add Object";
-            this.MenuItem_AddObject.Click += new System.EventHandler(this.MenuItem_AddObject_Click);
-            // 
-            // MenuItem_AddObjList
-            // 
-            this.MenuItem_AddObjList.Index = 4;
-            this.MenuItem_AddObjList.Text = "&Set Object Definition List";
-            this.MenuItem_AddObjList.Click += new System.EventHandler(this.MenuItem_AddObjList_Click);
-            // 
-            // MenuItem_LoadObjListFromData
-            // 
-            this.MenuItem_LoadObjListFromData.Index = 5;
-            this.MenuItem_LoadObjListFromData.Text = "Load Object Names from data folder";
-            this.MenuItem_LoadObjListFromData.Click += new System.EventHandler(this.MenuItem_LoadObjListFromData_Click);
+            this.menuItem_deleteObject.Index = 2;
+            this.menuItem_deleteObject.Text = "Delete Object";
+            this.menuItem_deleteObject.Click += new System.EventHandler(this.menuItem_deleteObject_Click);
             // 
             // menuItem11
             // 
-            this.menuItem11.Index = 6;
+            this.menuItem11.Index = 3;
             this.menuItem11.Text = "-";
             // 
             // MenuItem_MapProp
             // 
-            this.MenuItem_MapProp.Index = 7;
+            this.MenuItem_MapProp.Index = 4;
             this.MenuItem_MapProp.Text = "Map &Properties";
             this.MenuItem_MapProp.Click += new System.EventHandler(this.MenuItem_MapProp_Click);
             // 
@@ -519,15 +499,12 @@
         private System.Windows.Forms.ToolStripButton pasteToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton PlaceTileButton;
-        private System.Windows.Forms.ToolStripButton PlaceObjectButton;
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.MenuItem menuItem2;
         private System.Windows.Forms.MenuItem menuItem3;
         private System.Windows.Forms.MenuItem menuItem4;
         private System.Windows.Forms.MenuItem MenuItem_ClearChunks;
         private System.Windows.Forms.MenuItem MenuItem_ClearObjects;
-        private System.Windows.Forms.MenuItem menuItem7;
-        private System.Windows.Forms.MenuItem MenuItem_AddObject;
         private System.Windows.Forms.MenuItem menuItem11;
         private System.Windows.Forms.MenuItem MenuItem_MapProp;
         private System.Windows.Forms.MenuItem MenuItem_MapLayer;
@@ -538,9 +515,7 @@
         private System.Windows.Forms.MenuItem menuItem15;
         private System.Windows.Forms.MenuItem MenuItem_ShowGrid;
         private System.Windows.Forms.MenuItem MenuItem_About;
-        private System.Windows.Forms.MenuItem MenuItem_AddObjList;
         private System.Windows.Forms.MenuItem MenuItem_CollisionMasksLyrB;
-        private System.Windows.Forms.MenuItem MenuItem_LoadObjListFromData;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem MenuItem_Open;
         private System.Windows.Forms.MenuItem MenuItem_Save;
@@ -549,10 +524,13 @@
         private System.Windows.Forms.MenuItem MenuItem_FullImgExp;
         private System.Windows.Forms.MenuItem MenuItem_MapImgExp;
         private System.Windows.Forms.MenuItem MenuItem_ObjImgExp;
-        private System.Windows.Forms.MenuItem menuItem5;
-        private System.Windows.Forms.MenuItem menuItem10;
-        private System.Windows.Forms.MenuItem MenuItem_Exit;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.MenuItem menuItem_RedrawMap;
+        private System.Windows.Forms.MenuItem MenuItem_ReloadMap;
+        private System.Windows.Forms.MenuItem MenuItem_ReloadTileset;
+        private System.Windows.Forms.MenuItem MenuItem_ReloadTileconfig;
+        private System.Windows.Forms.MenuItem MenuItem_ReloadStageconfig;
+        private System.Windows.Forms.MenuItem menuItem_deleteObject;
     }
 }
 

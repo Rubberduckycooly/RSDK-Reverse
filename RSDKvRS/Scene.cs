@@ -11,22 +11,114 @@ namespace RSDKvRS
     /* Full Map Layout */
     public class Scene
     {
+        /// <summary>
+        /// the Stage Name (what the titlecard displays)
+        /// </summary>
         public string Title = "Stage";
+
+        /// <summary>
+        /// the array of Chunk IDs for the stage
+        /// </summary>
         public ushort[][] MapLayout;
 
+        /// <summary>
+        /// the starting Music ID for the stage
+        /// </summary>
         public byte Music; //This is usually Set to 0
+        /// <summary>
+        /// the displayed Background layer?
+        /// </summary>
         public byte Background; //This is usually Set to 1 in PC, 0 in DC
 
+        /// <summary>
+        /// player's Spawn Xpos
+        /// </summary>
         public ushort PlayerXpos;
+        /// <summary>
+        /// player's Spawn Ypos
+        /// </summary>
         public ushort PlayerYPos;
 
+        /// <summary>
+        /// the list of objects in the stage
+        /// </summary>
         public List<Object> objects = new List<Object>();
 
-        public int width, height;
+        /// <summary>
+        /// stage width (in chunks)
+        /// </summary>
+        public ushort width;
+        /// <summary>
+        /// stage height (in chunks)
+        /// </summary>
+        public ushort height;
+
+        /// <summary>
+        /// the starting X Boundary, it's always 0 though
+        /// </summary>
+        public int xBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// the starting Y Boundary, it's always 0 though
+        /// </summary>
+        public int yBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// the ending X Boundary, it's the value (in pixels) for the stage width
+        /// </summary>
+        public int xBoundary2
+        {
+            get
+            {
+                return width << 7;
+            }
+        }
+        /// <summary>
+        /// the ending Y Boundary, it's the value (in pixels) for the stage height
+        /// </summary>
+        public int yBoundary2
+        {
+            get
+            {
+                return height << 7;
+            }
+        }
+        /// <summary>
+        /// The water level for the stage, by default it will be below the stage, so it's kinda useless lol
+        /// </summary>
+        public int WaterLevel
+        {
+            get
+            {
+                return yBoundary2 + 128;
+            }
+        }
+
+        /// <summary>
+        /// the Max amount of objects that can be in a single stage
+        /// </summary>
+        public int MaxObjectCount
+        {
+            get
+            {
+                return 1100;
+            }
+        }
 
         public Scene()
         {
-
+            MapLayout = new ushort[1][];
+            MapLayout[0] = new ushort[1];
         }
 
         public Scene(string filename) : this(new Reader(filename))
@@ -79,6 +171,8 @@ namespace RSDKvRS
             int ObjCount = ITMreader.ReadByte() << 8;
             ObjCount |= ITMreader.ReadByte();
 
+            Object.cur_id = 0;
+
             for (int i = 0; i < ObjCount; i++)
             {
                 // Add object
@@ -112,8 +206,8 @@ namespace RSDKvRS
 
             int num_of_objects = objects.Count;
 
-            if (num_of_objects > 65535)
-                throw new Exception("Cannot save as Retro-Sonic map. Number of objects > 65535");
+            if (num_of_objects > MaxObjectCount)
+                throw new Exception("Cannot save as Retro-Sonic map. Number of objects above 1100!");
 
             // Separate path components			
             String dirname = Path.GetDirectoryName(writer.GetFilename());
@@ -170,6 +264,42 @@ namespace RSDKvRS
         public ushort[][] TileLayout { get; set; }
 
         public int width, height;
+
+        public int xBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        public int yBoundary1
+        {
+            get
+            {
+                return 0;
+            }
+        }
+        public int xBoundary2
+        {
+            get
+            {
+                return width << 7;
+            }
+        }
+        public int yBoundary2
+        {
+            get
+            {
+                return height << 7;
+            }
+        }
+        public int WaterLevel
+        {
+            get
+            {
+                return yBoundary2 + 128;
+            }
+        }
 
         public MapLayout(string filename) : this(new Reader(filename))
         {
@@ -242,6 +372,14 @@ namespace RSDKvRS
         public ushort PlayerXpos;
         public ushort PlayerYPos;
 
+        public int MaxObjectCount
+        {
+            get
+            {
+                return 1100;
+            }
+        }
+
         List<Object> objects = new List<Object>();
 
         public ObjectLayout(string filename) : this(new Reader(filename))
@@ -269,6 +407,9 @@ namespace RSDKvRS
             // Read objects from the item file
             int ObjCount = reader.ReadByte() << 8;
             ObjCount |= reader.ReadByte();
+
+            Object.cur_id = 0;
+
             for (int i = 0; i < ObjCount; i++)
             {
                 // Add object
@@ -295,8 +436,8 @@ namespace RSDKvRS
 
             int num_of_objects = objects.Count;
 
-            if (num_of_objects > 65535)
-                throw new Exception("Cannot save as Retro-Sonic map. Number of objects > 65535");
+            if (num_of_objects > MaxObjectCount)
+                throw new Exception("Cannot save as Retro-Sonic map. Number of objects above 1100!");
 
             // Save zone name
             writer.WriteRSDKString(Title);
@@ -312,6 +453,8 @@ namespace RSDKvRS
             // Write number of objects
             writer.Write((byte)(num_of_objects >> 8));
             writer.Write((byte)(num_of_objects & 0xFF));
+
+            objects = objects.OrderBy(o => o.id).ToList();
 
             // Write object data
             for (int n = 0; n < num_of_objects; n++)

@@ -41,16 +41,16 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Unknown1NUD.Value = Mapv3.HLines[Pvalue].Unknown1;
+                        BehaviourNUD.Value = Mapv3.HLines[Pvalue].Behaviour;
                         RSPDNUD.Value = Mapv3.HLines[Pvalue].RelativeSpeed;
                         CSPDNUD.Value = Mapv3.HLines[Pvalue].ConstantSpeed;
-                        UnknownNUD.Value = Mapv3.HLines[Pvalue].Unknown;
+                        DrawLayerNUD.Value = Mapv3.HLines[Pvalue].DrawLayer;
                         break;
                     case 0:
-                        Unknown1NUD.Value = Mapv4.HLines[Pvalue].Unknown1;
+                        BehaviourNUD.Value = Mapv4.HLines[Pvalue].Behaviour;
                         RSPDNUD.Value = Mapv4.HLines[Pvalue].RelativeSpeed;
                         CSPDNUD.Value = Mapv4.HLines[Pvalue].ConstantSpeed;
-                        UnknownNUD.Value = Mapv4.HLines[Pvalue].Unknown;
+                        DrawLayerNUD.Value = Mapv4.HLines[Pvalue].Behaviour;
                         break;
                     default:
                         break;
@@ -61,16 +61,16 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Unknown1NUD.Value = Mapv3.VLines[Pvalue].Unknown1;
+                        BehaviourNUD.Value = Mapv3.VLines[Pvalue].Behaviour;
                         RSPDNUD.Value = Mapv3.VLines[Pvalue].RelativeSpeed;
                         CSPDNUD.Value = Mapv3.VLines[Pvalue].ConstantSpeed;
-                        UnknownNUD.Value = Mapv3.VLines[Pvalue].Unknown;
+                        DrawLayerNUD.Value = Mapv3.VLines[Pvalue].DrawLayer;
                         break;
                     case 0:
-                        Unknown1NUD.Value = Mapv4.VLines[Pvalue].Unknown1;
+                        BehaviourNUD.Value = Mapv4.VLines[Pvalue].Behaviour;
                         RSPDNUD.Value = Mapv4.VLines[Pvalue].RelativeSpeed;
                         CSPDNUD.Value = Mapv4.VLines[Pvalue].ConstantSpeed;
-                        UnknownNUD.Value = Mapv4.VLines[Pvalue].Unknown;
+                        DrawLayerNUD.Value = Mapv4.VLines[Pvalue].DrawLayer;
                         break;
                     default:
                         break;
@@ -96,10 +96,10 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Mapv3.HLines[Pvalue].Unknown1 = (byte)Unknown1NUD.Value;
+                        Mapv3.HLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
                         break;
                     case 0:
-                        Mapv4.HLines[Pvalue].Unknown1 = (byte)Unknown1NUD.Value;
+                        Mapv4.HLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
                         break;
                     default:
                         break;
@@ -110,10 +110,10 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Mapv3.VLines[Pvalue].Unknown1 = (byte)Unknown1NUD.Value;
+                        Mapv3.VLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
                         break;
                     case 0:
-                        Mapv4.VLines[Pvalue].Unknown1 = (byte)Unknown1NUD.Value;
+                        Mapv4.VLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
                         break;
                     default:
                         break;
@@ -192,10 +192,10 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Mapv3.HLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        Mapv3.HLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
                         break;
                     case 0:
-                        Mapv4.HLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        Mapv4.HLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
                         break;
                     default:
                         break;
@@ -206,10 +206,10 @@ namespace RetroED.Tools.BackgroundEditor
                 switch (LoadedRSDKver)
                 {
                     case 1:
-                        Mapv3.VLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        Mapv3.VLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
                         break;
                     case 0:
-                        Mapv4.VLines[Pvalue].Unknown = (byte)UnknownNUD.Value;
+                        Mapv4.VLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
                         break;
                     default:
                         break;

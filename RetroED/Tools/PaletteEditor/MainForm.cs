@@ -395,6 +395,7 @@ namespace RetroED.Tools.PaletteEditor
             catch (Exception Ex)
             {
                 MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'RSonic.exe' open!)");
+                MemoryEditing = false;
             }
         }
 
@@ -432,6 +433,7 @@ namespace RetroED.Tools.PaletteEditor
             catch (Exception Ex)
             {
                 MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'Nexus.exe' open!)");
+                MemoryEditing = false;
             }
         }
 
@@ -447,28 +449,41 @@ namespace RetroED.Tools.PaletteEditor
                 IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
 
                 int bytesRead = 0;
-                byte[] buffer = new byte[1024]; //3 bytes for RGB and one for... idk lmfao
+                byte[] buffer = new byte[2048]; //3 bytes for RGB and one for... idk lmfao
 
                 colorGrid.Colors.Clear();
                 Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
 
-                int offset = 0x0053FD74;
+                //int offset = 0x01C34D88;
+                int offset = 0xABFB64;
 
-                for (int i = 0; i < 256; i++)
+                for (int i = 0; i < 2048; i++)
                 {
-                    ReadProcessMemory((int)processHandle, offset + (i * 4), buffer, buffer.Length, ref bytesRead);
+                    ReadProcessMemory((int)processHandle, offset + (i), buffer, buffer.Length, ref bytesRead);
 
                     Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
 
                     cc.Add(c);
 
-                    Console.WriteLine(buffer[0] + " " + buffer[1] + " " + buffer[2]);
+                    Console.WriteLine(buffer[0]);// + " " + buffer[1] + " " + buffer[2]);
                 }
+
+                /*for (int i = 0; i < 256; i++)
+                {
+                    ReadProcessMemory((int)processHandle, offset + (i), buffer, buffer.Length, ref bytesRead);
+
+                    Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+
+                    cc.Add(c);
+
+                    Console.WriteLine(buffer[0]);// + " " + buffer[1] + " " + buffer[2]);
+                }*/
                 colorGrid.Colors = cc;
             }
             catch (Exception Ex)
             {
                 MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'Soniccd.exe' open!)");
+                MemoryEditing = false;
             }
         }
 
@@ -544,15 +559,71 @@ namespace RetroED.Tools.PaletteEditor
                         }
                         colorGrid.Colors = cc;
                     }
+                    if (GameType == 2)
+                    {
+                        Process process = Process.GetProcessesByName("soniccd")[0];
+
+                        IntPtr processHandle = OpenProcess(PROCESS_WM_READ, false, process.Id);
+
+                        int bytesRead = 0;
+                        byte[] buffer = new byte[2048]; //3 bytes for RGB and one for... idk lmfao
+
+                        colorGrid.Colors.Clear();
+                        Cyotek.Windows.Forms.ColorCollection cc = new Cyotek.Windows.Forms.ColorCollection();
+
+                        //int offset = 0x01C34D88;
+                        int offset = 0x00A2EC00;
+
+                        for (int i = 0; i < 2048; i++)
+                        {
+                            ReadProcessMemory((int)processHandle, offset + (316) + (i), buffer, buffer.Length, ref bytesRead);
+
+                            Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+
+                            cc.Add(c);
+
+                            Console.WriteLine(buffer[0]);// + " " + buffer[1] + " " + buffer[2]);
+                        }
+
+                        /*for (int i = 0; i < 256; i++)
+                        {
+                            ReadProcessMemory((int)processHandle, offset + (i), buffer, buffer.Length, ref bytesRead);
+
+                            Color c = Color.FromArgb(255, buffer[2], buffer[1], buffer[0]);
+
+                            cc.Add(c);
+
+                            Console.WriteLine(buffer[0]);// + " " + buffer[1] + " " + buffer[2]);
+                        }*/
+                        colorGrid.Colors = cc;
+                    }
                 }
                 catch (Exception Ex)
                 {
                     MessageBox.Show("Error: " + Ex.Message + Environment.NewLine + "(This likely means you don't have 'RSonic.exe', 'Nexus.exe' or 'Soniccd.exe' open!)");
+                    MemoryEditing = false;
+                }
+            }
+        }
+
+        private void exportLoadedPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            dlg.Filter = "Adobe Colour Table Files|*.act";
+
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                Cyotek.Windows.Forms.IPaletteSerializer serializer;
+
+                serializer = new Cyotek.Windows.Forms.AdobeColorTablePaletteSerializer();
+
+                using (Stream stream = File.Create(dlg.FileName))
+                {
+                    serializer.Serialize(stream, colorGrid.Colors); //Save a .act file
                 }
             }
         }
 
         #endregion
-
     }
 }

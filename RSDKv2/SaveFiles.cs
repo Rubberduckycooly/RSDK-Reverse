@@ -10,14 +10,41 @@ namespace RSDKv2
     {
         public class SaveData
         {
+            /// <summary>
+            /// what character you are
+            /// </summary>
             public int CharacterID;
+            /// <summary>
+            /// how many lives you have
+            /// </summary>
             public int Lives;
+            /// <summary>
+            /// current scorre
+            /// </summary>
             public byte[] Score = new byte[4];
+            /// <summary>
+            /// what level the player is upto
+            /// </summary>
             public int LevelID;
+            /// <summary>
+            /// how many timestones are collected
+            /// </summary>
             public int TimeStones = 127;
+            /// <summary>
+            /// I have no idea lma
+            /// </summary>
             public int unknown2 = 0;
+            /// <summary>
+            /// what stages have good futures
+            /// </summary>
             public byte[] GoodFutures = new byte[4];
+            /// <summary>
+            /// how many robo machines have been broken
+            /// </summary>
             public ushort RoboMachines;
+            /// <summary>
+            /// how many holograms have been broken
+            /// </summary>
             public ushort MSHolograms;
 
             public SaveData(Stream stream) : this(new Reader(stream))

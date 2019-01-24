@@ -8,37 +8,52 @@ namespace RSDKvB
 {
     public class Tileconfig
     {
-
+        /// <summary>
+        /// 1024, one for each tile
+        /// </summary>
         const int TILES_COUNT = 1024;
 
+        /// <summary>
+        /// A list of all the mask values on plane A
+        /// </summary>
         public CollisionMask[] CollisionPath1 = new CollisionMask[TILES_COUNT];
+        /// <summary>
+        /// A list of all the mask values on plane B
+        /// </summary>
         public CollisionMask[] CollisionPath2 = new CollisionMask[TILES_COUNT];
 
         public class CollisionMask
         {
-            // Collision position for each pixel
-            public byte[] Collision = new byte [16]; //two Collision Values per byte
+            /// <summary>
+            /// Collision position for each pixel
+            /// </summary>
+            public byte[] Collision = new byte[16]; //two Collision Values per read byte
 
-            // If has collision
+            /// <summary>
+            /// the collision flags for each "column"
+            /// </summary>
             public bool[] HasCollision = new bool[16];
 
-            // Unknown 5 bytes config
-            //public byte[] Config;
-
-            // Collision Mask config
-
-            //
+            /// <summary>
+            /// is the Mask A ceiling mask?
+            /// </summary>
             public bool isCeiling;
 
-            //for special occasions, like conveyor belts
-            //public byte special;
-            //The Slope's angle
+            /// <summary>
+            /// The Slope's angle
+            /// </summary>
             public byte slopeAngle;
-            //How the player's physics react to the slope
+            /// <summary>
+            /// How the player's physics react to the slope
+            /// </summary>
             public byte physics;
-            //How much momentum is gained from the slope
+            /// <summary>
+            /// How much momentum is gained from the slope
+            /// </summary>
             public byte momentum;
-            //Unknown
+            /// <summary>
+            /// Unknown
+            /// </summary>
             public byte unknown;
 
             public CollisionMask()

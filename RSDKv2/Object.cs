@@ -8,19 +8,56 @@ namespace RSDKv2
 {
     public class Object
     {
+        /// <summary>
+        /// the Object's Name (used for entity list)
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// The Type of the object
+        /// </summary>
         public int type;
+        /// <summary>
+        /// The Object's SubType/PropertyValue
+        /// </summary>
         public int subtype;
+        /// <summary>
+        /// The Object's X Position
+        /// </summary>
         public int xPos;
+        /// <summary>
+        /// The Object's Y Position
+        /// </summary>
         public int yPos;
-        static int cur_id = 0;
+        /// <summary>
+        /// How Many Objects have been loaded
+        /// </summary>
+        public static int cur_id = 0;
+        /// <summary>
+        /// the Index of the object in the loaded Object List
+        /// </summary>
         public int id;
 
         public Object(int type, int subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_id++)
         {
         }
 
-        private Object(int type, int subtype, int xPos, int yPos, int id)
+        public Object(int type, int subtype, int xPos, int yPos, int id)
         {
+            Name = "Unknown Object";
+            this.type = type;
+            this.subtype = subtype;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.id = id;
+        }
+
+        public Object(byte type, byte subtype, int xPos, int yPos, int id, string name)
+        {
+            this.Name = name;
             this.type = type;
             this.subtype = subtype;
             this.xPos = xPos;

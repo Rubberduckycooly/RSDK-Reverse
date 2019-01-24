@@ -48,19 +48,67 @@ namespace RSDKv5
                 }
                 public struct HitBox
                 {
-                    public short Left, Right, Top, Bottom;
+                    /// <summary>
+                    /// the Xpos of the hitbox
+                    /// </summary>
+                    public short X;
+                    /// <summary>
+                    /// the Width of the hitbox
+                    /// </summary>
+                    public short Width;
+                    /// <summary>
+                    /// the Ypos of the hitbox
+                    /// </summary>
+                    public short Y;
+                    /// <summary>
+                    /// the height of the hitbox
+                    /// </summary>
+                    public short Height;
                 }
 
+                /// <summary>
+                /// the hitbox data for the frame
+                /// </summary>
                 public List<HitBox> HitBoxes = new List<HitBox>();
+                /// <summary>
+                /// the spritesheet ID
+                /// </summary>
                 public byte SpriteSheet = 0;
+                /// <summary>
+                /// the collisionBox ID
+                /// </summary>
                 public byte CollisionBox = 0;
+                /// <summary>
+                /// how many frames to wait before the next frame is shown
+                /// </summary>
                 public short Delay = 0;
+                /// <summary>
+                /// special value, used for things like the title card letters (and strangely, mighty's victory anim)
+                /// </summary>
                 public short ID = 0;
+                /// <summary>
+                /// the Xpos on the sheet
+                /// </summary>
                 public short X = 0;
+                /// <summary>
+                /// the Ypos on the sheet
+                /// </summary>
                 public short Y = 0;
+                /// <summary>
+                /// the width of the frame
+                /// </summary>
                 public short Width = 0;
+                /// <summary>
+                /// the height of the frame
+                /// </summary>
                 public short Height = 0;
+                /// <summary>
+                /// the X Offset for the frame
+                /// </summary>
                 public short PivotX = 0;
+                /// <summary>
+                /// the Y Offset for the frame
+                /// </summary>
                 public short PivotY = 0;
 
                 public sprFrame()
@@ -84,10 +132,10 @@ namespace RSDKv5
                     for (int i = 0; i < anim.CollisionBoxes.Count; ++i)
                     {
                         var hitBox = new HitBox();
-                        hitBox.Left = reader.ReadInt16();
-                        hitBox.Top = reader.ReadInt16();
-                        hitBox.Right = reader.ReadInt16();
-                        hitBox.Bottom = reader.ReadInt16();
+                        hitBox.X = reader.ReadInt16();
+                        hitBox.Width = reader.ReadInt16();
+                        hitBox.Y = reader.ReadInt16();
+                        hitBox.Height = reader.ReadInt16();
                         HitBoxes.Add(hitBox);
                     }
                 }
@@ -105,19 +153,53 @@ namespace RSDKv5
                     writer.Write(PivotY);
                     for (int c = 0; c < HitBoxes.Count; ++c)
                     {
-                        writer.Write(HitBoxes[c].Left);
-                        writer.Write(HitBoxes[c].Top);
-                        writer.Write(HitBoxes[c].Right);
-                        writer.Write(HitBoxes[c].Bottom);
+                        writer.Write(HitBoxes[c].X);
+                        writer.Write(HitBoxes[c].Width);
+                        writer.Write(HitBoxes[c].Y);
+                        writer.Write(HitBoxes[c].Height);
                     }
                 }
 
+                /// <summary>
+                /// Retrieves the PivotX value for the frame relative to its horrizontal flipping.
+                /// </summary>
+                /// <param name="fliph">Horizontal flip</param>
+                public int RelCenterX(bool fliph)
+                {
+                    return (fliph ? -(Width + PivotX) : PivotX);
+                }
+
+                /// <summary>
+                /// Retrieves the PivotY value for the frame relative to its vertical flipping.
+                /// </summary>
+                /// <param name="flipv">Vertical flip</param>
+                public int RelCenterY(bool flipv)
+                {
+                    return (flipv ? -(Height + PivotY) : PivotY);
+                }
+
+
             }
 
+            /// <summary>
+            /// the name of the animtion
+            /// </summary>
             public string AnimName;
+            /// <summary>
+            /// the list of frames in this animation
+            /// </summary>
             public List<sprFrame> Frames = new List<sprFrame>();
+            /// <summary>
+            /// the frame to loop back from
+            /// </summary>
             public byte LoopIndex;
+            /// <summary>
+            /// the amount to multiply each frame's "Delay" value
+            /// </summary>
             public short SpeedMultiplyer;
+            /// <summary>
+            /// the rotation style of the animation
+            /// </summary>
             public byte RotationFlags;
 
             public sprAnimation()
@@ -127,7 +209,13 @@ namespace RSDKv5
 
             public sprAnimation(Reader reader, Animation anim = null)
             {
-                AnimName = reader.ReadString();
+                AnimName = reader.ReadRSDKString();
+                string tmp = "";
+                for (int ii = 0; ii < AnimName.Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
+                {
+                    tmp += AnimName[ii];
+                }
+                AnimName = tmp;
                 short frameCount = reader.ReadInt16();
                 SpeedMultiplyer = reader.ReadInt16();
                 LoopIndex = reader.ReadByte();
@@ -185,11 +273,19 @@ namespace RSDKv5
 
             int spriteSheetCount = reader.ReadByte();
             for (int i = 0; i < spriteSheetCount; ++i)
-                SpriteSheets.Add(reader.ReadString());
+            {
+                SpriteSheets.Add(reader.ReadRSDKString());
+                string tmp = "";
+                for (int ii = 0; ii < SpriteSheets[i].Length-1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
+                {
+                    tmp += SpriteSheets[i][ii];
+                }
+                SpriteSheets[i] = tmp;
+            }
 
             int collisionBoxCount = reader.ReadByte();
             for (int i = 0; i < collisionBoxCount; ++i)
-                CollisionBoxes.Add(reader.ReadString());
+                CollisionBoxes.Add(reader.ReadRSDKString());
 
             var animationCount = reader.ReadInt16();
             for (int i = 0; i < animationCount; ++i)

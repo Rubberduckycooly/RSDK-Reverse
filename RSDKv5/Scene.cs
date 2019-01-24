@@ -4,16 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace RSDKv5
 {
     public class Scene
     {   
+        /// <summary>
+        /// the file's signature
+        /// </summary>
         public static readonly byte[] MAGIC = new byte[] { (byte)'S', (byte)'C', (byte)'N', (byte)'\0' };
+        public static bool readTilesOnly;
 
+        /// <summary>
+        /// metadata stuff for RSDK Scene editor
+        /// </summary>
         public SceneEditorMetadata EditorMetadata;
 
+        /// <summary>
+        /// the layers in this scene
+        /// </summary>
         public List<SceneLayer> Layers = new List<SceneLayer>();
+        /// <summary>
+        /// the object types in this scene
+        /// </summary>
         public List<SceneObject> Objects = new List<SceneObject>();
 
 
@@ -27,26 +41,40 @@ namespace RSDKv5
 
         }
 
-        public Scene(Stream stream) : this(new Reader(stream))
-        {
-
-        }
-
         private Scene(Reader reader)
         {
-            // Load scene
-            if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
-                throw new Exception("Invalid scene file header magic");
+            if (!readTilesOnly)
+            {
+                // Load scene
+                if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
+                    throw new Exception("Invalid scene file header magic");
 
-            EditorMetadata = new SceneEditorMetadata(reader);
-            
-            byte layers_count = reader.ReadByte();
-            for (int i = 0; i < layers_count; ++i)
-                Layers.Add(new SceneLayer(reader));
+                EditorMetadata = new SceneEditorMetadata(reader);
 
-            byte objects_count = reader.ReadByte();
-            for (int i = 0; i < objects_count; ++i)
-                Objects.Add(new SceneObject(reader));
+                byte layers_count = reader.ReadByte();
+                for (int i = 0; i < layers_count; ++i)
+                    Layers.Add(new SceneLayer(reader));
+
+                byte objects_count = reader.ReadByte();
+                for (int i = 0; i < objects_count; ++i)
+                    Objects.Add(new SceneObject(reader));
+            }
+            else
+            {
+                // Load scene
+                if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
+                    throw new Exception("Invalid scene file header magic");
+
+                EditorMetadata = new SceneEditorMetadata(reader);
+
+                byte layers_count = reader.ReadByte();
+                for (int i = 0; i < layers_count; ++i)
+                    Layers.Add(new SceneLayer(reader));
+
+                /*byte objects_count = reader.ReadByte();
+                for (int i = 0; i < objects_count; ++i)
+                    Objects.Add(new SceneObject(reader));*/
+            }
         }
 
         public void Write(string filename)

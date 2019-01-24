@@ -2,41 +2,53 @@
 {
     public class ScrollInfo
     {
-        short _unknownWord1;
-        short _unknownWord2;
-        byte _unknownByte1;
-        byte _unknownByte2;
+        short _relativeSpeed;
+        short _constantspeed;
+        byte _behaviour;
+        byte _drawOrder;
 
-        public ScrollInfo(short word1 = 0x100, short word2 = 0, byte byte1 = 0, byte byte2 = 0)
+        /// <summary>
+        /// the Speed of the scroll info when the player is moving
+        /// </summary>
+        public short RelativeSpeed { get => _relativeSpeed; set => _relativeSpeed = value; }
+        /// <summary>
+        /// the Speed of the scroll info when the player is't moving
+        /// </summary>
+        public short ConstantSpeed { get => _constantspeed; set => _constantspeed = value; }
+        /// <summary>
+        /// a special byte that tells the game if this scroll info has any special properties
+        /// </summary>
+        public byte Behaviour { get => _behaviour; set => _behaviour = value; }
+        /// <summary>
+        /// what drawlayer this scroll info is on (maybe?)
+        /// </summary>
+        public byte DrawOrder { get => _drawOrder; set => _drawOrder = value; }
+
+        public ScrollInfo(short rSpeed = 0x100, short cSpeed = 0, byte behav = 0, byte dlayer = 0)
         {
-            _unknownWord1 = word1;
-            _unknownWord2 = word2;
+            _relativeSpeed = rSpeed;
+            _constantspeed = cSpeed;
 
-            _unknownByte1 = byte1;
-            _unknownByte2 = byte2;
+            _behaviour = behav;
+            _drawOrder = dlayer;
         }
 
-        internal ScrollInfo(Reader reader)
+        public ScrollInfo(Reader reader)
         {
-            _unknownWord1 = reader.ReadInt16();
-            _unknownWord2 = reader.ReadInt16();
+            _relativeSpeed = reader.ReadInt16();
+            _constantspeed = reader.ReadInt16();
 
-            _unknownByte1 = reader.ReadByte();
-            _unknownByte2 = reader.ReadByte();
+            _behaviour = reader.ReadByte();
+            _drawOrder = reader.ReadByte();
         }
 
-        public short UnknownWord1 { get => _unknownWord1; set => _unknownWord1 = value; }
-        public short UnknownWord2 { get => _unknownWord2; set => _unknownWord2 = value; }
-        public byte UnknownByte1 { get => _unknownByte1; set => _unknownByte1 = value; }
-        public byte UnknownByte2 { get => _unknownByte2; set => _unknownByte2 = value; }
-
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
-            writer.Write(_unknownWord1);
-            writer.Write(_unknownWord2);
+            writer.Write(_relativeSpeed);
+            writer.Write(_constantspeed);
 
-            writer.Write(_unknownByte1);
-            writer.Write(_unknownByte2);
+            writer.Write(_behaviour);
+            writer.Write(_drawOrder);
         }
     }
 }

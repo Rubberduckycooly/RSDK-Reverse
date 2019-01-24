@@ -8,12 +8,22 @@ namespace RSDKv1
 {
     public class StageConfig
     {
-
+        /// <summary>
+        /// the stageconfig palette (index 96-128)
+        /// </summary>
         public Palette StagePalette = new Palette();
-
+        /// <summary>
+        /// the list of Stage SoundFX paths
+        /// </summary>
         public List<string> SoundFX = new List<string>();
-
-        public List<string> ObjectsNames = new List<string>();
+        /// <summary>
+        /// A list of the script filepaths for the stage-specific objects
+        /// </summary>
+        public List<string> ScriptPaths = new List<string>();
+        /// <summary>
+        /// whether or not to load the global objects in this stage
+        /// </summary>
+        public bool LoadGlobalScripts = false;
 
         public StageConfig()
         {
@@ -32,6 +42,8 @@ namespace RSDKv1
 
         public StageConfig(Reader reader)
         {
+            LoadGlobalScripts = reader.ReadBoolean();
+
             StagePalette.Read(reader, 2);
 
             this.ReadObjectsNames(reader);
@@ -44,18 +56,16 @@ namespace RSDKv1
 
         internal void ReadObjectsNames(Reader reader)
         {
-            byte unknownval = reader.ReadByte();
             byte objects_count = reader.ReadByte();
 
             for (int i = 0; i < objects_count; ++i)
-            { ObjectsNames.Add(reader.ReadRSDKString()); }
+            { ScriptPaths.Add(reader.ReadRSDKString()); }
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
-            writer.Write((byte)0);
-            writer.Write((byte)ObjectsNames.Count);
-            foreach (string name in ObjectsNames)
+            writer.Write((byte)ScriptPaths.Count);
+            foreach (string name in ScriptPaths)
                 writer.WriteRSDKString(name);
         }
 
@@ -86,8 +96,10 @@ namespace RSDKv1
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
+            writer.Write(LoadGlobalScripts);
+
             StagePalette.Write(writer);
 
             WriteObjectsNames(writer);

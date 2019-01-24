@@ -6,17 +6,32 @@ using System.Threading.Tasks;
 
 namespace RSDKvB
 {
-    /* RSDKv3 and RSDKv4 have identical StageConfig file layouts, with RSDKv2 being very similar*/
     public class StageConfig
     {
-
+        /// <summary>
+        /// the stageconfig palette (index 96-128)
+        /// </summary>
         public Palette StagePalette = new Palette();
-
+        /// <summary>
+        /// the list of Stage SoundFX paths
+        /// </summary>
         public List<string> SoundFX = new List<string>();
+        /// <summary>
+        /// a list of names for each SFX file
+        /// </summary>
         public List<string> SfxNames = new List<string>();
-
+        /// <summary>
+        /// a list of names for each script
+        /// </summary>
         public List<string> ObjectsNames = new List<string>();
-        public List<string> ScriptFilepaths = new List<string>();
+        /// <summary>
+        /// A list of the script filepaths for the stage-specific objects
+        /// </summary>
+        public List<string> ScriptPaths = new List<string>();
+        /// <summary>
+        /// whether or not to load the global objects in this stage
+        /// </summary>
+        public bool LoadGlobalScripts = false;
 
         public StageConfig()
         {
@@ -35,6 +50,8 @@ namespace RSDKvB
 
         public StageConfig(Reader reader)
         {
+            LoadGlobalScripts = reader.ReadBoolean();
+
             StagePalette.Read(reader, 2);
 
             this.ReadWAVConfiguration(reader);
@@ -50,36 +67,40 @@ namespace RSDKvB
 
             for (int i = 0; i < objects_count; ++i)
             { ObjectsNames.Add(reader.ReadRSDKString()); }
+
             for (int i = 0; i < objects_count; ++i)
-            { ScriptFilepaths.Add(reader.ReadRSDKString());}
+            { ScriptPaths.Add(reader.ReadRSDKString());}
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
             writer.Write((byte)ObjectsNames.Count);
+
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
-            foreach (string srcname in ScriptFilepaths)
+
+            foreach (string srcname in ScriptPaths)
                 writer.WriteRSDKString(srcname);
         }
 
         internal void ReadWAVConfiguration(Reader reader)
         {
-            byte objects_count = reader.ReadByte();
             byte SoundFX_count = reader.ReadByte();
 
             for (int i = 0; i < SoundFX_count; ++i)
             { SfxNames.Add(reader.ReadRSDKString()); }
+
             for (int i = 0; i < SoundFX_count; ++i)
             { SoundFX.Add(reader.ReadString()); }
         }
 
         internal void WriteWAVConfiguration(Writer writer)
         {
-            writer.Write((byte)0);
             writer.Write((byte)SoundFX.Count);
+
             foreach (string wavname in SfxNames)
                 writer.WriteRSDKString(wavname);
+
             foreach (string wav in SoundFX)
                 writer.Write(wav);
         }
@@ -96,8 +117,10 @@ namespace RSDKvB
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
+            writer.Write(LoadGlobalScripts);
+
             StagePalette.Write(writer);
 
             WriteWAVConfiguration(writer);

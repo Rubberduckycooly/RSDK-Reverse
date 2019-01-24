@@ -56,6 +56,12 @@ namespace RetroED.Tools.GFXTool
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
+                if (TransparentCB.Checked)
+                {
+                    System.Drawing.Imaging.ColorPalette cp = GFX.gfxImage.Palette;
+                    GFX.gfxImage.Palette.Entries[0] = Color.FromArgb(255, 0, 255);
+                }
+
                     switch (dlg.FilterIndex - 1)
                     {
                         case 0:
@@ -121,6 +127,25 @@ namespace RetroED.Tools.GFXTool
                 this.Text = "Exporting - " + txt;
                 GFX.Write(dlg.FileName,dcGFX);
                 this.Text = txt;
+            }
+        }
+
+        private void SelectPaletteButton_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "Act Files|*.act";
+
+            if (dlg.ShowDialog(this) == DialogResult.OK)
+            {
+                RSDKvRS.Reader reader = new RSDKvRS.Reader(dlg.FileName);
+
+                for (int i = 0; i < 255; i++)
+                {
+                    GFX.GFXpal[i].R = reader.ReadByte();
+                    GFX.GFXpal[i].G = reader.ReadByte();
+                    GFX.GFXpal[i].B = reader.ReadByte();
+                }
+                GFX.ReDrawImage();
             }
         }
     }

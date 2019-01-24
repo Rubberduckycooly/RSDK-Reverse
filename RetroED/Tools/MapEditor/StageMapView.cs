@@ -43,50 +43,20 @@ namespace RetroED.Tools.MapEditor
         //Built-In Object Definitions for your convenience ;)
 
         //Retro-Sonic Global Objects
-        public Object_Definitions.Retro_SonicObjects RSObjects = new Object_Definitions.Retro_SonicObjects();
-
-        //Sonic Nexus Global Objects
-        public Object_Definitions.SonicNexusObjects NexusObjects = new Object_Definitions.SonicNexusObjects();
-
-        //Sonic CD Global Objects
-        public Object_Definitions.SonicCDObjects CDObjects = new Object_Definitions.SonicCDObjects();
-
-        //Sonic 1 Global Objects
-        public Object_Definitions.Sonic1Objects S1Objects = new Object_Definitions.Sonic1Objects();
+        public Object_Definitions.ObjectDefinitions ObjectDefinitions = new Object_Definitions.ObjectDefinitions();
 
         public List<Bitmap> Chunks = new List<Bitmap>();
 
         public Point tilePoint;
 
-        #region Retro-Sonic Development Kit
-        public RSDKvRS.Scene _RSDK1Scene;
-        public RSDKvRS.Tiles128x128 _RSDK1Chunks;
-        public RSDKvRS.Tileconfig _RSDK1CollisionMask;
-        #endregion
+        public MainView Parent;
 
-        #region RSDKv1
-        public RSDKv1.Scene _RSDK2Scene;
-        public RSDKv1.Tiles128x128 _RSDK2Chunks;
-        public RSDKv1.Tileconfig _RSDK2CollisionMask;
-        #endregion
-
-        #region RSDKv1
-        public RSDKv2.Scene _RSDK3Scene;
-        public RSDKv2.Tiles128x128 _RSDK3Chunks;
-        public RSDKv2.Tileconfig _RSDK3CollisionMask;
-        #endregion
-
-        #region RSDKvB
-        public RSDKvB.Scene _RSDK4Scene;
-        public RSDKvB.Tiles128x128 _RSDK4Chunks;
-        public RSDKvB.Tileconfig _RSDK4CollisionMask;
-        #endregion
-
-        public StageMapView()
+        public StageMapView(MainView p)
         {
             InitializeComponent();
             pnlMap.Paint += pnlMap_Paint; // Paint on the Form!
             pnlMap.Resize += ((sender, e) => Refresh()); //Resize the form (I think)
+            Parent = p;
         }
 
         void pnlMap_Paint(object sender, PaintEventArgs e)
@@ -96,7 +66,7 @@ namespace RetroED.Tools.MapEditor
             switch (loadedRSDKver)
             {
                 case 0:
-                    if (_RSDK4Scene == null) return;
+                    if (Parent._RSDKBScene == null) return;
                     e.Graphics.Clear(Color.FromArgb(255, 255, 0, 255));
                     Rectangle viewport4 = new Rectangle(-pnlMap.AutoScrollPosition.X, -pnlMap.AutoScrollPosition.Y, pnlMap.Width, pnlMap.Height);
                     int startX4 = (viewport4.X / 128) - 1;
@@ -109,34 +79,34 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX4; x < endX4; x++)
                         {
-                            if (y < _RSDK4Scene.MapLayout.Length && x < _RSDK4Scene.MapLayout[y].Length && _RSDK4Scene.MapLayout[y][x] < _RSDK4Chunks.BlockList.Length)
+                            if (y < Parent._RSDKBScene.MapLayout.Length && x < Parent._RSDKBScene.MapLayout[y].Length && Parent._RSDKBScene.MapLayout[y][x] < Parent._RSDKBChunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
                                     if (ShowMap)
                                     {
-                                        if (_RSDK4Scene.MapLayout[y][x] > 0)
+                                        if (Parent._RSDKBScene.MapLayout[y][x] > 0)
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK4Scene.MapLayout[y][x]], x * 128, y * 128);
+                                            e.Graphics.DrawImageUnscaled(Chunks[Parent._RSDKBScene.MapLayout[y][x]], x * 128, y * 128);
                                         }
                                         else { }
                                     }
                                     if (ShowCollisionA)
                                     {
-                                        ushort Chunk = _RSDK4Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDKBScene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK4Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDKBScene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0,0,16,16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0,0,16,16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -152,7 +122,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0) //All
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -168,7 +138,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1 || _RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 4) //Top Only
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1 || Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 4) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -184,7 +154,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -206,20 +176,20 @@ namespace RetroED.Tools.MapEditor
                                     }
                                     if (ShowCollisionB)
                                     {
-                                        ushort Chunk = _RSDK4Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDKBScene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK4Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDKBScene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -235,7 +205,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || _RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -251,7 +221,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -267,7 +237,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK4Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
+                                                    if (Parent._RSDKBChunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -293,21 +263,21 @@ namespace RetroED.Tools.MapEditor
                     }
                     if (ShowObjects) //Heh, It works now :)
                     {
-                        for (int o = 0; o < _RSDK4Scene.objects.Count; o++)
+                        for (int o = 0; o < Parent._RSDKBScene.objects.Count; o++)
                         {
-                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK4Scene.objects[o].xPos, _RSDK4Scene.objects[o].yPos, viewport4.Width, viewport4.Height)))
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(Parent._RSDKBScene.objects[o].xPos, Parent._RSDKBScene.objects[o].yPos, viewport4.Width, viewport4.Height)))
                             {
-                                Object_Definitions.MapObject mapobj = S1Objects.GetObjectByType(_RSDK4Scene.objects[o].type, _RSDK4Scene.objects[o].subtype);
+                                Object_Definitions.MapObject mapobj = ObjectDefinitions.GetObjectByType(Parent._RSDKBScene.objects[o].type, Parent._RSDKBScene.objects[o].subtype);
                                 if (mapobj != null && mapobj.ID > 0)
                                 {
                                     Bitmap b = mapobj.RenderObject(loadedRSDKver, datapath);
-                                    e.Graphics.DrawImageUnscaled(b, _RSDK4Scene.objects[o].xPos - b.Width / 2, _RSDK4Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImageUnscaled(b, Parent._RSDKBScene.objects[o].xPos + mapobj.PivotX, Parent._RSDKBScene.objects[o].yPos + mapobj.PivotX);
                                     b.Dispose();
                                 }
                                 else
                                 {
                                     Bitmap b = RetroED.Properties.Resources.OBJ;
-                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK4Scene.objects[o].xPos - b.Width / 2, _RSDK4Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, Parent._RSDKBScene.objects[o].xPos - b.Width / 2, Parent._RSDKBScene.objects[o].yPos - b.Height / 2);
                                     b.Dispose();
                                 }
                             }
@@ -322,21 +292,21 @@ namespace RetroED.Tools.MapEditor
                             int lft = 0 % gridCellSize.Width;
                             int top = 0 % gridCellSize.Height;
 
-                            for (int i = 0; i <= _RSDK4Scene.width * 128; ++i)
+                            for (int i = 0; i <= Parent._RSDKBScene.width * 128; ++i)
                             {
-                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, _RSDK4Scene.height * 128);
+                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, Parent._RSDKBScene.height * 128);
                             }
 
-                            for (int j = 0; j <= _RSDK4Scene.height * 128; ++j)
+                            for (int j = 0; j <= Parent._RSDKBScene.height * 128; ++j)
                             {
-                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK4Scene.width * 128, top + j * gridCellSize.Height);
+                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, Parent._RSDKBScene.width * 128, top + j * gridCellSize.Height);
                             }
                         }
                     }
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128));
                     break;
                 case 1:
-                    if (_RSDK3Scene == null) return;
+                    if (Parent._RSDK1Scene == null) return;
                     e.Graphics.Clear(Color.FromArgb(255, 255, 0, 255));
                     Rectangle viewport3 = new Rectangle(-pnlMap.AutoScrollPosition.X, -pnlMap.AutoScrollPosition.Y, pnlMap.Width, pnlMap.Height);
                     int startX3 = (viewport3.X / 128) - 1;
@@ -349,34 +319,34 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX3; x < endX3; x++)
                         {
-                            if (y < _RSDK3Scene.MapLayout.Length && x < _RSDK3Scene.MapLayout[y].Length && _RSDK3Scene.MapLayout[y][x] < _RSDK3Chunks.BlockList.Length)
+                            if (y < Parent._RSDK2Scene.MapLayout.Length && x < Parent._RSDK2Scene.MapLayout[y].Length && Parent._RSDK2Scene.MapLayout[y][x] < Parent._RSDK2Chunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
                                     if (ShowMap)
                                     {
-                                        if (_RSDK3Scene.MapLayout[y][x] > 0)
+                                        if (Parent._RSDK2Scene.MapLayout[y][x] > 0)
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK3Scene.MapLayout[y][x]], x * 128, y * 128);
+                                            e.Graphics.DrawImageUnscaled(Chunks[Parent._RSDK2Scene.MapLayout[y][x]], x * 128, y * 128);
                                         }
                                         else { }
                                     }
                                     if (ShowCollisionA)
                                     {
-                                        ushort Chunk = _RSDK3Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDK2Scene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK3Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDK2Scene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -392,7 +362,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0 || _RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 4) //All
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0 || Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 4) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -408,7 +378,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1) //Top Only
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -424,7 +394,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -446,20 +416,20 @@ namespace RetroED.Tools.MapEditor
                                     }
                                     if (ShowCollisionB)
                                     {
-                                        ushort Chunk = _RSDK3Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDK2Scene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK3Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDK2Scene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -475,7 +445,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || _RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -491,7 +461,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -507,7 +477,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK3Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
+                                                    if (Parent._RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -533,26 +503,27 @@ namespace RetroED.Tools.MapEditor
                     }
                     if (ShowObjects) //Heh, It works now :)
                     {
-                        for (int o = 0; o < _RSDK3Scene.objects.Count; o++)
+                        for (int o = 0; o < Parent._RSDK2Scene.objects.Count; o++)
                         {
-                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK3Scene.objects[o].xPos, _RSDK3Scene.objects[o].yPos, viewport3.Width, viewport3.Height)))
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(Parent._RSDK2Scene.objects[o].xPos, Parent._RSDK2Scene.objects[o].yPos, viewport3.Width, viewport3.Height)))
                             {
-                                Object_Definitions.MapObject mapobj = CDObjects.GetObjectByType(_RSDK3Scene.objects[o].type, _RSDK3Scene.objects[o].subtype);
+                                Object_Definitions.MapObject mapobj = ObjectDefinitions.GetObjectByType(Parent._RSDK2Scene.objects[o].type, Parent._RSDK2Scene.objects[o].subtype);
                                 if (mapobj != null && mapobj.ID > 0)
                                 {
                                     Bitmap b = mapobj.RenderObject(loadedRSDKver, datapath);
-                                    e.Graphics.DrawImageUnscaled(b, _RSDK3Scene.objects[o].xPos - b.Width / 2, _RSDK3Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImageUnscaled(b, Parent._RSDK2Scene.objects[o].xPos + mapobj.PivotX, Parent._RSDK2Scene.objects[o].yPos + mapobj.PivotY);
                                     b.Dispose();
                                 }
                                 else
                                 {
                                     Bitmap b = RetroED.Properties.Resources.OBJ;
-                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK3Scene.objects[o].xPos - b.Width / 2, _RSDK3Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, Parent._RSDK2Scene.objects[o].xPos - b.Width / 2, Parent._RSDK2Scene.objects[o].yPos - b.Height / 2);
                                     b.Dispose();
                                 }
                             }
                         }
                     }
+
                     if (ShowGrid)
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -562,21 +533,21 @@ namespace RetroED.Tools.MapEditor
                             int lft = 0 % gridCellSize.Width;
                             int top = 0 % gridCellSize.Height;
 
-                            for (int i = 0; i <= _RSDK3Scene.width * 128; ++i)
+                            for (int i = 0; i <= Parent._RSDK2Scene.width * 128; ++i)
                             {
-                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, _RSDK3Scene.height * 128);
+                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, Parent._RSDK2Scene.height * 128);
                             }
 
-                            for (int j = 0; j <= _RSDK3Scene.height * 128; ++j)
+                            for (int j = 0; j <= Parent._RSDK2Scene.height * 128; ++j)
                             {
-                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK3Scene.width * 128, top + j * gridCellSize.Height);
+                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, Parent._RSDK2Scene.width * 128, top + j * gridCellSize.Height);
                             }
                         }
                     }
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128));
                     break;
                 case 2:
-                    if (_RSDK2Scene == null) return;
+                    if (Parent._RSDK1Scene == null) return;
                     e.Graphics.Clear(Color.FromArgb(255, 255, 0, 255));
                     Rectangle viewport2 = new Rectangle(-pnlMap.AutoScrollPosition.X, -pnlMap.AutoScrollPosition.Y, pnlMap.Width, pnlMap.Height);
                     int startX2 = (viewport2.X / 128) - 1;
@@ -589,34 +560,34 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX2; x < endX2; x++)
                         {
-                            if (y < _RSDK2Scene.MapLayout.Length && x < _RSDK2Scene.MapLayout[y].Length && _RSDK2Scene.MapLayout[y][x] < _RSDK2Chunks.BlockList.Length)
+                            if (y < Parent._RSDK1Scene.MapLayout.Length && x < Parent._RSDK1Scene.MapLayout[y].Length && Parent._RSDK1Scene.MapLayout[y][x] < Parent._RSDK1Chunks.BlockList.Length)
                             {
                                 if (e.ClipRectangle.IntersectsWith(new Rectangle(x * 128, y * 128, 128, 128)))
                                 {
                                     if (ShowMap)
                                     {
-                                        if (_RSDK2Scene.MapLayout[y][x] > 0)
+                                        if (Parent._RSDK1Scene.MapLayout[y][x] > 0)
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK2Scene.MapLayout[y][x]], x * 128, y * 128);
+                                            e.Graphics.DrawImageUnscaled(Chunks[Parent._RSDK1Scene.MapLayout[y][x]], x * 128, y * 128);
                                         }
                                         else { }
                                     }
                                     if (ShowCollisionA)
                                     {
-                                        ushort Chunk = _RSDK2Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDK1Scene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK2Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDK1Scene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -632,7 +603,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0) //All
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 0) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -648,7 +619,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1) //Top Only
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 1) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -664,7 +635,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag0 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -686,20 +657,20 @@ namespace RetroED.Tools.MapEditor
                                     }
                                     if (ShowCollisionB)
                                     {
-                                        ushort Chunk = _RSDK2Scene.MapLayout[y][x];
+                                        ushort Chunk = Parent._RSDK1Scene.MapLayout[y][x];
                                         for (int h = 0; h < 8; h++)
                                         {
                                             for (int w = 0; w < 8; w++)
                                             {
-                                                if (_RSDK2Scene.MapLayout[y][x] > 0)
+                                                if (Parent._RSDK1Scene.MapLayout[y][x] > 0)
                                                 {
                                                     int tx, ty;
                                                     tx = (x * 8) + w;
                                                     ty = (y * 8) + h;
 
-                                                    Bitmap cm = CollisionPathA[_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
+                                                    Bitmap cm = CollisionPathA[Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].Tile16x16].Clone(new Rectangle(0, 0, 16, 16), System.Drawing.Imaging.PixelFormat.DontCare);
 
-                                                    switch (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].Direction)
+                                                    switch (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].Direction)
                                                     {
                                                         case 0:
                                                             cm.RotateFlip(RotateFlipType.RotateNoneFlipNone);
@@ -715,7 +686,7 @@ namespace RetroED.Tools.MapEditor
                                                             break;
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || _RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 0 || Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 4) //All
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -731,7 +702,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 1) //Top Only
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -747,7 +718,7 @@ namespace RetroED.Tools.MapEditor
                                                         e.Graphics.DrawImage(cm, (x * 128) + (w * 16), (y * 128) + (h * 16));
                                                     }
 
-                                                    if (_RSDK2Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
+                                                    if (Parent._RSDK1Chunks.BlockList[Chunk].Mapping[h][w].CollisionFlag1 == 2) //All But Top
                                                     {
                                                         for (int ix = 0; ix < cm.Width; ix++)
                                                         {
@@ -773,11 +744,11 @@ namespace RetroED.Tools.MapEditor
                     }
                     if (ShowObjects) //Heh, It works now :)
                     {
-                        for (int o = 0; o < _RSDK2Scene.objects.Count; o++)
+                        for (int o = 0; o < Parent._RSDK1Scene.objects.Count; o++)
                         {
-                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK2Scene.objects[o].xPos, _RSDK2Scene.objects[o].yPos, viewport2.Width, viewport2.Height)))
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(Parent._RSDK1Scene.objects[o].xPos, Parent._RSDK1Scene.objects[o].yPos, viewport2.Width, viewport2.Height)))
                             {
-                                Object_Definitions.MapObject mapobj = NexusObjects.GetObjectByType(_RSDK2Scene.objects[o].type, _RSDK2Scene.objects[o].subtype);
+                                Object_Definitions.MapObject mapobj = ObjectDefinitions.GetObjectByType(Parent._RSDK1Scene.objects[o].type, Parent._RSDK1Scene.objects[o].subtype);
                                 if (mapobj != null && mapobj.ID > 0)
                                 {
                                     Bitmap b = mapobj.RenderObject(loadedRSDKver, datapath);
@@ -785,13 +756,13 @@ namespace RetroED.Tools.MapEditor
                                     if (mapobj.Flip == 1) { b.RotateFlip(RotateFlipType.RotateNoneFlipX); }
                                     if (mapobj.Flip == 2) { b.RotateFlip(RotateFlipType.RotateNoneFlipY); }
                                     if (mapobj.Flip == 3) { b.RotateFlip(RotateFlipType.RotateNoneFlipXY); }
-                                    e.Graphics.DrawImageUnscaled(b, _RSDK2Scene.objects[o].xPos - b.Width/2, _RSDK2Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImageUnscaled(b, Parent._RSDK1Scene.objects[o].xPos - b.Width/2, Parent._RSDK1Scene.objects[o].yPos - b.Height / 2);
                                     b.Dispose();
                                 }
                                 else
                                 {
                                     Bitmap b = RetroED.Properties.Resources.OBJ;
-                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK2Scene.objects[o].xPos - b.Width / 2, _RSDK2Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, Parent._RSDK1Scene.objects[o].xPos + mapobj.PivotX, Parent._RSDK1Scene.objects[o].yPos + mapobj.PivotY);
                                     b.Dispose();
                                 }
                                 //Console.WriteLine(o);
@@ -807,21 +778,21 @@ namespace RetroED.Tools.MapEditor
                             int lft = 0 % gridCellSize.Width;
                             int top = 0 % gridCellSize.Height;
 
-                            for (int i = 0; i <= _RSDK2Scene.width * 128; ++i)
+                            for (int i = 0; i <= Parent._RSDK1Scene.width * 128; ++i)
                             {
-                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, _RSDK2Scene.height * 128);
+                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, Parent._RSDK1Scene.height * 128);
                             }
 
-                            for (int j = 0; j <= _RSDK2Scene.height * 128; ++j)
+                            for (int j = 0; j <= Parent._RSDK1Scene.height * 128; ++j)
                             {
-                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK2Scene.width * 128, top + j * gridCellSize.Height);
+                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, Parent._RSDK1Scene.width * 128, top + j * gridCellSize.Height);
                             }
                         }
                     }
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128));
                     break;
                 case 3:
-                    if (_RSDK1Scene == null) return; //We're not going to draw a Scene if we don't have one lol!
+                    if (Parent._RSDKRSScene == null) return; //We're not going to draw a Scene if we don't have one lol!
                     if (PanelMap != null) { PanelMap.Dispose(); } //Delet this, We don't need it anymore
                     e.Graphics.Clear(Color.FromArgb(255, 255, 0, 255)); //Fill the "Canvas" with the colour FF00FF
                     //Setup the viewport, this defines where on the map we are (I think)
@@ -836,7 +807,7 @@ namespace RetroED.Tools.MapEditor
                     {
                         for (int x = startX1; x < endX1; x++)
                         {
-                            if (y < _RSDK1Scene.MapLayout.Length && x < _RSDK1Scene.MapLayout[y].Length && _RSDK1Scene.MapLayout[y][x] < _RSDK1Chunks.BlockList.Length)
+                            if (y < Parent._RSDKRSScene.MapLayout.Length && x < Parent._RSDKRSScene.MapLayout[y].Length && Parent._RSDKRSScene.MapLayout[y][x] < Parent._RSDKRSChunks.BlockList.Length)
                             {
                                 // Draw the map, line by line!
 
@@ -845,9 +816,9 @@ namespace RetroED.Tools.MapEditor
                                 {
                                     if (ShowMap)//Check if the user wants to show the map
                                     {
-                                        if (_RSDK1Scene.MapLayout[y][x] > 0) //Don't draw Chunk Zero, It's always transparent!
+                                        if (Parent._RSDKRSScene.MapLayout[y][x] > 0) //Don't draw Chunk Zero, It's always transparent!
                                         {
-                                            e.Graphics.DrawImageUnscaled(Chunks[_RSDK1Scene.MapLayout[y][x]], x * 128, y * 128); //Draw the chunk to the map!
+                                            e.Graphics.DrawImageUnscaled(Chunks[Parent._RSDKRSScene.MapLayout[y][x]], x * 128, y * 128); //Draw the chunk to the map!
                                         }
                                         else { }
                                     }
@@ -862,27 +833,28 @@ namespace RetroED.Tools.MapEditor
                     }
                     if (ShowObjects) //Heh, It works now :)
                     {
-                        for (int o = 0; o < _RSDK1Scene.objects.Count; o++)
+                        for (int o = 0; o < Parent._RSDKRSScene.objects.Count; o++)
                         {
-                            if (e.ClipRectangle.IntersectsWith(new Rectangle(_RSDK1Scene.objects[o].xPos, _RSDK1Scene.objects[o].yPos, viewport1.Width, viewport1.Height)))
+                            if (e.ClipRectangle.IntersectsWith(new Rectangle(Parent._RSDKRSScene.objects[o].xPos, Parent._RSDKRSScene.objects[o].yPos, viewport1.Width, viewport1.Height)))
                             {
-                                Object_Definitions.MapObject mapobj = RSObjects.GetObjectByType(_RSDK1Scene.objects[o].type, _RSDK1Scene.objects[o].subtype);
+                                Object_Definitions.MapObject mapobj = ObjectDefinitions.GetObjectByType(Parent._RSDKRSScene.objects[o].type, Parent._RSDKRSScene.objects[o].subtype);
                                 if (mapobj != null && mapobj.ID > 0)
                                 {
                                     Bitmap b = mapobj.RenderObject(loadedRSDKver, datapath);
-                                    e.Graphics.DrawImageUnscaled(b, _RSDK1Scene.objects[o].xPos - b.Width / 2, _RSDK1Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImageUnscaled(b, Parent._RSDKRSScene.objects[o].xPos + mapobj.PivotX, Parent._RSDKRSScene.objects[o].yPos + mapobj.PivotY);
                                     b.Dispose();
                                 }
                                 else
                                 {
                                     Bitmap b = RetroED.Properties.Resources.OBJ;
-                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK1Scene.objects[o].xPos - b.Width / 2, _RSDK1Scene.objects[o].yPos - b.Height / 2);
+                                    e.Graphics.DrawImage(RetroED.Properties.Resources.OBJ, Parent._RSDKRSScene.objects[o].xPos - b.Width / 2, Parent._RSDKRSScene.objects[o].yPos - b.Height / 2);
                                     b.Dispose();
                                 }
                                 //Console.WriteLine(o);
                             }
                         }
                     }
+
                     if (ShowGrid) //If we want a grid, then draw it over the map
                     {
                         Pen pen = new Pen(Color.DarkGray);
@@ -892,24 +864,25 @@ namespace RetroED.Tools.MapEditor
                             int lft = 0 % gridCellSize.Width;
                             int top = 0 % gridCellSize.Height;
 
-                            for (int i = 0; i <= _RSDK1Scene.width * 128; ++i)
+                            for (int i = 0; i <= Parent._RSDKRSScene.width * 128; ++i)
                             {
-                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, _RSDK1Scene.height * 128);
+                                e.Graphics.DrawLine(pen, lft + i * gridCellSize.Width, 0, lft + i * gridCellSize.Width, Parent._RSDKRSScene.height * 128);
                             }
 
-                            for (int j = 0; j <= _RSDK1Scene.height * 128; ++j)
+                            for (int j = 0; j <= Parent._RSDKRSScene.height * 128; ++j)
                             {
-                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, _RSDK1Scene.width * 128, top + j * gridCellSize.Height);
+                                e.Graphics.DrawLine(pen, 0, top + j * gridCellSize.Height, Parent._RSDKRSScene.width * 128, top + j * gridCellSize.Height);
                             }
                         }
                     }
                     Pen PSpen = new Pen(Color.White); //We want the player spawn circle to be white!
                     e.Graphics.DrawRectangle(p, new Rectangle(tilePoint.X * 128, tilePoint.Y * 128, 128, 128)); //Draw the selected tile!
-                    e.Graphics.DrawEllipse(PSpen, _RSDK1Scene.PlayerXpos, _RSDK1Scene.PlayerYPos, 32, 32); //Draw Spawn Circle
+                    e.Graphics.DrawEllipse(PSpen, Parent._RSDKRSScene.PlayerXpos, Parent._RSDKRSScene.PlayerYPos, 32, 32); //Draw Spawn Circle
                     break;
                 default:
                     break;
             }
+            GC.Collect();
         }
 
         public void DrawScene(PaintEventArgs e = null)
@@ -931,6 +904,7 @@ namespace RetroED.Tools.MapEditor
 
             pnlMap_Paint(this, e);
             Refresh();
+            GC.Collect();
         } //Exactly what it says
 
         public void SetScene()
@@ -940,26 +914,26 @@ namespace RetroED.Tools.MapEditor
                 case 0:
                     LoadChunks();
                     LoadCollisionMasks();
-                    Text = _RSDK4Scene.Title;
-                    AutoScrollMinSize = new Size(_RSDK4Scene.MapLayout[0].Length * 128, _RSDK4Scene.MapLayout.Length * 128);
+                    Text = Parent._RSDKBScene.Title;
+                    AutoScrollMinSize = new Size(Parent._RSDKBScene.MapLayout[0].Length * 128, Parent._RSDKBScene.MapLayout.Length * 128);
                     break;
                 case 1:
                     LoadChunks();
                     LoadCollisionMasks();
-                    Text = _RSDK3Scene.Title;
-                    AutoScrollMinSize = new Size(_RSDK3Scene.MapLayout[0].Length * 128, _RSDK3Scene.MapLayout.Length * 128);
+                    Text = Parent._RSDK2Scene.Title;
+                    AutoScrollMinSize = new Size(Parent._RSDK2Scene.MapLayout[0].Length * 128, Parent._RSDK2Scene.MapLayout.Length * 128);
                     break;
                 case 2:
                     LoadChunks();
                     LoadCollisionMasks();
-                    Text = _RSDK2Scene.Title;
-                    AutoScrollMinSize = new Size(_RSDK2Scene.MapLayout[0].Length * 128, _RSDK2Scene.MapLayout.Length * 128);
+                    Text = Parent._RSDK1Scene.Title;
+                    AutoScrollMinSize = new Size(Parent._RSDK1Scene.MapLayout[0].Length * 128, Parent._RSDK1Scene.MapLayout.Length * 128);
                     break;
                 case 3:
                     LoadChunks();
                     LoadCollisionMasks();
-                    Text = _RSDK1Scene.Title;
-                    AutoScrollMinSize = new Size(_RSDK1Scene.MapLayout[0].Length * 128, _RSDK1Scene.MapLayout.Length * 128);
+                    Text = Parent._RSDKRSScene.Title;
+                    AutoScrollMinSize = new Size(Parent._RSDKRSScene.MapLayout[0].Length * 128, Parent._RSDKRSScene.MapLayout.Length * 128);
                     break;
                 default:
                     break;
@@ -974,29 +948,29 @@ namespace RetroED.Tools.MapEditor
                 case 0:
                     for (int i = 0; i < 1024; i++)
                     {
-                        CollisionPathA.Add(_RSDK4CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
-                        CollisionPathB.Add(_RSDK4CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathA.Add(Parent._RSDKBCollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathB.Add(Parent._RSDKBCollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
                     }
                     break;
                 case 1:
                     for (int i = 0; i < 1024; i++)
                     {
-                        CollisionPathA.Add(_RSDK3CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
-                        CollisionPathB.Add(_RSDK3CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathA.Add(Parent._RSDK2CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathB.Add(Parent._RSDK2CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
                     }
                     break;
                 case 2:
                     for (int i = 0; i < 1024; i++)
                     {
-                        CollisionPathA.Add(_RSDK2CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
-                        CollisionPathB.Add(_RSDK2CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathA.Add(Parent._RSDK1CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        CollisionPathB.Add(Parent._RSDK1CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
                     }
                     break;
                 case 3:
                     for (int i = 0; i < 1024; i++)
                     {
-                        //CollisionPathA.Add(_RSDK1CollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
-                        //CollisionPathB.Add(_RSDK1CollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        //CollisionPathA.Add(Parent._RSDKRSCollisionMask.CollisionPath1[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
+                        //CollisionPathB.Add(Parent._RSDKRSCollisionMask.CollisionPath2[i].DrawCMask(Color.FromArgb(0, 0, 0, 0), Color.FromArgb(255, 0, 255, 0)/*, Tiles[curColisionMask]*/));
                     }
                     break;
                 default:
@@ -1009,16 +983,16 @@ namespace RetroED.Tools.MapEditor
             switch (loadedRSDKver)
             {
                 case 0:
-                    AutoScrollMinSize = new Size(_RSDK4Scene.width * 128, _RSDK4Scene.height * 128);
+                    AutoScrollMinSize = new Size(Parent._RSDKBScene.width * 128, Parent._RSDKBScene.height * 128);
                     break;
                 case 1:
-                    AutoScrollMinSize = new Size(_RSDK3Scene.width * 128, _RSDK3Scene.height * 128);
+                    AutoScrollMinSize = new Size(Parent._RSDK1Scene.width * 128, Parent._RSDK1Scene.height * 128);
                     break;
                 case 2:
-                    AutoScrollMinSize = new Size(_RSDK2Scene.width * 128, _RSDK2Scene.height * 128);
+                    AutoScrollMinSize = new Size(Parent._RSDK1Scene.width * 128, Parent._RSDK1Scene.height * 128);
                     break;
                 case 3:
-                    AutoScrollMinSize = new Size(_RSDK1Scene.width * 128, _RSDK1Scene.height * 128);
+                    AutoScrollMinSize = new Size(Parent._RSDKRSScene.width * 128, Parent._RSDKRSScene.height * 128);
                     break;
                 default:
                     break;
@@ -1030,36 +1004,36 @@ namespace RetroED.Tools.MapEditor
             Chunks.Clear();
             if (loadedRSDKver == 0)
             {
-                for (int i = 0; i < _RSDK4Chunks.BlockList.Length; i++)
+                for (int i = 0; i < Parent._RSDKBChunks.BlockList.Length; i++)
                 {
-                    Bitmap b = _RSDK4Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
+                    Bitmap b = Parent._RSDKBChunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
                     Chunks.Add(b); //Add it to the list!
                 }
             }
             if (loadedRSDKver == 1)
             {
-                for (int i = 0; i < _RSDK3Chunks.BlockList.Length; i++)
+                for (int i = 0; i < Parent._RSDK2Chunks.BlockList.Length; i++)
                 {
-                    Bitmap b = _RSDK3Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
+                    Bitmap b = Parent._RSDK2Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
                     Chunks.Add(b); //Add it to the list!
                 }
             }
             if (loadedRSDKver == 2)
             {
-                for (int i = 0; i < _RSDK2Chunks.BlockList.Length; i++)
+                for (int i = 0; i < Parent._RSDK1Chunks.BlockList.Length; i++)
                 {
-                    Bitmap b = _RSDK2Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
+                    Bitmap b = Parent._RSDK1Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 255, 0, 255)); //add transparent colour!
                     Chunks.Add(b); //Add it to the list!
                 }
             }
             if (loadedRSDKver == 3)
             {
-                for (int i = 0; i < _RSDK1Chunks.BlockList.Length; i++)
+                for (int i = 0; i < Parent._RSDKRSChunks.BlockList.Length; i++)
                 {
-                    Bitmap b = _RSDK1Chunks.BlockList[i].Render(_tiles); //render chunk to an image!
+                    Bitmap b = Parent._RSDKRSChunks.BlockList[i].Render(_tiles); //render chunk to an image!
                     b.MakeTransparent(Color.FromArgb(255, 0, 0, 0)); //add transparent colour!
                     Chunks.Add(b); //Add it to the list!
                 }
@@ -1083,62 +1057,6 @@ namespace RetroED.Tools.MapEditor
                         SetChunk(tilePoint, (ushort)_ChunkView.selectedChunk); //Place Selected Chunk
                         DrawScene();
                     }
-                    if (PlacementMode == 2)
-                    {
-                        NewObjectForm frm = new NewObjectForm(loadedRSDKver,0);
-                        //Where is the mouse?
-                        frm.XposNUD.Value = e.X;
-                        frm.YposNUD.Value = e.Y;
-
-                        switch (loadedRSDKver) //Set the object Definitions
-                        {
-                            case 3:
-                                frm.RSObjects = RSObjects;
-                                break;
-                            case 2:
-                                frm.NexusObjects = NexusObjects;
-                                break;
-                            case 1:
-                                frm.CDObjects = CDObjects;
-                                break;
-                            case 0:
-                                frm.S1Objects = S1Objects;
-                                break;
-                        }
-                        frm.SetupObjects();
-
-
-                        if (frm.ShowDialog(this) == DialogResult.OK)
-                        {
-                            switch (loadedRSDKver)
-                            {
-                                case 3:
-                                        RSDKvRS.Object Obj1 = new RSDKvRS.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
-                                    _RSDK1Scene.objects.Add(Obj1); //Add it to the map!
-                                    _ChunkView.RefreshObjList(); //Update the list!
-                                    DrawScene();
-                                    break;
-                                case 2:
-                                        RSDKv1.Object Obj2 = new RSDKv1.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
-                                    _RSDK2Scene.objects.Add(Obj2); //Add it to the map!
-                                    _ChunkView.RefreshObjList(); //Update the list!
-                                    DrawScene();
-                                    break;
-                                case 1:
-                                        RSDKv2.Object Obj3 = new RSDKv2.Object(frm.Type, frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
-                                    _RSDK3Scene.objects.Add(Obj3); //Add it to the map!
-                                    _ChunkView.RefreshObjList(); //Update the list!
-                                    DrawScene();
-                                    break;
-                                case 0:
-                                    RSDKvB.Object Obj4 = new RSDKvB.Object((byte)frm.Type, (byte)frm.Subtype, frm.Xpos, frm.Ypos); //make an object from the data we got!
-                                    _RSDK4Scene.objects.Add(Obj4); //Add it to the map!
-                                    _ChunkView.RefreshObjList(); //Update the list!
-                                    DrawScene();
-                                    break;
-                            }
-                        }
-                    }
                     break;
                 case MouseButtons.Right:
                     if (PlacementMode == 0)
@@ -1149,22 +1067,22 @@ namespace RetroED.Tools.MapEditor
                         switch (loadedRSDKver) //Copy chunk
                         {
                             case 0:
-                                selChunk = _RSDK4Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                                selChunk = Parent._RSDKBScene.MapLayout[tilePoint.Y][tilePoint.X];
                                 _ChunkView.BlocksList.SelectedIndex = selChunk;
                                 _ChunkView.BlocksList.Refresh();
                                 break;
                             case 1:
-                                selChunk = _RSDK3Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                                selChunk = Parent._RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
                                 _ChunkView.BlocksList.SelectedIndex = selChunk;
                                 _ChunkView.BlocksList.Refresh();
                                 break;
                             case 2:
-                                selChunk = _RSDK2Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                                selChunk = Parent._RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
                                 _ChunkView.BlocksList.SelectedIndex = selChunk;
                                 _ChunkView.BlocksList.Refresh();
                                 break;
                             case 3:
-                                selChunk = _RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                                selChunk = Parent._RSDKRSScene.MapLayout[tilePoint.Y][tilePoint.X];
                                 _ChunkView.BlocksList.SelectedIndex = selChunk;
                                 _ChunkView.BlocksList.Refresh();
                                 break;
@@ -1186,22 +1104,22 @@ namespace RetroED.Tools.MapEditor
                     switch (loadedRSDKver) //Check the RSDK version then Copy the chunk
                     {
                         case 0:
-                            chunk = _RSDK4Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                            chunk = Parent._RSDKBScene.MapLayout[tilePoint.Y][tilePoint.X];
                             _ChunkView.BlocksList.SelectedIndex = chunk; //Change the selected index of the chunklist!
                             _ChunkView.BlocksList.Refresh();
                             break;
                         case 1:
-                            chunk = _RSDK3Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                            chunk = Parent._RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
                             _ChunkView.BlocksList.SelectedIndex = chunk;
                             _ChunkView.BlocksList.Refresh();
                             break;
                         case 2:
-                            chunk = _RSDK2Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                            chunk = Parent._RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
                             _ChunkView.BlocksList.SelectedIndex = chunk;
                             _ChunkView.BlocksList.Refresh();
                             break;
                         case 3:
-                            chunk = _RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X];
+                            chunk = Parent._RSDKRSScene.MapLayout[tilePoint.Y][tilePoint.X];
                             _ChunkView.BlocksList.SelectedIndex = chunk;
                             _ChunkView.BlocksList.Refresh();
                             break;
@@ -1252,27 +1170,27 @@ namespace RetroED.Tools.MapEditor
             switch (loadedRSDKver) //What RSDK version is loaded?
             {
                 case 0:
-                    if (tilePoint.X < _RSDK4Scene.width && tilePoint.Y < _RSDK4Scene.height) //The chunk will be on the map right?
+                    if (tilePoint.X < Parent._RSDKBScene.width && tilePoint.Y < Parent._RSDKBScene.height) //The chunk will be on the map right?
                     {
-                    _RSDK4Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk; //The chunk at these co-ordinates will become "NewChunk"
+                    Parent._RSDKBScene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk; //The chunk at these co-ordinates will become "NewChunk"
                     }
                     break;
                 case 1:
-                    if (tilePoint.X < _RSDK3Scene.width && tilePoint.Y < _RSDK3Scene.height) //The chunk will be on the map right?
+                    if (tilePoint.X < Parent._RSDK2Scene.width && tilePoint.Y < Parent._RSDK2Scene.height) //The chunk will be on the map right?
                     {
-                        _RSDK3Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
+                        Parent._RSDK2Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
                     }
                     break;
                 case 2:
-                    if (tilePoint.X < _RSDK2Scene.width && tilePoint.Y < _RSDK2Scene.height) //The chunk will be on the map right?
+                    if (tilePoint.X < Parent._RSDK1Scene.width && tilePoint.Y < Parent._RSDK1Scene.height) //The chunk will be on the map right?
                     {
-                        _RSDK2Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
+                        Parent._RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
                     }
                     break;
                 case 3:
-                    if (tilePoint.X < _RSDK1Scene.width && tilePoint.Y < _RSDK1Scene.height) //The chunk will be on the map right?
+                    if (tilePoint.X < Parent._RSDKRSScene.width && tilePoint.Y < Parent._RSDKRSScene.height) //The chunk will be on the map right?
                     {
-                    _RSDK1Scene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
+                    Parent._RSDKRSScene.MapLayout[tilePoint.Y][tilePoint.X] = NewChunk;//The chunk at these co-ordinates will become "NewChunk"
                     }
                     break;
                 default:

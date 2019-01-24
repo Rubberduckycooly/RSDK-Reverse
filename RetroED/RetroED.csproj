@@ -22,7 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -87,7 +87,29 @@
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Discord.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionAddDeleteEntities.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionChangeTile.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionDummy.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionEntityPropertyChange.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionMoveEntities.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionsGroup.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\ActionsGroupCloseMarker.cs" />
+    <Compile Include="Extensions\Map Editing Tools\Actions\IAction.cs" />
+    <Compile Include="Extensions\Map Editing Tools\EntityToolbar.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Extensions\Map Editing Tools\EntityToolbar.Designer.cs">
+      <DependentUpon>EntityToolbar.cs</DependentUpon>
+    </Compile>
     <Compile Include="Extensions\Map Editing Tools\FolderSelectDialog.cs" />
+    <Compile Include="Extensions\Map Editing Tools\KeyBoardPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Extensions\Map Editing Tools\KeyBoardPanel.Designer.cs">
+      <DependentUpon>KeyBoardPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\Map Editing Tools\LocalProperty.cs" />
+    <Compile Include="Extensions\Map Editing Tools\LocalPropertyGrid.cs" />
     <Compile Include="Extensions\Map Editing Tools\Reflector.cs" />
     <Compile Include="Extensions\Map Editing Tools\SceneSelect.cs">
       <SubType>Form</SubType>
@@ -185,10 +207,28 @@
     <Compile Include="Tools\ChunkEditor\TileSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Tools\GameconfigEditors\RetroSonicCharListEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RetroSonicCharListEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKv1GameconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKv1GameconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKv2GameconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\GameconfigEditors\RSDKv2GameconfigEditor\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\GameconfigEditors\RSDKvBGameconfigEditor\MainForm.cs">
@@ -281,18 +321,8 @@
     <Compile Include="Tools\MapEditor\MainView.Designer.cs">
       <DependentUpon>MainView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tools\MapEditor\NewObjectForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\MapEditor\NewObjectForm.Designer.cs">
-      <DependentUpon>NewObjectForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\MapEditor\Object Definitions\MapObject.cs" />
-    <Compile Include="Tools\MapEditor\Object Definitions\Retro-SonicGlobalObjects.cs" />
-    <Compile Include="Tools\MapEditor\Object Definitions\Sonic1GlobalObjects.cs" />
-    <Compile Include="Tools\MapEditor\Object Definitions\Sonic2GlobalObjects.cs" />
-    <Compile Include="Tools\MapEditor\Object Definitions\SonicCDGlobalObjects.cs" />
-    <Compile Include="Tools\MapEditor\Object Definitions\SonicNexusGlobalObjects.cs" />
+    <Compile Include="Tools\MapEditor\Object Definitions\ObjectDefinitions.cs" />
     <Compile Include="Tools\MapEditor\PropertiesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -523,8 +553,35 @@
     <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapMode.cs" />
     <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapVisualFlagLocation.cs" />
     <Compile Include="Tools\ScriptEditor\ScintillaNET\WrapVisualFlags.cs" />
+    <Compile Include="Tools\StageconfigEditors\RSDKv1StageconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKv1StageconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKv2StageconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKv2StageconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKvBStageconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKvBStageconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKvRSZoneconfigEditor\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tools\StageconfigEditors\RSDKvRSZoneconfigEditor\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Extensions\Map Editing Tools\EntityToolbar.resx">
+      <DependentUpon>EntityToolbar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Extensions\Map Editing Tools\SceneSelect.resx">
       <DependentUpon>SceneSelect.cs</DependentUpon>
@@ -578,7 +635,16 @@
     <EmbeddedResource Include="Tools\ChunkEditor\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GameconfigEditors\RetroSonicCharListEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Tools\GameconfigEditors\RetroSonicStageListEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GameconfigEditors\RSDKv1GameconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\GameconfigEditors\RSDKv2GameconfigEditor\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\GameconfigEditors\RSDKvBGameconfigEditor\MainForm.resx">
@@ -614,9 +680,6 @@
     <EmbeddedResource Include="Tools\MapEditor\MainView.resx">
       <DependentUpon>MainView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tools\MapEditor\NewObjectForm.resx">
-      <DependentUpon>NewObjectForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Tools\MapEditor\PropertiesForm.resx">
       <DependentUpon>PropertiesForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -649,6 +712,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\ScriptEditor\MainForm.resx">
       <DependentUpon>Mainform.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\StageconfigEditors\RSDKv1StageconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\StageconfigEditors\RSDKv2StageconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\StageconfigEditors\RSDKvBStageconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Tools\StageconfigEditors\RSDKvRSZoneconfigEditor\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -732,11 +807,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tools\AnimationEditor\" />
-    <Folder Include="Tools\GameconfigEditors\RSDKv1GameconfigEditor\" />
-    <Folder Include="Tools\GameconfigEditors\RSDKv2GameconfigEditor\" />
-    <Folder Include="Tools\StageconfigEditors\RSDKv1StageconfigEditor\" />
-    <Folder Include="Tools\StageconfigEditors\RSDKv2StageconfigEditor\" />
-    <Folder Include="Tools\StageconfigEditors\RSDKvBStageconfigEditor\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RSDKv1\RSDKv1.csproj">

@@ -9,14 +9,6 @@ namespace RSDKv5
 {
     public class Model
     {
-
-        public enum Flags
-        {
-            HasNormals = 1,
-            HasUnknown = 2,
-            HasColours = 4,
-        }
-
         public class Unknown
         {
             public float x;
@@ -43,9 +35,21 @@ namespace RSDKv5
 
         public class Colour
         {
-            public byte b;
-            public byte g;
+            /// <summary>
+            /// Colour Red Value
+            /// </summary>
             public byte r;
+            /// <summary>
+            /// Colour Green Value
+            /// </summary>
+            public byte g;
+            /// <summary>
+            /// Colour Blue Value
+            /// </summary>
+            public byte b;
+            /// <summary>
+            /// Colour Alpha Value
+            /// </summary>
             public byte a;
 
             public Colour()
@@ -77,15 +81,23 @@ namespace RSDKv5
         {
             public class Vertex
             {
-                //Only if Quad
+                /// <summary>
+                /// an extra point to be used if it's a quad
+                /// </summary>
                 public float w = 0;
 
                 public float x = 0;
                 public float y = 0;
                 public float z = 0;
 
+                /// <summary>
+                /// is it a quad
+                /// </summary>
                 public bool isQuad = false;
 
+                /// <summary>
+                /// normal data
+                /// </summary>
                 public Normal normal = new Normal();
 
                 public class Normal
@@ -156,6 +168,9 @@ namespace RSDKv5
 
             }
 
+            /// <summary>
+            /// a list of verticies in this frame
+            /// </summary>
             public List<Vertex> Vertices = new List<Vertex>();
 
             public Frame()
@@ -190,20 +205,55 @@ namespace RSDKv5
             }
         }
 
-
+        /// <summary>
+        /// the file's signtature
+        /// </summary>
         public static readonly byte[] MAGIC = new byte[] { (byte)'M', (byte)'D', (byte)'L', (byte)'\0' };
 
+        /// <summary>
+        /// does it have normals?
+        /// </summary>
         public bool HasNormals = true;
+        /// <summary>
+        /// does it have [Unknown]?
+        /// </summary>
         public bool HasUnknown = false;
+        /// <summary>
+        /// is it using colours?
+        /// </summary>
         public bool HasColours = true;
+        /// <summary>
+        /// is it using quads (4) or tris (3)
+        /// </summary>
         public byte FaceVerticiesCount = 3; //Tri (3) or Quad (4)?
+        /// <summary>
+        /// how many verticies in the model?
+        /// </summary>
         public ushort VertexCount = 0;
+        /// <summary>
+        /// how many frames in the model?
+        /// </summary>
         public ushort FramesCount = 0;
+        /// <summary>
+        /// how many faces in the model?
+        /// </summary>
         public short FaceCount = 0;
 
+        /// <summary>
+        /// a list of all of the [Unknown]
+        /// </summary>
         public List<Unknown> Unknowns = new List<Unknown>();
+        /// <summary>
+        /// a list of all the colours for each face
+        /// </summary>
         public List<Colour> Colours = new List<Colour>();
+        /// <summary>
+        /// a list of frames, used to animate the model
+        /// </summary>
         public List<Frame> Frames = new List<Frame>();
+        /// <summary>
+        /// a list of all the faces
+        /// </summary>
         public List<short> Faces = new List<short>();
 
         public Model()
@@ -243,6 +293,7 @@ namespace RSDKv5
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
+
             byte flags = reader.ReadByte();
             //HasNormals = (flags & 0x00000001) != 0;
             //HasUnknown = (flags & 0x00000010) != 0;

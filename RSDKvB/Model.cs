@@ -10,46 +10,36 @@ namespace RSDKvB
     {
         public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'3', (byte)'D', (byte)'\0' };
 
-        public class Colour
-        {
-            public byte b;
-            public byte g;
-            public byte r;
-            public byte a;
-
-            public Colour()
-            {
-
-            }
-
-            public Colour(Reader reader)
-            {
-                b = reader.ReadByte();
-                g = reader.ReadByte();
-                r = reader.ReadByte();
-                a = reader.ReadByte();
-            }
-
-            public void Write(Writer writer)
-            {
-                writer.Write(b);
-                writer.Write(g);
-                writer.Write(r);
-                writer.Write(a);
-            }
-        }
         public class Vertex
         {
+            /// <summary>
+            /// Vertex X
+            /// </summary>
             public float x;
+            /// <summary>
+            /// Vertex Y
+            /// </summary>
             public float y;
+            /// <summary>
+            /// Vertex Z
+            /// </summary>
             public float z;
 
-            public List<Normal> Normals = new List<Normal>();
+            public Normal normal = new Normal();
 
             public class Normal
             {
+                /// <summary>
+                /// Normal X
+                /// </summary>
                 public float x;
+                /// <summary>
+                /// Normal Y
+                /// </summary>
                 public float y;
+                /// <summary>
+                /// Normal Z
+                /// </summary>
                 public float z;
 
                 public Normal()
@@ -77,16 +67,13 @@ namespace RSDKvB
 
             }
 
-            public Vertex(Reader reader, bool useNormals)
+            public Vertex(Reader reader)
             {
                 x = reader.ReadSingle();
                 y = reader.ReadSingle();
                 z = reader.ReadSingle();
 
-                if (useNormals)
-                {
-                    Normals.Add(new Normal(reader));
-                }
+                normal = new Normal(reader);
             }
 
             public void Write(Writer writer)
@@ -94,18 +81,108 @@ namespace RSDKvB
                 writer.Write(x);
                 writer.Write(y);
                 writer.Write(z);
+
+                normal.Write(writer);
             }
 
         }
 
-        public List<Colour> Colours = new List<Colour>();
+        public class Face
+        {
+            /// <summary>
+            /// Face Value 1
+            /// </summary>
+            public short Value1 = 0;
+            /// <summary>
+            /// Face Value 2
+            /// </summary>
+            public short Value2 = 0;
+            /// <summary>
+            /// Face Value 3
+            /// </summary>
+            public short Value3 = 0;
 
+            public Face()
+            {
+
+            }
+
+            public Face(Reader reader)
+            {
+                Value1 = reader.ReadInt16();
+                Value2 = reader.ReadInt16();
+                Value3 = reader.ReadInt16();
+            }
+
+            public void Write(Writer writer)
+            {
+
+            }
+        }
+
+        public class TexturePosition
+        {
+            public float X = 0;
+            public float Y = 0;
+
+            public TexturePosition()
+            {
+
+            }
+
+            public TexturePosition(Reader reader)
+            {
+                X = reader.ReadSingle();
+                Y = reader.ReadSingle();
+            }
+
+            public void Write(Writer writer)
+            {
+                writer.Write(X);
+                writer.Write(Y);
+            }
+        }
+        /// <summary>
+        /// a list of all the Texture positions
+        /// </summary>
+        public List<TexturePosition> TexturePositions = new List<TexturePosition>();
+        /// <summary>
+        /// a list of all the faces
+        /// </summary>
+        public List<Face> Faces = new List<Face>();
+        /// <summary>
+        /// a list of all the verticies
+        /// </summary>
         public List<Vertex> Vertices = new List<Vertex>();
 
-        public List<short> Faces = new List<short>();
+        /// <summary>
+        /// if it's using Quads or Tris (it's always using tris)
+        /// </summary>
+        public int FaceVerticiesCount
+        {
+            get
+            {
+                return 3;
+            }
+        }
 
+        /// <summary>
+        /// how many faces there are
+        /// </summary>
         public short FaceCount;
+        /// <summary>
+        /// how many texture positions there are
+        /// </summary>
+        public ushort TexturePosCount;
+        /// <summary>
+        /// how many verticies there are
+        /// </summary>
         public ushort VertexCount;
+
+        /// <summary>
+        /// if it's a wierd file that does weird shit
+        /// </summary>
+        public bool WeirdOne = false;
 
         public Model()
         {
@@ -127,37 +204,201 @@ namespace RSDKvB
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
 
-            VertexCount = reader.ReadUInt16();
+            TexturePosCount = reader.ReadUInt16();
 
-            for (int i = 0; i < VertexCount; i++)
+            for (int i = 0; i < TexturePosCount; i++)
             {
-                reader.ReadSingle();
-                reader.ReadSingle();
+                TexturePositions.Add(new TexturePosition(reader));
             }
 
             FaceCount = reader.ReadInt16();
             for (int i = 0; i < FaceCount; ++i)
-                Faces.Add(reader.ReadInt16());
-
-            var vc = reader.ReadInt16();
-
-            if (vc == 1)
             {
-                for (int i = 0; i < vc; i++)
-                {
-                    Vertices.Add(new Vertex(reader,true));
-                }
+                //Faces.Add(reader.ReadInt16());
+                Faces.Add(new Face(reader));
             }
+
+            VertexCount = reader.ReadUInt16();
+
+            //FIX THIS
+            //if (VertexCount == 1)
+            //{
+                int newcnt = (int)((reader.BaseStream.Length - reader.BaseStream.Position) / 4) / 6;
+
+                for (int i = 0; i < newcnt; i++)
+                {
+                    Vertices.Add(new Vertex(reader));
+                }
+                WeirdOne = true;
+            /*}
             else
             {
-                for (int i = 0; i < vc; i++)
+                for (int i = 0; i < VertexCount; i++)
                 {
-                    Vertices.Add(new Vertex(reader, true));
+                    Vertices.Add(new Vertex(reader));
                 }
-            }
+            }*/
 
             Console.WriteLine("File Size: " + reader.BaseStream.Length + " Reader Pos: " + reader.BaseStream.Position + " Data Left: " + (reader.BaseStream.Length - reader.BaseStream.Position));
 
         }
+
+        public void Write(Writer writer)
+        {
+            writer.Write(MAGIC);
+
+            writer.Write((ushort)TexturePositions.Count);
+
+            for (int i = 0; i < TexturePositions.Count; i++)
+            {
+                TexturePositions[i].Write(writer);
+            }
+
+            writer.Write((ushort)Faces.Count);
+            for (int i = 0; i < Faces.Count; ++i)
+            {
+                Faces[i].Write(writer);
+            }
+            if (WeirdOne)
+            {
+                writer.Write(1);
+            }
+            else
+            {
+                writer.Write((ushort)Vertices.Count);
+            }
+
+            for (int i = 0; i < Vertices.Count; i++)
+            {
+                Vertices[i].Write(writer);
+            }
+        }
+
+        public ushort ToRGB555(byte red, byte green, byte blue)
+        {
+            return (ushort)(((red & 0b11111000) << 7) | ((green & 0b11111000) << 2) | ((blue & 0b11111000) >> 3));
+        }
+
+        public void WriteAsOBJ(string filename, string mtlfilename)
+        {
+            string streamName = filename;
+
+            StringBuilder builder = new StringBuilder();
+            // Shows I been here lol
+            builder.AppendLine("# Kimi no sei kimi no sei kimi no sei de watashi Oh Okubyou de kakkou tsukanai kimi no sei da yo");
+
+            // Link Material
+            builder.AppendLine("mtllib " + mtlfilename + ".mtl");
+            // Object
+            builder.AppendLine("o RetrovBModel");
+            for (int v = 0; v < Vertices.Count; ++v)
+                builder.AppendLine(string.Format("v {0} {1} {2}", Vertices[v].x, Vertices[v].y, Vertices[v].z));
+
+            builder.AppendLine("vn 0.0000 1.0000 0.0000");
+            builder.AppendLine("usemtl None");
+            builder.AppendLine("s off");
+
+            for (int v = 0; v < FaceCount; v++)
+            {
+                builder.AppendLine($"usemtl ManiaModel.Colour.{Faces[v]:###}");
+                builder.AppendLine(string.Format("f {0} {1} {2}", Faces[v].Value1 + 1, Faces[v].Value2 + 1, Faces[v].Value3 + 1));
+            }
+
+            File.WriteAllText(streamName, builder.ToString());
+        }
+
+        public void WriteMTL(Writer writer)
+        {
+            StringBuilder builder = new StringBuilder();
+            // Shows I been here lol - SS16
+            builder.AppendLine("# Kimi no sei kimi no sei kimi no sei de watashi Oh Okubyou de kakkou tsukanai kimi no sei da yo");
+
+            writer.Write(Encoding.ASCII.GetBytes(builder.ToString()));
+            writer.Close();
+
+        }
+
+
+        public void WriteAsSTLBinary(Writer writer)
+        {
+
+            byte[] junk = Encoding.ASCII.GetBytes("Kimi no sei kimi no sei kimi no sei de watashi Oh Okubyou de kakkou tsukanai kimi no sei da yo");
+            writer.Write(junk, 0, 0x50);
+
+            writer.Write((int)(FaceCount / FaceVerticiesCount));
+            // Triangle
+
+            var vertices = new Vertex[FaceVerticiesCount];
+            for (int v = 0; v < FaceCount; v++)
+            {
+                vertices[0] = Vertices[Faces[v].Value1];
+                vertices[1] = Vertices[Faces[v].Value2];
+                vertices[2] = Vertices[Faces[v].Value3];
+
+                // Normal
+                //writer.Write(0f);
+                //writer.Write(0f);
+                //writer.Write(1f);
+                writer.Write(vertices[0].normal.x);
+                writer.Write(vertices[0].normal.y);
+                writer.Write(vertices[0].normal.z);
+
+                // Vector 1
+                writer.Write(vertices[0].x);
+                writer.Write(vertices[0].z);
+                writer.Write(vertices[0].y);
+                // Vector 2
+                writer.Write(vertices[1].x);
+                writer.Write(vertices[1].z);
+                writer.Write(vertices[1].y);
+                // Vector 3
+                writer.Write(vertices[2].x);
+                writer.Write(vertices[2].z);
+                writer.Write(vertices[2].y);
+
+                // Attribute
+                /*if (HasColours)
+                {
+                    int colour = Faces[v];
+                    ushort attb = (ushort)(ToRGB555(Colours[colour].r, Colours[colour].g, Colours[colour].b));
+                    writer.Write(attb);
+                }
+                else*/
+                    writer.Write((short)0);
+            }
+
+            writer.Close();
+        }
+
+        public void WriteAsSTL(string filename)
+        {
+            string streamName = filename;
+            using (var writer = new StreamWriter(File.Create(streamName)))
+            {
+                writer.WriteLine("solid obj");
+                var vertices = new Vertex[FaceVerticiesCount];
+                for (int v = 0; v < FaceCount; v++)
+                {
+                    vertices[0] = Vertices[Faces[v].Value1];
+                    vertices[1] = Vertices[Faces[v].Value2];
+                    vertices[2] = Vertices[Faces[v].Value3];
+
+                    writer.WriteLine(" facet normal 0.000000 0.000000 1.000000");
+                    writer.WriteLine("  outer loop");
+                    writer.WriteLine(WriteVertex(vertices[0]));
+                    writer.WriteLine(WriteVertex(vertices[1]));
+                    writer.WriteLine(WriteVertex(vertices[2]));
+                    writer.WriteLine("  endloop");
+                    writer.WriteLine(" endfacet");
+                }
+                writer.WriteLine("endsolid");
+            }
+
+            string WriteVertex(Vertex vertex)
+            {
+                return string.Format("   vertex {0} {1:} {2:}", vertex.x, vertex.z, vertex.y);
+            }
+        }
+
     }
 }

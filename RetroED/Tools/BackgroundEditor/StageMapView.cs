@@ -127,7 +127,7 @@ namespace RetroED.Tools.BackgroundEditor
                     {
                         for (int i = 0; i < _RSDK4Background.Layers[curlayer].LineIndexes.Count; i++)
                         {
-                            e.Graphics.DrawLine(p, 0, _RSDK4Background.Layers[curlayer].LineIndexes[i], _RSDK4Background.Layers[curlayer].width * 128, _RSDK4Background.Layers[curlayer].LineIndexes[i]);
+                            e.Graphics.DrawLine(p, 0, _RSDK4Background.Layers[curlayer].LineIndexes[i] * 4, _RSDK4Background.Layers[curlayer].width * 128, _RSDK4Background.Layers[curlayer].LineIndexes[i] * 4);
                         }
                     }
 
@@ -430,6 +430,7 @@ namespace RetroED.Tools.BackgroundEditor
                 default:
                     break;
             }
+            GC.Collect();
         }
 
         public void DrawLevel(PaintEventArgs e = null)
@@ -451,6 +452,7 @@ namespace RetroED.Tools.BackgroundEditor
 
             pnlMap_Paint(this, e);
             Refresh();
+            GC.Collect();
         }
 
         public void SetLevel()

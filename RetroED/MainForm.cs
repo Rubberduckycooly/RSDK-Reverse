@@ -29,7 +29,7 @@ namespace RetroED
 
         public void InitDiscord()
         {
-            //SharpPresence.Discord.Initialize("477031085788626947", eh);
+            SharpPresence.Discord.Initialize("477031085788626947", eh);
 
             rp.state = "RetroED";
             rp.details = "Chillin' out without any tools open";
@@ -43,13 +43,13 @@ namespace RetroED
 
             rp.startTimestamp = secondsSinceEpoch;
 
-            //SharpPresence.Discord.RunCallbacks();
-            //SharpPresence.Discord.UpdatePresence(rp);
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(rp);
         }
 
         public void UpdateDiscord()
         {
-            //SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.RunCallbacks();
             if (TabControl.SelectedTab != null)
             {
                 rp.details = TabControl.TabPages[TabControl.SelectedIndex].Text;
@@ -59,13 +59,13 @@ namespace RetroED
             {
                 rp.details = "Chillin' out without any tools open";
             }
-            //SharpPresence.Discord.UpdatePresence(rp);
+            SharpPresence.Discord.UpdatePresence(rp);
         }
 
         public void DisposeDiscord()
         {
             rp.startTimestamp = 0;
-            //SharpPresence.Discord.Shutdown();
+            SharpPresence.Discord.Shutdown();
         }
 
         /// <summary>
@@ -102,49 +102,56 @@ namespace RetroED
         public void LinkMenubar()
         {
             UnlinkMenubar();
-            var form = (Form)TabControl.SelectedTab.Controls[0]; 
-            var menu = form.Menu;
-            if (menu == null)
-                return;
-            foreach (MenuItem item in menu.MenuItems)
+            try
             {
-                bool found = false;
-                for (int i = 0; i < Menu.MenuItems.Count; ++i)
-                { if (item.Text == Menu.MenuItems[i].Text) found = true; }
-                if (!found)
+                var form = (Form)TabControl.SelectedTab.Controls[0];
+                var menu = form.Menu;
+                if (menu == null)
+                    return;
+                foreach (MenuItem item in menu.MenuItems)
                 {
-                    var menuItem = new MenuItem(item.Text);
-                    Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(null, null, menuItem));
-                    Menu.MenuItems.Add(3, menuItem);
-                }
-                for (int i = 0; i < Menu.MenuItems.Count; ++i)
-                {
-                    if (item.Text == Menu.MenuItems[i].Text)
+                    bool found = false;
+                    for (int i = 0; i < Menu.MenuItems.Count; ++i)
+                    { if (item.Text == Menu.MenuItems[i].Text) found = true; }
+                    if (!found)
                     {
-                        bool HasItems = Menu.MenuItems[i].MenuItems.Count > 0;
-                        int ii = 0;
-                        while (item.MenuItems.Count > 0)
-                            if (item.MenuItems[0].Text != "Exit")
-                            {
-                                Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(Menu.MenuItems[i], item, item.MenuItems[0]));
-                                Menu.MenuItems[i].MenuItems.Add(ii, item.MenuItems[0]);
-                                ++ii;
-                            }
-                            else
-                            item.MenuItems.Remove(item.MenuItems[0]);
-                        if (HasItems)
+                        var menuItem = new MenuItem(item.Text);
+                        Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(null, null, menuItem));
+                        Menu.MenuItems.Add(3, menuItem);
+                    }
+                    for (int i = 0; i < Menu.MenuItems.Count; ++i)
+                    {
+                        if (item.Text == Menu.MenuItems[i].Text)
                         {
-                            var spacer = new MenuItem("-");
-                            Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(Menu.MenuItems[i], null, spacer));
-                            Menu.MenuItems[i].MenuItems.Add(ii, spacer);
+                            bool HasItems = Menu.MenuItems[i].MenuItems.Count > 0;
+                            int ii = 0;
+                            while (item.MenuItems.Count > 0)
+                                if (item.MenuItems[0].Text != "Exit")
+                                {
+                                    Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(Menu.MenuItems[i], item, item.MenuItems[0]));
+                                    Menu.MenuItems[i].MenuItems.Add(ii, item.MenuItems[0]);
+                                    ++ii;
+                                }
+                                else
+                                    item.MenuItems.Remove(item.MenuItems[0]);
+                            if (HasItems)
+                            {
+                                var spacer = new MenuItem("-");
+                                Links.Add(new Tuple<MenuItem, MenuItem, MenuItem>(Menu.MenuItems[i], null, spacer));
+                                Menu.MenuItems[i].MenuItems.Add(ii, spacer);
+                            }
+
+                            if (Menu.MenuItems[i].MenuItems.Count > 0)
+                                Menu.MenuItems[i].Enabled = true;
+
+                            break;
                         }
-
-                        if (Menu.MenuItems[i].MenuItems.Count > 0)
-                            Menu.MenuItems[i].Enabled = true;
-
-                        break;
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
@@ -327,6 +334,21 @@ namespace RetroED
             return frm;
         } //Opens the Retro Sonic Stage List Editor (and returns a referece to it)
 
+        Tools.RetroSonicCharacterListEditor.MainForm OpenRSonicCharListEditor()
+        {
+            var frm = new Tools.RetroSonicCharacterListEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the Retro Sonic Stage List Editor (and returns a referece to it)
+
         Tools.ScriptEditor.MainForm OpenScriptEditor()
         {
             var frm = new Tools.ScriptEditor.MainForm();
@@ -342,6 +364,36 @@ namespace RetroED
             return frm;
         } //Opens the RSDK Script List Editor (and returns a referece to it)
 
+        Tools.GameconfigEditors.RSDKv1GameconfigEditor.MainForm OpenGameconfig1Editor()
+        {
+            var frm = new Tools.GameconfigEditors.RSDKv1GameconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKv1 Gameconfig Editor (and returns a referece to it)
+
+        Tools.GameconfigEditors.RSDKv2GameconfigEditor.MainForm OpenGameconfig2Editor()
+        {
+            var frm = new Tools.GameconfigEditors.RSDKv2GameconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKv2 Gameconfig Editor (and returns a referece to it)
+
         Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm OpenGameconfigBEditor()
         {
             var frm = new Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm();
@@ -355,7 +407,67 @@ namespace RetroED
             TabControl.SelectedTab = newTab;
             frm.Show();
             return frm;
-        } //Opens the RSDK Script List Editor (and returns a referece to it)
+        } //Opens the RSDKvB Gameconfig Editor (and returns a referece to it)
+
+        Tools.StageconfigEditors.RSDKvRSStageconfigEditor.MainForm OpenStageconfigRSEditor()
+        {
+            var frm = new Tools.StageconfigEditors.RSDKvRSStageconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKvRS Stageconfig Editor (and returns a referece to it)
+
+        Tools.StageconfigEditors.RSDKv1StageconfigEditor.MainForm OpenStageconfig1Editor()
+        {
+            var frm = new Tools.StageconfigEditors.RSDKv1StageconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKv1 Stageconfig Editor (and returns a referece to it)
+
+        Tools.StageconfigEditors.RSDKv2StageconfigEditor.MainForm OpenStageconfig2Editor()
+        {
+            var frm = new Tools.StageconfigEditors.RSDKv2StageconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKv2 Stageconfig Editor (and returns a referece to it)
+
+        Tools.StageconfigEditors.RSDKvBStageconfigEditor.MainForm OpenStageconfigBEditor()
+        {
+            var frm = new Tools.StageconfigEditors.RSDKvBStageconfigEditor.MainForm();
+            frm.TopLevel = false;
+            frm.ControlBox = false;
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Dock = DockStyle.Fill;
+            var newTab = new TabPage(frm.Text);
+            newTab.Controls.Add(frm);
+            TabControl.TabPages.Add(newTab);
+            TabControl.SelectedTab = newTab;
+            frm.Show();
+            return frm;
+        } //Opens the RSDKvB Stageconfig Editor (and returns a referece to it)
 
         private void MenuItem_RSDKUnpacker_Click(object sender, EventArgs e)
         {
@@ -483,6 +595,11 @@ namespace RetroED
             OpenRSonicMdfEditor();
         }
 
+        private void menuItem9_Click(object sender, EventArgs e)
+        {
+            OpenRSonicCharListEditor();
+        }
+
         private void MenuItem_ScriptEditor_Click(object sender, EventArgs e)
         {
             OpenScriptEditor();
@@ -491,6 +608,36 @@ namespace RetroED
         private void menuItem16_Click(object sender, EventArgs e)
         {
             OpenGameconfigBEditor();
+        }
+
+        private void menuItem15_Click(object sender, EventArgs e)
+        {
+            OpenGameconfig2Editor();
+        }
+
+        private void menuItem13_Click(object sender, EventArgs e)
+        {
+            OpenGameconfig1Editor();
+        }
+
+        private void menuItem20_Click(object sender, EventArgs e)
+        {
+            OpenStageconfigRSEditor();
+        }
+
+        private void menuItem17_Click(object sender, EventArgs e)
+        {
+            OpenStageconfig1Editor();
+        }
+
+        private void menuItem18_Click(object sender, EventArgs e)
+        {
+            OpenStageconfig2Editor();
+        }
+
+        private void menuItem19_Click(object sender, EventArgs e)
+        {
+            OpenStageconfigBEditor();
         }
     }
 }

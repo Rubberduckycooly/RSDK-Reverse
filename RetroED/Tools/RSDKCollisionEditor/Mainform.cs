@@ -819,7 +819,7 @@ namespace RetroED.Tools.CollisionEditor
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                RSDKv5.TilesConfig tcf5 = new RSDKv5.TilesConfig(dlg.FileName);
+                RSDKv5.TileConfig tcf5 = new RSDKv5.TileConfig(dlg.FileName);
                 tcf = new RSDKvB.Tileconfig();
                 for (int i = 0; i < 1024; i++)
                 {
@@ -877,7 +877,7 @@ namespace RetroED.Tools.CollisionEditor
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                RSDKv5.TilesConfig tcf5 = new RSDKv5.TilesConfig();
+                RSDKv5.TileConfig tcf5 = new RSDKv5.TileConfig();
 
                 for (int i = 0; i < 1024; i++)
                 {

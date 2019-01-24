@@ -42,6 +42,8 @@ namespace RetroED.Tools.PaletteEditor
             this.viewRetroSonicInternalPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewSonicNexusInternalPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewSonicCDInternalPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportLoadedPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SplitContainer = new System.Windows.Forms.SplitContainer();
             this.colorGrid = new Cyotek.Windows.Forms.ColorGrid();
             this.colorEditor = new Cyotek.Windows.Forms.ColorEditor();
@@ -100,7 +102,7 @@ namespace RetroED.Tools.PaletteEditor
             // 
             this.openToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -108,21 +110,21 @@ namespace RetroED.Tools.PaletteEditor
             // 
             this.saveAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.saveAsToolStripMenuItem.Text = "Save As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(213, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(173, 6);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(176, 26);
             this.closeToolStripMenuItem.Text = "&Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -149,7 +151,9 @@ namespace RetroED.Tools.PaletteEditor
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewRetroSonicInternalPaletteToolStripMenuItem,
             this.viewSonicNexusInternalPaletteToolStripMenuItem,
-            this.viewSonicCDInternalPaletteToolStripMenuItem});
+            this.viewSonicCDInternalPaletteToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.exportLoadedPaletteToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -173,11 +177,23 @@ namespace RetroED.Tools.PaletteEditor
             // viewSonicCDInternalPaletteToolStripMenuItem
             // 
             this.viewSonicCDInternalPaletteToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.viewSonicCDInternalPaletteToolStripMenuItem.Enabled = false;
             this.viewSonicCDInternalPaletteToolStripMenuItem.Name = "viewSonicCDInternalPaletteToolStripMenuItem";
             this.viewSonicCDInternalPaletteToolStripMenuItem.Size = new System.Drawing.Size(303, 26);
             this.viewSonicCDInternalPaletteToolStripMenuItem.Text = "View Sonic CD Internal Palette";
             this.viewSonicCDInternalPaletteToolStripMenuItem.Click += new System.EventHandler(this.viewSonicCDInternalPaletteToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(300, 6);
+            // 
+            // exportLoadedPaletteToolStripMenuItem
+            // 
+            this.exportLoadedPaletteToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.exportLoadedPaletteToolStripMenuItem.Name = "exportLoadedPaletteToolStripMenuItem";
+            this.exportLoadedPaletteToolStripMenuItem.Size = new System.Drawing.Size(303, 26);
+            this.exportLoadedPaletteToolStripMenuItem.Text = "Export Loaded Palette to...";
+            this.exportLoadedPaletteToolStripMenuItem.Click += new System.EventHandler(this.exportLoadedPaletteToolStripMenuItem_Click);
             // 
             // SplitContainer
             // 
@@ -269,5 +285,7 @@ namespace RetroED.Tools.PaletteEditor
         private System.Windows.Forms.ToolStripMenuItem viewSonicCDInternalPaletteToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showPaletteRotationsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem exportLoadedPaletteToolStripMenuItem;
     }
 }
