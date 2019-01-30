@@ -13,64 +13,37 @@ namespace RetroED.Tools.BackgroundEditor
     public partial class RSN_LineScrollForm : Form
     {
 
-        public int LoadedRSDKver;
+        public Retro_Formats.EngineType engineType;
 
-        public int Pvalue;
+        public int curLine;
 
         public bool RemoveVal = false;
 
-        /*The unknown values seem to be line positions for each LineScroll Class*/
+        public Retro_Formats.Background Background = new Retro_Formats.Background();
 
-        public RSDKvRS.BGLayout BackgroundvRS;
-        public RSDKv1.BGLayout Backgroundv1;
+        int isVertical = 0;
 
-        int hv = 0;
-
-        public RSN_LineScrollForm(int RSDKver, int PVal, int HV)
+        public RSN_LineScrollForm(Retro_Formats.EngineType RSDKver, int PVal, int isVertical)
         {
             InitializeComponent();
-            hv = HV;
-            LoadedRSDKver = RSDKver;
-            Pvalue = PVal;
+            isVertical = isVertical;
+            engineType = RSDKver;
+            curLine = PVal;
         }
 
         public void Setup()
         {
-            if (hv == 0)
+            if (isVertical == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        LineNoNUD.Value = BackgroundvRS.HLines[Pvalue].RelativeSpeed;
-                        SPDNUD.Value = BackgroundvRS.HLines[Pvalue].ConstantSpeed;
-                        DeformNUD.Value = BackgroundvRS.HLines[Pvalue].Deform;
-                        break;
-                    case 2:
-                        LineNoNUD.Value = Backgroundv1.HLines[Pvalue].RelativeSpeed;
-                        SPDNUD.Value = Backgroundv1.HLines[Pvalue].ConstantSpeed;
-                        DeformNUD.Value = Backgroundv1.HLines[Pvalue].Deform;
-                        break;
-                    default:
-                        break;
-                }
+                LineNoNUD.Value = Background.HLines[curLine].RelativeSpeed;
+                SPDNUD.Value = Background.HLines[curLine].ConstantSpeed;
+                DeformNUD.Value = Background.HLines[curLine].Behaviour;
             }
-            else if (hv == 1)
+            else if (isVertical == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        LineNoNUD.Value = BackgroundvRS.VLines[Pvalue].RelativeSpeed;
-                        SPDNUD.Value = BackgroundvRS.VLines[Pvalue].RelativeSpeed;
-                        DeformNUD.Value = BackgroundvRS.VLines[Pvalue].Deform;
-                        break;
-                    case 2:
-                        LineNoNUD.Value = Backgroundv1.VLines[Pvalue].RelativeSpeed;
-                        SPDNUD.Value = Backgroundv1.VLines[Pvalue].ConstantSpeed;
-                        DeformNUD.Value = Backgroundv1.VLines[Pvalue].Deform;
-                        break;
-                    default:
-                        break;
-                }
+                LineNoNUD.Value = Background.HLines[curLine].RelativeSpeed;
+                SPDNUD.Value = Background.HLines[curLine].ConstantSpeed;
+                DeformNUD.Value = Background.HLines[curLine].Behaviour;
             }
         }
 
@@ -88,33 +61,13 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void CSPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (hv == 0)
+            if (isVertical == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.HLines[Pvalue].ConstantSpeed = (byte)SPDNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.HLines[Pvalue].ConstantSpeed = (byte)SPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[curLine].ConstantSpeed = (byte)SPDNUD.Value;
             }
-            else if (hv == 1)
+            else if (isVertical == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.VLines[Pvalue].ConstantSpeed = (byte)SPDNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.VLines[Pvalue].ConstantSpeed = (byte)SPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[curLine].ConstantSpeed = (byte)SPDNUD.Value;
             }
         }
 
@@ -127,65 +80,25 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void DeformNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (hv == 0)
+            if (isVertical == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.HLines[Pvalue].Deform = (byte)DeformNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.HLines[Pvalue].Deform = (byte)DeformNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[curLine].Behaviour = (byte)DeformNUD.Value;
             }
-            else if (hv == 1)
+            else if (isVertical == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.VLines[Pvalue].Deform = (byte)DeformNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.VLines[Pvalue].Deform = (byte)DeformNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[curLine].Behaviour = (byte)DeformNUD.Value;
             }
         }
 
         private void RSPDNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (hv == 0)
+            if (isVertical == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.HLines[Pvalue].RelativeSpeed = (byte)LineNoNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.HLines[Pvalue].RelativeSpeed = (byte)LineNoNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[curLine].RelativeSpeed = (byte)LineNoNUD.Value;
             }
-            else if (hv == 1)
+            else if (isVertical == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        BackgroundvRS.VLines[Pvalue].RelativeSpeed = (byte)LineNoNUD.Value;
-                        break;
-                    case 2:
-                        Backgroundv1.VLines[Pvalue].RelativeSpeed = (byte)LineNoNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[curLine].RelativeSpeed = (byte)LineNoNUD.Value;
             }
         }
     }

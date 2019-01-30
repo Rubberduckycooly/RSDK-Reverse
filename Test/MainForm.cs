@@ -105,7 +105,7 @@ namespace Test
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
                 //Videos
-                //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
+                RSDKv1.Video rsv = new RSDKv1.Video(filepath);
 
 
                 //Scripts

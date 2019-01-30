@@ -14,7 +14,7 @@ namespace RetroED.Tools.RSDKUnpacker
     public partial class MainForm : Form
     {
         string filename;
-        int dataVer = 0;
+        Retro_Formats.EngineType engineType;
 
         List<string> FileList = new List<string>();
 
@@ -38,25 +38,42 @@ namespace RetroED.Tools.RSDKUnpacker
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                dataVer = dlg.FilterIndex - 1;
+                switch(dlg.FilterIndex-1)
+                {
+                    case 0:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
+                        break;
+                    case 1:
+                        engineType = Retro_Formats.EngineType.RSDKv1;
+                        break;
+                    case 2:
+                        engineType = Retro_Formats.EngineType.RSDKv2;
+                        break;
+                    case 3:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        break;
+                    case 4:
+                        engineType = Retro_Formats.EngineType.RSDKv5;
+                        break;
+                }
                 filename = dlg.FileName;
                 DataFileLocation.Text = filename;
 
-                switch (dataVer)
+                switch (engineType)
                 {
-                    case 0:
+                    case Retro_Formats.EngineType.RSDKvRS:
                         DatavRS = new RSDKvRS.DataFile(filename);
                         SetFileListRS();
                         break;
-                    case 1:
+                    case Retro_Formats.EngineType.RSDKv1:
                         Datav1 = new RSDKv1.DataFile(filename);
                         SetFileListv1();
                         break;
-                    case 2:
+                    case Retro_Formats.EngineType.RSDKv2:
                         Datav2 = new RSDKv2.DataFile(filename);
                         SetFileListv2();
                         break;
-                    case 3:
+                    case Retro_Formats.EngineType.RSDKvB:
                         if (FileList == null || FileList.Count <= 0)
                         {
                             if (File.Exists("RSDKvBFileList.txt"))
@@ -75,7 +92,7 @@ namespace RetroED.Tools.RSDKUnpacker
                             SetFileListvB();
                         }
                         break;
-                    case 4:
+                    case Retro_Formats.EngineType.RSDKv5:
                         if (FileList == null || FileList.Count <= 0)
                         {
                             if (File.Exists("ManiaFileList.txt"))
@@ -106,21 +123,21 @@ namespace RetroED.Tools.RSDKUnpacker
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                switch (dataVer)
+                switch (engineType)
                 {
-                    case 0:
+                    case Retro_Formats.EngineType.RSDKvRS:
                         ExtractDataVRS(filename, dlg.SelectedPath);
                         break;
-                    case 1:
+                    case Retro_Formats.EngineType.RSDKv1:
                         ExtractDataV1(filename, dlg.SelectedPath);
                         break;
-                    case 2:
+                    case Retro_Formats.EngineType.RSDKv2:
                         ExtractDataV2(filename, dlg.SelectedPath);
                         break;
-                    case 3:
+                    case Retro_Formats.EngineType.RSDKvB:
                         ExtractDataVB(filename, dlg.SelectedPath);
                         break;
-                    case 4:
+                    case Retro_Formats.EngineType.RSDKv5:
                         ExtractDataV5(filename, dlg.SelectedPath);
                         break;
                     default:
@@ -144,27 +161,27 @@ namespace RetroED.Tools.RSDKUnpacker
 
             if (selectRSDKForm.ShowDialog(this) == DialogResult.OK)
             {
-                dataVer = selectRSDKForm.RSDKver;
+                engineType = selectRSDKForm.engineType;
                 if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
                     filename = dlg.SelectedPath;
                     DataFolderLocation.Text = filename;
 
-                    switch (dataVer)
+                    switch (engineType)
                     {
-                        case 0:
+                        case Retro_Formats.EngineType.RSDKvRS:
                             BuildFromDataFolderVRS(dlg.SelectedPath);
                             break;
-                        case 1:
+                        case Retro_Formats.EngineType.RSDKv1:
                             BuildFromDataFolderV1(dlg.SelectedPath);
                             break;
-                        case 2:
+                        case Retro_Formats.EngineType.RSDKv2:
                             BuildFromDataFolderV2(dlg.SelectedPath);
                             break;
-                        case 3:
+                        case Retro_Formats.EngineType.RSDKvB:
                             BuildFromDataFolderVB(dlg.SelectedPath);
                             break;
-                        case 4:
+                        case Retro_Formats.EngineType.RSDKv5:
                             BuildFromDataFolderV5(dlg.SelectedPath);
                             break;
                         default:
@@ -591,9 +608,9 @@ namespace RetroED.Tools.RSDKUnpacker
             if (FileListBox.SelectedIndex >= 0)
             {
                 FileOptionsForm frm = new FileOptionsForm();
-                switch (dataVer)
+                switch (engineType)
                 {
-                    case 0:
+                    case Retro_Formats.EngineType.RSDKvRS:
                         frm.Setup(DatavRS.Files[FileListBox.SelectedIndex]);
 
                         if (frm.ShowDialog(this) == DialogResult.OK)
@@ -602,7 +619,7 @@ namespace RetroED.Tools.RSDKUnpacker
                             SetFileListRS();
                         }
                         break;
-                    case 1:
+                    case Retro_Formats.EngineType.RSDKv1:
                         frm.Setup(Datav1.Files[FileListBox.SelectedIndex]);
 
                         if (frm.ShowDialog(this) == DialogResult.OK)
@@ -611,7 +628,7 @@ namespace RetroED.Tools.RSDKUnpacker
                             SetFileListv1();
                         }
                         break;
-                    case 2:
+                    case Retro_Formats.EngineType.RSDKv2:
                         frm.Setup(Datav2.Files[FileListBox.SelectedIndex]);
 
                         if (frm.ShowDialog(this) == DialogResult.OK)
@@ -620,7 +637,7 @@ namespace RetroED.Tools.RSDKUnpacker
                             SetFileListv2();
                         }
                         break;
-                    case 3:
+                    case Retro_Formats.EngineType.RSDKvB:
                         frm.Setup(DatavB.Files[FileListBox.SelectedIndex]);
 
                         if (frm.ShowDialog(this) == DialogResult.OK)
@@ -629,7 +646,7 @@ namespace RetroED.Tools.RSDKUnpacker
                             SetFileListvB();
                         }
                         break;
-                    case 4:
+                    case Retro_Formats.EngineType.RSDKv5:
                         frm.Setup(Datav5.Files[FileListBox.SelectedIndex]);
 
                         if (frm.ShowDialog(this) == DialogResult.OK)
@@ -644,22 +661,22 @@ namespace RetroED.Tools.RSDKUnpacker
 
         private void EncryptedCB_CheckedChanged(object sender, EventArgs e)
         {
-            switch (dataVer)
+            switch (engineType)
             {
-                case 0:
+                case Retro_Formats.EngineType.RSDKvRS:
                     EncryptedCB.Checked = false;
                     break;
-                case 1:
+                case Retro_Formats.EngineType.RSDKv1:
                     EncryptedCB.Checked = Datav1.Files[FileListBox.SelectedIndex].encrypted;
                     break;
-                case 2:
+                case Retro_Formats.EngineType.RSDKv2:
                     //EncryptedCB.Checked = Datav2.Files[FileListBox.SelectedIndex].encrypted;
                     EncryptedCB.Checked = true;
                     break;
-                case 3:
+                case Retro_Formats.EngineType.RSDKvB:
                     EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].Encrypted;
                     break;
-                case 4:
+                case Retro_Formats.EngineType.RSDKv5:
                     EncryptedCB.Checked = Datav5.Files[FileListBox.SelectedIndex].Encrypted;
                     break;
             }
@@ -667,9 +684,9 @@ namespace RetroED.Tools.RSDKUnpacker
 
         void RefreshUI()
         {
-            switch(dataVer)
+            switch(engineType)
             {
-                case 0: //RSonic '07 (RSDKvRS)
+                case Retro_Formats.EngineType.RSDKvRS: //RSonic '07 (RSDKvRS)
                     if (FileListBox.SelectedIndex >= 0)
                     {
                         FileSizeLabel.Text = "File Size = " + DatavRS.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
@@ -680,7 +697,7 @@ namespace RetroED.Tools.RSDKUnpacker
                         DirectoryList.SelectedIndex = DatavRS.Files[FileListBox.SelectedIndex].DirID;
                     }
                     break;
-                case 1: //Sonic Nexus (RSDKv1)
+                case Retro_Formats.EngineType.RSDKv1: //Sonic Nexus (RSDKv1)
                     if (FileListBox.SelectedIndex >= 0)
                     {
                         FileSizeLabel.Text = "File Size = " + Datav1.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
@@ -690,7 +707,7 @@ namespace RetroED.Tools.RSDKUnpacker
                         EncryptedCB.Checked = Datav1.Files[FileListBox.SelectedIndex].encrypted;
                     }
                     break;
-                case 2: //Sonic CD (RSDKv2)
+                case Retro_Formats.EngineType.RSDKv2: //Sonic CD (RSDKv2)
                     if (FileListBox.SelectedIndex >= 0)
                     {
                         FileSizeLabel.Text = "File Size = " + Datav2.Files[FileListBox.SelectedIndex].fileSize + " Bytes";
@@ -701,7 +718,7 @@ namespace RetroED.Tools.RSDKUnpacker
                         EncryptedCB.Checked = true;
                     }
                     break;
-                case 3: //Sonic 1 & 2 (RSDKvB)
+                case Retro_Formats.EngineType.RSDKvB: //Sonic 1 & 2 (RSDKvB)
                     if (FileListBox.SelectedIndex >= 0)
                     {
                         FileSizeLabel.Text = "File Size = " + DatavB.Files[FileListBox.SelectedIndex].FileSize + " Bytes";
@@ -711,7 +728,7 @@ namespace RetroED.Tools.RSDKUnpacker
                         EncryptedCB.Checked = DatavB.Files[FileListBox.SelectedIndex].Encrypted;
                     }
                     break;
-                case 4: //Sonic Mania (RSDKv5)
+                case Retro_Formats.EngineType.RSDKv5: //Sonic Mania (RSDKv5)
                     if (FileListBox.SelectedIndex >= 0)
                     {
                         FileSizeLabel.Text = "File Size = " + Datav5.Files[FileListBox.SelectedIndex].FileSize + " Bytes";
@@ -736,16 +753,16 @@ namespace RetroED.Tools.RSDKUnpacker
 
         private void DirectoryList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(dataVer)
+            switch(engineType)
             {
-                case 0: //RSonic '07 (RSDKvRS)
+                case Retro_Formats.EngineType.RSDKvRS: //RSonic '07 (RSDKvRS)
                     DatavRS.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
                     break;
-                case 1: //Sonic Nexus (RSDKv1)
-                    //Datav1.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
+                case Retro_Formats.EngineType.RSDKv1: //Sonic Nexus (RSDKv1)
+                    Datav1.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
                     break;
-                case 2: //Sonic CD (RSDKv2)
-                    //Datav2.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
+                case Retro_Formats.EngineType.RSDKv2: //Sonic CD (RSDKv2)
+                    Datav2.Files[FileListBox.SelectedIndex].DirID = (byte)DirectoryList.SelectedIndex;
                     break;
             }
         }

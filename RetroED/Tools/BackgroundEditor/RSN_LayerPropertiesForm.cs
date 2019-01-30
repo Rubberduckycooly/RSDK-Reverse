@@ -13,40 +13,25 @@ namespace RetroED.Tools.BackgroundEditor
     public partial class RSN_LayerPropertiesForm : Form
     {
 
-        public int LoadedRSDKver;
+        public Retro_Formats.EngineType engineType;
 
         public int CurLayer = 0;
 
-        public RSDKvRS.BGLayout Mapv1;
-        public RSDKv1.BGLayout Mapv2;
+        public Retro_Formats.Background Background = new Retro_Formats.Background();
 
-        public RSN_LayerPropertiesForm(int RSDKver)
+        public RSN_LayerPropertiesForm(Retro_Formats.EngineType RSDKver)
         {
             InitializeComponent();
-            LoadedRSDKver = RSDKver;
+            engineType = RSDKver;
         }
 
         public void Setup()
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    MapWidthNUD.Value = Mapv1.Layers[CurLayer].width;
-                    MapHeightNUD.Value = Mapv1.Layers[CurLayer].height;
-                    DeformNUD.Value = Mapv1.Layers[CurLayer].Deform;
-                    RVSPDNUD.Value = Mapv1.Layers[CurLayer].RelativeSpeed;
-                    CVSPDNUD.Value = Mapv1.Layers[CurLayer].ConstantSpeed;
-                    break;
-                case 2:
-                    MapWidthNUD.Value = Mapv2.Layers[CurLayer].width;
-                    MapHeightNUD.Value = Mapv2.Layers[CurLayer].height;
-                    DeformNUD.Value = Mapv2.Layers[CurLayer].Deform;
-                    RVSPDNUD.Value = Mapv2.Layers[CurLayer].RelativeSpeed;
-                    CVSPDNUD.Value = Mapv2.Layers[CurLayer].ConstantSpeed;
-                    break;
-                default:
-                    break;
-            }
+            MapWidthNUD.Value = Background.Layers[CurLayer].width;
+            MapHeightNUD.Value = Background.Layers[CurLayer].height;
+            DeformNUD.Value = Background.Layers[CurLayer].Behaviour;
+            RVSPDNUD.Value = Background.Layers[CurLayer].RelativeSpeed;
+            CVSPDNUD.Value = Background.Layers[CurLayer].ConstantSpeed;
         }
 
         private void OKButton_Click(object sender, EventArgs e)
@@ -62,77 +47,27 @@ namespace RetroED.Tools.BackgroundEditor
         }
         private void MapWidthNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    Mapv1.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
-                    break;
-                default:
-                    break;
-            }
+            Background.Layers[CurLayer].width = (byte)MapWidthNUD.Value;
         }
 
         private void MapHeightNUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    Mapv1.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
-                    break;
-                default:
-                    break;
-            }
+            Background.Layers[CurLayer].height = (byte)MapHeightNUD.Value;
         }
 
         private void Unknown1NUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    Mapv1.Layers[CurLayer].Deform = (byte)DeformNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Layers[CurLayer].Deform = (byte)DeformNUD.Value;
-                    break;
-                default:
-                    break;
-            }
+            Background.Layers[CurLayer].Behaviour = (byte)DeformNUD.Value;
         }
 
         private void Unknown2NUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    Mapv1.Layers[CurLayer].RelativeSpeed = (byte)RVSPDNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Layers[CurLayer].RelativeSpeed = (byte)RVSPDNUD.Value;
-                    break;
-                default:
-                    break;
-            }
+            Background.Layers[CurLayer].RelativeSpeed = (byte)RVSPDNUD.Value;
         }
 
         private void Unknown3NUD_ValueChanged(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    Mapv1.Layers[CurLayer].ConstantSpeed = (byte)CVSPDNUD.Value;
-                    break;
-                case 2:
-                    Mapv2.Layers[CurLayer].ConstantSpeed = (byte)CVSPDNUD.Value;
-                    break;
-                default:
-                    break;
-            }
+            Background.Layers[CurLayer].ConstantSpeed = (byte)CVSPDNUD.Value;
         }
     }
 }

@@ -255,14 +255,22 @@ namespace RSDKv1
                 while (notEnd)
                 {
                     byte BlockSize = reader.ReadByte();
-                    byte clearCode = reader.ReadByte(); //just read the clearcode
+                    //byte clearCode = reader.ReadByte(); //just read the clearcode
 
                     if (BlockSize == 0)
                     {
-                        break;
+                        bool Next = false;
+
+                        while (!Next)
+                        {
+                            byte tmp = reader.ReadByte();
+                            if (tmp == (byte)';') { Next = true; return; } // AKA ';'
+                        }
                     }
 
-                    if (!ExtendedCodeTable)
+                    reader.ReadBytes(BlockSize);
+
+                    /*if (!ExtendedCodeTable)
                     {
 
                         while ((c = reader.ReadByte()) != EndCode)
@@ -295,7 +303,7 @@ namespace RSDKv1
                         Console.WriteLine("wtf no");
                         break;                    
                         //gonna haveta do special stuff for 256 colour images
-                    }
+                    }*/
                 }
             }
 

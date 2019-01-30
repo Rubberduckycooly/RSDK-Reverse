@@ -12,7 +12,9 @@ namespace RetroED
 {
     public partial class SelectRSDKForm : Form
     {
-        public int RSDKver = 0;
+        public Retro_Formats.EngineType engineType = 0;
+
+        public bool usingRSDKv5 = false;
 
         public SelectRSDKForm()
         {
@@ -21,8 +23,45 @@ namespace RetroED
 
         private void RSDKVerBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (RSDKVerBox.SelectedIndex >= 0) RSDKver = RSDKVerBox.SelectedIndex;
-            else RSDKver = 0;
+            if (!usingRSDKv5)
+            {
+                switch (RSDKVerBox.SelectedIndex)
+                {
+                    case 0:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        break;
+                    case 1:
+                        engineType = Retro_Formats.EngineType.RSDKv2;
+                        break;
+                    case 2:
+                        engineType = Retro_Formats.EngineType.RSDKv1;
+                        break;
+                    case 3:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
+                        break;
+                }
+            }
+            else
+            {
+                switch (RSDKVerBox.SelectedIndex)
+                {
+                    case 4:
+                        engineType = Retro_Formats.EngineType.RSDKv5;
+                        break;
+                    case 3:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        break;
+                    case 2:
+                        engineType = Retro_Formats.EngineType.RSDKv2;
+                        break;
+                    case 1:
+                        engineType = Retro_Formats.EngineType.RSDKv1;
+                        break;
+                    case 0:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
+                        break;
+                }
+            }
         }
 
         private void OKButton_Click(object sender, EventArgs e)

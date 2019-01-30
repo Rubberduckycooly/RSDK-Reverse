@@ -41,7 +41,7 @@
             // 
             // statusStrip1
             // 
-            this.statusStrip1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.MousePosStatusLabel});
@@ -53,6 +53,7 @@
             // 
             // MousePosStatusLabel
             // 
+            this.MousePosStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MousePosStatusLabel.Name = "MousePosStatusLabel";
             this.MousePosStatusLabel.Size = new System.Drawing.Size(116, 20);
             this.MousePosStatusLabel.Text = "Mouse Position: ";
@@ -81,8 +82,9 @@
             // 
             // BlocksList
             // 
-            this.BlocksList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BlocksList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.BlocksList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlocksList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BlocksList.ImageHeight = 128;
             this.BlocksList.ImageSize = 128;
             this.BlocksList.ImageWidth = 128;
@@ -97,7 +99,8 @@
             // 
             // ObjectsPage
             // 
-            this.ObjectsPage.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ObjectsPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
+            this.ObjectsPage.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ObjectsPage.Location = new System.Drawing.Point(4, 26);
             this.ObjectsPage.Name = "ObjectsPage";
             this.ObjectsPage.Size = new System.Drawing.Size(309, 326);
@@ -108,7 +111,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.ClientSize = new System.Drawing.Size(317, 381);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.statusStrip1);

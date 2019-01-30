@@ -8,18 +8,8 @@ namespace RetroED.Tools.ChunkMappingsEditor
 {
     public partial class MainForm : Form
     {
-
-        enum RSDKver //All 4 Versions use the same file format lol
-        {
-            NONE,
-            RSDK1,
-            RSDK2,
-            RSDK3,
-            RSDK4
-        }
-
         //What RSDK version is loaded?
-        int LoadedChunkVer = (int)RSDKver.RSDK3;
+        Retro_Formats.EngineType engineType = 0;
 
         //Stuff that tells the program what chunk to display
         int curChunk = 0;
@@ -41,10 +31,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
         public RetroED.MainForm Parent;
 
         //Chunk Data
-        RSDKvRS.Tiles128x128 Chunksv1;
-        RSDKv1.Tiles128x128 Chunksv2;
-        RSDKv2.Tiles128x128 Chunksv3;
-        RSDKvB.Tiles128x128 Chunksv4;
+        Retro_Formats.MetaTiles Chunks = new Retro_Formats.MetaTiles();
 
         //Tileset
         Bitmap Tiles;
@@ -74,42 +61,13 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         void RedrawChunk()
         {
-            if (LoadedChunkVer == (int)RSDKver.RSDK4)
-            {
-                DisplayedChunk = Chunksv4.RenderChunk(curChunk, Tiles);//Draw the current chunk!
-                OrientationBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction;
-                VisualBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane;//Update Chunk Values!
-                CollisionABox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0;
-                CollisionBBox.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1;
-                ChunkNumberLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv4.BlockList.Length + ":"; //What chunk are we on?
-            }
-            if (LoadedChunkVer == (int)RSDKver.RSDK3)
-            {
-                DisplayedChunk = Chunksv3.RenderChunk(curChunk, Tiles); //Draw the current chunk!
-                OrientationBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction;
-                VisualBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane;//Update Chunk Values!
-                CollisionABox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0;
-                CollisionBBox.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1;
-                ChunkNumberLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv3.BlockList.Length + ":";//What chunk are we on?
-            }
-            if (LoadedChunkVer == (int)RSDKver.RSDK2)
-            {
-                DisplayedChunk = Chunksv2.RenderChunk(curChunk, Tiles); //Draw the current chunk!
-                OrientationBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction;
-                VisualBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane;//Update Chunk Values!
-                CollisionABox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0;
-                CollisionBBox.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1;
-                ChunkNumberLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv2.BlockList.Length + ":";//What chunk are we on?
-            }
-            if (LoadedChunkVer == (int)RSDKver.RSDK1)
-            {
-                DisplayedChunk = Chunksv1.RenderChunk(curChunk, Tiles); //Draw the current chunk!
-                OrientationBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction; //Update Chunk Values!
-                VisualBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane;
-                CollisionABox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0;
-                CollisionBBox.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1;
-                ChunkNumberLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunksv1.BlockList.Length + ":";//What chunk are we on?
-            }
+            DisplayedChunk = Chunks.ChunkList[curChunk].Render(Tiles);//Draw the current chunk!
+            OrientationBox.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Direction;
+            VisualBox.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].VisualPlane;//Update Chunk Values!
+            CollisionABox.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag0;
+            CollisionBBox.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag1;
+            ChunkNumberLabel.Text = "Chunk " + (curChunk + 1) + " Of " + Chunks.ChunkList.Length + ":"; //What chunk are we on?
+
 
             int zw = (int)(DisplayedChunk.Width * ZoomLevel);
             int zh = (int)(DisplayedChunk.Height * ZoomLevel);
@@ -168,47 +126,35 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 switch (dlg.FilterIndex - 1) //What RSDK version was loaded?
                 {
                     case 0:
-                        Chunksv1 = null;
-                        Chunksv2 = null;
-                        Chunksv3 = null;
-                        Chunksv4 = new RSDKvB.Tiles128x128(dlg.FileName);
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
-                        LoadedChunkVer = (int)RSDKver.RSDK4;
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        Chunks.ImportFrom(engineType, dlg.FileName);
                         LoadTileSet(Tiles);
                         LoadChunks(Tiles);
                         GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
                     case 1:
-                        Chunksv1 = null;
-                        Chunksv2 = null;
-                        Chunksv3 = new RSDKv2.Tiles128x128(dlg.FileName);
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
-                        Chunksv4 = null;
-                        LoadedChunkVer = (int)RSDKver.RSDK3;
+                        engineType = Retro_Formats.EngineType.RSDKv2;
+                        Chunks.ImportFrom(engineType, dlg.FileName);
                         LoadTileSet(Tiles);
                         LoadChunks(Tiles);
                         GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
                     case 2:
-                        Chunksv1 = null;
-                        Chunksv2 = new RSDKv1.Tiles128x128(dlg.FileName);
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
-                        Chunksv3 = null;
-                        Chunksv4 = null;
-                        LoadedChunkVer = (int)RSDKver.RSDK2;
+                        engineType = Retro_Formats.EngineType.RSDKv1;
+                        Chunks.ImportFrom(engineType,dlg.FileName);
                         LoadTileSet(Tiles);
                         LoadChunks(Tiles);
                         GotoNUD.Maximum = 512;
                         RedrawChunk();
                         break;
-                    default:
-                        Chunksv1 = new RSDKvRS.Tiles128x128(dlg.FileName);
-                        Chunksv2 = null;
-                        Chunksv3 = null;
-                        Chunksv4 = null;
-                        LoadedChunkVer = (int)RSDKver.RSDK1;
+                    case 3:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
+                        Chunks.ImportFrom(engineType, dlg.FileName);
                         RSDKvRS.gfx gfx = new RSDKvRS.gfx(dlg.FileName.Replace("Zone.til", "Zone.gfx"), false); //A Zone's Tileset should be in the same folder as its chunk mappings
                         Tiles = new Bitmap(gfx.gfxImage);
                         LoadTileSet(Tiles);
@@ -246,35 +192,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
         public void LoadChunks(Bitmap TileSet)
         {
             StageChunksList.Images.Clear(); // Clear the previous images, since we load the entire file!
-
-            switch (LoadedChunkVer)
+            for (int i = 0; i < Chunks.MaxChunks; i++)
             {
-                case (int)RSDKver.RSDK1:
-                    for (int i = 0; i < 256; i++)
-                    {
-                        StageChunksList.Images.Add(Chunksv1.BlockList[i].Render(TileSet));
-                    }
-                    break;
-                case (int)RSDKver.RSDK2:
-                    for (int i = 0; i < 512; i++)
-                    {
-                        StageChunksList.Images.Add(Chunksv2.BlockList[i].Render(TileSet));
-                    }
-                    break;
-                case (int)RSDKver.RSDK3:
-                    for (int i = 0; i < 512; i++)
-                    {
-                        StageChunksList.Images.Add(Chunksv3.BlockList[i].Render(TileSet));
-                    }
-                    break;
-                case (int)RSDKver.RSDK4:
-                    for (int i = 0; i < 512; i++)
-                    {
-                        StageChunksList.Images.Add(Chunksv4.BlockList[i].Render(TileSet));
-                    }
-                    break;
+                StageChunksList.Images.Add(Chunks.ChunkList[i].Render(TileSet));
             }
-
             StageChunksList.Refresh(); // Update the tileList control
         }
 
@@ -328,23 +249,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             if (filename != null)
             {
-                switch (LoadedChunkVer)
-                {
-                    case 1:
-                        Chunksv1.Write(filename);
-                        break;
-                    case 2:
-                        Chunksv2.Write(filename);
-                        break;
-                    case 3:
-                        Chunksv3.Write(filename);
-                        break;
-                    case 4:
-                        Chunksv4.Write(filename);
-                        break;
-                    default:
-                        break;
-                }
+                Chunks.ExportTo(engineType, filename);
             }
             else
             {
@@ -356,28 +261,27 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             SaveFileDialog dlg = new SaveFileDialog();
             dlg.DefaultExt = ".bin";
-            dlg.Filter = "RSDKvB (Sonic 1 & 2 Remakes) Chunk Mappings|128x128Tiles.bin|RSDKv2 (Sonic CD) Chunk Mappings|128x128Tiles.bin|RSDKv1 (Sonic Nexus) Chunk Mappings|128x128Tiles.bin|Retro-Sonic Chunk Mappings|Zone.til";
+            dlg.Filter = "RSDKvB Chunk Mappings|128x128Tiles.bin|RSDKv2 Chunk Mappings|128x128Tiles.bin|RSDKv1 Chunk Mappings|128x128Tiles.bin|Retro-Sonic Chunk Mappings|Zone.til";
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 filename = dlg.FileName;
-                switch (LoadedChunkVer)
+                switch(dlg.FilterIndex-1)
                 {
+                    case 0:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        break;
                     case 1:
-                        Chunksv1.Write(dlg.FileName);
+                        engineType = Retro_Formats.EngineType.RSDKv2;
                         break;
                     case 2:
-                        Chunksv2.Write(dlg.FileName);
+                        engineType = Retro_Formats.EngineType.RSDKv1;
                         break;
                     case 3:
-                        Chunksv3.Write(dlg.FileName);
-                        break;
-                    case 4:
-                        Chunksv4.Write(dlg.FileName);
-                        break;
-                    default:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
                         break;
                 }
+                Chunks.ExportTo(engineType, filename);
             }
         }
 
@@ -388,41 +292,11 @@ namespace RetroED.Tools.ChunkMappingsEditor
                 dlg.Description = "Select A Folder To Place The Chunks In";
                 if (dlg.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (LoadedChunkVer != (int)RSDKver.RSDK1)
+                    for (int i = 0; i < Chunks.MaxChunks; i++)
                     {
-                    for (int i = 0; i < 512; i++)
-                    {
-                        if (LoadedChunkVer == (int)RSDKver.RSDK4)
-                        {
-                            Bitmap b;
-                            b = Chunksv4.RenderChunk(i, Tiles);
-                            b.Save(dlg.SelectedPath + "\\" + i + ".png");
-                        }
-                        if (LoadedChunkVer == (int)RSDKver.RSDK3)
-                        {
-                            Bitmap b;
-                            b = Chunksv3.RenderChunk(i, Tiles);
-                            b.Save(dlg.SelectedPath + "\\" + i + ".png");
-                        }
-                        if (LoadedChunkVer == (int)RSDKver.RSDK2)
-                        {
-                            Bitmap b;
-                            b = Chunksv2.RenderChunk(i, Tiles);
-                            b.Save(dlg.SelectedPath + "\\" + i + ".png");
-                        }
-                    }
-                    }
-                    else
-                    {
-                        for (int i = 0; i < 256; i++)
-                        {
-                            if (LoadedChunkVer == (int)RSDKver.RSDK1)
-                            {
-                                Bitmap b;
-                                b = Chunksv1.RenderChunk(i, Tiles);
-                                b.Save(dlg.SelectedPath + "\\" + i + ".png");
-                            }
-                        }
+                        Bitmap b;
+                        b = Chunks.ChunkList[i].Render(Tiles);
+                        b.Save(dlg.SelectedPath + "\\" + i + ".png");
                     }
                 }
                 dlg.Dispose();
@@ -438,116 +312,30 @@ namespace RetroED.Tools.ChunkMappingsEditor
             switch (e.Button)
             {
                 case MouseButtons.Left:
-                    if (LoadedChunkVer == 1) //if its on, Auto-Set Kicks in!
+                    if (AutoSetDirectionBool)
                     {
-                        if (AutoSetDirectionBool)
-                        {
-                            Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
-                        }
-                        if (AutoSetVisualPlaneBool)
-                        {
-                            Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
-                        }
-                        if (AutoSetCollisionABool)
-                        {
-                            Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
-                        }
-                        if (AutoSetCollisionBBool)
-                        {
-                            Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
-                        }
-                        if (AutoSet16x16TileBool)
-                        {
-                            Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
-                        }
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
                     }
-                    if (LoadedChunkVer == 2) //if its on, Auto-Set Kicks in!
+                    if (AutoSetVisualPlaneBool)
                     {
-                        if (AutoSetDirectionBool)
-                        {
-                            Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
-                        }
-                        if (AutoSetVisualPlaneBool)
-                        {
-                            Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
-                        }
-                        if (AutoSetCollisionABool)
-                        {
-                            Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
-                        }
-                        if (AutoSetCollisionBBool)
-                        {
-                            Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
-                        }
-                        if (AutoSet16x16TileBool)
-                        {
-                            Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
-                        }
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
                     }
-                    if (LoadedChunkVer == 3) //if its on, Auto-Set Kicks in!
+                    if (AutoSetCollisionABool)
                     {
-                        if (AutoSetDirectionBool)
-                        {
-                            Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
-                        }
-                        if (AutoSetVisualPlaneBool)
-                        {
-                            Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
-                        }
-                        if (AutoSetCollisionABool)
-                        {
-                            Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
-                        }
-                        if (AutoSetCollisionBBool)
-                        {
-                            Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
-                        }
-                        if (AutoSet16x16TileBool)
-                        {
-                            Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
-                        }
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
                     }
-                    if (LoadedChunkVer == 4) //if its on, Auto-Set Kicks in!
+                    if (AutoSetCollisionBBool)
                     {
-                        if (AutoSetDirectionBool)
-                        {
-                            Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
-                        }
-                        if (AutoSetVisualPlaneBool)
-                        {
-                            Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
-                        }
-                        if (AutoSetCollisionABool)
-                        {
-                            Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
-                        }
-                        if (AutoSetCollisionBBool)
-                        {
-                            Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
-                        }
-                        if (AutoSet16x16TileBool)
-                        {
-                            Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
-                        }
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
+                    }
+                    if (AutoSet16x16TileBool)
+                    {
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
                     }
                     RedrawChunk(); //If you don't know what this would do then you clearly shouldn't be here lol
               break;
                 case MouseButtons.Middle:
-                    switch (LoadedChunkVer)
-                    {
-                        case (int)RSDKver.RSDK4:
-                            StageTilesList.SelectedIndex = Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16;
-                            break;
-                        case (int)RSDKver.RSDK3:
-                            StageTilesList.SelectedIndex = Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16;
-                            break;
-                        case (int)RSDKver.RSDK2:
-                            StageTilesList.SelectedIndex = Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16;
-                            break;
-                        case (int)RSDKver.RSDK1:
-                            StageTilesList.SelectedIndex = Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16;
-                            break;
-                    }
+                    StageTilesList.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16;
                     StageTilesList.Refresh();
               break;
             }
@@ -555,117 +343,32 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void OrientationBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch(LoadedChunkVer)
-            {
-                case 1:
-                    Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = (byte)OrientationBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 2:
-                    Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = (byte)OrientationBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 3:
-                    Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = (byte)OrientationBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 4:
-                    Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Direction = (byte)OrientationBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-            }
+            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Direction = (byte)OrientationBox.SelectedIndex;
+            RedrawChunk();
         }
 
         private void VisualBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (LoadedChunkVer)
-            {
-                case 1:
-                    Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = (byte)VisualBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 2:
-                    Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = (byte)VisualBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 3:
-                    Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = (byte)VisualBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 4:
-                    Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].VisualPlane = (byte)VisualBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-            }
+            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].VisualPlane = (byte)VisualBox.SelectedIndex;
+            RedrawChunk();
         }
 
         private void CollisionABox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (LoadedChunkVer)
-            {
-                case 1:
-                    Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = (byte)CollisionABox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 2:
-                    Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = (byte)CollisionABox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 3:
-                    Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = (byte)CollisionABox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 4:
-                    Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag0 = (byte)CollisionABox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-            }
+            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag0 = (byte)CollisionABox.SelectedIndex;
+            RedrawChunk();
         }
 
         private void CollisionBBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (LoadedChunkVer)
-            {
-                case 1:
-                    Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = (byte)CollisionBBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 2:
-                    Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = (byte)CollisionBBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 3:
-                    Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = (byte)CollisionBBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 4:
-                    Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].CollisionFlag1 = (byte)CollisionBBox.SelectedIndex;
-                    RedrawChunk();
-                    break;
-            }
+            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag1 = (byte)CollisionBBox.SelectedIndex;
+            RedrawChunk();
         }
 
         private void StageTilesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (LoadedChunkVer)
-            {
-                case 1:
-                    Chunksv1.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 2:
-                    Chunksv2.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 3:
-                    Chunksv3.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
-                    RedrawChunk();
-                    break;
-                case 4:
-                    Chunksv4.BlockList[curChunk].Mapping[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
-                    RedrawChunk();
-                    break;
-            }
+            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
+            RedrawChunk();
             if (StageTilesList.SelectedIndex >= 0)
             { 
                 TileIDNUD.Value = StageTilesList.SelectedIndex;
@@ -675,13 +378,9 @@ namespace RetroED.Tools.ChunkMappingsEditor
         private void NextChunkButton_Click(object sender, EventArgs e)
         {
             curChunk++; //go to the next chunk
-            if (LoadedChunkVer != (int)RSDKver.RSDK1 && curChunk > 511) //Make sure we don't go further than the amount of chunks we have
+            if (curChunk > Chunks.MaxChunks - 1) //Make sure we don't go further than the amount of chunks we have
             {
-                curChunk = 511;
-            }
-            if (LoadedChunkVer == (int)RSDKver.RSDK1 && curChunk > 255) //Make sure we don't go further than the amount of chunks we have (But for Retro-Sonic this time!)
-            {
-                curChunk = 255;
+                curChunk = Chunks.MaxChunks - 1;
             }
             StageChunksList.SelectedIndex = curChunk;
             StageChunksList.Refresh();
@@ -709,29 +408,14 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void GotoNUD_ValueChanged(object sender, EventArgs e)
         {
-            if (LoadedChunkVer == 1)
+            if (GotoNUD.Value <= Chunks.MaxChunks)
             {
-                if (GotoNUD.Value <= 256)
-                {
-                    gotoChunk = (int)GoToChunkNUD.Value - 1;
-                }
-                else
-                {
-                    GotoNUD.Value = 256;
-                    gotoChunk = (int)GoToChunkNUD.Value - 1;
-                }
+                gotoChunk = (int)GoToChunkNUD.Value - 1;
             }
-            if (LoadedChunkVer >= 1)
+            else
             {
-                if (GotoNUD.Value <= 512)
-                {
-                    gotoChunk = (int)GoToChunkNUD.Value - 1;
-                }
-                else
-                {
-                    GotoNUD.Value = 512;
-                    gotoChunk = (int)GoToChunkNUD.Value - 1;
-                }
+                GotoNUD.Value = Chunks.MaxChunks;
+                gotoChunk = (int)GoToChunkNUD.Value - 1;
             }
             if (gotoChunk <= 0)
             {
@@ -856,22 +540,7 @@ namespace RetroED.Tools.ChunkMappingsEditor
             frm.numericUpDown1.Value = curChunk + 1;
             if (frm.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                if (LoadedChunkVer == (int)RSDKver.RSDK4)
-                {
-                    Chunksv4.BlockList[frm.DestinationChunk] = Chunksv4.Clone(frm.SourceChunk);
-                }
-                if (LoadedChunkVer == (int)RSDKver.RSDK3)
-                {
-                    Chunksv3.BlockList[frm.DestinationChunk] = Chunksv3.Clone(frm.SourceChunk);
-                }
-                if (LoadedChunkVer == (int)RSDKver.RSDK2)
-                {
-                    Chunksv2.BlockList[frm.DestinationChunk] = Chunksv2.Clone(frm.SourceChunk);
-                }
-                if (LoadedChunkVer == (int)RSDKver.RSDK1)
-                {
-                    Chunksv1.BlockList[frm.DestinationChunk] = Chunksv1.Clone(frm.SourceChunk);
-                }
+                Chunks.ChunkList[frm.DestinationChunk] = Chunks.Clone(frm.SourceChunk);
             }
         }
 

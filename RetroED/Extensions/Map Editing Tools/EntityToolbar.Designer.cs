@@ -45,6 +45,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbEditor.Controls.Add(this.entitiesList);
             this.gbEditor.Controls.Add(this.entityProperties);
+            this.gbEditor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.gbEditor.Location = new System.Drawing.Point(0, 72);
             this.gbEditor.Margin = new System.Windows.Forms.Padding(4);
             this.gbEditor.Name = "gbEditor";
@@ -89,6 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbSpawn.Controls.Add(this.btnSpawn);
             this.gbSpawn.Controls.Add(this.cbSpawn);
+            this.gbSpawn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.gbSpawn.Location = new System.Drawing.Point(0, 4);
             this.gbSpawn.Margin = new System.Windows.Forms.Padding(4);
             this.gbSpawn.Name = "gbSpawn";
@@ -101,6 +103,7 @@
             // btnSpawn
             // 
             this.btnSpawn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSpawn.ForeColor = System.Drawing.SystemColors.ControlText;
             this.btnSpawn.Location = new System.Drawing.Point(247, 22);
             this.btnSpawn.Margin = new System.Windows.Forms.Padding(4);
             this.btnSpawn.Name = "btnSpawn";
@@ -126,9 +129,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.Controls.Add(this.gbEditor);
             this.Controls.Add(this.gbSpawn);
+            this.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.Name = "EntityToolbar";
             this.Size = new System.Drawing.Size(325, 501);
             this.gbEditor.ResumeLayout(false);

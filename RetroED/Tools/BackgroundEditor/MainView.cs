@@ -16,23 +16,19 @@ namespace RetroED.Tools.BackgroundEditor
         {
             NONE,
             PlaceTiles,
-            PlaceObjects
         }
 
-        public int LoadedRSDKver = 0;
+        public Retro_Formats.EngineType engineType;
 
         private Image _loadedTiles;
-        private StageChunksView _blocksViewer;
-        private StageMapView _mapViewer;
+        public StageChunksView _blocksViewer;
+        public StageMapView _mapViewer;
 
         int curlayer = 0;
 
         public RetroED.MainForm Parent;
 
         public bool DrawLines = false;
-
-        //Stack<UndoAction> UndoList;
-        //Stack<UndoAction> RedoList;
 
         string tiles;
         string mappings;
@@ -41,34 +37,16 @@ namespace RetroED.Tools.BackgroundEditor
         bool showgrid = false;
         int PlacementMode = 0;
 
-        #region Retro-Sonic Development Kit
-        RSDKvRS.BGLayout _RSDK1Background;
-        RSDKvRS.Tiles128x128 _RSDK1Chunks;
-        #endregion
-
-        #region RSDKv1
-        RSDKv1.BGLayout _RSDK2Background;
-        RSDKv1.Tiles128x128 _RSDK2Chunks;
-        #endregion
-
-        #region RSDKv1
-        RSDKv2.BGLayout _RSDK3Background;
-        RSDKv2.Tiles128x128 _RSDK3Chunks;
-        #endregion
-
-        #region RSDKvB
-        RSDKvB.BGLayout _RSDK4Background;
-        RSDKvB.Tiles128x128 _RSDK4Chunks;
-        #endregion
+        public Retro_Formats.Background background = new Retro_Formats.Background();
+        public Retro_Formats.MetaTiles Chunks = new Retro_Formats.MetaTiles();
 
         public MainView()
         {
             InitializeComponent();
-            _mapViewer = new StageMapView();
+            _mapViewer = new StageMapView(this);
             _mapViewer.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
-            _blocksViewer = new StageChunksView(_mapViewer);
+            _blocksViewer = new StageChunksView(this);
             _blocksViewer.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft);
-            _mapViewer._ChunkView = _blocksViewer;
         }
 
         private void tsmiFileOpen_Click(object sender, EventArgs e)
@@ -77,16 +55,30 @@ namespace RetroED.Tools.BackgroundEditor
             ofd.Filter = "Sonic 1/Sonic 2 Background files (Backgrounds.bin)|Backgrounds.bin|Sonic CD Background files (Backgrounds.bin)|Backgrounds.bin|Sonic Nexus Background files (Backgrounds.bin)|Backgrounds.bin|Retro-Sonic Background files (ZoneBG.map)|ZoneBG.map";
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                LoadedRSDKver = ofd.FilterIndex - 1;
+                switch(ofd.FilterIndex - 1)
+                {
+                    case 0:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
+                        break;
+                    case 1:
+                        engineType = Retro_Formats.EngineType.RSDKv2;
+                        break;
+                    case 2:
+                        engineType = Retro_Formats.EngineType.RSDKv1;
+                        break;
+                    case 3:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
+                        break;
+                }
 
-                if (LoadedRSDKver == 3)
+                if (engineType == Retro_Formats.EngineType.RSDKvRS)
                 {
                     tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.gfx");
                     mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "Zone.til");
                     Background = ofd.FileName;
                     if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background))
                     {
-                        LoadLevel(ofd.FileName, LoadedRSDKver);
+                        LoadLevel(ofd.FileName);
                     }
                     else
                     {
@@ -94,14 +86,14 @@ namespace RetroED.Tools.BackgroundEditor
                     }
                 }
 
-                if (LoadedRSDKver != 3)
+                if (engineType != Retro_Formats.EngineType.RSDKvRS)
                 {
                     tiles = Path.Combine(Path.GetDirectoryName(ofd.FileName), "16x16Tiles.gif");
                     mappings = Path.Combine(Path.GetDirectoryName(ofd.FileName), "128x128Tiles.bin");
                     Background = ofd.FileName;
                     if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(Background))
                     {
-                        LoadLevel(ofd.FileName, LoadedRSDKver);
+                        LoadLevel(ofd.FileName);
                     }
                     else
                     {
@@ -130,18 +122,18 @@ namespace RetroED.Tools.BackgroundEditor
                 }
 
                 Parent.rp.state = "RetroED - " + this.Text;
-                switch (LoadedRSDKver)
+                switch (engineType)
                 {
-                    case 0:
+                    case Retro_Formats.EngineType.RSDKvB:
                         Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
                         break;
-                    case 1:
+                    case Retro_Formats.EngineType.RSDKv2:
                         Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
                         break;
-                    case 2:
+                    case Retro_Formats.EngineType.RSDKv1:
                         Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
                         break;
-                    case 3:
+                    case Retro_Formats.EngineType.RSDKvRS:
                         Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                         break;
                 }
@@ -151,251 +143,47 @@ namespace RetroED.Tools.BackgroundEditor
             }
         }
 
-        void LoadLevel(string level, int RSDKver)
+        void LoadLevel(string level)
         {
-            //Clears the map
-            _mapViewer.DrawLevel();
-            switch (RSDKver)
+            background.ImportFrom(engineType, level);
+            Chunks.ImportFrom(engineType, level);
+            using (var fs = new FileStream(tiles, FileMode.Open))
             {
-                case 0:
-                    using (Stream strm = File.OpenRead(level))
-                    {
-                        _RSDK4Background = new RSDKvB.BGLayout(strm);
-                    }
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK4Chunks = new RSDKvB.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer._RSDKvBBackground = _RSDK4Background;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-                    _blocksViewer.RefreshParallaxList();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK4Chunks = _RSDK4Chunks;
-                    _mapViewer._RSDK4Background = _RSDK4Background;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetLevel();
-                    _mapViewer.DrawLevel();
-
-                    //MenuItem_SelectLayer.MenuItems.Clear();
-                    //for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
-                    //{
-                    //    MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    //}  
-
-                    break;
-                case 1:
-                    using (Stream strm = File.OpenRead(level))
-                    {
-                        _RSDK3Background = new RSDKv2.BGLayout(strm);
-                    }
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK3Chunks = new RSDKv2.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer._RSDKv2Background = _RSDK3Background;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-                    _blocksViewer.RefreshParallaxList();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK3Chunks = _RSDK3Chunks;
-                    _mapViewer._RSDK3Background = _RSDK3Background;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetLevel();
-                    _mapViewer.DrawLevel();
-
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-
-                    break;
-                case 2:
-                    using (Stream strm = File.OpenRead(level))
-                    {
-                        _RSDK2Background = new RSDKv1.BGLayout(strm);
-                    }
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK2Chunks = new RSDKv1.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer._RSDKv1Background = _RSDK2Background;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-                    _blocksViewer.RefreshParallaxList();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK2Chunks = _RSDK2Chunks;
-                    _mapViewer._RSDK2Background = _RSDK2Background;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetLevel();
-                    _mapViewer.DrawLevel();
-
-                    break;
-                case 3:
-                    using (Stream strm = File.OpenRead(level))
-                    {
-                        _RSDK1Background = new RSDKvRS.BGLayout(strm);
-                    }
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK1Chunks = new RSDKvRS.Tiles128x128(strm);
-                    }
-                    RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles, false);
-
-                    _loadedTiles = gfx.gfxImage;
-
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer._tiles = gfx.gfxImage;
-                    _blocksViewer._RSDKvRSBackground = _RSDK1Background;
-                    _blocksViewer._RSDK1Chunks = _RSDK1Chunks;
-                    _blocksViewer.SetChunks();
-                    _blocksViewer.RefreshParallaxList();
-
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer._tiles = gfx.gfxImage;
-                    _mapViewer._RSDK1Background = _RSDK1Background;
-                    _mapViewer._RSDK1Chunks = _RSDK1Chunks;
-                    _mapViewer.SetLevel();
-                    _mapViewer.DrawLevel();
-
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    break;
-                default:
-                    break;
+                var bmp = new Bitmap(fs);
+                _loadedTiles = (Bitmap)bmp.Clone();
             }
+            _blocksViewer._tiles = _loadedTiles;
+            _blocksViewer.SetChunks();
+            _blocksViewer.RefreshParallaxList();
+
+            _mapViewer._tiles = _loadedTiles;
+            _mapViewer.SetLevel();
+            _mapViewer.DrawLevel();
         }
 
         private void exportImageToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            if (background != null)
             {
-                case 0:
-                    if (_RSDK4Background != null)
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "PNG Image (*.png)|*.png";
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    Bitmap massive = new Bitmap(background.Layers[curlayer].MapLayout[0].Length * 128, background.Layers[curlayer].MapLayout.Length * 128);
+                    using (Graphics g = Graphics.FromImage(massive))
                     {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK)
+                        for (int y = 0; y < background.Layers[curlayer].MapLayout.Length; y++)
                         {
-                            Bitmap massive = new Bitmap(_RSDK4Background.Layers[curlayer].MapLayout[0].Length * 128, _RSDK4Background.Layers[curlayer].MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
+                            for (int x = 0; x < background.Layers[curlayer].MapLayout[0].Length; x++)
                             {
-                                for (int y = 0; y < _RSDK4Background.Layers[curlayer].MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK4Background.Layers[curlayer].MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK4Chunks.BlockList[_RSDK4Background.Layers[curlayer].MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
+                                g.DrawImage(Chunks.ChunkList[background.Layers[curlayer].MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
                             }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                            GC.Collect();
                         }
                     }
-                    break;
-                case 1:
-                    if (_RSDK3Background != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            Bitmap massive = new Bitmap(_RSDK3Background.Layers[curlayer].MapLayout[0].Length * 128, _RSDK3Background.Layers[curlayer].MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK3Background.Layers[curlayer].MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK3Background.Layers[curlayer].MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK3Chunks.BlockList[_RSDK3Background.Layers[curlayer].MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                            GC.Collect();
-                        }
-                    }
-                    break;
-                case 2:
-                    if (_RSDK2Background != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            Bitmap massive = new Bitmap(_RSDK2Background.Layers[curlayer].MapLayout[0].Length * 128, _RSDK2Background.Layers[curlayer].MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK2Background.Layers[curlayer].MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK2Background.Layers[curlayer].MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK2Chunks.BlockList[_RSDK2Background.Layers[curlayer].MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                            GC.Collect();
-                        }
-                    }
-                    break;
-                case 3:
-                    if (_RSDK1Background != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK)
-                        {
-                            Bitmap massive = new Bitmap(_RSDK1Background.Layers[curlayer].MapLayout[0].Length * 128, _RSDK1Background.Layers[curlayer].MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK1Background.Layers[curlayer].MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK1Background.Layers[curlayer].MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK1Chunks.BlockList[_RSDK1Background.Layers[curlayer].MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                            GC.Collect();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                    massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    massive.Dispose();
+                    GC.Collect();
+                }
             }
         }
 
@@ -418,23 +206,7 @@ namespace RetroED.Tools.BackgroundEditor
             }
             else
             {
-                switch (LoadedRSDKver)
-                {
-                    case 0:
-                        _mapViewer._RSDK4Background.Write(Background);
-                        break;
-                    case 1:
-                        _mapViewer._RSDK3Background.Write(Background);
-                        break;
-                    case 2:
-                        _mapViewer._RSDK2Background.Write(Background);
-                        break;
-                    case 3:
-                        _mapViewer._RSDK1Background.Write(Background);
-                        break;
-                    default:
-                        break;
-                }
+                background.ExportTo(engineType,Background);
             }
         }
 
@@ -445,23 +217,23 @@ namespace RetroED.Tools.BackgroundEditor
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                switch (LoadedRSDKver)
+                switch (dlg.FilterIndex - 1)
                 {
                     case 0:
-                        _mapViewer._RSDK4Background.Write(dlg.FileName);
+                        engineType = Retro_Formats.EngineType.RSDKvB;
                         break;
                     case 1:
-                        _mapViewer._RSDK3Background.Write(dlg.FileName);
+                        engineType = Retro_Formats.EngineType.RSDKv2;
                         break;
                     case 2:
-                        _mapViewer._RSDK2Background.Write(dlg.FileName);
+                        engineType = Retro_Formats.EngineType.RSDKv1;
                         break;
                     case 3:
-                        _mapViewer._RSDK1Background.Write(dlg.FileName);
-                        break;
-                    default:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
                         break;
                 }
+                Background = dlg.FileName;
+                background.ExportTo(engineType, Background);
             }
         }
 
@@ -485,8 +257,8 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void mapPropertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            RSN_LayerPropertiesForm frm1 = new RSN_LayerPropertiesForm(LoadedRSDKver);
-            CD12_LayerPropertiesForm frm2 = new CD12_LayerPropertiesForm(LoadedRSDKver);
+            RSN_LayerPropertiesForm frm1 = new RSN_LayerPropertiesForm(engineType);
+            CD12_LayerPropertiesForm frm2 = new CD12_LayerPropertiesForm(engineType);
 
             frm1.CurLayer = _mapViewer.curlayer;
             frm2.CurLayer = _mapViewer.curlayer;
@@ -495,119 +267,119 @@ namespace RetroED.Tools.BackgroundEditor
             int OLDwidth = 0;
             int OLDheight = 0;
 
-            switch (LoadedRSDKver)
+            switch (engineType)
             {
-                case 3:
-                    OldTiles = _RSDK1Background.Layers[curlayer].MapLayout;
-                    OLDwidth = _RSDK1Background.Layers[curlayer].width;
-                    OLDheight = _RSDK1Background.Layers[curlayer].height;
-                    frm1.Mapv1 = _RSDK1Background;
+                case Retro_Formats.EngineType.RSDKvRS:
+                    OldTiles = background.Layers[curlayer].MapLayout;
+                    OLDwidth = background.Layers[curlayer].width;
+                    OLDheight = background.Layers[curlayer].height;
+                    frm1.Background = background;
                     frm1.Setup();
                     break;
-                case 2:
-                    OldTiles = _RSDK2Background.Layers[curlayer].MapLayout;
-                    OLDwidth = _RSDK2Background.Layers[curlayer].width;
-                    OLDheight = _RSDK2Background.Layers[curlayer].height;
-                    frm1.Mapv2 = _RSDK2Background;
+                case Retro_Formats.EngineType.RSDKv1:
+                    OldTiles = background.Layers[curlayer].MapLayout;
+                    OLDwidth = background.Layers[curlayer].width;
+                    OLDheight = background.Layers[curlayer].height;
+                    frm1.Background = background;
                     frm1.Setup();
                     break;
-                case 1:
-                    OldTiles = _RSDK3Background.Layers[curlayer].MapLayout;
-                    OLDwidth = _RSDK3Background.Layers[curlayer].width;
-                    OLDheight = _RSDK3Background.Layers[curlayer].height;
-                    frm2.Mapv2 = _RSDK3Background;
+                case Retro_Formats.EngineType.RSDKv2:
+                    OldTiles = background.Layers[curlayer].MapLayout;
+                    OLDwidth = background.Layers[curlayer].width;
+                    OLDheight = background.Layers[curlayer].height;
+                    frm2.Background = background;
                     frm2.Setup();
                     break;
-                case 0:
-                    OldTiles = _RSDK4Background.Layers[curlayer].MapLayout;
-                    OLDwidth = _RSDK4Background.Layers[curlayer].width;
-                    OLDheight = _RSDK4Background.Layers[curlayer].height;
-                    frm2.MapvB = _RSDK4Background;
+                case Retro_Formats.EngineType.RSDKvB:
+                    OldTiles = background.Layers[curlayer].MapLayout;
+                    OLDwidth = background.Layers[curlayer].width;
+                    OLDheight = background.Layers[curlayer].height;
+                    frm2.Background = background;
                     frm2.Setup();
                     break;
                 default:
                     break;
             }
 
-            switch (LoadedRSDKver)
+            switch (engineType)
             {
-                case 3:
+                case Retro_Formats.EngineType.RSDKvRS:
                     if (frm1.ShowDialog(this) == DialogResult.OK)
                     {
-                                _RSDK1Background = frm1.Mapv1;
-                                NewTiles = _RSDK1Background.Layers[curlayer].MapLayout;
-                                CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight);
+                                background = frm1.Background;
+                                NewTiles = background.Layers[curlayer].MapLayout;
+                                CheckDimensions(engineType, OldTiles, NewTiles, OLDwidth, OLDheight);
                                 _mapViewer.DrawLevel();
                     }
                     break;
-                case 2:
+                case Retro_Formats.EngineType.RSDKv1:
                     if (frm1.ShowDialog(this) == DialogResult.OK)
                     {
-                                _RSDK2Background = frm1.Mapv2;
-                                NewTiles = _RSDK2Background.Layers[curlayer].MapLayout;
-                                CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight);
+                                background = frm1.Background;
+                                NewTiles = background.Layers[curlayer].MapLayout;
+                                CheckDimensions(engineType, OldTiles, NewTiles, OLDwidth, OLDheight);
                                 _mapViewer.DrawLevel();
                     }
                     break;
-                case 1:
+                case Retro_Formats.EngineType.RSDKv2:
                     if (frm2.ShowDialog(this) == DialogResult.OK)
                     {
-                                _RSDK3Background = frm2.Mapv2;
-                                NewTiles = _RSDK3Background.Layers[curlayer].MapLayout;
-                                CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight);
+                                background = frm2.Background;
+                                NewTiles = background.Layers[curlayer].MapLayout;
+                                CheckDimensions(engineType, OldTiles, NewTiles, OLDwidth, OLDheight);
                                 _mapViewer.DrawLevel();
                     }
                     break;
-                case 0:
+                case Retro_Formats.EngineType.RSDKvB:
                     if (frm2.ShowDialog(this) == DialogResult.OK)
                     {
-                                _RSDK4Background = frm2.MapvB;
-                                NewTiles = _RSDK4Background.Layers[curlayer].MapLayout;
-                                CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight);
+                                background = frm2.Background;
+                                NewTiles = background.Layers[curlayer].MapLayout;
+                                CheckDimensions(engineType, OldTiles, NewTiles, OLDwidth, OLDheight);
                                 _mapViewer.DrawLevel();
                     }
                     break;
             }
         }
 
-        void CheckDimensions(int RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight)
+        void CheckDimensions(Retro_Formats.EngineType RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight)
         {
-            if (RSDKver == 3)
+            if (RSDKver == Retro_Formats.EngineType.RSDKvRS)
             {
-                if (_RSDK1Background.Layers[curlayer].width != OLDwidth || _RSDK1Background.Layers[curlayer].height != OLDheight)
+                if (background.Layers[curlayer].width != OLDwidth || background.Layers[curlayer].height != OLDheight)
                 {
                     Console.WriteLine("Different");
-                    _RSDK1Background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDK1Background.Layers[curlayer].width, (ushort)_RSDK1Background.Layers[curlayer].height, RSDKver);
+                    background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)background.Layers[curlayer].width, (ushort)background.Layers[curlayer].height, RSDKver);
                 }
             }
-            if (RSDKver == 2)
+            if (RSDKver == Retro_Formats.EngineType.RSDKv1)
             {
-                if (_RSDK2Background.Layers[_mapViewer.curlayer].width != OLDwidth || _RSDK2Background.Layers[_mapViewer.curlayer].height != OLDheight)
+                if (background.Layers[_mapViewer.curlayer].width != OLDwidth || background.Layers[_mapViewer.curlayer].height != OLDheight)
                 {
                     Console.WriteLine("Different");
-                    _RSDK2Background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDK2Background.Layers[_mapViewer.curlayer].width, (ushort)_RSDK2Background.Layers[_mapViewer.curlayer].height, RSDKver);
+                    background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)background.Layers[_mapViewer.curlayer].width, (ushort)background.Layers[_mapViewer.curlayer].height, RSDKver);
                 }
 
             }
-            if (RSDKver == 1)
+            if (RSDKver == Retro_Formats.EngineType.RSDKv2)
             {
-                if (_RSDK3Background.Layers[curlayer].width != OLDwidth || _RSDK3Background.Layers[curlayer].height != OLDheight)
+                if (background.Layers[curlayer].width != OLDwidth || background.Layers[curlayer].height != OLDheight)
                 {
                     Console.WriteLine("Different");
-                    _RSDK3Background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDK3Background.Layers[curlayer].width, (ushort)_RSDK3Background.Layers[curlayer].height, RSDKver);
+                    background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)background.Layers[curlayer].width, (ushort)background.Layers[curlayer].height, RSDKver);
                 }
             }
-            if (RSDKver == 0)
+            if (RSDKver == Retro_Formats.EngineType.RSDKvB)
             {
-                if (_RSDK4Background.Layers[curlayer].width != OLDwidth || _RSDK4Background.Layers[curlayer].height != OLDheight)
+                if (background.Layers[curlayer].width != OLDwidth || background.Layers[curlayer].height != OLDheight)
                 {
                     Console.WriteLine("Different");
-                    _RSDK4Background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDK4Background.Layers[curlayer].width, (ushort)_RSDK4Background.Layers[curlayer].height, RSDKver);
+                    background.Layers[curlayer].MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)background.Layers[curlayer].width, (ushort)background.Layers[curlayer].height, RSDKver);
                 }
             }
         }
 
-        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
+        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, Retro_Formats.EngineType RSDKver)
         {
             //Yeah, I "borrowed" this from Maniac
 
@@ -654,153 +426,32 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void refreshChunksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            Chunks.ImportFrom(engineType, mappings);
+            using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
             {
-                case 0:
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK4Chunks = new RSDKvB.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK4Chunks = _RSDK4Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK4Background = _RSDK4Background;
-                    _mapViewer._RSDK4Chunks = _RSDK4Chunks;
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer.SetLevel();
-                    break;
-                case 1:
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK3Chunks = new RSDKv2.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK3Chunks = _RSDK3Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK3Background = _RSDK3Background;
-                    _mapViewer._RSDK3Chunks = _RSDK3Chunks;
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer.SetLevel();
-                    break;
-                case 2:
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK2Chunks = new RSDKv1.Tiles128x128(strm);
-                    }
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._RSDK2Chunks = _RSDK2Chunks;
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK2Background = _RSDK2Background;
-                    _mapViewer._RSDK2Chunks = _RSDK2Chunks;
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer.SetLevel();
-                    break;
-                case 3:
-                    using (Stream strm = File.OpenRead(mappings))
-                    {
-                        _RSDK1Chunks = new RSDKvRS.Tiles128x128(strm);
-                    }
-                    RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles, false);
-
-                    _loadedTiles = gfx.gfxImage;
-
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer._tiles = gfx.gfxImage;
-                    _blocksViewer._RSDK1Chunks = _RSDK1Chunks;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer._RSDK1Background = _RSDK1Background;
-                    _mapViewer._RSDK1Chunks = _RSDK1Chunks;
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer.SetLevel();
-                    break;
-                default:
-                    break;
+                var bmp = new Bitmap(fs);
+                _loadedTiles = (Bitmap)bmp.Clone();
             }
+            _blocksViewer._tiles = _loadedTiles;
+            _blocksViewer.SetChunks();
+
+            _mapViewer._tiles = _loadedTiles;
+            _mapViewer.SetLevel();
         }
 
         private void clearChunksToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch(LoadedRSDKver)
+            ushort[][] NewTiles = new ushort[background.Layers[curlayer].height][];
+            for (ushort i = 0; i < background.Layers[curlayer].height; i++)
             {
-                case 3:
-                    ushort[][] NewTiles1 = new ushort[_RSDK1Background.Layers[curlayer].height][];
-                    for (ushort i = 0; i < _RSDK1Background.Layers[curlayer].height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles1[i] = new ushort[_RSDK1Background.Layers[curlayer].width];
-                        for (int j = 0; j < _RSDK1Background.Layers[curlayer].width; ++j)
-                            NewTiles1[i][j] = 0; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK1Background.Layers[curlayer].MapLayout = NewTiles1;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 2:
-                    ushort[][] NewTiles2 = new ushort[_RSDK2Background.Layers[_mapViewer.curlayer].height][];
-                    for (ushort i = 0; i < _RSDK2Background.Layers[_mapViewer.curlayer].height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles2[i] = new ushort[_RSDK2Background.Layers[_mapViewer.curlayer].width];
-                        for (int j = 0; j < _RSDK2Background.Layers[_mapViewer.curlayer].width; ++j)
-                            NewTiles2[i][j] = 0; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK2Background.Layers[curlayer].MapLayout = NewTiles2;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 1:
-                    ushort[][] NewTiles3 = new ushort[_RSDK3Background.Layers[curlayer].height][];
-                    for (ushort i = 0; i < _RSDK3Background.Layers[curlayer].height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles3[i] = new ushort[_RSDK3Background.Layers[curlayer].width];
-                        for (int j = 0; j < _RSDK3Background.Layers[curlayer].width; ++j)
-                            NewTiles3[i][j] = 0; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK3Background.Layers[curlayer].MapLayout = NewTiles3;
-                    _mapViewer.DrawLevel();
-                    break;
-                case 0:
-                    ushort[][] NewTiles4 = new ushort[_RSDK4Background.Layers[curlayer].height][];
-                    for (ushort i = 0; i < _RSDK4Background.Layers[curlayer].height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles4[i] = new ushort[_RSDK4Background.Layers[curlayer].width];
-                        for (int j = 0; j < _RSDK4Background.Layers[curlayer].width; ++j)
-                            NewTiles4[i][j] = 0; // fill the tiles with blanks
-                    }
-                    _mapViewer._RSDK4Background.Layers[curlayer].MapLayout = NewTiles4;
-                    _mapViewer.DrawLevel();
-                    break;
+                // first create arrays child arrays to the width
+                // a little inefficient, but at least they'll all be equal sized
+                NewTiles[i] = new ushort[background.Layers[curlayer].width];
+                for (int j = 0; j < background.Layers[curlayer].width; ++j)
+                    NewTiles[i][j] = 0; // fill the tiles with blanks
             }
+            background.Layers[curlayer].MapLayout = NewTiles;
+            _mapViewer.DrawLevel();
         }
 
         private void MenuItem_DrawAllLayers_Click(object sender, EventArgs e)
@@ -826,169 +477,45 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void clearScrollInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch(LoadedRSDKver)
-            {
-                case 0:
-                    _RSDK4Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 1:
-                    _RSDK3Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 2:
-                    _RSDK2Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 3:
-                    _RSDK1Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-            }
+            background.HLines.Clear();
+            _blocksViewer.RefreshParallaxList();
         }
 
         private void addParallaxValueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 0:
-                    _RSDK4Background.HLines.Add(new RSDKvB.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 1:
-                    _RSDK3Background.HLines.Add(new RSDKv2.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 2:
-                    _RSDK2Background.HLines.Add(new RSDKv1.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 3:
-                    _RSDK1Background.HLines.Add(new RSDKvRS.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-            }
+            background.HLines.Add(new Retro_Formats.Background.ScrollInfo());
+            _blocksViewer.RefreshParallaxList();
         }
 
         private void addLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch(LoadedRSDKver)
+            background.Layers.Add(new Retro_Formats.Background.BackgroundLayer());
+            /*MenuItem_SelectLayer.MenuItems.Clear();
+            for (int i = 0; i < background.Layers.Count; i++)
             {
-                case 3:
-                    _RSDK1Background.Layers.Add(new RSDKvRS.BGLayout.BGLayer());
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    break;
-                case 2:
-                    _RSDK2Background.Layers.Add(new RSDKv1.BGLayout.BGLayer());
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }
-                    */
-                    break;
-                case 1:
-                    _RSDK3Background.Layers.Add(new RSDKv2.BGLayout.BGLayer());
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }
-                    */
-                    break;
-                case 0:
-                    _RSDK4Background.Layers.Add(new RSDKvB.BGLayout.BGLayer());
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }
-                    */
-                    break;
-            }
+                MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+            }*/
         }
 
         private void removeCurrentLayerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
+            background.Layers.RemoveAt(curlayer);
+            curlayer = 0;
+            /*MenuItem_SelectLayer.MenuItems.Clear();
+            for (int i = 0; i < background.Layers.Count; i++)
             {
-                case 3:
-                    _RSDK1Background.Layers.RemoveAt(curlayer);
-                    curlayer = 0;
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    _mapViewer.DrawLevel();
-                    break;
-                case 2:
-                    _RSDK2Background.Layers.RemoveAt(curlayer);
-                    curlayer = 0;
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    _mapViewer.DrawLevel();
-                    break;
-                case 1:
-                    _RSDK3Background.Layers.RemoveAt(curlayer);
-                    curlayer = 0;
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    _mapViewer.DrawLevel();
-                    break;
-                case 0:
-                    _RSDK4Background.Layers.RemoveAt(curlayer);
-                    curlayer = 0;
-                    /*MenuItem_SelectLayer.MenuItems.Clear();
-                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
-                    {
-                        MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
-                    }*/
-                    _mapViewer.DrawLevel();
-                    break;
-            }
+                MenuItem_SelectLayer.MenuItems.Add("Background Layer " + i.ToString());
+            }*/
+            _mapViewer.DrawLevel();
         }
 
         private void MenuItem_SelectLayer_Click(object sender, EventArgs e)
         {
             SelectLayerForm SLF = new SelectLayerForm();
             SLF.SelLayer = curlayer;
-            switch (LoadedRSDKver)
+            for (int i = 0; i < background.Layers.Count; i++)
             {
-                case 0:
-                    for (int i = 0; i < _RSDK4Background.Layers.Count; i++)
-                    {
-                        SLF.LayerList.Items.Add("Background Layer " + i);
-                    }
-                    break;
-                case 1:
-                    for (int i = 0; i < _RSDK3Background.Layers.Count; i++)
-                    {
-                        SLF.LayerList.Items.Add("Background Layer " + i);
-                    }
-                    break;
-                case 2:
-                    for (int i = 0; i < _RSDK2Background.Layers.Count; i++)
-                    {
-                        SLF.LayerList.Items.Add("Background Layer " + i);
-                    }
-                    break;
-                case 3:
-                    for (int i = 0; i < _RSDK1Background.Layers.Count; i++)
-                    {
-                        SLF.LayerList.Items.Add("Background Layer " + i);
-                    }
-                    break;
+                SLF.LayerList.Items.Add("Background Layer " + i);
             }
 
             if (SLF.ShowDialog(this) == DialogResult.OK)
@@ -1003,71 +530,21 @@ namespace RetroED.Tools.BackgroundEditor
 
         private void MenuItem_AddVPValues_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 0:
-                    _RSDK4Background.VLines.Add(new RSDKvB.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 1:
-                    _RSDK3Background.VLines.Add(new RSDKv2.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 2:
-                    _RSDK2Background.VLines.Add(new RSDKv1.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 3:
-                    _RSDK1Background.VLines.Add(new RSDKvRS.BGLayout.ScrollInfo());
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-            }
+            background.VLines.Add(new Retro_Formats.Background.ScrollInfo());
+            _blocksViewer.RefreshParallaxList();
         }
 
         private void MenuItem_ClearVPvalues_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 0:
-                    _RSDK4Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 1:
-                    _RSDK3Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 2:
-                    _RSDK2Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 3:
-                    _RSDK1Background.VLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-            }
+            background.VLines.Clear();
+            _blocksViewer.RefreshParallaxList();
         }
 
         private void MenuItem_ClearHPValues_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)
-            {
-                case 0:
-                    _RSDK4Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 1:
-                    _RSDK3Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 2:
-                    _RSDK2Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-                case 3:
-                    _RSDK1Background.HLines.Clear();
-                    _blocksViewer.RefreshParallaxList();
-                    break;
-            }
+            background.HLines.Clear();
+            background.VLines.Clear();
+            _blocksViewer.RefreshParallaxList();
         }
 
         private void menuItem4_Click(object sender, EventArgs e)

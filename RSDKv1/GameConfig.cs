@@ -144,7 +144,6 @@ namespace RSDKv1
             }
         }
 
-
         public class PlayerData
         {
             /// <summary>

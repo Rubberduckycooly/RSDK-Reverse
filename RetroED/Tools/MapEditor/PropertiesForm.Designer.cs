@@ -75,6 +75,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
             this.panel1.Controls.Add(this.groupBox2);
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this.MapHeightNUD);
@@ -103,6 +104,7 @@
             this.groupBox2.Controls.Add(this.MidpointNUD);
             this.groupBox2.Controls.Add(this.Layer0Label);
             this.groupBox2.Controls.Add(this.MidpointLabel);
+            this.groupBox2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox2.Location = new System.Drawing.Point(282, 95);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(235, 164);
@@ -112,7 +114,8 @@
             // 
             // Layer3NUD
             // 
-            this.Layer3NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Layer3NUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Layer3NUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Layer3NUD.Location = new System.Drawing.Point(142, 136);
             this.Layer3NUD.Maximum = new decimal(new int[] {
             5000,
@@ -135,7 +138,8 @@
             // 
             // Layer2NUD
             // 
-            this.Layer2NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Layer2NUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Layer2NUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Layer2NUD.Location = new System.Drawing.Point(142, 110);
             this.Layer2NUD.Maximum = new decimal(new int[] {
             5000,
@@ -149,7 +153,8 @@
             // 
             // Layer1NUD
             // 
-            this.Layer1NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Layer1NUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Layer1NUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Layer1NUD.Location = new System.Drawing.Point(142, 83);
             this.Layer1NUD.Maximum = new decimal(new int[] {
             5000,
@@ -181,7 +186,8 @@
             // 
             // Layer0NUD
             // 
-            this.Layer0NUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.Layer0NUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.Layer0NUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Layer0NUD.Location = new System.Drawing.Point(142, 55);
             this.Layer0NUD.Maximum = new decimal(new int[] {
             255,
@@ -195,7 +201,8 @@
             // 
             // MidpointNUD
             // 
-            this.MidpointNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MidpointNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MidpointNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MidpointNUD.Location = new System.Drawing.Point(142, 28);
             this.MidpointNUD.Maximum = new decimal(new int[] {
             255,
@@ -235,6 +242,7 @@
             this.groupBox1.Controls.Add(this.RSMusicNUD);
             this.groupBox1.Controls.Add(this.RSBGLabel);
             this.groupBox1.Controls.Add(this.RSMusicLabel);
+            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox1.Location = new System.Drawing.Point(3, 95);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(273, 166);
@@ -244,7 +252,8 @@
             // 
             // RSPlayerPosYNUD
             // 
-            this.RSPlayerPosYNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RSPlayerPosYNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RSPlayerPosYNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSPlayerPosYNUD.Location = new System.Drawing.Point(109, 116);
             this.RSPlayerPosYNUD.Maximum = new decimal(new int[] {
             5000,
@@ -258,7 +267,8 @@
             // 
             // RSPlayerPosXNUD
             // 
-            this.RSPlayerPosXNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RSPlayerPosXNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RSPlayerPosXNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSPlayerPosXNUD.Location = new System.Drawing.Point(109, 89);
             this.RSPlayerPosXNUD.Maximum = new decimal(new int[] {
             5000,
@@ -290,7 +300,8 @@
             // 
             // RSBGNUD
             // 
-            this.RSBGNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RSBGNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RSBGNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSBGNUD.Location = new System.Drawing.Point(109, 55);
             this.RSBGNUD.Maximum = new decimal(new int[] {
             255,
@@ -304,7 +315,8 @@
             // 
             // RSMusicNUD
             // 
-            this.RSMusicNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RSMusicNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RSMusicNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSMusicNUD.Location = new System.Drawing.Point(109, 28);
             this.RSMusicNUD.Maximum = new decimal(new int[] {
             255,
@@ -336,7 +348,8 @@
             // 
             // MapHeightNUD
             // 
-            this.MapHeightNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MapHeightNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MapHeightNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapHeightNUD.Location = new System.Drawing.Point(98, 67);
             this.MapHeightNUD.Maximum = new decimal(new int[] {
             1000,
@@ -360,7 +373,8 @@
             // 
             // MapWidthNUD
             // 
-            this.MapWidthNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MapWidthNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MapWidthNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapWidthNUD.Location = new System.Drawing.Point(98, 40);
             this.MapWidthNUD.Maximum = new decimal(new int[] {
             1000,
@@ -385,6 +399,7 @@
             // MapHeightLabel
             // 
             this.MapHeightLabel.AutoSize = true;
+            this.MapHeightLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapHeightLabel.Location = new System.Drawing.Point(12, 69);
             this.MapHeightLabel.Name = "MapHeightLabel";
             this.MapHeightLabel.Size = new System.Drawing.Size(84, 17);
@@ -394,6 +409,7 @@
             // MapWidthLabel
             // 
             this.MapWidthLabel.AutoSize = true;
+            this.MapWidthLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapWidthLabel.Location = new System.Drawing.Point(12, 40);
             this.MapWidthLabel.Name = "MapWidthLabel";
             this.MapWidthLabel.Size = new System.Drawing.Size(79, 17);
@@ -402,8 +418,9 @@
             // 
             // MapNameBox
             // 
-            this.MapNameBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MapNameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.MapNameBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.MapNameBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapNameBox.Location = new System.Drawing.Point(98, 9);
             this.MapNameBox.Name = "MapNameBox";
             this.MapNameBox.Size = new System.Drawing.Size(153, 22);
@@ -413,6 +430,7 @@
             // MapNameLabel
             // 
             this.MapNameLabel.AutoSize = true;
+            this.MapNameLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapNameLabel.Location = new System.Drawing.Point(12, 9);
             this.MapNameLabel.Name = "MapNameLabel";
             this.MapNameLabel.Size = new System.Drawing.Size(80, 17);

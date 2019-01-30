@@ -29,9 +29,7 @@ namespace RetroED.Extensions.DataSelect
         public RSDKvRS.ZoneList _SStagesvRS = new RSDKvRS.ZoneList();
         public RSDKvRS.ZoneList _BStagesvRS = new RSDKvRS.ZoneList();
 
-        public RSDKv1.GameConfig _GameConfigv1;
-        public RSDKv2.GameConfig _GameConfigv2;
-        public RSDKvB.GameConfig _GameConfigvB;
+        public Retro_Formats.Gameconfig _GameConfig;
 
         public returnData Result = new returnData();
 
@@ -47,25 +45,11 @@ namespace RetroED.Extensions.DataSelect
             _BStagesvRS = BS;
         }
 
-        public SceneSelect(RSDKv1.GameConfig config)
+        public SceneSelect(Retro_Formats.Gameconfig config)
         {
             InitializeComponent();
             LoadFromGameConfig(config);
-            _GameConfigv1 = config;
-        }
-
-        public SceneSelect(RSDKv2.GameConfig config)
-        {
-            InitializeComponent();
-            LoadFromGameConfig(config);
-            _GameConfigv2 = config;
-        }
-
-        public SceneSelect(RSDKvB.GameConfig config)
-        {
-            InitializeComponent();
-            LoadFromGameConfig(config);
-            _GameConfigvB = config;
+            _GameConfig = config;
         }
 
         public void LoadFromGameConfig(RSDKvRS.ZoneList RS, RSDKvRS.ZoneList CS, RSDKvRS.ZoneList SS, RSDKvRS.ZoneList BS)
@@ -182,14 +166,14 @@ namespace RetroED.Extensions.DataSelect
             }
         }
 
-        public void LoadFromGameConfig(RSDKv1.GameConfig config)
+        public void LoadFromGameConfig(Retro_Formats.Gameconfig config)
         {
             Categories.Clear();
             Directories.Clear();
-            for (int c = 0; c < config.Categories.Count; c++)
+            for (int c = 0; c < config.Categories.Length; c++)
             {
                 List<Tuple<string, string>> scenes = new List<Tuple<string, string>>();
-                foreach (RSDKv1.GameConfig.Category.SceneInfo scene in config.Categories[c].Scenes)
+                foreach (Retro_Formats.Gameconfig.Category.SceneInfo scene in config.Categories[c].Scenes)
                 {
                     scenes.Add(new Tuple<string, string>(scene.Name, scene.SceneFolder + "/Act" + scene.ActID + ".bin"));
 
@@ -205,134 +189,6 @@ namespace RetroED.Extensions.DataSelect
                 string categoryName = "Unknown Category";
 
                 switch(c)
-                {
-                    case 0:
-                        categoryName = "Presentation Stages";
-                        break;
-                    case 1:
-                        categoryName = "Regular Stages";
-                        break;
-                    case 2:
-                        categoryName = "Special Stages";
-                        break;
-                    case 3:
-                        categoryName = "Bonus Stages";
-                        break;
-                    default:
-                        categoryName = "Unknown Category";
-                        break;
-                }
-
-                Categories.Add(new Tuple<string, List<Tuple<string, string>>>(categoryName, scenes));
-            }
-
-            // Sort
-            Directories = Directories.OrderBy(key => key.Key).ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value);
-            foreach (KeyValuePair<string, List<String>> dir in Directories)
-                dir.Value.Sort();
-
-            this.scenesTree.ImageList = new ImageList();
-            this.scenesTree.ImageList.Images.Add("Folder", RetroED.Properties.Resources.folder);
-            this.scenesTree.ImageList.Images.Add("File", RetroED.Properties.Resources.file);
-
-            UpdateTree();
-            if (RetroED.Properties.Settings.Default.IsFilesViewDefault)
-            {
-                this.isFilesView.Checked = true;
-            }
-            else
-            {
-                this.isFilesView.Checked = false;
-            }
-        }
-
-        public void LoadFromGameConfig(RSDKv2.GameConfig config)
-        {
-            Categories.Clear();
-            Directories.Clear();
-            for (int c = 0; c < config.Categories.Count; c++)
-            {
-                List<Tuple<string, string>> scenes = new List<Tuple<string, string>>();
-                foreach (RSDKv2.GameConfig.Category.SceneInfo scene in config.Categories[c].Scenes)
-                {
-                    scenes.Add(new Tuple<string, string>(scene.Name, scene.SceneFolder + "/Act" + scene.ActID + ".bin"));
-
-                    List<string> files;
-                    if (!Directories.TryGetValue(scene.ActID, out files))
-                    {
-                        files = new List<string>();
-                        Directories[scene.ActID] = files;
-                    }
-                    files.Add("Act" + scene.ActID + ".bin");
-                }
-
-                string categoryName = "Unknown Category";
-
-                switch (c)
-                {
-                    case 0:
-                        categoryName = "Presentation Stages";
-                        break;
-                    case 1:
-                        categoryName = "Regular Stages";
-                        break;
-                    case 2:
-                        categoryName = "Special Stages";
-                        break;
-                    case 3:
-                        categoryName = "Bonus Stages";
-                        break;
-                    default:
-                        categoryName = "Unknown Category";
-                        break;
-                }
-
-                Categories.Add(new Tuple<string, List<Tuple<string, string>>>(categoryName, scenes));
-            }
-
-            // Sort
-            Directories = Directories.OrderBy(key => key.Key).ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value);
-            foreach (KeyValuePair<string, List<String>> dir in Directories)
-                dir.Value.Sort();
-
-            this.scenesTree.ImageList = new ImageList();
-            this.scenesTree.ImageList.Images.Add("Folder", RetroED.Properties.Resources.folder);
-            this.scenesTree.ImageList.Images.Add("File", RetroED.Properties.Resources.file);
-
-            UpdateTree();
-            if (RetroED.Properties.Settings.Default.IsFilesViewDefault)
-            {
-                this.isFilesView.Checked = true;
-            }
-            else
-            {
-                this.isFilesView.Checked = false;
-            }
-        }
-
-        public void LoadFromGameConfig(RSDKvB.GameConfig config)
-        {
-            Categories.Clear();
-            Directories.Clear();
-            for (int c = 0; c < config.Categories.Count; c++)
-            {
-                List<Tuple<string, string>> scenes = new List<Tuple<string, string>>();
-                foreach (RSDKvB.GameConfig.Category.SceneInfo scene in config.Categories[c].Scenes)
-                {
-                    scenes.Add(new Tuple<string, string>(scene.Name, scene.SceneFolder + "/Act" + scene.ActID + ".bin"));
-
-                    List<string> files;
-                    if (!Directories.TryGetValue(scene.ActID, out files))
-                    {
-                        files = new List<string>();
-                        Directories[scene.ActID] = files;
-                    }
-                    files.Add("Act" + scene.ActID + ".bin");
-                }
-
-                string categoryName = "Unknown Category";
-
-                switch (c)
                 {
                     case 0:
                         categoryName = "Presentation Stages";

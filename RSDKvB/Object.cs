@@ -19,37 +19,37 @@ namespace RSDKvB
         /// <summary>
         /// The Type of the object
         /// </summary>
-        public int type;
+        public byte type;
         /// <summary>
         /// The Object's SubType/PropertyValue
         /// </summary>
-        public int subtype;
+        public byte subtype;
         /// <summary>
-        /// a quick way to get the true X position
+        /// a quick way to get the X position
         /// </summary>
-        public int xPos
+        public short xPos
         {
             get
             {
-                return position.X.High + (position.X.Low / 0x10000);
+                return position.X.High;
             }
             set
             {
-
+                position.X.High = (short)value;
             }
         }
         /// <summary>
-        /// a quick way to get the true Y position
+        /// a quick way to get the Y position
         /// </summary>
-        public int yPos
+        public short yPos
         {
             get
             {
-                return position.Y.High + (position.Y.Low / 0x10000);
+                return position.Y.High;
             }
             set
             {
-
+                position.Y.High = (short)value;
             }
         }
         /// <summary>
@@ -63,7 +63,7 @@ namespace RSDKvB
         /// <summary>
         /// the raw position values
         /// </summary>
-        public Position position;
+        public Position position = new Position();
 
         /// <summary>
         /// How Many Objects have been loaded
@@ -74,11 +74,15 @@ namespace RSDKvB
         /// </summary>
         public int id;
 
-        public Object(byte type, byte subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_id++)
+        public Object()
         {
         }
 
-        public Object(byte type, byte subtype, int xPos, int yPos, int id)
+        public Object(byte type, byte subtype, short xPos, short yPos) : this(type, subtype, xPos, yPos, cur_id++)
+        {
+        }
+
+        public Object(byte type, byte subtype, short xPos, short yPos, int id)
         {
             Name = "Unknown Object";
             this.type = type;
@@ -88,7 +92,7 @@ namespace RSDKvB
             this.id = id;
         }
 
-        public Object(byte type, byte subtype, int xPos, int yPos, int id, string name)
+        public Object(byte type, byte subtype, short xPos, short yPos, int id, string name)
         {
             this.Name = name;
             this.type = type;

@@ -20,12 +20,10 @@ namespace RetroED.Tools.MapEditor
         }
 
         //What RSDK version is loaded?
-        public int LoadedRSDKver = 0;
-
-        bool LoadedObjDefinitions = false;
+        public Retro_Formats.EngineType engineType;
 
         //Stage's Tileset
-        private Image _loadedTiles;
+        public Image _loadedTiles;
 
         //The Chunk/Object Viewer
         public StageChunksView _blocksViewer;
@@ -42,10 +40,10 @@ namespace RetroED.Tools.MapEditor
 
         //The Path to these files
         string tiles;
-        string mappings;
-        string Map;
-        string CollisionMasks;
-        string Stageconfig;
+        string chunks;
+        string scene;
+        string collisionMasks;
+        string stageconfig;
 
         bool showgrid = false;
         int PlacementMode = 0;
@@ -57,158 +55,49 @@ namespace RetroED.Tools.MapEditor
 
         new RetroED.Extensions.EntityToolbar.EntityToolbar EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar();
 
-        #region Retro-Sonic Development Kit
-        //Why is Retro-Sonic so bad lmao
-        public RSDKvRS.ZoneList _RStagesvRS = new RSDKvRS.ZoneList();
-        public RSDKvRS.ZoneList _CStagesvRS = new RSDKvRS.ZoneList();
-        public RSDKvRS.ZoneList _SStagesvRS = new RSDKvRS.ZoneList();
-        public RSDKvRS.ZoneList _BStagesvRS = new RSDKvRS.ZoneList();
-        public RSDKvRS.Scene _RSDKRSScene = new RSDKvRS.Scene();
-        public RSDKvRS.Tiles128x128 _RSDKRSChunks = new RSDKvRS.Tiles128x128();
-        public RSDKvRS.Tileconfig _RSDKRSCollisionMask = new RSDKvRS.Tileconfig();
-        public RSDKvRS.Zoneconfig _RSDKRSStageconfig = new RSDKvRS.Zoneconfig();
-        #endregion
+        public RSDKvRS.ZoneList RStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList CStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList SStagesvRS = new RSDKvRS.ZoneList();
+        public RSDKvRS.ZoneList BStagesvRS = new RSDKvRS.ZoneList();
 
-        #region RSDKv1
-        public RSDKv1.GameConfig _RSDK1GameConfig;
-        public RSDKv1.Scene _RSDK1Scene = new RSDKv1.Scene();
-        public RSDKv1.Tiles128x128 _RSDK1Chunks = new RSDKv1.Tiles128x128();
-        public RSDKv1.Tileconfig _RSDK1CollisionMask = new RSDKv1.Tileconfig();
-        public RSDKv1.StageConfig _RSDK1Stageconfig = new RSDKv1.StageConfig();
-        #endregion
-
-        #region RSDKv2
-        public RSDKv2.GameConfig _RSDK2GameConfig = new RSDKv2.GameConfig();
-        public RSDKv2.Scene _RSDK2Scene = new RSDKv2.Scene();
-        public RSDKv2.Tiles128x128 _RSDK2Chunks = new RSDKv2.Tiles128x128();
-        public RSDKv2.Tileconfig _RSDK2CollisionMask = new RSDKv2.Tileconfig();
-        public RSDKv2.StageConfig _RSDK2Stageconfig = new RSDKv2.StageConfig();
-        #endregion
-
-        #region RSDKvB
-        public RSDKvB.GameConfig _RSDKBGameConfig = new RSDKvB.GameConfig();
-        public RSDKvB.Scene _RSDKBScene = new RSDKvB.Scene();
-        public RSDKvB.Tiles128x128 _RSDKBChunks = new RSDKvB.Tiles128x128();
-        public RSDKvB.Tileconfig _RSDKBCollisionMask = new RSDKvB.Tileconfig();
-        public RSDKvB.StageConfig _RSDKBStageconfig = new RSDKvB.StageConfig();
-        #endregion
+        public Retro_Formats.Gameconfig Gameconfig = new Retro_Formats.Gameconfig();
+        public Retro_Formats.Scene Scene = new Retro_Formats.Scene();
+        public Retro_Formats.MetaTiles Chunks = new Retro_Formats.MetaTiles();
+        public RSDKvB.Tileconfig Tileconfig = new RSDKvB.Tileconfig();
+        public Retro_Formats.Stageconfig Stageconfig = new Retro_Formats.Stageconfig();
 
         List<string> ObjectNames = new List<string>();
-        List<RSDKvRS.Object> ObjectTypesvRS = new List<RSDKvRS.Object>();
-        List<RSDKv1.Object> ObjectTypesv1 = new List<RSDKv1.Object>();
-        List<RSDKv2.Object> ObjectTypesv2 = new List<RSDKv2.Object>();
-        List<RSDKvB.Object> ObjectTypesvB = new List<RSDKvB.Object>();
+        List<Retro_Formats.Object> ObjectTypes = new List<Retro_Formats.Object>();
 
         public MainView()
         {
             InitializeComponent();
             _mapViewer = new StageMapView(this);
             _mapViewer.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
-            _blocksViewer = new StageChunksView(_mapViewer,this);
+            _blocksViewer = new StageChunksView(this);
             _blocksViewer.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.DockLeft);
-            _mapViewer._ChunkView = _blocksViewer;
             EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar();
             EntityToolbar.Dock = DockStyle.Fill;
             _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
         }
 
-        void LoadScene(string Scene, int RSDKver)
+        void LoadScene(string ScenePath)
         {
             //Clears the map
             _mapViewer.DrawScene();
-            switch (RSDKver)
+            Scene.ImportFrom(engineType, ScenePath);
+            Chunks.ImportFrom(engineType, chunks);
+            Tileconfig = new RSDKvB.Tileconfig(collisionMasks);
+            Stageconfig.ImportFrom(engineType, stageconfig);
+
+            using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
             {
-                case 0:
-                    _RSDKBScene = new RSDKvB.Scene(Scene);
-                    _RSDKBChunks = new RSDKvB.Tiles128x128(mappings);
-                    _RSDKBCollisionMask = new RSDKvB.Tileconfig(CollisionMasks);
-                    _RSDKBStageconfig = new RSDKvB.StageConfig(Stageconfig);
-
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    _RSDK2Scene = new RSDKv2.Scene(Scene);
-                    _RSDK2Chunks = new RSDKv2.Tiles128x128(mappings);
-                    _RSDK2CollisionMask = new RSDKv2.Tileconfig(CollisionMasks);
-                    _RSDK2Stageconfig = new RSDKv2.StageConfig(Stageconfig);
-
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    _RSDK1Scene = new RSDKv1.Scene(Scene);
-                    _RSDK1Chunks = new RSDKv1.Tiles128x128(mappings);
-                    _RSDK1CollisionMask = new RSDKv1.Tileconfig(CollisionMasks);
-                    _RSDK1Stageconfig = new RSDKv1.StageConfig(Stageconfig);
-
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = RSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.loadedRSDKver = RSDKver;
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    _RSDKRSScene = new RSDKvRS.Scene(Scene);
-                    _RSDKRSChunks = new RSDKvRS.Tiles128x128(mappings);
-                    _RSDKRSCollisionMask = new RSDKvRS.Tileconfig(CollisionMasks);
-                    _RSDKRSStageconfig = new RSDKvRS.Zoneconfig(Stageconfig);
-
-                    RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles, false);
-
-                    _loadedTiles = gfx.gfxImage;
-
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer._tiles = gfx.gfxImage.Clone(new Rectangle(0,0,gfx.gfxImage.Width, gfx.gfxImage.Height), System.Drawing.Imaging.PixelFormat.DontCare);
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer._tiles = gfx.gfxImage.Clone(new Rectangle(0, 0, gfx.gfxImage.Width, gfx.gfxImage.Height), System.Drawing.Imaging.PixelFormat.DontCare);
-                    _mapViewer.SetScene();
-                    gfx = null;
-                    break;
-                default:
-                    break;
+                var bmp = new Bitmap(fs);
+                _loadedTiles = (Bitmap)bmp.Clone();
             }
-        }
+            _blocksViewer.SetChunks();
 
-        private void exportImageToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-        }
-        
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+            _mapViewer.SetScene();
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -233,50 +122,17 @@ namespace RetroED.Tools.MapEditor
             }
         }
 
-        void CheckDimensions(int RSDKver, ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight) //Check to see if the map is a different size to another map/an older version of this map
+        void CheckDimensions(ushort[][] OldTiles, ushort[][] NewTiles, int OLDwidth, int OLDheight) //Check to see if the map is a different size to another map/an older version of this map
         {
-
-            if (RSDKver == 3)
+            if (Scene.width != OLDwidth || Scene.height != OLDheight)
             {
-                if (_RSDKRSScene.width != OLDwidth || _RSDKRSScene.height != OLDheight) //Well, Is it different?
-                {
-                    Console.WriteLine("Different"); //It is!
-                    //Update the map!
-                    _RSDKRSScene.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDheight, (ushort)_RSDKRSScene.width, (ushort)_RSDKRSScene.height, RSDKver);
-                    _mapViewer.DrawScene(); //Draw the map
-                }
-            }
-            if (RSDKver == 2)
-            {
-                if (_RSDK1Scene.width != OLDwidth || _RSDK1Scene.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK1Scene.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK1Scene.width, (ushort)_RSDK1Scene.height, RSDKver);
-                    _mapViewer.DrawScene();
-                }
-
-            }
-            if (RSDKver == 1)
-            {
-                if (_RSDK2Scene.width != OLDwidth || _RSDK2Scene.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDK2Scene.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDK2Scene.width, (ushort)_RSDK2Scene.height, RSDKver);
-                    _mapViewer.DrawScene();
-                }
-            }
-            if (RSDKver == 0)
-            {
-                if (_RSDKBScene.width != OLDwidth || _RSDKBScene.height != OLDheight)
-                {
-                    Console.WriteLine("Different");
-                    _RSDKBScene.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)_RSDKBScene.width, (ushort)_RSDKBScene.height, RSDKver);
-                    _mapViewer.DrawScene();
-                }
+                Console.WriteLine("Different");
+                Scene.MapLayout = UpdateMapDimensions(OldTiles, NewTiles, (ushort)OLDwidth, (ushort)OLDwidth, (ushort)Scene.width, (ushort)Scene.height);
+                _mapViewer.DrawScene();
             }
         }
 
-        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight, int RSDKver)
+        ushort[][] UpdateMapDimensions(ushort[][] OldTiles, ushort[][] NewTiles, ushort oldWidth, ushort oldHeight, ushort NewWidth, ushort NewHeight)
         {
             //Yeah, I "borrowed" this from Maniac
 
@@ -307,25 +163,15 @@ namespace RetroED.Tools.MapEditor
 
         private void clearObjectsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch(LoadedRSDKver)
+            switch (MessageBox.Show(this, "WARNING: you are going to remove ALL objects in the stage! THIS ACTION CANNOT BE UNDONE! Continue?", "RetroED Map Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
             {
-                case 3:
-                    _RSDKRSScene.objects.Clear(); //Clear the Object list (Delete all objects)
-                    _mapViewer.DrawScene(); //Let's redraw the Scene
-                    break;
-                case 2:
-                    _RSDK1Scene.objects.Clear(); //Clear the Object list (Delete all objects)
-                    _mapViewer.DrawScene(); //Let's redraw the Scene
-                    break;
-                case 1:
-                    _RSDK2Scene.objects.Clear(); //Clear the Object list (Delete all objects)
-                    _mapViewer.DrawScene(); //Let's redraw the Scene
-                    break;
-                case 0:
-                    _RSDKBScene.objects.Clear(); //Clear the Object list (Delete all objects)
-                    _mapViewer.DrawScene(); //Let's redraw the Scene
+                case System.Windows.Forms.DialogResult.Cancel:
+                    return;
+                case System.Windows.Forms.DialogResult.Yes:
                     break;
             }
+            Scene.objects.Clear(); //Clear the Object list (Delete all objects)
+            _mapViewer.DrawScene(); //Let's redraw the Scene
         }
 
         /// <summary>
@@ -333,22 +179,16 @@ namespace RetroED.Tools.MapEditor
         /// </summary>
         private void SetGameConfig()
         {
-            switch (LoadedRSDKver)
+            switch (engineType)
             {
-                case 0:
-                    _RSDKBGameConfig = new RSDKvB.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
+                case Retro_Formats.EngineType.RSDKvRS:
+                    RStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "Zones.mdf"));
+                    CStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "CZones.mdf"));
+                    SStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "SStages.mdf"));
+                    BStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "BStages.mdf"));
                     break;
-                case 1:
-                    _RSDK2GameConfig = new RSDKv2.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
-                    break;
-                case 2:
-                    _RSDK1GameConfig = new RSDKv1.GameConfig(Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
-                    break;
-                case 3:
-                    _RStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "Zones.mdf"));
-                    _CStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "CZones.mdf"));
-                    _SStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "SStages.mdf"));
-                    _BStagesvRS = new RSDKvRS.ZoneList(Path.Combine(DataDirectory, "TitleScr", "BStages.mdf"));
+                default:
+                    Gameconfig.ImportFrom(engineType, Path.Combine(DataDirectory, "Game", "GameConfig.bin"));
                     break;
             }
         }
@@ -374,18 +214,12 @@ namespace RetroED.Tools.MapEditor
         private bool IsDataDirectoryValid(string directoryToCheck)
         {
             bool exists = false;
-            switch(LoadedRSDKver)
+            switch(engineType)
             {
-                case 0:
+                default:
                     exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
                     break;
-                case 1:
-                    exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
-                    break;
-                case 2:
-                    exists = File.Exists(Path.Combine(directoryToCheck, "Game", "GameConfig.bin"));
-                    break;
-                case 3:
+                case Retro_Formats.EngineType.RSDKvRS:
                     exists = File.Exists(Path.Combine(directoryToCheck, "TitleScr", "Zones.mdf"));
                     break;
             }
@@ -433,18 +267,18 @@ namespace RetroED.Tools.MapEditor
         void OpenScene()
         {
 
-            switch(LoadedRSDKver)
+            switch(engineType)
             {
-                case 0:
-                    RetroED.Extensions.DataSelect.SceneSelect dlgB = new RetroED.Extensions.DataSelect.SceneSelect(_RSDKBGameConfig);
+                default:
+                    RetroED.Extensions.DataSelect.SceneSelect dlg = new RetroED.Extensions.DataSelect.SceneSelect(Gameconfig);
 
-                    dlgB.ShowDialog();
-                    if (dlgB.Result.FilePath != null)
+                    dlg.ShowDialog();
+                    if (dlg.Result.FilePath != null)
                     {
-                        string SelectedScene = Path.GetFileName(dlgB.Result.FilePath);
-                        string SelectedZone = dlgB.Result.FilePath.Replace(SelectedScene, "");
+                        string SelectedScene = Path.GetFileName(dlg.Result.FilePath);
+                        string SelectedZone = dlg.Result.FilePath.Replace(SelectedScene, "");
 
-                        categoryID = dlgB.Result.Category;
+                        categoryID = dlg.Result.Category;
 
                         FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
                         string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
@@ -468,72 +302,8 @@ namespace RetroED.Tools.MapEditor
                         
                     }
                     break;
-                case 1:
-                    RetroED.Extensions.DataSelect.SceneSelect dlg2 = new RetroED.Extensions.DataSelect.SceneSelect(_RSDK2GameConfig);
-
-                    dlg2.ShowDialog();
-                    if (dlg2.Result.FilePath != null)
-                    {
-                        string SelectedScene = Path.GetFileName(dlg2.Result.FilePath);
-                        string SelectedZone = dlg2.Result.FilePath.Replace(SelectedScene, "");
-
-                        categoryID = dlg2.Result.Category;
-
-                        FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
-                        string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
-                        Console.WriteLine("Scene Path = " + FilePath);
-                        //try
-                        //{
-                        if (File.Exists(FilePath))
-                        {
-                            Open(FilePath);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
-                        }
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
-                        //    return;
-                        //}
-                    }
-                    break;
-                case 2:
-                    RetroED.Extensions.DataSelect.SceneSelect dlg1 = new RetroED.Extensions.DataSelect.SceneSelect(_RSDK1GameConfig);
-
-                    dlg1.ShowDialog();
-                    if (dlg1.Result.FilePath != null)
-                    {
-                        string SelectedScene = Path.GetFileName(dlg1.Result.FilePath);
-                        string SelectedZone = dlg1.Result.FilePath.Replace(SelectedScene, "");
-
-                        categoryID = dlg1.Result.Category;
-
-                        FilePath = Path.Combine(DataDirectory, "Stages", SelectedZone, SelectedScene);
-                        string stageDir = Path.Combine(DataDirectory, "Stages", SelectedZone);
-                        Console.WriteLine("Scene Path = " + FilePath);
-                        //try
-                        //{
-                        if (File.Exists(FilePath))
-                        {
-                            Open(FilePath);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Scene Doesn't Exist! " + FilePath);
-                        }
-                        //}
-                        //catch (Exception ex)
-                        //{
-                        //    MessageBox.Show("Load failed. Error: " + ex.ToString());
-                        //    return;
-                        //}
-                    }
-                    break;
-                case 3:
-                    RetroED.Extensions.DataSelect.SceneSelect dlgRS = new RetroED.Extensions.DataSelect.SceneSelect(_RStagesvRS,_CStagesvRS,_SStagesvRS,_BStagesvRS);
+                case Retro_Formats.EngineType.RSDKvRS:
+                    RetroED.Extensions.DataSelect.SceneSelect dlgRS = new RetroED.Extensions.DataSelect.SceneSelect(RStagesvRS, CStagesvRS, SStagesvRS, BStagesvRS);
 
                     dlgRS.ShowDialog();
                     if (dlgRS.Result.FilePath != null)
@@ -583,9 +353,9 @@ namespace RetroED.Tools.MapEditor
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
-                LoadedRSDKver = dlg.RSDKver;
                 DataDirectory = null;
                 DataDirLoaded = false;
+                engineType = dlg.engineType;
                 //if (DataDirectory == null || !DataDirLoaded)
                 //{
                     OpenDataDirectory();
@@ -614,7 +384,7 @@ namespace RetroED.Tools.MapEditor
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
-                LoadedRSDKver = ofd.FilterIndex - 1;
+                engineType = ofd.FilterIndex - 1;
 
 
         }*/
@@ -622,17 +392,17 @@ namespace RetroED.Tools.MapEditor
 
         public void Open(string folderpath)
         {
-            if (LoadedRSDKver == 3) //Are We displaying a Retro-Sonic Map?
+            if (engineType == Retro_Formats.EngineType.RSDKvRS) //Are We displaying a Retro-Sonic Map?
             {
                 //Load the files needed to show the map
                 tiles = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.gfx");
-                mappings = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.til");
-                Map = folderpath;
-                CollisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.tcf");
-                Stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.zcf");
-                if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks) && File.Exists(Stageconfig))
+                chunks = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.til");
+                scene = folderpath;
+                collisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.tcf");
+                stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Zone.zcf");
+                if (File.Exists(tiles) && File.Exists(chunks) && File.Exists(collisionMasks) && File.Exists(stageconfig))
                 {
-                    LoadScene(folderpath, LoadedRSDKver);
+                    LoadScene(folderpath);
                     LoadObjectsFromDataFolder(DataDirectory);
 
                     string filename = Path.GetFileName(folderpath);
@@ -656,18 +426,18 @@ namespace RetroED.Tools.MapEditor
                     }
 
                     Parent.rp.state = "RetroED - " + this.Text;
-                    switch (LoadedRSDKver)
+                    switch (engineType)
                     {
-                        case 0:
+                        case Retro_Formats.EngineType.RSDKvB:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
                             break;
-                        case 1:
+                        case Retro_Formats.EngineType.RSDKv2:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
                             break;
-                        case 2:
+                        case Retro_Formats.EngineType.RSDKv1:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
                             break;
-                        case 3:
+                        case Retro_Formats.EngineType.RSDKvRS:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                             break;
                     }
@@ -679,18 +449,17 @@ namespace RetroED.Tools.MapEditor
                     MessageBox.Show("Tiles, Mappings, Collision Masks and Stageconfig need to exist in the same folder as act data, just like the game.");
                 }
             }
-
-            if (LoadedRSDKver != 3) //Are we NOT displaying a Retro-Sonic Map?
+            else //Are we NOT displaying a Retro-Sonic Map?
             {
                 //Load Map Data
                 tiles = Path.Combine(Path.GetDirectoryName(folderpath), "16x16Tiles.gif");
-                mappings = Path.Combine(Path.GetDirectoryName(folderpath), "128x128Tiles.bin");
-                Map = folderpath;
-                CollisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "CollisionMasks.bin");
-                Stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Stageconfig.bin");
-                if (File.Exists(tiles) && File.Exists(mappings) && File.Exists(CollisionMasks) && File.Exists(Stageconfig))
+                chunks = Path.Combine(Path.GetDirectoryName(folderpath), "128x128Tiles.bin");
+                scene = folderpath;
+                collisionMasks = Path.Combine(Path.GetDirectoryName(folderpath), "collisionMasks.bin");
+                stageconfig = Path.Combine(Path.GetDirectoryName(folderpath), "Stageconfig.bin");
+                if (File.Exists(tiles) && File.Exists(chunks) && File.Exists(collisionMasks) && File.Exists(stageconfig))
                 {
-                    LoadScene(folderpath, LoadedRSDKver);
+                    LoadScene(folderpath);
                     LoadObjectsFromDataFolder(DataDirectory);
 
                     string filename = Path.GetFileName(folderpath);
@@ -714,18 +483,18 @@ namespace RetroED.Tools.MapEditor
                     }
 
                     Parent.rp.state = "RetroED - " + this.Text;
-                    switch (LoadedRSDKver)
+                    switch (engineType)
                     {
-                        case 0:
+                        case Retro_Formats.EngineType.RSDKvB:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
                             break;
-                        case 1:
+                        case Retro_Formats.EngineType.RSDKv2:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
                             break;
-                        case 2:
+                        case Retro_Formats.EngineType.RSDKv1:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
                             break;
-                        case 3:
+                        case Retro_Formats.EngineType.RSDKvRS:
                             Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                             break;
                     }
@@ -741,33 +510,13 @@ namespace RetroED.Tools.MapEditor
 
         private void MenuItem_Save_Click(object sender, EventArgs e)
         {
-            if (Map == null) //Do we have a map file open?
+            if (scene == null) //Do we have a map file open?
             {
                 saveAsToolStripMenuItem_Click(this, e); //If not, then let the user make one
             }
             else
             {
-                switch (LoadedRSDKver) //Find out what RSDK version is loaded and then write the map data to the selected file
-                {
-                    case 0:
-                        _RSDKBScene.objects = EntityToolbar.EntitiesvB;
-                        _RSDKBScene.Write(Map);
-                        break;
-                    case 1:
-                        _RSDK2Scene.objects = EntityToolbar.Entitiesv2;
-                        _RSDK2Scene.Write(Map);
-                        break;
-                    case 2:
-                        _RSDK1Scene.objects = EntityToolbar.Entitiesv1;
-                        _RSDK1Scene.Write(Map);
-                        break;
-                    case 3:
-                        _RSDKRSScene.objects = EntityToolbar.EntitiesvRS;
-                        _RSDKRSScene.Write(Map);
-                        break;
-                    default:
-                        break;
-                }
+                Scene.ExportTo(engineType, scene);
             }
         }
 
@@ -778,398 +527,115 @@ namespace RetroED.Tools.MapEditor
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                switch (LoadedRSDKver) //Find out what RSDK version is loaded and then write the map data to the selected file
+                switch (engineType) //Find out what RSDK version is loaded and then write the map data to the selected file
                 {
-                    case 0:
-                        _RSDKBScene.Write(dlg.FileName);
-                        Map = dlg.FileName;
+                    case Retro_Formats.EngineType.RSDKvB:
+                        engineType = Retro_Formats.EngineType.RSDKvB;
                         break;
-                    case 1:
-                        _RSDK2Scene.Write(dlg.FileName);
-                        Map = dlg.FileName;
+                    case Retro_Formats.EngineType.RSDKv2:
+                        engineType = Retro_Formats.EngineType.RSDKv2;
                         break;
-                    case 2:
-                        _RSDK1Scene.Write(dlg.FileName);
-                        Map = dlg.FileName;
+                    case Retro_Formats.EngineType.RSDKv1:
+                        engineType = Retro_Formats.EngineType.RSDKv1;
                         break;
-                    case 3:
-                        _RSDKRSScene.Write(dlg.FileName);
-                        Map = dlg.FileName;
-                        break;
-                    default:
+                    case Retro_Formats.EngineType.RSDKvRS:
+                        engineType = Retro_Formats.EngineType.RSDKvRS;
                         break;
                 }
+                scene = dlg.FileName;
+                Scene.ExportTo(engineType, scene);
             }
         }
 
         private void MenuItem_ExportFullImage_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)  //Find out what RSDK version is loaded and then write the map data to the selected image location
+            if (Scene != null)
             {
-                case 0:
-                    if (_RSDKBScene != null)
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "PNG Image (*.png)|*.png";
+                if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                {
+                    Bitmap massive = new Bitmap(Scene.MapLayout[0].Length * 128, Scene.MapLayout.Length * 128);
+                    using (Graphics g = Graphics.FromImage(massive))
                     {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                        for (int y = 0; y < Scene.MapLayout.Length; y++)
                         {
-                            Bitmap massive = new Bitmap(_RSDKBScene.MapLayout[0].Length * 128, _RSDKBScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
+                            for (int x = 0; x < Scene.MapLayout[0].Length; x++)
                             {
-                                for (int y = 0; y < _RSDKBScene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDKBScene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDKBChunks.BlockList[_RSDKBScene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                                for (int o = 0; o < _RSDKBScene.objects.Count; o++)
-                                {
-                                        Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDKBScene.objects[o].type, _RSDKBScene.objects[o].subtype);
-                                        if (mapobj != null && mapobj.ID > 0)
-                                        {
-                                            g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDKBScene.objects[o].xPos + mapobj.PivotX, _RSDKBScene.objects[o].yPos + mapobj.PivotY);
-                                        }
-                                        else
-                                        {
-                                            g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDKBScene.objects[o].xPos, _RSDKBScene.objects[o].yPos);
-                                        }
-                                }
+                                g.DrawImage(Chunks.ChunkList[Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
                             }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
+                        }
+                        for (int o = 0; o < Scene.objects.Count; o++)
+                        {
+                            Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(Scene.objects[o].type, Scene.objects[o].subtype);
+                            if (mapobj != null && mapobj.ID > 0)
+                            {
+                                g.DrawImageUnscaled(mapobj.RenderObject(engineType, _mapViewer.datapath), Scene.objects[o].xPos + mapobj.PivotX, Scene.objects[o].yPos + mapobj.PivotY);
+                            }
+                            else
+                            {
+                                g.DrawImage(RetroED.Properties.Resources.OBJ, Scene.objects[o].xPos, Scene.objects[o].yPos);
+                            }
                         }
                     }
-                    break;
-                case 1:
-                    if (_RSDK2Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK2Scene.MapLayout[0].Length * 128, _RSDK2Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK2Scene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK2Scene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK2Chunks.BlockList[_RSDK2Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                                for (int o = 0; o < _RSDK2Scene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDK2Scene.objects[o].type, _RSDK2Scene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDK2Scene.objects[o].xPos + mapobj.PivotX, _RSDK2Scene.objects[o].yPos + mapobj.PivotY);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK2Scene.objects[o].xPos, _RSDK2Scene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 2:
-                    if (_RSDK1Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK1Scene.MapLayout[0].Length * 128, _RSDK1Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK1Scene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK1Scene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK1Chunks.BlockList[_RSDK1Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                                for (int o = 0; o < _RSDK1Scene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDK1Scene.objects[o].type, _RSDK1Scene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDK1Scene.objects[o].xPos + mapobj.PivotX, _RSDK1Scene.objects[o].yPos + mapobj.PivotY);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK1Scene.objects[o].xPos, _RSDK1Scene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 3:
-                    if (_RSDKRSScene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDKRSScene.MapLayout[0].Length * 128, _RSDKRSScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDKRSScene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDKRSScene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDKRSChunks.BlockList[_RSDKRSScene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                                for (int o = 0; o < _RSDKRSScene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDKRSScene.objects[o].type, _RSDKRSScene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDKRSScene.objects[o].xPos + mapobj.PivotX, _RSDKRSScene.objects[o].yPos + mapobj.PivotY);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDKRSScene.objects[o].xPos, _RSDKRSScene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                    massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    massive.Dispose();
+                }
             }
         }
 
         private void MenuItem_ExportMapImage_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)  //Find out what RSDK version is loaded and then write the map data to the selected image location
+            if (Scene != null)
             {
-                case 0:
-                    if (_RSDKBScene != null)
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "PNG Image (*.png)|*.png";
+                if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                {
+                    Bitmap massive = new Bitmap(Scene.MapLayout[0].Length * 128, Scene.MapLayout.Length * 128);
+                    using (Graphics g = Graphics.FromImage(massive))
                     {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                        for (int y = 0; y < Scene.MapLayout.Length; y++)
                         {
-                            Bitmap massive = new Bitmap(_RSDKBScene.MapLayout[0].Length * 128, _RSDKBScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
+                            for (int x = 0; x < Scene.MapLayout[0].Length; x++)
                             {
-                                for (int y = 0; y < _RSDKBScene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDKBScene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDKBChunks.BlockList[_RSDKBScene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
+                                g.DrawImage(Chunks.ChunkList[Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
                             }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
                         }
                     }
-                    break;
-                case 1:
-                    if (_RSDK2Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK2Scene.MapLayout[0].Length * 128, _RSDK2Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK2Scene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK2Scene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK2Chunks.BlockList[_RSDK2Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 2:
-                    if (_RSDK1Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK1Scene.MapLayout[0].Length * 128, _RSDK1Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDK1Scene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDK1Scene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDK1Chunks.BlockList[_RSDK1Scene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 3:
-                    if (_RSDKRSScene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDKRSScene.MapLayout[0].Length * 128, _RSDKRSScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int y = 0; y < _RSDKRSScene.MapLayout.Length; y++)
-                                {
-                                    for (int x = 0; x < _RSDKRSScene.MapLayout[0].Length; x++)
-                                    {
-                                        g.DrawImage(_RSDKRSChunks.BlockList[_RSDKRSScene.MapLayout[y][x]].Render(_loadedTiles), x * 128, y * 128);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                    massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    massive.Dispose();
+                }
             }
         }
 
         private void MenuItem_ExportObjImage_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver)  //Find out what RSDK version is loaded and then write the map data to the selected image location
+            if (Scene != null)
             {
-                case 0:
-                    if (_RSDKBScene != null)
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.Filter = "PNG Image (*.png)|*.png";
+                if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                {
+                    Bitmap massive = new Bitmap(Scene.MapLayout[0].Length * 128, Scene.MapLayout.Length * 128);
+                    using (Graphics g = Graphics.FromImage(massive))
                     {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
+                        for (int o = 0; o < Scene.objects.Count; o++)
                         {
-                            Bitmap massive = new Bitmap(_RSDKBScene.MapLayout[0].Length * 128, _RSDKBScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
+                            Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(Scene.objects[o].type, Scene.objects[o].subtype);
+                            if (mapobj != null && mapobj.ID > 0)
                             {
-                                for (int o = 0; o < _RSDKBScene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDKBScene.objects[o].type, _RSDKBScene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDKBScene.objects[o].xPos, _RSDKBScene.objects[o].yPos);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDKBScene.objects[o].xPos, _RSDKBScene.objects[o].yPos);
-                                    }
-                                }
+                                g.DrawImageUnscaled(mapobj.RenderObject(engineType, _mapViewer.datapath), Scene.objects[o].xPos, Scene.objects[o].yPos);
                             }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
+                            else
+                            {
+                                g.DrawImage(RetroED.Properties.Resources.OBJ, Scene.objects[o].xPos, Scene.objects[o].yPos);
+                            }
                         }
                     }
-                    break;
-                case 1:
-                    if (_RSDK2Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK2Scene.MapLayout[0].Length * 128, _RSDK2Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int o = 0; o < _RSDK2Scene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDK2Scene.objects[o].type, _RSDK2Scene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDK2Scene.objects[o].xPos, _RSDK2Scene.objects[o].yPos);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK2Scene.objects[o].xPos, _RSDK2Scene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 2:
-                    if (_RSDK1Scene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDK1Scene.MapLayout[0].Length * 128, _RSDK1Scene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int o = 0; o < _RSDK1Scene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDK1Scene.objects[o].type, _RSDK1Scene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDK1Scene.objects[o].xPos, _RSDK1Scene.objects[o].yPos);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDK1Scene.objects[o].xPos, _RSDK1Scene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                case 3:
-                    if (_RSDKRSScene != null)
-                    {
-                        SaveFileDialog sfd = new SaveFileDialog();
-                        sfd.Filter = "PNG Image (*.png)|*.png";
-                        if (sfd.ShowDialog() == DialogResult.OK) /*Just Render the map onto an image and save it*/
-                        {
-                            Bitmap massive = new Bitmap(_RSDKRSScene.MapLayout[0].Length * 128, _RSDKRSScene.MapLayout.Length * 128);
-                            using (Graphics g = Graphics.FromImage(massive))
-                            {
-                                for (int o = 0; o < _RSDKRSScene.objects.Count; o++)
-                                {
-                                    Object_Definitions.MapObject mapobj = _mapViewer.ObjectDefinitions.GetObjectByType(_RSDKRSScene.objects[o].type, _RSDKRSScene.objects[o].subtype);
-                                    if (mapobj != null && mapobj.ID > 0)
-                                    {
-                                        g.DrawImageUnscaled(mapobj.RenderObject(_mapViewer.loadedRSDKver, _mapViewer.datapath), _RSDKRSScene.objects[o].xPos, _RSDKRSScene.objects[o].yPos);
-                                    }
-                                    else
-                                    {
-                                        g.DrawImage(RetroED.Properties.Resources.OBJ, _RSDKRSScene.objects[o].xPos, _RSDKRSScene.objects[o].yPos);
-                                    }
-                                }
-                            }
-                            massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                            massive.Dispose();
-                        }
-                    }
-                    break;
-                default:
-                    break;
+                    massive.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    massive.Dispose();
+                }
             }
         }
 
@@ -1180,196 +646,54 @@ namespace RetroED.Tools.MapEditor
 
         private void MenuItem_ClearChunks_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //Find out what RSDK version is used and replace all the chunks with a transparent one (Chunk Zero)
+            ushort[][] NewTiles = new ushort[Scene.height][];
+            for (ushort i = 0; i < Scene.height; i++)
             {
-                case 3:
-                    ushort[][] NewChunks1 = new ushort[_RSDKRSScene.height][];
-                    for (ushort i = 0; i < _RSDKRSScene.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewChunks1[i] = new ushort[_RSDKRSScene.width];
-                        for (int j = 0; j < _RSDKRSScene.width; ++j)
-                            NewChunks1[i][j] = 0; // fill the chunks with blanks
-                    }
-                    _RSDKRSScene.MapLayout = NewChunks1;
-                    _mapViewer.DrawScene();
-                    break;
-                case 2:
-                    ushort[][] NewTiles2 = new ushort[_RSDK1Scene.height][];
-                    for (ushort i = 0; i < _RSDK1Scene.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles2[i] = new ushort[_RSDK1Scene.width];
-                        for (int j = 0; j < _RSDK1Scene.width; ++j)
-                            NewTiles2[i][j] = 0; // fill the chunks with blanks
-                    }
-                    _RSDK1Scene.MapLayout = NewTiles2;
-
-                    _mapViewer.DrawScene();
-                    break;
-                case 1:
-                    ushort[][] NewTiles3 = new ushort[_RSDK2Scene.height][];
-                    for (ushort i = 0; i < _RSDK2Scene.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles3[i] = new ushort[_RSDK2Scene.width];
-                        for (int j = 0; j < _RSDK2Scene.width; ++j)
-                            NewTiles3[i][j] = 0; // fill the chunks with blanks
-                    }
-                    _RSDK2Scene.MapLayout = NewTiles3;
-                    _mapViewer.DrawScene();
-                    break;
-                case 0:
-                    ushort[][] NewTiles4 = new ushort[_RSDKBScene.height][];
-                    for (ushort i = 0; i < _RSDKBScene.height; i++)
-                    {
-                        // first create arrays child arrays to the width
-                        // a little inefficient, but at least they'll all be equal sized
-                        NewTiles4[i] = new ushort[_RSDKBScene.width];
-                        for (int j = 0; j < _RSDKBScene.width; ++j)
-                            NewTiles4[i][j] = 0; // fill the chunks with blanks
-                    }
-                    _RSDKBScene.MapLayout = NewTiles4;
-                    _mapViewer.DrawScene();
-                    break;
+                // first create arrays child arrays to the width
+                // a little inefficient, but at least they'll all be equal sized
+                NewTiles[i] = new ushort[Scene.width];
+                for (int j = 0; j < Scene.width; ++j)
+                    NewTiles[i][j] = 0; // fill the chunks with blanks
             }
+            Scene.MapLayout = NewTiles;
+            _mapViewer.DrawScene();
         }
 
         private void MenuItem_ClearObjects_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //Find out what RSDK version is loaded and clear the object list of objects
-            {
-                case 3:
-                    _RSDKRSScene.objects.Clear();
-                    _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-                    EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesvRS, this);
-                    EntityToolbar.RSDKVer = LoadedRSDKver;
-                    EntityToolbar.Dock = DockStyle.Fill;
-                    EntityToolbar.EntitiesvRS = _RSDKRSScene.objects;
-                    _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
-                    _mapViewer.DrawScene();
-                    break;
-                case 2:
-                    _RSDK1Scene.objects.Clear();
-                    _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-                    EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesv1, this);
-                    EntityToolbar.RSDKVer = LoadedRSDKver;
-                    EntityToolbar.Dock = DockStyle.Fill;
-                    EntityToolbar.Entitiesv1 = _RSDK1Scene.objects;
-                    _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
-                    _mapViewer.DrawScene();
-                    break;
-                case 1:
-                    _RSDK2Scene.objects.Clear();
-                    _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-                    EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesv2, this);
-                    EntityToolbar.RSDKVer = LoadedRSDKver;
-                    EntityToolbar.Dock = DockStyle.Fill;
-                    EntityToolbar.Entitiesv2 = _RSDK2Scene.objects;
-                    _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
-                    _mapViewer.DrawScene();
-                    break;
-                case 0:
-                    _RSDKBScene.objects.Clear();
-                    _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-                    EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesvB, this);
-                    EntityToolbar.RSDKVer = LoadedRSDKver;
-                    EntityToolbar.Dock = DockStyle.Fill;
-                    EntityToolbar.EntitiesvB = _RSDKBScene.objects;
-                    _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
-                    _mapViewer.DrawScene();
-                    break;
-            }
+            Scene.objects.Clear();
+            _blocksViewer.tabControl.TabPages[1].Controls.Clear();
+            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypes, this);
+            EntityToolbar.engineType = engineType;
+            EntityToolbar.Dock = DockStyle.Fill;
+            EntityToolbar.Entities = Scene.objects;
+            _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
+            _mapViewer.DrawScene();
         }
 
         private void MenuItem_MapProp_Click(object sender, EventArgs e)
         {
-            PropertiesForm frm = new PropertiesForm(LoadedRSDKver);
+            PropertiesForm frm = new PropertiesForm(engineType);
 
             ushort[][] OldTiles;
             ushort[][] NewTiles;
             int OLDwidth = 0;
             int OLDheight = 0;
 
-            switch (LoadedRSDKver)
-            {
-                case 3:
-                    //Backup the data, We'll use this later! :)
-                    OldTiles = _RSDKRSScene.MapLayout;
-                    OLDwidth = _RSDKRSScene.width;
-                    OLDheight = _RSDKRSScene.height;
-                    //Set the form data to the map data
-                    frm.Mapv1 = _RSDKRSScene;
-                    frm.Setup();
-                    break;
-                case 2:
-                    //Backup the data, We'll use this later! :)
-                    OldTiles = _RSDK1Scene.MapLayout;
-                    OLDwidth = _RSDK1Scene.width;
-                    OLDheight = _RSDK1Scene.height;
-                    //Set the form data to the map data
-                    frm.Mapv2 = _RSDK1Scene;
-                    frm.Setup();
-                    break;
-                case 1:
-                    //Backup the data, We'll use this later! :)
-                    OldTiles = _RSDK2Scene.MapLayout;
-                    OLDwidth = _RSDK2Scene.width;
-                    OLDheight = _RSDK2Scene.height;
-                    //Set the form data to the map data
-                    frm.Mapv3 = _RSDK2Scene;
-                    frm.Setup();
-                    break;
-                case 0:
-                    //Backup the data, We'll use this later! :)
-                    OldTiles = _RSDKBScene.MapLayout;
-                    OLDwidth = _RSDKBScene.width;
-                    OLDheight = _RSDKBScene.height;
-                    //Set the form data to the map data
-                    frm.Mapv4 = _RSDKBScene;
-                    frm.Setup();
-                    break;
-                default:
-                    break;
-            }
+            //Backup the data, We'll use this later! :)
+            OldTiles = Scene.MapLayout;
+            OLDwidth = Scene.width;
+            OLDheight = Scene.height;
+            //Set the form data to the map data
+            frm.Scene = Scene;
+            frm.Setup();
             if (frm.ShowDialog(this) == DialogResult.OK)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 3:
-                        OldTiles = _RSDKRSScene.MapLayout; //Get Old Chunks
-                        _RSDKRSScene = frm.Mapv1; //Set the map data to the updated data
-                        NewTiles = _RSDKRSScene.MapLayout; //Get the updated Chunks
-                        CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight); //Was the map size changed?
-                        _mapViewer.DrawScene();
-                        break;
-                    case 2:
-                        OldTiles = _RSDK1Scene.MapLayout; //Get Old Chunks
-                        _RSDK1Scene = frm.Mapv2; //Set the map data to the updated data
-                        NewTiles = _RSDK1Scene.MapLayout; //Get the updated Chunks
-                        CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight); //Was the map size changed?
-                        _mapViewer.DrawScene();
-                        break;
-                    case 1:
-                        OldTiles = _RSDK2Scene.MapLayout; //Get Old Chunks
-                        _RSDK2Scene = frm.Mapv3; //Set the map data to the updated data
-                        NewTiles = _RSDK2Scene.MapLayout; //Get the updated Chunks
-                        CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight); //Was the map size changed?
-                        _mapViewer.DrawScene();
-                        break;
-                    case 0:
-                        OldTiles = _RSDKBScene.MapLayout; //Get Old Chunks
-                        _RSDKBScene = frm.Mapv4; //Set the map data to the updated data
-                        NewTiles = _RSDKBScene.MapLayout; //Get the updated Chunks
-                        CheckDimensions(LoadedRSDKver, OldTiles, NewTiles, OLDwidth, OLDheight); //Was the map size changed?
-                        _mapViewer.DrawScene();
-                        break;
-                    default:
-                        break;
-                }
+                OldTiles = Scene.MapLayout; //Get Old Chunks
+                Scene = frm.Scene; //Set the map data to the updated data
+                NewTiles = Scene.MapLayout; //Get the updated Chunks
+                CheckDimensions(OldTiles, NewTiles, OLDwidth, OLDheight); //Was the map size changed?
+                _mapViewer.DrawScene();
             }
         }
 
@@ -1385,14 +709,14 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.DrawScene();
         }
 
-        private void MenuItem_CollisionMasks_Click(object sender, EventArgs e)
+        private void MenuItem_collisionMasks_Click(object sender, EventArgs e)
         {
             _mapViewer.ShowCollisionA = MenuItem_CollisionMasksLyrA.Checked = !_mapViewer.ShowCollisionA; //Are we going to show the Collision Masks for each tile?
             _mapViewer.ShowCollisionB = MenuItem_CollisionMasksLyrB.Checked = false;
             _mapViewer.DrawScene();
         }
 
-        private void MenuItem_CollisionMasksLyrB_Click(object sender, EventArgs e)
+        private void MenuItem_collisionMasksLyrB_Click(object sender, EventArgs e)
         {
             _mapViewer.ShowCollisionB = MenuItem_CollisionMasksLyrB.Checked = !_mapViewer.ShowCollisionB; //Are we going to show the Collision Masks for each tile?
             _mapViewer.ShowCollisionA = MenuItem_CollisionMasksLyrA.Checked = false;
@@ -1433,18 +757,18 @@ namespace RetroED.Tools.MapEditor
 
         public void LoadObjectsFromDataFolder(string datapath)
         {
-            switch (LoadedRSDKver)
+            switch (engineType)
             {
-                case 0:
+                case Retro_Formats.EngineType.RSDKvB:
                     LoadRSDKBObjectsFromStageconfig(datapath);
                     break;
-                case 1:
+                case Retro_Formats.EngineType.RSDKv2:
                     LoadRSDK2ObjectsFromStageconfig(datapath);
                     break;
-                case 2:
+                case Retro_Formats.EngineType.RSDKv1:
                     LoadRSDK1ObjectsFromStageconfig(datapath);
                     break;
-                case 3:
+                case Retro_Formats.EngineType.RSDKvRS:
                     LoadRSDKObjectDefinitionsFromStageconfig(datapath);
                     break;
             }
@@ -1452,11 +776,11 @@ namespace RetroED.Tools.MapEditor
 
         public void LoadRSDKObjectDefinitionsFromStageconfig(string datapath)
         {
-            RSDKvRS.Zoneconfig _RSDKRSZoneconfig = new RSDKvRS.Zoneconfig(Stageconfig);
+            RSDKvRS.Zoneconfig _RSDKRSZoneconfig = new RSDKvRS.Zoneconfig(stageconfig);
             _mapViewer.ObjectDefinitions.Objects.Clear();
 
             ObjectNames.Clear();
-            ObjectTypesvRS.Clear();
+            ObjectTypes.Clear();
 
             List<string> Sheets = new List<string>();
 
@@ -1469,20 +793,20 @@ namespace RetroED.Tools.MapEditor
             
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("BlankObject", 0, 0, datapath + "Blank Objects Don't need sprites lmao", 0, 0, 0, 0, 0, 0, 0));
-            ObjectTypesvRS.Add(new RSDKvRS.Object(0, 0, 0, 0, 0, "BlankObject"));
+            ObjectTypes.Add(new Retro_Formats.Object(0, 0, 0, 0, 0, "BlankObject"));
             ObjectNames.Add("BlankObject");
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(1, 0), new Object_Definitions.MapObject("Ring", 1, 0, datapath + "\\Objects\\General.gfx", 0, 0, 16, 16, -8, -8, 0));
             ObjectNames.Add("Ring");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(1, 0, 0, 0, 1, "Ring"));
+            ObjectTypes.Add(new Retro_Formats.Object(1, 0, 0, 0, 1, "Ring"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(2, 0), new Object_Definitions.MapObject("DroppedRing", 2, 0, datapath + "//Objects//General.gfx", 0, 0, 16, 16, -8, -8, 0));
             ObjectNames.Add("DroppedRing");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(2, 0, 0, 0, 2, "DroppedRing"));
+            ObjectTypes.Add(new Retro_Formats.Object(2, 0, 0, 0, 2, "DroppedRing"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(3, 0), new Object_Definitions.MapObject("RingSparkle", 3, 0, datapath + "//Objects//General.gfx", 0, 0, 16, 16, -8, -8, 0));
             ObjectNames.Add("RingSparkle");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(3, 0, 0, 0, 3, "RingSparkle"));
+            ObjectTypes.Add(new Retro_Formats.Object(3, 0, 0, 0, 3, "RingSparkle"));
 
             Object_Definitions.MapObject BlankItemBox = new Object_Definitions.MapObject("BlankItemBox", 4, 0, datapath + "\\Objects\\General.gfx", 24, 0, 30, 32,-15,-16,0);
             Object_Definitions.MapObject RingBox = new Object_Definitions.MapObject("RingBox", 4, 1, datapath + "\\Objects\\General.gfx", 0, 0, 14, 16,-7,-8,0);
@@ -1507,11 +831,11 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(4, 9), oneUP);
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(4, 10), BlueRing);
             ObjectNames.Add("ItemBox");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(4, 0, 0, 0, 4, "ItemBox"));
+            ObjectTypes.Add(new Retro_Formats.Object(4, 0, 0, 0, 4, "ItemBox"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(5, 0), new Object_Definitions.MapObject("BrokenItemBox", 5, 0, datapath + "\\Objects\\General.gfx", 24, 0, 30, 32,-15,-16,0));
             ObjectNames.Add("BrokenItemBox");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(5, 0, 0, 0, 5, "BrokenItemBox"));
+            ObjectTypes.Add(new Retro_Formats.Object(5, 0, 0, 0, 5, "BrokenItemBox"));
 
             //TO-DO: MAP THE SPRING DIRECTIONS
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(6, 0), new Object_Definitions.MapObject("YellowSpring", 6, 0, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
@@ -1523,7 +847,7 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(6, 6), new Object_Definitions.MapObject("YellowSpring", 6, 6, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(6, 7), new Object_Definitions.MapObject("YellowSpring", 6, 7, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
             ObjectNames.Add("YellowSpring");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(6, 0, 0, 0, 6, "YellowSpring"));
+            ObjectTypes.Add(new Retro_Formats.Object(6, 0, 0, 0, 6, "YellowSpring"));
 
             //TO-DO: MAP THE SPRING DIRECTIONS
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(7, 0), new Object_Definitions.MapObject("RedSpring", 7, 0, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
@@ -1535,7 +859,7 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(7, 6), new Object_Definitions.MapObject("RedSpring", 7, 6, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(7, 7), new Object_Definitions.MapObject("RedSpring", 7, 7, datapath + "\\Objects\\General.gfx", 86, 16, 32, 16, -16, -8, 0));
             ObjectNames.Add("RedSpring");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(7, 0, 0, 0, 7, "RedSpring"));
+            ObjectTypes.Add(new Retro_Formats.Object(7, 0, 0, 0, 7, "RedSpring"));
 
             //TO-DO: MAP THE SPIKE DIRECTIONS
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(8, 0), new Object_Definitions.MapObject("Spikes", 8, 0, datapath + "\\Objects\\General.gfx", 118, 160, 32, 32, -16, -16, 0));
@@ -1543,95 +867,95 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(8, 2), new Object_Definitions.MapObject("Spikes", 8, 2, datapath + "\\Objects\\General.gfx", 118, 160, 32, 32, -16, -16, 0));
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(8, 3), new Object_Definitions.MapObject("Spikes", 8, 3, datapath + "\\Objects\\General.gfx", 118, 160, 32, 32, -16, -16, 0));
             ObjectNames.Add("Spikes");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(8, 0, 0, 0, 8, "Spikes"));
+            ObjectTypes.Add(new Retro_Formats.Object(8, 0, 0, 0, 8, "Spikes"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(9, 0), new Object_Definitions.MapObject("Checkpoint", 9, 0, datapath + "\\Objects\\General.gfx", 240, 0, 16, 48, -8, -24, 0));
             ObjectNames.Add("Checkpoint");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(9, 0, 0, 0, 9, "Checkpoint"));
+            ObjectTypes.Add(new Retro_Formats.Object(9, 0, 0, 0, 9, "Checkpoint"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(10, 0), new Object_Definitions.MapObject("UnknownObject(Type10)", 10, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type10)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(10, 0, 0, 0, 10, "UnknownObject(Type10)"));
+            ObjectTypes.Add(new Retro_Formats.Object(10, 0, 0, 0, 10, "UnknownObject(Type10)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(11, 0), new Object_Definitions.MapObject("UnknownObject(Type11)", 11, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type11)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(11, 0, 0, 0, 11, "UnknownObject(Type11)"));
+            ObjectTypes.Add(new Retro_Formats.Object(11, 0, 0, 0, 11, "UnknownObject(Type11)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(12, 0), new Object_Definitions.MapObject("UnknownObject(Type12)", 12, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type12)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(12, 0, 0, 0, 12, "UnknownObject(Type12)"));
+            ObjectTypes.Add(new Retro_Formats.Object(12, 0, 0, 0, 12, "UnknownObject(Type12)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(13, 0), new Object_Definitions.MapObject("UnknownObject(Type13)", 13, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type13)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(13, 0, 0, 0, 13, "UnknownObject(Type13)"));
+            ObjectTypes.Add(new Retro_Formats.Object(13, 0, 0, 0, 13, "UnknownObject(Type13)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(14, 0), new Object_Definitions.MapObject("UnknownObject(Type14)", 14, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type14)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(14, 0, 0, 0, 14, "UnknownObject(Type14)"));
+            ObjectTypes.Add(new Retro_Formats.Object(14, 0, 0, 0, 14, "UnknownObject(Type14)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(15, 0), new Object_Definitions.MapObject("UnknownObject(Type15)", 15, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type15)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(15, 0, 0, 0, 15, "UnknownObject(Type15)"));
+            ObjectTypes.Add(new Retro_Formats.Object(15, 0, 0, 0, 15, "UnknownObject(Type15)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(16, 0), new Object_Definitions.MapObject("UnknownObject(Type16)", 16, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type16)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(16, 0, 0, 0, 16, "UnknownObject(Type16)"));
+            ObjectTypes.Add(new Retro_Formats.Object(16, 0, 0, 0, 16, "UnknownObject(Type16)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(17, 0), new Object_Definitions.MapObject("UnknownObject(Type17)", 17, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type17)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(17, 0, 0, 0, 17, "UnknownObject(Type17)"));
+            ObjectTypes.Add(new Retro_Formats.Object(17, 0, 0, 0, 17, "UnknownObject(Type17)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(18, 0), new Object_Definitions.MapObject("SignPost", 18, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("SignPost");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(18, 0, 0, 0, 18, "SignPost"));
+            ObjectTypes.Add(new Retro_Formats.Object(18, 0, 0, 0, 18, "SignPost"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(19, 0), new Object_Definitions.MapObject("EggPrison", 19, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("EggPrison");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(19, 0, 0, 0, 19, "EggPrison"));
+            ObjectTypes.Add(new Retro_Formats.Object(19, 0, 0, 0, 19, "EggPrison"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(20, 0), new Object_Definitions.MapObject("SmallExplosion", 20, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("SmallExplosion");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(20, 0, 0, 0, 20, "SmallExplosion"));
+            ObjectTypes.Add(new Retro_Formats.Object(20, 0, 0, 0, 20, "SmallExplosion"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(21, 0), new Object_Definitions.MapObject("BigExplosion", 21, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("BigExplosion");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(21, 0, 0, 0, 21, "BigExplosion"));
+            ObjectTypes.Add(new Retro_Formats.Object(21, 0, 0, 0, 21, "BigExplosion"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(22, 0), new Object_Definitions.MapObject("EggPrisonDebris", 22, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("EggPrisonDebris");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(22, 0, 0, 0, 22, "EggPrisonDebris"));
+            ObjectTypes.Add(new Retro_Formats.Object(22, 0, 0, 0, 22, "EggPrisonDebris"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(23, 0), new Object_Definitions.MapObject("Animal", 23, 0, datapath + "\\Objects\\General2.gfx", 64, 0, 48, 48, -24, -24, 0));
             ObjectNames.Add("Animal");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(23, 0, 0, 0, 23, "Animal"));
+            ObjectTypes.Add(new Retro_Formats.Object(23, 0, 0, 0, 23, "Animal"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(24, 0), new Object_Definitions.MapObject("UnknownObject(Type24)", 24, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type24)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(24, 0, 0, 0, 24, "UnknownObject(Type24)"));
+            ObjectTypes.Add(new Retro_Formats.Object(24, 0, 0, 0, 24, "UnknownObject(Type24)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(25, 0), new Object_Definitions.MapObject("UnknownObject(Type25)", 25, 0, datapath + "//Sprites//", 0, 0, 0, 0, 0, 0, 0));
             ObjectNames.Add("UnknownObject(Type25)");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(25, 0, 0, 0, 25, "UnknownObject(Type25)"));
+            ObjectTypes.Add(new Retro_Formats.Object(25, 0, 0, 0, 25, "UnknownObject(Type25)"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(26, 0), new Object_Definitions.MapObject("BigRing", 26, 0, datapath + "\\Objects\\General.gfx", 256, 0, 64, 64, -32, -32, 0));
             ObjectNames.Add("BigRing");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(26, 0, 0, 0, 26, "BigRing"));
+            ObjectTypes.Add(new Retro_Formats.Object(26, 0, 0, 0, 26, "BigRing"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(27, 0), new Object_Definitions.MapObject("WaterSplash", 27, 0, datapath + "\\Objects\\General.gfx", 256, 0, 64, 64, -32, -32, 0));
             ObjectNames.Add("WaterSplash");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(27, 0, 0, 0, 27, "WaterSplash"));
+            ObjectTypes.Add(new Retro_Formats.Object(27, 0, 0, 0, 27, "WaterSplash"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(28, 0), new Object_Definitions.MapObject("AirBubbleSpawner", 28, 0, datapath + "\\Objects\\General.gfx", 256, 0, 64, 64, -32, -32, 0));
             ObjectNames.Add("AirBubbleSpawner");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(28, 0, 0, 0, 28, "AirBubbleSpawner"));
+            ObjectTypes.Add(new Retro_Formats.Object(28, 0, 0, 0, 28, "AirBubbleSpawner"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(29, 0), new Object_Definitions.MapObject("SmallAirBubble", 29, 0, datapath + "\\Objects\\General.gfx", 256, 0, 64, 64, -32, -32, 0));
             ObjectNames.Add("SmallAirBubble");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(29, 0, 0, 0, 29, "SmallAirBubble"));
+            ObjectTypes.Add(new Retro_Formats.Object(29, 0, 0, 0, 29, "SmallAirBubble"));
 
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(30, 0), new Object_Definitions.MapObject("SmokePuff", 30, 0, datapath + "\\Objects\\General.gfx", 256, 0, 64, 64, -32, -32, 0));
             ObjectNames.Add("SmokePuff");
-            ObjectTypesvRS.Add(new RSDKvRS.Object(30, 0, 0, 0, 30, "SmokePuff"));
+            ObjectTypes.Add(new Retro_Formats.Object(30, 0, 0, 0, 30, "SmokePuff"));
 
             for (int i = 1; i <= _RSDKRSZoneconfig.Objects.Count; i++)
             {
@@ -1672,26 +996,26 @@ namespace RetroED.Tools.MapEditor
 
                 _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 30), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath), (i + 30), 0, Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                     ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath));
-                    ObjectTypesvRS.Add(new RSDKvRS.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath)));
+                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath)));
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                     _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 30), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath), (i + 30), 0, "", 0, 0, 0, 0));
                     ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath));
-                    ObjectTypesvRS.Add(new RSDKvRS.Object(i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath)));
+                    ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKRSZoneconfig.Objects[i - 1].FilePath)));
                 }
             }
-            for (int i = 0; i < _RSDKRSScene.objects.Count; i++)
+            for (int i = 0; i < Scene.objects.Count; i++)
             {
-                _RSDKRSScene.objects[i].Name = ObjectNames[_RSDKRSScene.objects[i].type];
+                Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
             }
 
             _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesvRS, this);
-            EntityToolbar.RSDKVer = LoadedRSDKver;
+            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypes, this);
+            EntityToolbar.engineType = engineType;
             EntityToolbar.Dock = DockStyle.Fill;
-            EntityToolbar.EntitiesvRS = _RSDKRSScene.objects;
+            EntityToolbar.Entities = Scene.objects;
             _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
 
         }
@@ -1703,21 +1027,21 @@ namespace RetroED.Tools.MapEditor
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(1, 0), new Object_Definitions.MapObject("Player Spawn", 0, 0, "", 0, 0, 0, 0));
 
             ObjectNames.Clear();
-            ObjectTypesv1.Clear();
+            ObjectTypes.Clear();
 
             ObjectNames.Add("BlankObject");
-            ObjectTypesv1.Add(new RSDKv1.Object(0, 0, 0, 0, 0, "BlankObject"));
+            ObjectTypes.Add(new Retro_Formats.Object(0, 0, 0, 0, 0, "BlankObject"));
 
             ObjectNames.Add("PlayerSpawn");
-            ObjectTypesv1.Add(new RSDKv1.Object(1, 0, 0, 0, 1, "PlayerSpawn"));
+            ObjectTypes.Add(new Retro_Formats.Object(1, 0, 0, 0, 1, "PlayerSpawn"));
 
-            if (_RSDK1Stageconfig.LoadGlobalScripts)
+            if (Stageconfig.LoadGlobalScripts)
             {
-                for (int i = 1; i <= _RSDK1GameConfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Gameconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK1GameConfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Gameconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -1776,8 +1100,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]));
-                                    ObjectTypesv1.Add(new RSDKv1.Object(i + 1, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -1791,7 +1115,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -1799,24 +1123,24 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]));
-                            ObjectTypesv1.Add(new RSDKv1.Object(i + 1, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1]));
-                        ObjectTypesv1.Add(new RSDKv1.Object(i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1GameConfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                     }
                 }
-                for (int i = 1; i <= _RSDK1Stageconfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Stageconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK1Stageconfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -1870,8 +1194,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]));
-                                    ObjectTypesv1.Add(new RSDKv1.Object(i + 1, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath)));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -1885,7 +1209,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK1GameConfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]), (i + _RSDK1GameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -1893,31 +1217,31 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK1GameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]), (i + _RSDK1GameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]));
-                            ObjectTypesv1.Add(new RSDKv1.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath)));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK1GameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]), (i + _RSDK1GameConfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]));
-                        ObjectTypesv1.Add(new RSDKv1.Object(i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath), (i + Gameconfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath)));
                     }
                 }
-                for (int i = 0; i < _RSDK1Scene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
-                    _RSDK1Scene.objects[i].Name = ObjectNames[_RSDK1Scene.objects[i].type];
+                    Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                 }
             }
             else
             {
-                for (int i = 1; i <= _RSDK1Stageconfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Stageconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK1Stageconfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -1958,29 +1282,29 @@ namespace RetroED.Tools.MapEditor
                             Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
                         }
 
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]));
-                        ObjectTypesv1.Add(new RSDKv1.Object(i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath)));
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i +  1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1]));
-                        ObjectTypesv1.Add(new RSDKv1.Object(i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK1Stageconfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i +  1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ScriptPaths[i - 1].FilePath)));
                     }
                 }
-                for (int i = 0; i < _RSDK1Scene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
-                    _RSDK1Scene.objects[i].Name = ObjectNames[_RSDK1Scene.objects[i].type];
+                    Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                 }
             }
 
             _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesv1,this);
-            EntityToolbar.RSDKVer = LoadedRSDKver;
+            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypes,this);
+            EntityToolbar.engineType = engineType;
             EntityToolbar.Dock = DockStyle.Fill;
-            EntityToolbar.Entitiesv1 = _RSDK1Scene.objects;
+            EntityToolbar.Entities = Scene.objects;
             _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
 
         }
@@ -1993,19 +1317,19 @@ namespace RetroED.Tools.MapEditor
             bool UsingBytecode = Directory.Exists(datapath + "//Scripts//Bytecode");
 
             ObjectNames.Clear();
-            ObjectTypesv2.Clear();
+            ObjectTypes.Clear();
 
             ObjectNames.Add("BlankObject");
 
-            ObjectTypesv2.Add(new RSDKv2.Object(0, 0, 0, 0, 0, "BlankObject"));
+            ObjectTypes.Add(new Retro_Formats.Object(0, 0, 0, 0, 0, "BlankObject"));
 
-            if (_RSDK2Stageconfig.LoadGlobalScripts)
+            if (Stageconfig.LoadGlobalScripts)
             {
-                for (int i = 1; i <= _RSDK2GameConfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Gameconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK2GameConfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Gameconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2064,8 +1388,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]));
-                                    ObjectTypesv2.Add(new RSDKv2.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -2079,7 +1403,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -2087,24 +1411,24 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]));
-                            ObjectTypesv2.Add(new RSDKv2.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1]));
-                        ObjectTypesv2.Add(new RSDKv2.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2GameConfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                     }
                 }
-                for (int i = 1; i <= _RSDK2Stageconfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Stageconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK2Stageconfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2158,8 +1482,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]));
-                                    ObjectTypesv2.Add(new RSDKv2.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -2173,7 +1497,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK2GameConfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]), (i + _RSDK2GameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -2181,38 +1505,38 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK2GameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]), (i + _RSDK2GameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]));
-                            ObjectTypesv2.Add(new RSDKv2.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDK2GameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]), (i + _RSDK2GameConfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]));
-                        ObjectTypesv2.Add(new RSDKv2.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                     }
                 }
-                for (int i = 0; i < _RSDK2Scene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
                     try
                     {
-                        _RSDK2Scene.objects[i].Name = ObjectNames[_RSDK2Scene.objects[i].type];
+                        Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                     }
                     catch (Exception ex)
                     {
-                        _RSDK2Scene.objects[i].Name = ObjectNames[0];
+                        Scene.objects[i].Name = ObjectNames[0];
                     }
                 }
             }
             else
             {
-                for (int i = 1; i <= _RSDK2Stageconfig.ObjectsNames.Count; i++)
+                for (int i = 1; i <= Stageconfig.ObjectsNames.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDK2Stageconfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2253,36 +1577,36 @@ namespace RetroED.Tools.MapEditor
                             Y = Convert.ToInt32(SetEditorIcon[0].Paramaters[7]);
                         }
 
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]));
-                        ObjectTypesv2.Add(new RSDKv2.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1]));
-                        ObjectTypesv2.Add(new RSDKv2.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDK2Stageconfig.ObjectsNames[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                     }
                 }
-                for (int i = 0; i < _RSDK2Scene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
-                    _RSDK2Scene.objects[i].Name = ObjectNames[_RSDK2Scene.objects[i].type];
+                    Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                 }
             }
 
             _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesv2, this);
-            EntityToolbar.RSDKVer = LoadedRSDKver;
+            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypes, this);
+            EntityToolbar.engineType = engineType;
             EntityToolbar.Dock = DockStyle.Fill;
-            EntityToolbar.Entitiesv2 = _RSDK2Scene.objects;
+            EntityToolbar.Entities = Scene.objects;
             _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
         }
 
         public void LoadRSDKBObjectsFromStageconfig(string datapath)
         {
-            RSDKvB.GameConfig _RSDKBGameConfig = new RSDKvB.GameConfig(datapath + "//Game//Gameconfig.bin");
-            RSDKvB.StageConfig _RSDKBStageConfig = new RSDKvB.StageConfig(Stageconfig);
+            Gameconfig.ImportFrom(engineType, datapath + "//Game//Gameconfig.bin");
+            Stageconfig.ImportFrom(engineType,stageconfig);
             _mapViewer.ObjectDefinitions.Objects.Clear();
             _mapViewer.ObjectDefinitions.Objects.Add(new Point(0, 0), new Object_Definitions.MapObject("Blank Object", 0, 0, "", 0, 0, 0, 0));
 
@@ -2294,19 +1618,19 @@ namespace RetroED.Tools.MapEditor
             }
 
             ObjectNames.Clear();
-            ObjectTypesvB.Clear();
+            ObjectTypes.Clear();
 
             ObjectNames.Add("BlankObject");
 
-            ObjectTypesvB.Add(new RSDKvB.Object(0, 0, 0, 0, 0, "BlankObject"));
+            ObjectTypes.Add(new Retro_Formats.Object(0, 0, 0, 0, 0, "BlankObject"));
 
-            if (_RSDKBStageConfig.LoadGlobalScripts)
+            if (Stageconfig.LoadGlobalScripts)
             {
-                for (int i = 1; i <= _RSDKBGameConfig.ScriptPaths.Count; i++)
+                for (int i = 1; i <= Gameconfig.ScriptPaths.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDKBGameConfig.ScriptPaths[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Gameconfig.ScriptPaths[i - 1].FilePath));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2365,8 +1689,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]));
-                                    ObjectTypesv1.Add(new RSDKv1.Object(i + 1, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -2380,7 +1704,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -2388,24 +1712,24 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]));
-                            ObjectTypesvB.Add(new RSDKvB.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1]));
-                        ObjectTypesv2.Add(new RSDKv2.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBGameConfig.ScriptPaths[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Gameconfig.ScriptPaths[i - 1].FilePath)));
                     }
                 }
-                for (int i = 1; i <= _RSDKBStageConfig.ObjectsNames.Count; i++)
+                for (int i = 1; i <= Stageconfig.ObjectsNames.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDKBStageConfig.ObjectsNames[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ObjectsNames[i - 1]));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2459,8 +1783,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                                    ObjectTypesvB.Add(new RSDKvB.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -2474,7 +1798,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDKBGameConfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -2482,24 +1806,24 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                            ObjectTypesvB.Add(new RSDKvB.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                        ObjectTypesvB.Add(new RSDKvB.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                     }
                 }
-                for (int i = 0; i < _RSDKBScene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
                     try
                     {
-                        _RSDKBScene.objects[i].Name = ObjectNames[_RSDKBScene.objects[i].type];
+                        Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                     }
                     catch (Exception ex)
                     {
@@ -2509,11 +1833,11 @@ namespace RetroED.Tools.MapEditor
             }
             else
             {
-                for (int i = 1; i <= _RSDKBStageConfig.ObjectsNames.Count; i++)
+                for (int i = 1; i <= Stageconfig.ObjectsNames.Count; i++)
                 {
                     try
                     {
-                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + _RSDKBStageConfig.ObjectsNames[i - 1]));
+                        RSDKv1.Script Script = new RSDKv1.Script(new StreamReader(datapath + "//Scripts//" + Stageconfig.ObjectsNames[i - 1]));
 
                         RSDKv1.Script.Sub subv1 = new RSDKv1.Script.Sub();
 
@@ -2572,8 +1896,8 @@ namespace RetroED.Tools.MapEditor
                                     break;
                                 default:
                                     SingleIcon = false;
-                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                                    ObjectTypesvB.Add(new RSDKvB.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                                    ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                                    ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                                     for (int s = 0; s < SetEditorIcon.Count; s++)
                                     {
                                         PivotX = Convert.ToInt32(SetEditorIcon[s].Paramaters[2]);
@@ -2587,7 +1911,7 @@ namespace RetroED.Tools.MapEditor
 
                                         int iconSubType = Convert.ToInt32(IconStr);
 
-                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDKBGameConfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), iconSubType), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
                                     }
                                     break;
                             }
@@ -2595,24 +1919,24 @@ namespace RetroED.Tools.MapEditor
 
                         if (SingleIcon)
                         {
-                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + _RSDKBGameConfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
-                            ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                            ObjectTypesvB.Add(new RSDKvB.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                            _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + Gameconfig.ScriptPaths.Count + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + Gameconfig.ScriptPaths.Count + 1), 0, datapath + "//Sprites//" + Sheet, X, Y, Width, Height, PivotX, PivotY, 0));
+                            ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                            ObjectTypes.Add(new Retro_Formats.Object((byte)(i + 1), 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                         }
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
-                        ObjectNames.Add(Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1]));
-                        ObjectTypesvB.Add(new RSDKvB.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(_RSDKBStageConfig.ObjectsNames[i - 1])));
+                        _mapViewer.ObjectDefinitions.Objects.Add(new Point((i + 1), 0), new Object_Definitions.MapObject(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]), (i + 1), 0, "", 0, 0, 0, 0));
+                        ObjectNames.Add(Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1]));
+                        ObjectTypes.Add(new Retro_Formats.Object((byte)i, 0, 0, 0, i, Path.GetFileNameWithoutExtension(Stageconfig.ObjectsNames[i - 1])));
                     }
                 }
-                for (int i = 0; i < _RSDKBScene.objects.Count; i++)
+                for (int i = 0; i < Scene.objects.Count; i++)
                 {
                     try
                     {
-                        _RSDKBScene.objects[i].Name = ObjectNames[_RSDKBScene.objects[i].type];
+                        Scene.objects[i].Name = ObjectNames[Scene.objects[i].type];
                     }
                     catch (Exception ex)
                     {
@@ -2622,10 +1946,10 @@ namespace RetroED.Tools.MapEditor
             }
 
             _blocksViewer.tabControl.TabPages[1].Controls.Clear();
-            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypesvB, this);
-            EntityToolbar.RSDKVer = LoadedRSDKver;
+            EntityToolbar = new RetroED.Extensions.EntityToolbar.EntityToolbar(ObjectTypes, this);
+            EntityToolbar.engineType = engineType;
             EntityToolbar.Dock = DockStyle.Fill;
-            EntityToolbar.EntitiesvB = _RSDKBScene.objects;
+            EntityToolbar.Entities = Scene.objects;
             _blocksViewer.tabControl.TabPages[1].Controls.Add(EntityToolbar);
         }
 
@@ -2636,200 +1960,47 @@ namespace RetroED.Tools.MapEditor
 
         private void MenuItem_RefreshChunks_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //The Same as when the map was being setup
-            {
-                case 0:
-                    _RSDKBChunks = new RSDKvB.Tiles128x128(mappings);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    _RSDK2Chunks = new RSDKv2.Tiles128x128(mappings);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    _RSDK1Chunks = new RSDKv1.Tiles128x128(mappings);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    _RSDKRSChunks = new RSDKvRS.Tiles128x128(mappings);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                default:
-                    break;
-            }
+            Chunks.ImportFrom(engineType, chunks);
+            _blocksViewer.SetChunks();
+            _mapViewer.SetScene();
         }
 
         private void MenuItem_ReloadMap_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //The Same as when the map was being setup
-            {
-                case 0:
-                    _RSDKBScene = new RSDKvB.Scene(Map);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    _RSDK2Scene = new RSDKv2.Scene(Map);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    _RSDK1Scene = new RSDKv1.Scene(Map);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    _RSDKRSScene = new RSDKvRS.Scene(Map);
-                    _blocksViewer.SetChunks();
-                    _mapViewer.SetScene();
-                    break;
-                default:
-                    break;
-            }
-
+            Scene.ImportFrom(engineType, scene);
+            _blocksViewer.SetChunks();
+            _mapViewer.SetScene();
         }
 
         private void MenuItem_ReloadTileset_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //The Same as when the map was being setup
+            using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
             {
-                case 0:
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    using (var fs = new System.IO.FileStream(tiles, System.IO.FileMode.Open))
-                    {
-                        var bmp = new Bitmap(fs);
-                        _loadedTiles = (Bitmap)bmp.Clone();
-                    }
-                    _blocksViewer._tiles = _loadedTiles;
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    RSDKvRS.gfx gfx = new RSDKvRS.gfx(tiles);
-
-                    _loadedTiles = gfx.gfxImage;
-
-                    _blocksViewer.loadedRSDKver = LoadedRSDKver;
-                    _blocksViewer._tiles = gfx.gfxImage;
-                    _blocksViewer.SetChunks();
-
-                    _mapViewer._tiles = _loadedTiles;
-                    _mapViewer.loadedRSDKver = LoadedRSDKver;
-                    _mapViewer.SetScene();
-                    break;
-                default:
-                    break;
+                var bmp = new Bitmap(fs);
+                _loadedTiles = (Bitmap)bmp.Clone();
             }
-
+            _blocksViewer.SetChunks();
+            _mapViewer.SetScene();
         }
 
         private void MenuItem_ReloadTileconfig_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //The Same as when the map was being setup
-            {
-                case 0:
-                    _RSDKBCollisionMask = new RSDKvB.Tileconfig(CollisionMasks);
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    _RSDK2CollisionMask = new RSDKv2.Tileconfig(CollisionMasks);
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    _RSDK1CollisionMask = new RSDKv1.Tileconfig(CollisionMasks);
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    _RSDKRSCollisionMask = new RSDKvRS.Tileconfig(CollisionMasks,false);
-                    _mapViewer.SetScene();
-                    break;
-                default:
-                    break;
-            }
-
+            Tileconfig = new RSDKvB.Tileconfig(collisionMasks);
+            _mapViewer.SetScene();
         }
 
         private void MenuItem_ReloadStageconfig_Click(object sender, EventArgs e)
         {
-            switch (LoadedRSDKver) //The Same as when the map was being setup
-            {
-                case 0:
-                    _RSDKRSStageconfig = new RSDKvRS.Zoneconfig(Stageconfig);
-                    _mapViewer.SetScene();
-                    break;
-                case 1:
-                    _RSDK1Stageconfig = new RSDKv1.StageConfig(Stageconfig);
-                    _mapViewer.SetScene();
-                    break;
-                case 2:
-                    _RSDK2Stageconfig = new RSDKv2.StageConfig(Stageconfig);
-                    _mapViewer.SetScene();
-                    break;
-                case 3:
-                    _RSDKBStageconfig = new RSDKvB.StageConfig(Stageconfig);
-                    _mapViewer.SetScene();
-                    break;
-                default:
-                    break;
-            }
-
+            Stageconfig.ImportFrom(engineType, stageconfig);
+            _mapViewer.SetScene();
         }
 
         private void menuItem_deleteObject_Click(object sender, EventArgs e)
         {
             if (EntityToolbar.entitiesList.SelectedIndex > 0)
             {
-                switch(LoadedRSDKver)
-                {
-                    case 0:
-                        EntityToolbar.EntitiesvB.RemoveAt(EntityToolbar.entitiesList.SelectedIndex);
-                        _mapViewer.DrawScene();
-                        break;
-                    case 1:
-                        EntityToolbar.Entitiesv2.RemoveAt(EntityToolbar.entitiesList.SelectedIndex);
-                        _mapViewer.DrawScene();
-                        break;
-                    case 2:
-                        EntityToolbar.Entitiesv1.RemoveAt(EntityToolbar.entitiesList.SelectedIndex);
-                        _mapViewer.DrawScene();
-                        break;
-                    case 3:
-                        EntityToolbar.EntitiesvRS.RemoveAt(EntityToolbar.entitiesList.SelectedIndex);
-                        _mapViewer.DrawScene();
-                        break;
-                }
+                EntityToolbar.Entities.RemoveAt(EntityToolbar.entitiesList.SelectedIndex);
+                _mapViewer.DrawScene();
             }
         }
     }

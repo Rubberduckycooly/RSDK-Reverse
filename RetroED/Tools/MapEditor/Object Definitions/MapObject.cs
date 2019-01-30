@@ -47,7 +47,7 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
             }
         }
 
-        public Bitmap RenderObject(int RSDKver, string DataPath)
+        public Bitmap RenderObject(Retro_Formats.EngineType RSDKver, string DataPath)
         {
             Bitmap b = RetroED.Properties.Resources.OBJ;
             if (!System.IO.File.Exists(DataPath + SpriteSheet))
@@ -55,31 +55,18 @@ namespace RetroED.Tools.MapEditor.Object_Definitions
                 b = RetroED.Properties.Resources.OBJ;
                 return b;
             }
-            switch (RSDKver)
+
+            if (RSDKver == Retro_Formats.EngineType.RSDKvRS)
             {
-                case 3:
-                    if (GFXHolder != null)
-                    {
-                        b = GFXHolder;
-                        b = CropImage(b, new Rectangle(X, Y, Width, Height));
-                        b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
-                    }
-                    break;
-                case 2:
-                    b = new Bitmap(DataPath + SpriteSheet, false);
-                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
-                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
-                    break;
-                case 1:
-                    b = new Bitmap(DataPath + SpriteSheet, false);
-                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
-                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
-                    break;
-                case 0:
-                    b = new Bitmap(DataPath + SpriteSheet, false);
-                    b = CropImage(b, new Rectangle(X, Y, Width, Height));
-                    b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
-                    break;
+                b = GFXHolder;
+                b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                b.MakeTransparent(Color.FromArgb(255, 0, 0, 0));
+            }
+            else
+            {
+                b = new Bitmap(DataPath + SpriteSheet, false);
+                b = CropImage(b, new Rectangle(X, Y, Width, Height));
+                b.MakeTransparent(Color.FromArgb(255, 255, 0, 255));
             }
             return b;
         }

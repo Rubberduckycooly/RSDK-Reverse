@@ -13,24 +13,21 @@ namespace RetroED.Tools.BackgroundEditor
     public partial class CD12_LineScrollForm : Form
     {
 
-        public int LoadedRSDKver;
+        public Retro_Formats.EngineType engineType;
 
         public bool RemoveVal = false;
 
         public int Pvalue;
 
-        public RSDKvRS.BGLayout Mapv1;
-        public RSDKv1.BGLayout Mapv2;
-        public RSDKv2.BGLayout Mapv3;
-        public RSDKvB.BGLayout Mapv4;
+        public Retro_Formats.Background Background = new Retro_Formats.Background();
 
         int hv = 0;
 
-        public CD12_LineScrollForm(int RSDKver, int PVal, int HV)
+        public CD12_LineScrollForm(Retro_Formats.EngineType RSDKver, int PVal, int HV)
         {
             InitializeComponent();
             hv = HV;
-            LoadedRSDKver = RSDKver;
+            engineType = RSDKver;
             Pvalue = PVal;
         }
 
@@ -38,43 +35,17 @@ namespace RetroED.Tools.BackgroundEditor
         {
             if (hv == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        BehaviourNUD.Value = Mapv3.HLines[Pvalue].Behaviour;
-                        RSPDNUD.Value = Mapv3.HLines[Pvalue].RelativeSpeed;
-                        CSPDNUD.Value = Mapv3.HLines[Pvalue].ConstantSpeed;
-                        DrawLayerNUD.Value = Mapv3.HLines[Pvalue].DrawLayer;
-                        break;
-                    case 0:
-                        BehaviourNUD.Value = Mapv4.HLines[Pvalue].Behaviour;
-                        RSPDNUD.Value = Mapv4.HLines[Pvalue].RelativeSpeed;
-                        CSPDNUD.Value = Mapv4.HLines[Pvalue].ConstantSpeed;
-                        DrawLayerNUD.Value = Mapv4.HLines[Pvalue].Behaviour;
-                        break;
-                    default:
-                        break;
-                }
+                BehaviourNUD.Value = Background.HLines[Pvalue].Behaviour;
+                RSPDNUD.Value = Background.HLines[Pvalue].RelativeSpeed;
+                CSPDNUD.Value = Background.HLines[Pvalue].ConstantSpeed;
+                DrawLayerNUD.Value = Background.HLines[Pvalue].Behaviour;
             }
             if (hv == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        BehaviourNUD.Value = Mapv3.VLines[Pvalue].Behaviour;
-                        RSPDNUD.Value = Mapv3.VLines[Pvalue].RelativeSpeed;
-                        CSPDNUD.Value = Mapv3.VLines[Pvalue].ConstantSpeed;
-                        DrawLayerNUD.Value = Mapv3.VLines[Pvalue].DrawLayer;
-                        break;
-                    case 0:
-                        BehaviourNUD.Value = Mapv4.VLines[Pvalue].Behaviour;
-                        RSPDNUD.Value = Mapv4.VLines[Pvalue].RelativeSpeed;
-                        CSPDNUD.Value = Mapv4.VLines[Pvalue].ConstantSpeed;
-                        DrawLayerNUD.Value = Mapv4.VLines[Pvalue].DrawLayer;
-                        break;
-                    default:
-                        break;
-                }
+                BehaviourNUD.Value = Background.VLines[Pvalue].Behaviour;
+                RSPDNUD.Value = Background.VLines[Pvalue].RelativeSpeed;
+                CSPDNUD.Value = Background.VLines[Pvalue].ConstantSpeed;
+                DrawLayerNUD.Value = Background.VLines[Pvalue].DrawLayer;
             }
         }
 
@@ -93,31 +64,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             if (hv == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.HLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.HLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
             }
             if (hv == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.VLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.VLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[Pvalue].Behaviour = (byte)BehaviourNUD.Value;
             }
         }
 
@@ -125,31 +76,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             if (hv == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.HLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.HLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
             }
             else if (hv == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.VLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.VLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[Pvalue].RelativeSpeed = (byte)RSPDNUD.Value;
             }
         }
 
@@ -157,31 +88,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             if (hv == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.HLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.HLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
             }
             else if (hv == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.VLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.VLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[Pvalue].ConstantSpeed = (byte)CSPDNUD.Value;
             }
         }
 
@@ -189,31 +100,11 @@ namespace RetroED.Tools.BackgroundEditor
         {
             if (hv == 0)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.HLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.HLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.HLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
             }
             else if (hv == 1)
             {
-                switch (LoadedRSDKver)
-                {
-                    case 1:
-                        Mapv3.VLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
-                        break;
-                    case 0:
-                        Mapv4.VLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
-                        break;
-                    default:
-                        break;
-                }
+                Background.VLines[Pvalue].DrawLayer = (byte)DrawLayerNUD.Value;
             }
         }
 
