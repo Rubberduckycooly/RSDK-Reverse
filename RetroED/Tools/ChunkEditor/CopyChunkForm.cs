@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.ChunkEditor
 {
-    public partial class CopyChunkForm : Form
+    public partial class CopyChunkForm : DockContent
     {
 
         public int SourceChunk;

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.IO;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.ChunkMappingsEditor
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DockContent
     {
         //What RSDK version is loaded?
         Retro_Formats.EngineType engineType = 0;
@@ -27,8 +29,6 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         //Where is the chunk's file path?
         string filename = null;
-
-        public RetroED.MainForm Parent;
 
         //Chunk Data
         Retro_Formats.MetaTiles Chunks = new Retro_Formats.MetaTiles();
@@ -76,10 +76,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
             using (Graphics g = Graphics.FromImage(DisplayedChunk))
             {
 
-            if (showGrid) // Do we want a grid?
-            {
-                Size gridCellSize = new Size(16 * (int)ZoomLevel, 16 * (int)ZoomLevel); // how big should each cell be?
-                Bitmap mapLine = new Bitmap(128 * (int)ZoomLevel, 128 * (int)ZoomLevel); // how big is the image?
+                if (showGrid) // Do we want a grid?
+                {
+                    Size gridCellSize = new Size(16 * (int)ZoomLevel, 16 * (int)ZoomLevel); // how big should each cell be?
+                    Bitmap mapLine = new Bitmap(128 * (int)ZoomLevel, 128 * (int)ZoomLevel); // how big is the image?
 
                     Pen pen = new Pen(Color.DarkGray);
 
@@ -106,10 +106,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
                     g.ResetTransform(); //Still No idea lmao
                     mapLine.Dispose(); //Delet This!
                 }
-           
-            Pen Recpen = new Pen(Color.Yellow); //Draw a yellow rectangle to show the user what tile they are editing!
-            g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16)); 
-        }
+
+                Pen Recpen = new Pen(Color.Yellow); //Draw a yellow rectangle to show the user what tile they are editing!
+                g.DrawRectangle(Recpen, new Rectangle(tilepoint.X * 16, tilepoint.Y * 16, 16, 16));
+            }
 
             ChunkDisplay.BackgroundImage = DisplayedChunk; //We want the chunk to show up! So make the background image display the currect chunk!
         }
@@ -118,7 +118,9 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             OpenFileDialog dlg = new OpenFileDialog();
             dlg.DefaultExt = ".bin";
-            dlg.Filter = "RSDKvB (Sonic 1 & 2 Remakes) Chunk Mappings|128x128Tiles.bin|RSDKv2 (Sonic CD) Chunk Mappings|128x128Tiles.bin|RSDKv1 (Sonic Nexus) Chunk Mappings|128x128Tiles.bin|Retro-Sonic Chunk Mappings|Zone.til";
+            dlg.Filter = "RSDKvB Chunk Mappings|128x128Tiles.bin|RSDKv2 Chunk Mappings|128x128Tiles.bin|RSDKv1 Chunk Mappings|128x128Tiles.bin|Retro-Sonic Chunk Mappings|Zone.til";
+            string RSDK = "RSDKvB";
+
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 curChunk = 0;
@@ -129,45 +131,57 @@ namespace RetroED.Tools.ChunkMappingsEditor
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         engineType = Retro_Formats.EngineType.RSDKvB;
                         Chunks.ImportFrom(engineType, dlg.FileName);
-                        LoadTileSet(Tiles);
-                        LoadChunks(Tiles);
-                        GotoNUD.Maximum = 512;
-                        RedrawChunk();
+                        RSDK = "RSDKvB";
                         break;
                     case 1:
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         engineType = Retro_Formats.EngineType.RSDKv2;
                         Chunks.ImportFrom(engineType, dlg.FileName);
-                        LoadTileSet(Tiles);
-                        LoadChunks(Tiles);
-                        GotoNUD.Maximum = 512;
-                        RedrawChunk();
+                        RSDK = "RSDKv2";
                         break;
                     case 2:
                         Tiles = new Bitmap(dlg.FileName.Replace("128x128Tiles.bin", "16x16Tiles.gif")); //A Zone's Tileset should be in the same folder as its chunk mappings
                         engineType = Retro_Formats.EngineType.RSDKv1;
                         Chunks.ImportFrom(engineType,dlg.FileName);
-                        LoadTileSet(Tiles);
-                        LoadChunks(Tiles);
-                        GotoNUD.Maximum = 512;
-                        RedrawChunk();
+                        RSDK = "RSDKv1";
                         break;
                     case 3:
                         engineType = Retro_Formats.EngineType.RSDKvRS;
                         Chunks.ImportFrom(engineType, dlg.FileName);
                         RSDKvRS.gfx gfx = new RSDKvRS.gfx(dlg.FileName.Replace("Zone.til", "Zone.gfx"), false); //A Zone's Tileset should be in the same folder as its chunk mappings
                         Tiles = new Bitmap(gfx.gfxImage);
-                        LoadTileSet(Tiles);
-                        LoadChunks(Tiles);
-                        GotoNUD.Maximum = 256; // Retro Sonic Only Supports 256 Chunks per File :(
-                        RedrawChunk();
+                        RSDK = "RSDKvRS";
                         break;
                 }
 
-                Parent.rp.state = "RetroED - " + this.Text;
-                Parent.rp.details = "Editing: " + System.IO.Path.GetFileName(dlg.FileName);
+                LoadTileSet(Tiles);
+                LoadChunks(Tiles);
+                GotoNUD.Maximum = Chunks.MaxChunks;
+                RedrawChunk();
+
+                string dispname = "";
+                string folder = Path.GetDirectoryName(filename);
+                DirectoryInfo di = new DirectoryInfo(folder);
+                folder = di.Name;
+                string file = Path.GetFileName(filename);
+
+                if (filename != null)
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                    dispname = folder + "/" + file;
+                }
+                else
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = "New Scene - RSDK Map Editor";
+                    dispname = "New Scene - RSDK Map Editor";
+                }
+
+
+
+                RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
+                RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
                 SharpPresence.Discord.RunCallbacks();
-                SharpPresence.Discord.UpdatePresence(Parent.rp);
+                SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
 
             }
         }
@@ -213,13 +227,13 @@ namespace RetroED.Tools.ChunkMappingsEditor
             return bmp;
         }
 
-/// <summary>
-/// Resize the image to the specified width and height.
-/// </summary>
-/// <param name="image">The image to resize.</param>
-/// <param name="width">The width to resize to.</param>
-/// <param name="height">The height to resize to.</param>
-/// <returns>The resized image.</returns>
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
         public static Bitmap ResizeImage(Image image, int width, int height)
         {
             var destRect = new Rectangle(0, 0, width, height);
@@ -249,6 +263,22 @@ namespace RetroED.Tools.ChunkMappingsEditor
         {
             if (filename != null)
             {
+                string dispname = "";
+                string folder = Path.GetDirectoryName(filename);
+                DirectoryInfo di = new DirectoryInfo(folder);
+                folder = di.Name;
+                string file = Path.GetFileName(filename);
+
+                if (filename != null)
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                    dispname = folder + "/" + file;
+                }
+                else
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = "New Scene - RSDK Map Editor";
+                    dispname = "New Scene - RSDK Map Editor";
+                }
                 Chunks.ExportTo(engineType, filename);
             }
             else
@@ -266,21 +296,49 @@ namespace RetroED.Tools.ChunkMappingsEditor
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
                 filename = dlg.FileName;
+                string RSDK = "RSDKvB";
                 switch(dlg.FilterIndex-1)
                 {
                     case 0:
                         engineType = Retro_Formats.EngineType.RSDKvB;
+                        RSDK = "RSDKvB";
                         break;
                     case 1:
                         engineType = Retro_Formats.EngineType.RSDKv2;
+                        RSDK = "RSDKv2";
                         break;
                     case 2:
                         engineType = Retro_Formats.EngineType.RSDKv1;
+                        RSDK = "RSDKv1";
                         break;
                     case 3:
                         engineType = Retro_Formats.EngineType.RSDKvRS;
+                        RSDK = "RSDKvRS";
                         break;
                 }
+
+                string dispname = "";
+                string folder = Path.GetDirectoryName(filename);
+                DirectoryInfo di = new DirectoryInfo(folder);
+                folder = di.Name;
+                string file = Path.GetFileName(filename);
+
+                if (filename != null)
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                    dispname = folder + "/" + file;
+                }
+                else
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = "New Chunk Mappings - RSDK Chunk Mappings Editor";
+                    dispname = "New Chunk Mappings - RSDK Chunk Mappings Editor";
+                }
+
+                RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
+                RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+                SharpPresence.Discord.RunCallbacks();
+                SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
+
                 Chunks.ExportTo(engineType, filename);
             }
         }
@@ -306,8 +364,11 @@ namespace RetroED.Tools.ChunkMappingsEditor
         private void ChunkDisplay_MouseDown(object sender, MouseEventArgs e)
         {
             tilepoint = new Point(((int)(e.X )) / (int)(16 * ZoomLevel), ((int)(e.Y )) / (int)(16 * ZoomLevel)); //Get the tile that was clicked, not the position on the screen
-            if (tilepoint.X >= 8 | tilepoint.Y >= 8) return; //Chunks dont have more than 8 tiles vertically OR horizontally!
-            Console.WriteLine(tilepoint.X + " " + tilepoint.Y);
+            //Make sure our point is in the chunk!
+            if (tilepoint.X < 0) tilepoint.X = 0;
+            if (tilepoint.Y < 0) tilepoint.Y = 0;
+            if (tilepoint.X >= 8) tilepoint.X = 7;
+            if (tilepoint.Y >= 8) tilepoint.Y = 7;
 
             switch (e.Button)
             {
@@ -328,9 +389,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
                     {
                         Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
                     }
-                    if (AutoSet16x16TileBool)
+                    if (MenuItem_PlaceTiles.Checked)
                     {
-                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = AutoTile;
+                        if (StageTilesList.SelectedIndex < 0) StageTilesList.SelectedIndex = 0;
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
                     }
                     RedrawChunk(); //If you don't know what this would do then you clearly shouldn't be here lol
               break;
@@ -367,12 +429,6 @@ namespace RetroED.Tools.ChunkMappingsEditor
 
         private void StageTilesList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
-            RedrawChunk();
-            if (StageTilesList.SelectedIndex >= 0)
-            { 
-                TileIDNUD.Value = StageTilesList.SelectedIndex;
-            }
         }
 
         private void NextChunkButton_Click(object sender, EventArgs e)
@@ -399,10 +455,10 @@ namespace RetroED.Tools.ChunkMappingsEditor
             RedrawChunk();
         }
 
-        private void showGridToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ShowGrid_Click(object sender, EventArgs e)
         {
-            showGridToolStripMenuItem.Checked = !showGridToolStripMenuItem.Checked;
-            showGrid = showGridToolStripMenuItem.Checked;
+            MenuItem_ShowGrid.Checked = !MenuItem_ShowGrid.Checked;
+            showGrid = MenuItem_ShowGrid.Checked;
             RedrawChunk();
         }
 
@@ -429,109 +485,88 @@ namespace RetroED.Tools.ChunkMappingsEditor
             RedrawChunk();
         }
 
-        private void orientationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ASOrientation_Click(object sender, EventArgs e)
         {
             if (AutoSetDirectionBool)
             {
                 AutoSetDirectionBool = false;
-                orientationToolStripMenuItem.Checked = false;
+                MenuItem_ASOrientation.Checked = false;
             }
             else if (!AutoSetDirectionBool)
             {
                 AutoSetDirectionBool = true;
-                orientationToolStripMenuItem.Checked = true;
+                MenuItem_ASOrientation.Checked = true;
             }
         }
 
-        private void visualPlaneToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ASVisPlane_Click(object sender, EventArgs e)
         {
             if (AutoSetVisualPlaneBool)
             {
                 AutoSetVisualPlaneBool = false;
-                visualPlaneToolStripMenuItem.Checked = false;
+                MenuItem_ASVisPlane.Checked = false;
             }
             else if (!AutoSetVisualPlaneBool)
             {
                 AutoSetVisualPlaneBool = true;
-                visualPlaneToolStripMenuItem.Checked = true;
+                MenuItem_ASVisPlane.Checked = true;
             }
         }
 
-        private void collisionAToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ASCollA_Click(object sender, EventArgs e)
         {
             if (AutoSetCollisionABool)
             {
                 AutoSetCollisionABool = false;
-                collisionAToolStripMenuItem.Checked = false;
+                MenuItem_ASCollA.Checked = false;
             }
             else if (!AutoSetCollisionABool)
             {
                 AutoSetCollisionABool = true;
-                collisionAToolStripMenuItem.Checked = true;
+                MenuItem_ASCollA.Checked = true;
             }
         }
 
-        private void collisionBToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MenuItem_ASCollB_Click(object sender, EventArgs e)
         {
             if (AutoSetCollisionBBool)
             {
                 AutoSetCollisionBBool = false;
-                collisionBToolStripMenuItem.Checked = false;
+                MenuItem_ASCollB.Checked = false;
             }
             else if (!AutoSetCollisionBBool)
             {
                 AutoSetCollisionBBool = true;
-                collisionBToolStripMenuItem.Checked = true;
+                MenuItem_ASCollB.Checked = true;
             }
         }
 
-        private void tile16x16ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (AutoSet16x16TileBool)
-            {
-                AutoSet16x16TileBool = false;
-                tile16x16ToolStripMenuItem.Checked = false;
-            }
-            else if (!AutoSet16x16TileBool)
-            {
-                AutoSet16x16TileBool = true;
-                tile16x16ToolStripMenuItem.Checked = true;
-            }
-        }
-
-        private void setAutoOrientationToolStripMenuItem_Click(object sender, EventArgs e)
+        private void setAutoMenuItem_ASOrientation_Click(object sender, EventArgs e)
         {
             ChunkEditor.AutoSetOrientation frm = new ChunkEditor.AutoSetOrientation();
             frm.ShowDialog();
             AutoDirection = frm.Value;
         }
 
-        private void setAutoVisualPlaneToolStripMenuItem_Click(object sender, EventArgs e)
+        private void setAutoMenuItem_ASVisPlane_Click(object sender, EventArgs e)
         {
             ChunkEditor.AutoSetVisualPlane frm = new ChunkEditor.AutoSetVisualPlane();
             frm.ShowDialog();
             AutoVisualPlane = frm.Value;
         }
 
-        private void setAutoCollisionAToolStripMenuItem_Click(object sender, EventArgs e)
+        private void setAutoMenuItem_ASCollA_Click(object sender, EventArgs e)
         {
             ChunkEditor.AutoSetCollisionA frm = new ChunkEditor.AutoSetCollisionA();
             frm.ShowDialog();
             AutoCollisionA = frm.Value;
         }
 
-        private void setAutoCollisionBToolStripMenuItem_Click(object sender, EventArgs e)
+        private void setAutoMenuItem_ASCollB_Click(object sender, EventArgs e)
         {
             ChunkEditor.AutoSetCollisionB frm = new ChunkEditor.AutoSetCollisionB();
             frm.ShowDialog();
             AutoCollisionB = frm.Value;
-        }
-
-        private void setAutoTile16x16ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            ChunkEditor.AutoSetTiles frm = new ChunkEditor.AutoSetTiles(StageTilesList);
-            frm.ShowDialog();
-            AutoTile = frm.Value;
         }
 
         private void copyChunkToToolStripMenuItem_Click(object sender, EventArgs e)
@@ -585,6 +620,75 @@ namespace RetroED.Tools.ChunkMappingsEditor
             StageTilesList.ImageSize = (16 * TileZoomBar.Value);
             StageTilesList.ImageWidth = (16 * TileZoomBar.Value);
             StageTilesList.ImageHeight = (16 * TileZoomBar.Value);
+        }
+
+        private void MenuItem_PlaceTiles_Click(object sender, EventArgs e)
+        {
+            MenuItem_PlaceTiles.Checked = !MenuItem_PlaceTiles.Checked;
+        }
+
+        private void ChunkDisplay_MouseMove(object sender, MouseEventArgs e)
+        {
+            switch (e.Button)
+            {
+                case MouseButtons.Left:
+                    tilepoint = new Point(((int)(e.X)) / (int)(16 * ZoomLevel), ((int)(e.Y)) / (int)(16 * ZoomLevel)); //Get the tile that was clicked, not the position on the screen
+                    //Make sure our point is in the chunk!
+                    if (tilepoint.X < 0) tilepoint.X = 0;
+                    if (tilepoint.Y < 0) tilepoint.Y = 0;
+                    if (tilepoint.X >= 8) tilepoint.X = 7;
+                    if (tilepoint.Y >= 8) tilepoint.Y = 7;
+
+                    if (AutoSetDirectionBool)
+                    {
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Direction = AutoDirection;
+                    }
+                    if (AutoSetVisualPlaneBool)
+                    {
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].VisualPlane = AutoVisualPlane;
+                    }
+                    if (AutoSetCollisionABool)
+                    {
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag0 = AutoCollisionA;
+                    }
+                    if (AutoSetCollisionBBool)
+                    {
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].CollisionFlag1 = AutoCollisionB;
+                    }
+                    if (MenuItem_PlaceTiles.Checked)
+                    {
+                        if (StageTilesList.SelectedIndex < 0) StageTilesList.SelectedIndex = 0;
+                        Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16 = (ushort)StageTilesList.SelectedIndex;
+                    }
+                    RedrawChunk(); //If you don't know what this would do then you clearly shouldn't be here lol
+                    break;
+                case MouseButtons.Middle:
+                    StageTilesList.SelectedIndex = Chunks.ChunkList[curChunk].Mappings[tilepoint.Y][tilepoint.X].Tile16x16;
+                    StageTilesList.Refresh();
+                    break;
+            }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Chunks = new Retro_Formats.MetaTiles();
+            curChunk = 0;
+            tilepoint = new Point();
+            Tiles = new Bitmap(16, 16368);
+            using (Graphics g = Graphics.FromImage(Tiles))
+            {
+                g.Clear(Color.FromArgb(255, 255, 0, 255));
+            }
+            LoadTileSet(Tiles);
+            LoadChunks(Tiles);
+            GotoNUD.Maximum = Chunks.MaxChunks;
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
+            RetroED.MainForm.Instance.rp.details = "Editing: New Chunk Mappings";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
+
+            RedrawChunk();
         }
     }
 }

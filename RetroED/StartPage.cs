@@ -5,15 +5,16 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroED.Tools.CollisionEditor
+namespace RetroED.StartPage
 {
-    public partial class About_Form : DockContent
+    public partial class StartPage : DockContent
     {
-        public About_Form()
+
+        public StartPage()
         {
             InitializeComponent();
         }

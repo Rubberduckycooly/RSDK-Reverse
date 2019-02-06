@@ -16,7 +16,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -117,6 +117,12 @@
     <Compile Include="Extensions\Map Editing Tools\SceneSelect.Designer.cs">
       <DependentUpon>SceneSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="StartPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StartPage.Designer.cs">
+      <DependentUpon>StartPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,12 +161,6 @@
     </Compile>
     <Compile Include="Tools\BackgroundEditor\SelectLayerForm.Designer.cs">
       <DependentUpon>SelectLayerForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Tools\ChunkEditor\AutoSetTiles.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Tools\ChunkEditor\AutoSetTiles.Designer.cs">
-      <DependentUpon>AutoSetTiles.cs</DependentUpon>
     </Compile>
     <Compile Include="Tools\ChunkEditor\AutoSetCollisionA.cs">
       <SubType>Form</SubType>
@@ -587,6 +587,9 @@
     <EmbeddedResource Include="Extensions\Map Editing Tools\SceneSelect.resx">
       <DependentUpon>SceneSelect.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StartPage.resx">
+      <DependentUpon>StartPage.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -614,9 +617,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\BackgroundEditor\SelectLayerForm.resx">
       <DependentUpon>SelectLayerForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Tools\ChunkEditor\AutoSetTiles.resx">
-      <DependentUpon>AutoSetTiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Tools\ChunkEditor\AutoSetCollisionA.resx">
       <DependentUpon>AutoSetCollisionA.cs</DependentUpon>

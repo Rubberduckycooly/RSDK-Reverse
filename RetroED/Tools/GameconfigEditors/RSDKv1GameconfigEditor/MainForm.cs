@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DockContent
     {
         public RSDKv1.GameConfig gameconfig = new RSDKv1.GameConfig();
 
@@ -47,7 +48,19 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             FILEPATH = null;
             refreshLists();
             RefreshUI();
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = "New Gameconfig";
+            RetroED.MainForm.Instance.CurrentTabText = "New Gameconfig";
+
+            string RSDK = "RSDKv1";
+            string dispname = "";
+            RetroED.MainForm.Instance.CurrentTabText = "New Gameconfig";
+            dispname = "New Gameconfig";
+
+            Text = "New Stageconfig";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Gameconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public void Open(string Filepath)
@@ -56,7 +69,32 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             FILEPATH = Filepath;
             RefreshUI();
             refreshLists();
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = Path.GetFileName(Filepath);
+            RetroED.MainForm.Instance.CurrentTabText = Path.GetFileName(Filepath);
+
+            string RSDK = "RSDKv1";
+            string dispname = "";
+            string folder = Path.GetDirectoryName(Filepath);
+            DirectoryInfo di = new DirectoryInfo(folder);
+            folder = di.Name;
+            string file = Path.GetFileName(Filepath);
+
+            if (Filepath != null)
+            {
+                RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                dispname = folder + "/" + file;
+            }
+            else
+            {
+                RetroED.MainForm.Instance.CurrentTabText = "New Gameconfig - RSDK Gameconfig Editor";
+                dispname = "New Stageconfig - RSDK Gameconfig Editor";
+            }
+
+            Text = Path.GetFileName(Filepath) + " - RSDK Gameconfig Editor";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Gameconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public void Save(string Filepath)
@@ -64,7 +102,32 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             Console.WriteLine(FILEPATH);
             gameconfig.Write(new RSDKv1.Writer(Filepath));
             FILEPATH = Filepath;
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = Path.GetFileName(Filepath);
+            RetroED.MainForm.Instance.CurrentTabText = Path.GetFileName(Filepath);
+
+            string RSDK = "RSDKv1";
+            string dispname = "";
+            string folder = Path.GetDirectoryName(Filepath);
+            DirectoryInfo di = new DirectoryInfo(folder);
+            folder = di.Name;
+            string file = Path.GetFileName(Filepath);
+
+            if (Filepath != null)
+            {
+                RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                dispname = folder + "/" + file;
+            }
+            else
+            {
+                RetroED.MainForm.Instance.CurrentTabText = "New Gameconfig - RSDK Gameconfig Editor";
+                dispname = "New Stageconfig - RSDK Gameconfig Editor";
+            }
+
+            Text = Path.GetFileName(Filepath) + " - RSDK Gameconfig Editor";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Gameconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public string DecToHex(int DecVal)
@@ -155,6 +218,7 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
                 StgNameBox.Text = gameconfig.Categories[CurCategory].Scenes[CurStage].Name;
                 StgFolderBox.Text = gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder;
                 StgIDBox.Text = gameconfig.Categories[CurCategory].Scenes[CurStage].ActID;
+                StgUnknownNUD.Value = gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown;
             }
 
             if (gameconfig.ScriptPaths.Count > 0)
@@ -186,7 +250,7 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             StageBox.Items.Clear();
             for (int i = 0; i < gameconfig.Categories[CurCategory].Scenes.Count; i++)
             {
-                StageBox.Items.Add(gameconfig.Categories[CurCategory].Scenes[i].Name + ", " + gameconfig.Categories[CurCategory].Scenes[i].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[i].ActID);
+                StageBox.Items.Add(gameconfig.Categories[CurCategory].Scenes[i].Name + ", " + gameconfig.Categories[CurCategory].Scenes[i].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[i].ActID + ", " + gameconfig.Categories[CurCategory].Scenes[i].Unknown);
             }
         }
 
@@ -248,7 +312,7 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             gameconfig.Categories[CurCategory].Scenes[CurStage].Name = StgNameBox.Text;
             if (StageBox.Items.Count > 0)
             {
-                StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID;
+                StageBox.Items[CurStage] = StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown;
             }
         }
 
@@ -257,7 +321,7 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder = StgFolderBox.Text;
             if (StageBox.Items.Count > 0)
             {
-                StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID;
+                StageBox.Items[CurStage] = StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown;
             }
         }
 
@@ -266,7 +330,16 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
             gameconfig.Categories[CurCategory].Scenes[CurStage].ActID = StgIDBox.Text;
             if (StageBox.Items.Count > 0)
             {
-                StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID;
+                StageBox.Items[CurStage] = StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown;
+            }
+        }
+
+        private void StgUnknownNUD_ValueChanged(object sender, EventArgs e)
+        {
+            gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown = (byte)StgUnknownNUD.Value;
+            if (StageBox.Items.Count > 0)
+            {
+                StageBox.Items[CurStage] = gameconfig.Categories[CurCategory].Scenes[CurStage].Name + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].SceneFolder + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].ActID + ", " + gameconfig.Categories[CurCategory].Scenes[CurStage].Unknown;
             }
         }
 
@@ -290,6 +363,15 @@ namespace RetroED.Tools.GameconfigEditors.RSDKv1GameconfigEditor
         {
             gameconfig.Categories[CurCategory].Scenes.RemoveAt(CurStage);
             CurStage--;
+            RefreshUI();
+            refreshLists();
+        }
+
+        private void ClearStgButton_Click(object sender, EventArgs e)
+        {
+            gameconfig.Categories[CurCategory].Scenes = new List<RSDKv1.GameConfig.Category.SceneInfo>();
+            gameconfig.Categories[CurCategory].Scenes.Add(new RSDKv1.GameConfig.Category.SceneInfo());
+            CurStage = 0;
             RefreshUI();
             refreshLists();
         }

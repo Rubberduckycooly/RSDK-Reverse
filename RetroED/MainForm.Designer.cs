@@ -29,20 +29,22 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.TabControl = new System.Windows.Forms.TabControl();
-            this.StartupTab = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.ToolsBox = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.RSDKVerBox = new System.Windows.Forms.ComboBox();
-            this.RFBox = new System.Windows.Forms.GroupBox();
-            this.RecentFilesList = new System.Windows.Forms.ListBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.UpdateNotesLabel = new System.Windows.Forms.Label();
-            this.UpdateNotesBox = new System.Windows.Forms.RichTextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.NameLabel = new System.Windows.Forms.Label();
             this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
             this.menuItem1 = new System.Windows.Forms.MenuItem();
             this.menuItem2 = new System.Windows.Forms.MenuItem();
@@ -78,168 +80,11 @@
             this.RunExeButton = new System.Windows.Forms.MenuItem();
             this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.menuItem5 = new System.Windows.Forms.MenuItem();
-            this.TabControl.SuspendLayout();
-            this.StartupTab.SuspendLayout();
-            this.RFBox.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.dpMain = new WeifenLuo.WinFormsUI.Docking.DockPanel();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // TabControl
-            // 
-            this.TabControl.Controls.Add(this.StartupTab);
-            this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TabControl.Location = new System.Drawing.Point(0, 0);
-            this.TabControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.TabControl.Name = "TabControl";
-            this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(1261, 673);
-            this.TabControl.TabIndex = 0;
-            this.TabControl.SelectedIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
-            this.TabControl.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.TabControl_ControlAdded);
-            // 
-            // StartupTab
-            // 
-            this.StartupTab.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
-            this.StartupTab.Controls.Add(this.label3);
-            this.StartupTab.Controls.Add(this.ToolsBox);
-            this.StartupTab.Controls.Add(this.label2);
-            this.StartupTab.Controls.Add(this.RSDKVerBox);
-            this.StartupTab.Controls.Add(this.RFBox);
-            this.StartupTab.Controls.Add(this.groupBox1);
-            this.StartupTab.Controls.Add(this.NameLabel);
-            this.StartupTab.Location = new System.Drawing.Point(4, 25);
-            this.StartupTab.Name = "StartupTab";
-            this.StartupTab.Size = new System.Drawing.Size(1253, 644);
-            this.StartupTab.TabIndex = 0;
-            this.StartupTab.Text = "Start Page";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label3.Location = new System.Drawing.Point(3, 89);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(333, 17);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "General Purpose Editor For RSDK versions below 5";
-            // 
-            // ToolsBox
-            // 
-            this.ToolsBox.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ToolsBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.ToolsBox.Location = new System.Drawing.Point(727, 0);
-            this.ToolsBox.Name = "ToolsBox";
-            this.ToolsBox.Size = new System.Drawing.Size(526, 644);
-            this.ToolsBox.TabIndex = 5;
-            this.ToolsBox.TabStop = false;
-            this.ToolsBox.Text = "Tools";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label2.Location = new System.Drawing.Point(8, 202);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(145, 17);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Select RSDK Version:";
-            // 
-            // RSDKVerBox
-            // 
-            this.RSDKVerBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.RSDKVerBox.FormattingEnabled = true;
-            this.RSDKVerBox.Items.AddRange(new object[] {
-            "RSDKvB",
-            "RSDKv2",
-            "RSDKv1",
-            "RSDKvRS"});
-            this.RSDKVerBox.Location = new System.Drawing.Point(8, 222);
-            this.RSDKVerBox.Name = "RSDKVerBox";
-            this.RSDKVerBox.Size = new System.Drawing.Size(329, 24);
-            this.RSDKVerBox.TabIndex = 3;
-            // 
-            // RFBox
-            // 
-            this.RFBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.RFBox.Controls.Add(this.RecentFilesList);
-            this.RFBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.RFBox.Location = new System.Drawing.Point(8, 277);
-            this.RFBox.Name = "RFBox";
-            this.RFBox.Size = new System.Drawing.Size(710, 359);
-            this.RFBox.TabIndex = 2;
-            this.RFBox.TabStop = false;
-            this.RFBox.Text = "Recent Files";
-            // 
-            // RecentFilesList
-            // 
-            this.RecentFilesList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.RecentFilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.RecentFilesList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.RecentFilesList.FormattingEnabled = true;
-            this.RecentFilesList.ItemHeight = 16;
-            this.RecentFilesList.Items.AddRange(new object[] {
-            "C:/RetroEngine/v2/R11A/Act1.bin - RSDKv2"});
-            this.RecentFilesList.Location = new System.Drawing.Point(3, 18);
-            this.RecentFilesList.Name = "RecentFilesList";
-            this.RecentFilesList.Size = new System.Drawing.Size(704, 338);
-            this.RecentFilesList.TabIndex = 0;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.UpdateNotesLabel);
-            this.groupBox1.Controls.Add(this.UpdateNotesBox);
-            this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.groupBox1.Location = new System.Drawing.Point(340, 4);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(381, 267);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Latest Update";
-            // 
-            // UpdateNotesLabel
-            // 
-            this.UpdateNotesLabel.AutoSize = true;
-            this.UpdateNotesLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.UpdateNotesLabel.Location = new System.Drawing.Point(7, 56);
-            this.UpdateNotesLabel.Name = "UpdateNotesLabel";
-            this.UpdateNotesLabel.Size = new System.Drawing.Size(99, 17);
-            this.UpdateNotesLabel.TabIndex = 2;
-            this.UpdateNotesLabel.Text = "Update Notes:";
-            // 
-            // UpdateNotesBox
-            // 
-            this.UpdateNotesBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
-            this.UpdateNotesBox.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.UpdateNotesBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.UpdateNotesBox.Location = new System.Drawing.Point(3, 76);
-            this.UpdateNotesBox.Name = "UpdateNotesBox";
-            this.UpdateNotesBox.ReadOnly = true;
-            this.UpdateNotesBox.Size = new System.Drawing.Size(375, 188);
-            this.UpdateNotesBox.TabIndex = 1;
-            this.UpdateNotesBox.Text = "Version 1.2.0:\n\n- did a bunch of internal tweaks to make everything run better";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.label1.Location = new System.Drawing.Point(7, 22);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 17);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Version: 1.2.0";
-            // 
-            // NameLabel
-            // 
-            this.NameLabel.AutoSize = true;
-            this.NameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 45F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Italic | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NameLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.NameLabel.Location = new System.Drawing.Point(9, 4);
-            this.NameLabel.Name = "NameLabel";
-            this.NameLabel.Size = new System.Drawing.Size(325, 85);
-            this.NameLabel.TabIndex = 0;
-            this.NameLabel.Text = "RetroED";
             // 
             // mainMenu1
             // 
@@ -495,12 +340,93 @@
             this.menuItem5.Text = "About RetroED";
             this.menuItem5.Click += new System.EventHandler(this.MenuItem_About_Click);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 648);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1261, 25);
+            this.statusStrip1.TabIndex = 1;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(108, 20);
+            this.toolStripStatusLabel1.Text = "RetroED Status";
+            // 
+            // dpMain
+            // 
+            this.dpMain.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.dpMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dpMain.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
+            this.dpMain.Location = new System.Drawing.Point(0, 0);
+            this.dpMain.Margin = new System.Windows.Forms.Padding(4);
+            this.dpMain.Name = "dpMain";
+            this.dpMain.Size = new System.Drawing.Size(1261, 648);
+            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
+            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
+            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            autoHideStripSkin1.TabGradient = tabGradient1;
+            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
+            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
+            dockPanelGradient2.EndColor = System.Drawing.SystemColors.Control;
+            dockPanelGradient2.StartColor = System.Drawing.SystemColors.Control;
+            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
+            tabGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
+            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
+            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
+            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
+            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
+            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
+            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
+            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
+            tabGradient6.EndColor = System.Drawing.SystemColors.InactiveCaption;
+            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient6.TextColor = System.Drawing.SystemColors.InactiveCaptionText;
+            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
+            tabGradient7.EndColor = System.Drawing.Color.Transparent;
+            tabGradient7.StartColor = System.Drawing.Color.Transparent;
+            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
+            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
+            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
+            this.dpMain.Skin = dockPanelSkin1;
+            this.dpMain.TabIndex = 4;
+            this.dpMain.ContentAdded += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dpMain_ContentAdded);
+            this.dpMain.ContentRemoved += new System.EventHandler<WeifenLuo.WinFormsUI.Docking.DockContentEventArgs>(this.dpMain_ContentRemoved);
+            this.dpMain.ActiveContentChanged += new System.EventHandler(this.dpMain_ActiveContentChanged);
+            this.dpMain.TabIndexChanged += new System.EventHandler(this.TabControl_SelectedIndexChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1261, 673);
-            this.Controls.Add(this.TabControl);
+            this.Controls.Add(this.dpMain);
+            this.Controls.Add(this.statusStrip1);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -509,19 +435,14 @@
             this.Text = "RetroED";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_Close);
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.TabControl.ResumeLayout(false);
-            this.StartupTab.ResumeLayout(false);
-            this.StartupTab.PerformLayout();
-            this.RFBox.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        public System.Windows.Forms.TabControl TabControl;
         private System.Windows.Forms.MainMenu mainMenu1;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.Windows.Forms.MenuItem menuItem2;
@@ -557,18 +478,9 @@
         private System.Windows.Forms.MenuItem menuItem19;
         private System.Windows.Forms.MenuItem MenuItem_ScriptEditor;
         private System.Windows.Forms.MenuItem menuItem9;
-        private System.Windows.Forms.TabPage StartupTab;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.GroupBox ToolsBox;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox RSDKVerBox;
-        private System.Windows.Forms.GroupBox RFBox;
-        private System.Windows.Forms.ListBox RecentFilesList;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label UpdateNotesLabel;
-        private System.Windows.Forms.RichTextBox UpdateNotesBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label NameLabel;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private WeifenLuo.WinFormsUI.Docking.DockPanel dpMain;
     }
 }
 

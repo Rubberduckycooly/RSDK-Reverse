@@ -58,7 +58,8 @@
             // 
             // SourceFileLocation
             // 
-            this.SourceFileLocation.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SourceFileLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SourceFileLocation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SourceFileLocation.Location = new System.Drawing.Point(167, 17);
             this.SourceFileLocation.Name = "SourceFileLocation";
             this.SourceFileLocation.ReadOnly = true;
@@ -79,7 +80,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(453, 97);
             this.Controls.Add(this.panel1);
             this.Name = "MainForm";

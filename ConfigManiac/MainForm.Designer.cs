@@ -111,6 +111,8 @@
             this.SCMiscPage = new System.Windows.Forms.TabPage();
             this.SCMiscBox = new System.Windows.Forms.GroupBox();
             this.LoadGlobalObjectsCB = new System.Windows.Forms.CheckBox();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fileSystemWatcher1)).BeginInit();
             this.ConfigManager.SuspendLayout();
@@ -144,10 +146,11 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.menuStrip1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.eclipseEngine1ToolStripMenuItem});
+            this.eclipseEngine1ToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(8, 2, 0, 2);
@@ -163,39 +166,44 @@
             this.openToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem});
+            this.eclipseEngine1ToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.eclipseEngine1ToolStripMenuItem.Name = "eclipseEngine1ToolStripMenuItem";
             this.eclipseEngine1ToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
             this.eclipseEngine1ToolStripMenuItem.Text = "File";
             // 
             // newToolStripMenuItem
             // 
-            this.newToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.newToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.newToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
-            this.openToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.openToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.openToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
-            this.saveToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.saveToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.saveToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
-            this.saveAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.saveAsToolStripMenuItem.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.saveAsToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(145, 26);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
             this.saveAsToolStripMenuItem.Text = "Save as....";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
@@ -219,7 +227,7 @@
             // 
             // GCPage
             // 
-            this.GCPage.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.GCPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.GCPage.Controls.Add(this.tabControl1);
             this.GCPage.Controls.Add(this.groupBox8);
             this.GCPage.Location = new System.Drawing.Point(4, 25);
@@ -255,7 +263,7 @@
             // groupBox5
             // 
             this.groupBox5.AutoSize = true;
-            this.groupBox5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.groupBox5.Controls.Add(this.ClearCatButton);
             this.groupBox5.Controls.Add(this.DelCatButton);
             this.groupBox5.Controls.Add(this.AddCatButton);
@@ -308,6 +316,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label14.Location = new System.Drawing.Point(411, 72);
             this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label14.Name = "label14";
@@ -319,7 +328,8 @@
             // 
             this.GCCatNameBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCCatNameBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCCatNameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCCatNameBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCCatNameBox.Location = new System.Drawing.Point(414, 93);
             this.GCCatNameBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCCatNameBox.Name = "GCCatNameBox";
@@ -351,6 +361,8 @@
             // 
             // GCStageModeNUD
             // 
+            this.GCStageModeNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCStageModeNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCStageModeNUD.Location = new System.Drawing.Point(10, 180);
             this.GCStageModeNUD.Maximum = new decimal(new int[] {
             255,
@@ -365,6 +377,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label7.Location = new System.Drawing.Point(7, 159);
             this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
@@ -405,6 +418,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label6.Location = new System.Drawing.Point(7, 112);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
@@ -416,7 +430,8 @@
             // 
             this.GCStgIDBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCStgIDBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCStgIDBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCStgIDBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCStgIDBox.Location = new System.Drawing.Point(10, 133);
             this.GCStgIDBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCStgIDBox.Name = "GCStgIDBox";
@@ -427,6 +442,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label4.Location = new System.Drawing.Point(7, 65);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
@@ -438,7 +454,8 @@
             // 
             this.GCStgFolderBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCStgFolderBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCStgFolderBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCStgFolderBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCStgFolderBox.Location = new System.Drawing.Point(10, 86);
             this.GCStgFolderBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCStgFolderBox.Name = "GCStgFolderBox";
@@ -449,6 +466,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label3.Location = new System.Drawing.Point(7, 18);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
@@ -460,7 +478,8 @@
             // 
             this.GCStgNameBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCStgNameBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCStgNameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCStgNameBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCStgNameBox.Location = new System.Drawing.Point(10, 39);
             this.GCStgNameBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCStgNameBox.Name = "GCStgNameBox";
@@ -472,6 +491,7 @@
             // 
             this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label11.AutoSize = true;
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label11.Location = new System.Drawing.Point(411, 19);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
@@ -497,8 +517,9 @@
             // 
             // GCStageBox
             // 
-            this.GCStageBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCStageBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.GCStageBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.GCStageBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCStageBox.FormattingEnabled = true;
             this.GCStageBox.ItemHeight = 16;
             this.GCStageBox.Location = new System.Drawing.Point(4, 19);
@@ -521,7 +542,7 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.groupBox7.Controls.Add(this.label12);
             this.groupBox7.Controls.Add(this.GCObjCFGBox);
             this.groupBox7.Controls.Add(this.GCDelObjButton);
@@ -539,6 +560,7 @@
             // 
             this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label12.Location = new System.Drawing.Point(409, 19);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(90, 17);
@@ -548,7 +570,8 @@
             // GCObjCFGBox
             // 
             this.GCObjCFGBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCObjCFGBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCObjCFGBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCObjCFGBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCObjCFGBox.Location = new System.Drawing.Point(412, 40);
             this.GCObjCFGBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCObjCFGBox.Name = "GCObjCFGBox";
@@ -569,8 +592,9 @@
             // 
             // GCObjListBox
             // 
-            this.GCObjListBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCObjListBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.GCObjListBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.GCObjListBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCObjListBox.FormattingEnabled = true;
             this.GCObjListBox.ItemHeight = 16;
             this.GCObjListBox.Location = new System.Drawing.Point(3, 18);
@@ -605,7 +629,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.groupBox2.Controls.Add(this.GCMaxPlayNUD);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label2);
@@ -623,6 +647,8 @@
             // 
             // GCMaxPlayNUD
             // 
+            this.GCMaxPlayNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCMaxPlayNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCMaxPlayNUD.Location = new System.Drawing.Point(412, 86);
             this.GCMaxPlayNUD.Maximum = new decimal(new int[] {
             255,
@@ -638,6 +664,7 @@
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.AutoSize = true;
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label5.Location = new System.Drawing.Point(409, 65);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(138, 17);
@@ -648,6 +675,7 @@
             // 
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label2.Location = new System.Drawing.Point(409, 18);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(67, 17);
@@ -657,7 +685,8 @@
             // GCSFXPathBox
             // 
             this.GCSFXPathBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.GCSFXPathBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCSFXPathBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GCSFXPathBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCSFXPathBox.Location = new System.Drawing.Point(412, 39);
             this.GCSFXPathBox.Margin = new System.Windows.Forms.Padding(4);
             this.GCSFXPathBox.Name = "GCSFXPathBox";
@@ -678,8 +707,9 @@
             // 
             // GCSoundFXListBox
             // 
-            this.GCSoundFXListBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GCSoundFXListBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.GCSoundFXListBox.Dock = System.Windows.Forms.DockStyle.Left;
+            this.GCSoundFXListBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GCSoundFXListBox.FormattingEnabled = true;
             this.GCSoundFXListBox.ItemHeight = 16;
             this.GCSoundFXListBox.Location = new System.Drawing.Point(3, 18);
@@ -721,6 +751,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox9.Controls.Add(this.groupBox11);
             this.groupBox9.Controls.Add(this.groupBox10);
+            this.groupBox9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox9.Location = new System.Drawing.Point(3, 175);
             this.groupBox9.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox9.Name = "groupBox9";
@@ -736,6 +767,7 @@
             this.groupBox11.Controls.Add(this.label13);
             this.groupBox11.Controls.Add(this.StartCatBox);
             this.groupBox11.Controls.Add(this.label10);
+            this.groupBox11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox11.Location = new System.Drawing.Point(2, 99);
             this.groupBox11.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox11.Name = "groupBox11";
@@ -792,6 +824,7 @@
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.VersionBox);
+            this.groupBox10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox10.Location = new System.Drawing.Point(2, 23);
             this.groupBox10.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox10.Name = "groupBox10";
@@ -803,7 +836,8 @@
             // 
             // VersionBox
             // 
-            this.VersionBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.VersionBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.VersionBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.VersionBox.Location = new System.Drawing.Point(9, 25);
             this.VersionBox.Margin = new System.Windows.Forms.Padding(4);
             this.VersionBox.Name = "VersionBox";
@@ -815,6 +849,7 @@
             // chat
             // 
             this.chat.Controls.Add(this.SubNameTxt);
+            this.chat.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.chat.Location = new System.Drawing.Point(7, 98);
             this.chat.Margin = new System.Windows.Forms.Padding(4);
             this.chat.Name = "chat";
@@ -826,7 +861,8 @@
             // 
             // SubNameTxt
             // 
-            this.SubNameTxt.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SubNameTxt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SubNameTxt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SubNameTxt.Location = new System.Drawing.Point(9, 25);
             this.SubNameTxt.Margin = new System.Windows.Forms.Padding(4);
             this.SubNameTxt.Name = "SubNameTxt";
@@ -838,6 +874,7 @@
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.GameNameTxt);
+            this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.groupBox1.Location = new System.Drawing.Point(7, 22);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
@@ -849,7 +886,8 @@
             // 
             // GameNameTxt
             // 
-            this.GameNameTxt.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.GameNameTxt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GameNameTxt.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GameNameTxt.Location = new System.Drawing.Point(9, 25);
             this.GameNameTxt.Margin = new System.Windows.Forms.Padding(4);
             this.GameNameTxt.Name = "GameNameTxt";
@@ -860,7 +898,7 @@
             // 
             // SCPage
             // 
-            this.SCPage.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SCPage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.SCPage.Controls.Add(this.tabControl2);
             this.SCPage.Location = new System.Drawing.Point(4, 25);
             this.SCPage.Name = "SCPage";
@@ -894,7 +932,7 @@
             // 
             // groupBox4
             // 
-            this.groupBox4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.groupBox4.Controls.Add(this.label1);
             this.groupBox4.Controls.Add(this.SCObjectNameBox);
             this.groupBox4.Controls.Add(this.SCDelObjButton);
@@ -912,6 +950,7 @@
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Location = new System.Drawing.Point(622, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(90, 17);
@@ -921,7 +960,8 @@
             // SCObjectNameBox
             // 
             this.SCObjectNameBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SCObjectNameBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SCObjectNameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SCObjectNameBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCObjectNameBox.Location = new System.Drawing.Point(625, 39);
             this.SCObjectNameBox.Margin = new System.Windows.Forms.Padding(4);
             this.SCObjectNameBox.Name = "SCObjectNameBox";
@@ -942,8 +982,9 @@
             // 
             // SCObjectList
             // 
-            this.SCObjectList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SCObjectList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.SCObjectList.Dock = System.Windows.Forms.DockStyle.Left;
+            this.SCObjectList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCObjectList.FormattingEnabled = true;
             this.SCObjectList.ItemHeight = 16;
             this.SCObjectList.Location = new System.Drawing.Point(3, 18);
@@ -977,7 +1018,7 @@
             // 
             // groupBox6
             // 
-            this.groupBox6.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.groupBox6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.groupBox6.Controls.Add(this.SCSFXMaxPlayNUD);
             this.groupBox6.Controls.Add(this.label8);
             this.groupBox6.Controls.Add(this.label9);
@@ -997,6 +1038,8 @@
             // 
             this.SCSFXMaxPlayNUD.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.SCSFXMaxPlayNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SCSFXMaxPlayNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCSFXMaxPlayNUD.Location = new System.Drawing.Point(620, 86);
             this.SCSFXMaxPlayNUD.Maximum = new decimal(new int[] {
             255,
@@ -1013,6 +1056,7 @@
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.AutoSize = true;
+            this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label8.Location = new System.Drawing.Point(620, 65);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(138, 17);
@@ -1024,6 +1068,7 @@
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label9.Location = new System.Drawing.Point(620, 18);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(67, 17);
@@ -1034,7 +1079,8 @@
             // 
             this.SCSFXPathBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.SCSFXPathBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SCSFXPathBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SCSFXPathBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCSFXPathBox.Location = new System.Drawing.Point(620, 39);
             this.SCSFXPathBox.Margin = new System.Windows.Forms.Padding(4);
             this.SCSFXPathBox.Name = "SCSFXPathBox";
@@ -1056,8 +1102,9 @@
             // 
             // SCSFXList
             // 
-            this.SCSFXList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SCSFXList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.SCSFXList.Dock = System.Windows.Forms.DockStyle.Left;
+            this.SCSFXList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCSFXList.FormattingEnabled = true;
             this.SCSFXList.ItemHeight = 16;
             this.SCSFXList.Location = new System.Drawing.Point(3, 18);
@@ -1092,8 +1139,10 @@
             // 
             // SCMiscBox
             // 
+            this.SCMiscBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.SCMiscBox.Controls.Add(this.LoadGlobalObjectsCB);
             this.SCMiscBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SCMiscBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SCMiscBox.Location = new System.Drawing.Point(3, 3);
             this.SCMiscBox.Name = "SCMiscBox";
             this.SCMiscBox.Size = new System.Drawing.Size(1168, 520);
@@ -1112,11 +1161,29 @@
             this.LoadGlobalObjectsCB.UseVisualStyleBackColor = true;
             this.LoadGlobalObjectsCB.CheckedChanged += new System.EventHandler(this.LoadGlobalObjectsCB_CheckedChanged);
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem1});
+            this.aboutToolStripMenuItem.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(62, 24);
+            this.aboutToolStripMenuItem.Text = "About";
+            // 
+            // aboutToolStripMenuItem1
+            // 
+            this.aboutToolStripMenuItem1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(24)))), ((int)(((byte)(24)))), ((int)(((byte)(24)))));
+            this.aboutToolStripMenuItem1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
+            this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(216, 26);
+            this.aboutToolStripMenuItem1.Text = "About";
+            this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.aboutToolStripMenuItem1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(1196, 618);
             this.Controls.Add(this.ConfigManager);
             this.Controls.Add(this.menuStrip1);
@@ -1257,6 +1324,8 @@
         private System.Windows.Forms.Button ClearCatButton;
         private System.Windows.Forms.Button DelCatButton;
         private System.Windows.Forms.Button AddCatButton;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
     }
 }
 

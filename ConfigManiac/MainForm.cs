@@ -18,6 +18,21 @@ namespace ConfigManiac
         public RSDKv5.StageConfig stageconfig = new RSDKv5.StageConfig();
 
         int type = 0;
+        public string TypeStr
+        {
+            get
+            {
+                if (type == 0)
+                {
+                    return "Gameconfig";
+                }
+                else if (type == 1)
+                {
+                    return "Stageconfig";
+                }
+                return "";
+            }
+        }
 
         public int CurCategory = 0;
         public int CurStage = 0;
@@ -42,7 +57,15 @@ namespace ConfigManiac
 
         public void New()
         {
-            gameconfig = new RSDKv5.GameConfig();
+            switch(type)
+            {
+                case 0:
+                    gameconfig = new RSDKv5.GameConfig();
+                    break;
+                case 1:
+                    stageconfig = new RSDKv5.StageConfig();
+                    break;
+            }
             FILEPATH = null;
             refreshLists();
             RefreshUI();
@@ -106,7 +129,7 @@ namespace ConfigManiac
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (MessageBox.Show(this, "Do you want to save the current file?", "ConfigManiac", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+            switch (MessageBox.Show(this, "Do you want to save the current file?", "ConfigManiac - " + TypeStr, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
             {
                 case System.Windows.Forms.DialogResult.Cancel:
                     return;
@@ -447,7 +470,7 @@ namespace ConfigManiac
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switch (MessageBox.Show(this, "Do you want to save the current file?", "ConfigManiac", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+            switch (MessageBox.Show(this, "Do you want to save the current file?", "ConfigManiac - " + TypeStr, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
             {
                 case System.Windows.Forms.DialogResult.Cancel:
                     return;
@@ -594,6 +617,8 @@ namespace ConfigManiac
             CurObj = 0;
             refreshLists();
             RefreshUI();
+            type = ConfigManager.SelectedIndex;
+            this.Text = "Config Manager - " + TypeStr;
         }
 
         private void AddCatButton_Click(object sender, EventArgs e)
@@ -623,6 +648,12 @@ namespace ConfigManiac
             CurCategory = 0;
             RefreshUI();
             refreshLists();
+        }
+
+        private void aboutToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            AboutForm dlg = new AboutForm();
+            dlg.ShowDialog();
         }
     }   
 }

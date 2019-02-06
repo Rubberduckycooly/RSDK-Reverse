@@ -80,8 +80,8 @@ namespace TaxReceiptTool
                             for (int i = 0; i < SpriteFramesvRS.Count; i++)
                             {
                                 RSDKvRS.Animation.sprAnimation.sprFrame Frame = new RSDKvRS.Animation.sprAnimation.sprFrame();
-                                Frame.PivotX = Convert.ToByte(SpriteFramesvRS[i].Paramaters[0]);
-                                Frame.PivotY = Convert.ToByte(SpriteFramesvRS[i].Paramaters[1]);
+                                Frame.PivotX = Convert.ToSByte(SpriteFramesvRS[i].Paramaters[0]);
+                                Frame.PivotY = Convert.ToSByte(SpriteFramesvRS[i].Paramaters[1]);
                                 Frame.Width = Convert.ToByte(SpriteFramesvRS[i].Paramaters[2]);
                                 Frame.Height = Convert.ToByte(SpriteFramesvRS[i].Paramaters[3]);
                                 Frame.X = Convert.ToByte(SpriteFramesvRS[i].Paramaters[4]);
@@ -422,8 +422,8 @@ namespace TaxReceiptTool
                         for (int i = 0; i < SpriteFramesvRS.Count; i++)
                         {
                             RSDKvRS.Animation.sprAnimation.sprFrame Frame = new RSDKvRS.Animation.sprAnimation.sprFrame();
-                            Frame.PivotX = Convert.ToByte(SpriteFramesvRS[i].Paramaters[0]);
-                            Frame.PivotY = Convert.ToByte(SpriteFramesvRS[i].Paramaters[1]);
+                            Frame.PivotX = Convert.ToSByte(SpriteFramesvRS[i].Paramaters[0]);
+                            Frame.PivotY = Convert.ToSByte(SpriteFramesvRS[i].Paramaters[1]);
                             Frame.Width = Convert.ToByte(SpriteFramesvRS[i].Paramaters[2]);
                             Frame.Height = Convert.ToByte(SpriteFramesvRS[i].Paramaters[3]);
                             Frame.X = Convert.ToByte(SpriteFramesvRS[i].Paramaters[4]);
@@ -474,12 +474,25 @@ namespace TaxReceiptTool
                         for (int i = 0; i < SpriteFramesv1.Count; i++)
                         {
                             RSDKv1.Animation.sprAnimation.sprFrame Frame = new RSDKv1.Animation.sprAnimation.sprFrame();
-                            Frame.PivotX = Convert.ToSByte(SpriteFramesv1[i].Paramaters[0]);
-                            Frame.PivotY = Convert.ToSByte(SpriteFramesv1[i].Paramaters[1]);
-                            Frame.Width = Convert.ToByte(SpriteFramesv1[i].Paramaters[2]);
-                            Frame.Height = Convert.ToByte(SpriteFramesv1[i].Paramaters[3]);
-                            Frame.X = Convert.ToByte(SpriteFramesv1[i].Paramaters[4]);
-                            Frame.Y = Convert.ToByte(SpriteFramesv1[i].Paramaters[5]);
+                            Frame.PivotX = 0;
+                            Frame.PivotX = 0;
+                            Frame.X = 0;
+                            Frame.Y = 0;
+                            Frame.Width = 0;
+                            Frame.Height = 0;
+                            try
+                            {
+                                Frame.PivotX = Convert.ToSByte(SpriteFramesv1[i].Paramaters[0]);
+                                Frame.PivotY = Convert.ToSByte(SpriteFramesv1[i].Paramaters[1]);
+                                Frame.Width = Convert.ToByte(SpriteFramesv1[i].Paramaters[2]);
+                                Frame.Height = Convert.ToByte(SpriteFramesv1[i].Paramaters[3]);
+                                Frame.X = Convert.ToByte(SpriteFramesv1[i].Paramaters[4]);
+                                Frame.Y = Convert.ToByte(SpriteFramesv1[i].Paramaters[5]);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Fuck!");
+                            }
                             Frame.SpriteSheet = s;
                             a.Frames.Add(Frame);
                         }
@@ -535,34 +548,43 @@ namespace TaxReceiptTool
 
                     for (byte s = 0; s < LoadSpritesv2.Count; s++)
                     {
-                        try
+
+                        RSDKv2.Animation.sprAnimation a = new RSDKv2.Animation.sprAnimation();
+                        if (s == 0) a.AnimName = name + " Animation";
+                        else if (s > 0) a.AnimName = name + " Animation " + s;
+                        for (int i = 0; i < SpriteFramesv2.Count; i++)
                         {
-                            RSDKv2.Animation.sprAnimation a = new RSDKv2.Animation.sprAnimation();
-                            a.AnimName = name + " Animation " + s;
-                            for (int i = 0; i < SpriteFramesv2.Count; i++)
+                            RSDKv2.Animation.sprAnimation.sprFrame Frame = new RSDKv2.Animation.sprAnimation.sprFrame();
+                            Frame.PivotX = 0;
+                            Frame.PivotX = 0;
+                            Frame.X = 0;
+                            Frame.Y = 0;
+                            Frame.Width = 0;
+                            Frame.Height = 0;
+                            try
                             {
-                                RSDKv2.Animation.sprAnimation.sprFrame Frame = new RSDKv2.Animation.sprAnimation.sprFrame();
                                 Frame.PivotX = Convert.ToSByte(SpriteFramesv2[i].Paramaters[0]);
                                 Frame.PivotY = Convert.ToSByte(SpriteFramesv2[i].Paramaters[1]);
                                 Frame.Width = Convert.ToByte(SpriteFramesv2[i].Paramaters[2]);
                                 Frame.Height = Convert.ToByte(SpriteFramesv2[i].Paramaters[3]);
                                 Frame.X = Convert.ToByte(SpriteFramesv2[i].Paramaters[4]);
                                 Frame.Y = Convert.ToByte(SpriteFramesv2[i].Paramaters[5]);
-                                a.Frames.Add(Frame);
                             }
-                            animv2[s].Animations.Add(a);
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Fuck!");
+                            }
+                            a.Frames.Add(Frame);
                         }
-                        catch (Exception ex)
-                        {
-
-                        }
+                        animv2[s].Animations.Add(a);
                     }
 
                     string animnamev2 = datafolderpath + "//Animations//" + scriptnames[Value0++];
 
                     for (int i = 0; i < animv2.Count; i++)
                     {
-                        animv2[i].Write(new RSDKv2.Writer(animnamev2 + (i+1) + ".ani"));
+                        if (i == 0) animv2[i].Write(new RSDKv2.Writer(animnamev2 + ".ani"));
+                        if (i > 0) animv2[i].Write(new RSDKv2.Writer(animnamev2 + (i+1) + ".ani"));
                     }
 
                     break;
@@ -597,12 +619,25 @@ namespace TaxReceiptTool
                         for (int i = 0; i < SpriteFramesvB.Count; i++)
                         {
                             RSDKvB.Animation.sprAnimation.sprFrame Frame = new RSDKvB.Animation.sprAnimation.sprFrame();
-                            Frame.PivotX = Convert.ToSByte(SpriteFramesvB[i].Paramaters[0]);
-                            Frame.PivotY = Convert.ToSByte(SpriteFramesvB[i].Paramaters[1]);
-                            Frame.Width = Convert.ToByte(SpriteFramesvB[i].Paramaters[2]);
-                            Frame.Height = Convert.ToByte(SpriteFramesvB[i].Paramaters[3]);
-                            Frame.X = Convert.ToByte(SpriteFramesvB[i].Paramaters[4]);
-                            Frame.Y = Convert.ToByte(SpriteFramesvB[i].Paramaters[5]);
+                            Frame.PivotX = 0;
+                            Frame.PivotX = 0;
+                            Frame.X = 0;
+                            Frame.Y = 0;
+                            Frame.Width = 0;
+                            Frame.Height = 0;
+                            try
+                            {
+                                Frame.PivotX = Convert.ToSByte(SpriteFramesvB[i].Paramaters[0]);
+                                Frame.PivotY = Convert.ToSByte(SpriteFramesvB[i].Paramaters[1]);
+                                Frame.Width = Convert.ToByte(SpriteFramesvB[i].Paramaters[2]);
+                                Frame.Height = Convert.ToByte(SpriteFramesvB[i].Paramaters[3]);
+                                Frame.X = Convert.ToByte(SpriteFramesvB[i].Paramaters[4]);
+                                Frame.Y = Convert.ToByte(SpriteFramesvB[i].Paramaters[5]);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine("Fuck!");
+                            }
                             Frame.SpriteSheet = s;
                             a.Frames.Add(Frame);
                         }

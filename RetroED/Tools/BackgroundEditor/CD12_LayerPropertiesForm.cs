@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.BackgroundEditor
 {
-    public partial class CD12_LayerPropertiesForm : Form
+    public partial class CD12_LayerPropertiesForm : DockContent
     {
 
         public Retro_Formats.EngineType engineType;

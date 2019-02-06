@@ -449,7 +449,7 @@ namespace Retro_Formats
 
         public Background()
         {
-
+            Layers.Add(new BackgroundLayer());
         }
 
         public void ImportFrom(EngineType type, string filepath)
@@ -896,7 +896,10 @@ namespace Retro_Formats
 
         public MetaTiles()
         {
-
+            for (int i = 0; i < ChunkList.Length; i++)
+            {
+                ChunkList[i] = new MetaTile();
+            }
         }
 
         public MetaTile Clone(int ChunkID)

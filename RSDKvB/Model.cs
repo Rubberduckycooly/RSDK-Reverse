@@ -90,17 +90,17 @@ namespace RSDKvB
         public class Face
         {
             /// <summary>
-            /// Face Value 1
+            /// Face X
             /// </summary>
-            public short Value1 = 0;
+            public short X = 0;
             /// <summary>
-            /// Face Value 2
+            /// Face Y
             /// </summary>
-            public short Value2 = 0;
+            public short Y = 0;
             /// <summary>
-            /// Face Value 3
+            /// Face Z
             /// </summary>
-            public short Value3 = 0;
+            public short Z = 0;
 
             public Face()
             {
@@ -109,14 +109,16 @@ namespace RSDKvB
 
             public Face(Reader reader)
             {
-                Value1 = reader.ReadInt16();
-                Value2 = reader.ReadInt16();
-                Value3 = reader.ReadInt16();
+                X = reader.ReadInt16();
+                Y = reader.ReadInt16();
+                Z = reader.ReadInt16();
             }
 
             public void Write(Writer writer)
             {
-
+                writer.Write(X);
+                writer.Write(Y);
+                writer.Write(Z);
             }
         }
 
@@ -223,13 +225,13 @@ namespace RSDKvB
             //FIX THIS
             //if (VertexCount == 1)
             //{
-                int newcnt = (int)((reader.BaseStream.Length - reader.BaseStream.Position) / 4) / 6;
+            int newcnt = (int)((reader.BaseStream.Length - reader.BaseStream.Position) / 4) / 6;
 
-                for (int i = 0; i < newcnt; i++)
-                {
-                    Vertices.Add(new Vertex(reader));
-                }
-                WeirdOne = true;
+            for (int i = 0; i < newcnt; i++)
+            {
+                Vertices.Add(new Vertex(reader));
+            }
+            WeirdOne = true;
             /*}
             else
             {
@@ -301,7 +303,7 @@ namespace RSDKvB
             for (int v = 0; v < FaceCount; v++)
             {
                 builder.AppendLine($"usemtl ManiaModel.Colour.{Faces[v]:###}");
-                builder.AppendLine(string.Format("f {0} {1} {2}", Faces[v].Value1 + 1, Faces[v].Value2 + 1, Faces[v].Value3 + 1));
+                builder.AppendLine(string.Format("f {0} {1} {2}", Faces[v].X + 1, Faces[v].Y + 1, Faces[v].Z + 1));
             }
 
             File.WriteAllText(streamName, builder.ToString());
@@ -331,14 +333,11 @@ namespace RSDKvB
             var vertices = new Vertex[FaceVerticiesCount];
             for (int v = 0; v < FaceCount; v++)
             {
-                vertices[0] = Vertices[Faces[v].Value1];
-                vertices[1] = Vertices[Faces[v].Value2];
-                vertices[2] = Vertices[Faces[v].Value3];
+                vertices[0] = Vertices[Faces[v].X];
+                vertices[1] = Vertices[Faces[v].Y];
+                vertices[2] = Vertices[Faces[v].Z];
 
                 // Normal
-                //writer.Write(0f);
-                //writer.Write(0f);
-                //writer.Write(1f);
                 writer.Write(vertices[0].normal.x);
                 writer.Write(vertices[0].normal.y);
                 writer.Write(vertices[0].normal.z);
@@ -357,14 +356,7 @@ namespace RSDKvB
                 writer.Write(vertices[2].y);
 
                 // Attribute
-                /*if (HasColours)
-                {
-                    int colour = Faces[v];
-                    ushort attb = (ushort)(ToRGB555(Colours[colour].r, Colours[colour].g, Colours[colour].b));
-                    writer.Write(attb);
-                }
-                else*/
-                    writer.Write((short)0);
+                writer.Write((short)0);
             }
 
             writer.Close();
@@ -379,9 +371,9 @@ namespace RSDKvB
                 var vertices = new Vertex[FaceVerticiesCount];
                 for (int v = 0; v < FaceCount; v++)
                 {
-                    vertices[0] = Vertices[Faces[v].Value1];
-                    vertices[1] = Vertices[Faces[v].Value2];
-                    vertices[2] = Vertices[Faces[v].Value3];
+                    vertices[0] = Vertices[Faces[v].X];
+                    vertices[1] = Vertices[Faces[v].Y];
+                    vertices[2] = Vertices[Faces[v].Z];
 
                     writer.WriteLine(" facet normal 0.000000 0.000000 1.000000");
                     writer.WriteLine("  outer loop");

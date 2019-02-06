@@ -70,8 +70,9 @@
             // 
             // BlocksList
             // 
-            this.BlocksList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BlocksList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.BlocksList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.BlocksList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BlocksList.ImageHeight = 128;
             this.BlocksList.ImageSize = 128;
             this.BlocksList.ImageWidth = 128;
@@ -96,8 +97,9 @@
             // 
             // HpValuesList
             // 
-            this.HpValuesList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.HpValuesList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.HpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.HpValuesList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.HpValuesList.FormattingEnabled = true;
             this.HpValuesList.ItemHeight = 17;
             this.HpValuesList.Location = new System.Drawing.Point(0, 0);
@@ -118,8 +120,9 @@
             // 
             // VpValuesList
             // 
-            this.VpValuesList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.VpValuesList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.VpValuesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.VpValuesList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.VpValuesList.FormattingEnabled = true;
             this.VpValuesList.ItemHeight = 17;
             this.VpValuesList.Location = new System.Drawing.Point(0, 0);
@@ -141,8 +144,9 @@
             // 
             // LineNumberListBox
             // 
-            this.LineNumberListBox.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.LineNumberListBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.LineNumberListBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.LineNumberListBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LineNumberListBox.FormattingEnabled = true;
             this.LineNumberListBox.ItemHeight = 17;
             this.LineNumberListBox.Location = new System.Drawing.Point(3, 3);
@@ -154,13 +158,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(317, 381);
             this.Controls.Add(this.tabControl);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "StageChunksView";
-            this.Text = "128x128 Chunks";
+            this.Text = "Chunks & Line Scroll";
             this.tabControl.ResumeLayout(false);
             this.ChunksPage.ResumeLayout(false);
             this.HpValues.ResumeLayout(false);

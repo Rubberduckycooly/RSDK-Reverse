@@ -9,28 +9,27 @@ namespace RSDKv5
 {
     public class Model
     {
-        public class Unknown
+        public class TexturePosition
         {
-            public float x;
-            public float y;
+            public float X = 0;
+            public float Y = 0;
 
-            public Unknown()
+            public TexturePosition()
             {
 
             }
 
-            public Unknown(Reader reader)
+            public TexturePosition(Reader reader)
             {
-                x = reader.ReadSingle();
-                y = reader.ReadSingle();
+                X = reader.ReadSingle();
+                Y = reader.ReadSingle();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(x);
-                writer.Write(y);
+                writer.Write(X);
+                writer.Write(Y);
             }
-
         }
 
         public class Colour
@@ -240,9 +239,9 @@ namespace RSDKv5
         public short FaceCount = 0;
 
         /// <summary>
-        /// a list of all of the [Unknown]
+        /// a list of all the Texture positions
         /// </summary>
-        public List<Unknown> Unknowns = new List<Unknown>();
+        public List<TexturePosition> TexturePositions = new List<TexturePosition>();
         /// <summary>
         /// a list of all the colours for each face
         /// </summary>
@@ -299,7 +298,7 @@ namespace RSDKv5
             //HasUnknown = (flags & 0x00000010) != 0;
             //HasColours = (flags & 0x00000100) != 0;
 
-            HasNormals = GetBit(flags,0);
+            HasNormals = GetBit(flags, 0);
             HasUnknown = GetBit(flags, 1);
             HasColours = GetBit(flags, 2);
 
@@ -313,7 +312,7 @@ namespace RSDKv5
 
             FaceVerticiesCount = reader.ReadByte();
             if (FaceVerticiesCount != 3 && FaceVerticiesCount != 4)
-                throw new Exception("Detected Vertex Type wasn't Tris or Quads! RSDK doesn't support other N-gons!");
+                throw new Exception("Detected Vertex Type wasn't Tris or Quads! RSDKv5 doesn't support other N-gons!");
 
             VertexCount = reader.ReadUInt16();
             FramesCount = reader.ReadUInt16();
@@ -322,7 +321,7 @@ namespace RSDKv5
 
             if (HasUnknown)
                 for (int i = 0; i < VertexCount; ++i)
-                    Unknowns.Add(new Unknown(reader));
+                    TexturePositions.Add(new TexturePosition(reader));
 
             if (HasColours)
                 for (int i = 0; i < VertexCount; ++i)
@@ -368,8 +367,8 @@ namespace RSDKv5
 
             if (HasUnknown)
                 for (int i = 0; i < VertexCount; ++i)
-                    Unknowns[i].Write(writer);
-            
+                    TexturePositions[i].Write(writer);
+
             if (HasColours)
                 for (int i = 0; i < VertexCount; ++i)
                     Colours[i].Write(writer);
@@ -424,7 +423,7 @@ namespace RSDKv5
                 }
 
                 File.WriteAllText(streamName, builder.ToString());
-           }
+            }
         }
 
         public void WriteMTL(Writer writer)
@@ -495,7 +494,7 @@ namespace RSDKv5
                 }
                 else
                     writer.Write((short)0);
-                
+
                 if (FaceVerticiesCount == 4)
                 {
                     // Normal
@@ -540,7 +539,7 @@ namespace RSDKv5
             {
                 string tmp = Path.GetExtension(filename);
                 string tmp2 = filename.Replace(tmp, "");
-                string streamName = tmp2 + " Frame "+ i + tmp;
+                string streamName = tmp2 + " Frame " + i + tmp;
                 using (var writer = new StreamWriter(File.Create(streamName)))
                 {
                     writer.WriteLine("solid obj");
@@ -589,7 +588,7 @@ namespace RSDKv5
 
         public void DeleteFrame(int index)
         {
-            int VertexCnt = Frames[index].Vertices.Count-1;
+            int VertexCnt = Frames[index].Vertices.Count - 1;
             Frames.RemoveAt(index);
             FramesCount--;
             VertexCount -= (ushort)VertexCnt;

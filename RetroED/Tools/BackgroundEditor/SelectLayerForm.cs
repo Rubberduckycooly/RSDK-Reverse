@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.BackgroundEditor
 {
-    public partial class SelectLayerForm : Form
+    public partial class SelectLayerForm : DockContent
     {
 
         public int SelLayer = 0;

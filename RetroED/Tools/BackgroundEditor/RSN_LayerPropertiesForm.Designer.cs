@@ -51,6 +51,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.panel1.Controls.Add(this.CVSPDNUD);
             this.panel1.Controls.Add(this.CVSPDLabel);
             this.panel1.Controls.Add(this.RVSPDNUD);
@@ -71,7 +72,8 @@
             // 
             // CVSPDNUD
             // 
-            this.CVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.CVSPDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.CVSPDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CVSPDNUD.Location = new System.Drawing.Point(182, 121);
             this.CVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -91,6 +93,7 @@
             // CVSPDLabel
             // 
             this.CVSPDLabel.AutoSize = true;
+            this.CVSPDLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CVSPDLabel.Location = new System.Drawing.Point(12, 123);
             this.CVSPDLabel.Name = "CVSPDLabel";
             this.CVSPDLabel.Size = new System.Drawing.Size(164, 17);
@@ -99,7 +102,8 @@
             // 
             // RVSPDNUD
             // 
-            this.RVSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RVSPDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RVSPDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RVSPDNUD.Location = new System.Drawing.Point(182, 92);
             this.RVSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -118,7 +122,8 @@
             // 
             // DeformNUD
             // 
-            this.DeformNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.DeformNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.DeformNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DeformNUD.Location = new System.Drawing.Point(182, 65);
             this.DeformNUD.Maximum = new decimal(new int[] {
             255,
@@ -138,6 +143,7 @@
             // RVSPDLabel
             // 
             this.RVSPDLabel.AutoSize = true;
+            this.RVSPDLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RVSPDLabel.Location = new System.Drawing.Point(12, 94);
             this.RVSPDLabel.Name = "RVSPDLabel";
             this.RVSPDLabel.Size = new System.Drawing.Size(159, 17);
@@ -147,6 +153,7 @@
             // DeformLabel
             // 
             this.DeformLabel.AutoSize = true;
+            this.DeformLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DeformLabel.Location = new System.Drawing.Point(12, 65);
             this.DeformLabel.Name = "DeformLabel";
             this.DeformLabel.Size = new System.Drawing.Size(76, 17);
@@ -155,7 +162,8 @@
             // 
             // MapHeightNUD
             // 
-            this.MapHeightNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MapHeightNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MapHeightNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapHeightNUD.Location = new System.Drawing.Point(182, 36);
             this.MapHeightNUD.Maximum = new decimal(new int[] {
             255,
@@ -174,7 +182,8 @@
             // 
             // MapWidthNUD
             // 
-            this.MapWidthNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.MapWidthNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.MapWidthNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapWidthNUD.Location = new System.Drawing.Point(182, 9);
             this.MapWidthNUD.Maximum = new decimal(new int[] {
             255,
@@ -194,6 +203,7 @@
             // MapHeightLabel
             // 
             this.MapHeightLabel.AutoSize = true;
+            this.MapHeightLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapHeightLabel.Location = new System.Drawing.Point(12, 38);
             this.MapHeightLabel.Name = "MapHeightLabel";
             this.MapHeightLabel.Size = new System.Drawing.Size(93, 17);
@@ -203,6 +213,7 @@
             // MapWidthLabel
             // 
             this.MapWidthLabel.AutoSize = true;
+            this.MapWidthLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.MapWidthLabel.Location = new System.Drawing.Point(12, 9);
             this.MapWidthLabel.Name = "MapWidthLabel";
             this.MapWidthLabel.Size = new System.Drawing.Size(88, 17);

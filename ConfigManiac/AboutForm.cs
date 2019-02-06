@@ -7,13 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WeifenLuo.WinFormsUI.Docking;
 
-namespace RetroED.Tools.CollisionEditor
+namespace ConfigManiac
 {
-    public partial class About_Form : DockContent
+    public partial class AboutForm : Form
     {
-        public About_Form()
+        public AboutForm()
         {
             InitializeComponent();
         }

@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.StageconfigEditors.RSDKvBStageconfigEditor
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DockContent
     {
         public RSDKvB.StageConfig stageconfig = new RSDKvB.StageConfig();
 
@@ -43,7 +44,19 @@ namespace RetroED.Tools.StageconfigEditors.RSDKvBStageconfigEditor
             FILEPATH = null;
             refreshLists();
             RefreshUI();
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = "New stageconfig";
+            RetroED.MainForm.Instance.CurrentTabText = "New stageconfig";
+
+            string RSDK = "RSDKvB";
+            string dispname = "";
+            RetroED.MainForm.Instance.CurrentTabText = "New Stageconfig";
+            dispname = "New Stageconfig";
+
+            Text = "New Stageconfig";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Stageconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public void Open(string Filepath)
@@ -52,7 +65,32 @@ namespace RetroED.Tools.StageconfigEditors.RSDKvBStageconfigEditor
             FILEPATH = Filepath;
             RefreshUI();
             refreshLists();
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = Path.GetFileName(Filepath);
+            RetroED.MainForm.Instance.CurrentTabText = Path.GetFileName(Filepath);
+
+            string RSDK = "RSDKvB";
+            string dispname = "";
+            string folder = Path.GetDirectoryName(Filepath);
+            DirectoryInfo di = new DirectoryInfo(folder);
+            folder = di.Name;
+            string file = Path.GetFileName(Filepath);
+
+            if (Filepath != null)
+            {
+                RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                dispname = folder + "/" + file;
+            }
+            else
+            {
+                RetroED.MainForm.Instance.CurrentTabText = "New Stageconfig - RSDK Stageconfig Editor";
+                dispname = "New Stageconfig - RSDK Stageconfig Editor";
+            }
+
+            Text = Path.GetFileName(Filepath) + " - RSDK Stageconfig Editor";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Stageconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public void Save(string Filepath)
@@ -60,7 +98,32 @@ namespace RetroED.Tools.StageconfigEditors.RSDKvBStageconfigEditor
             Console.WriteLine(FILEPATH);
             stageconfig.Write(new RSDKvB.Writer(Filepath));
             FILEPATH = Filepath;
-            RetroED.MainForm.Instance.TabControl.TabPages[RetroED.MainForm.Instance.TabControl.SelectedIndex].Text = Path.GetFileName(Filepath);
+            RetroED.MainForm.Instance.CurrentTabText = Path.GetFileName(Filepath);
+
+            string RSDK = "RSDKvB";
+            string dispname = "";
+            string folder = Path.GetDirectoryName(Filepath);
+            DirectoryInfo di = new DirectoryInfo(folder);
+            folder = di.Name;
+            string file = Path.GetFileName(Filepath);
+
+            if (Filepath != null)
+            {
+                RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                dispname = folder + "/" + file;
+            }
+            else
+            {
+                RetroED.MainForm.Instance.CurrentTabText = "New Palette - RSDK Stageconfig Editor";
+                dispname = "New Stageconfig - RSDK Stageconfig Editor";
+            }
+
+            Text = Path.GetFileName(Filepath) + " - RSDK Stageconfig Editor";
+
+            RetroED.MainForm.Instance.rp.state = "RetroED - RSDK Stageconfig Editor";
+            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
+            SharpPresence.Discord.RunCallbacks();
+            SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
         }
 
         public string DecToHex(int DecVal)
@@ -118,11 +181,6 @@ namespace RetroED.Tools.StageconfigEditors.RSDKvBStageconfigEditor
         {
             SoundPlayer sp = new SoundPlayer();
             sp.Stop();
-        }
-
-        private void menuStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
-        {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)

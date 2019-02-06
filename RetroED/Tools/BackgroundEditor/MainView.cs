@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.BackgroundEditor
 {
-    public partial class MainView : Form
+    public partial class MainView : DockContent
     {
         enum Placementmode
         {
@@ -25,8 +26,6 @@ namespace RetroED.Tools.BackgroundEditor
         public StageMapView _mapViewer;
 
         int curlayer = 0;
-
-        public RetroED.MainForm Parent;
 
         public bool DrawLines = false;
 
@@ -112,33 +111,33 @@ namespace RetroED.Tools.BackgroundEditor
                     string tmp = ofd.FileName.Replace(pth, "");
                     DirectoryInfo di = new DirectoryInfo(tmp);
                     dir = di.Name;
-                    RetroED.MainForm.Instance.TabControl.SelectedTab.Text = dir + "/" + pth;
+                    RetroED.MainForm.Instance.CurrentTabText = dir + "/" + pth;
                     dispname = dir + "/" + pth;
                 }
                 else
                 {
-                    RetroED.MainForm.Instance.TabControl.SelectedTab.Text = "New Scene - RSDK Background Editor";
+                    RetroED.MainForm.Instance.CurrentTabText = "New Scene - RSDK Background Editor";
                     dispname = "New Scene - RSDK Background Editor";
                 }
 
-                Parent.rp.state = "RetroED - " + this.Text;
+                RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
                 switch (engineType)
                 {
                     case Retro_Formats.EngineType.RSDKvB:
-                        Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
+                        RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvB)";
                         break;
                     case Retro_Formats.EngineType.RSDKv2:
-                        Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
+                        RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv2)";
                         break;
                     case Retro_Formats.EngineType.RSDKv1:
-                        Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
+                        RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv1)";
                         break;
                     case Retro_Formats.EngineType.RSDKvRS:
-                        Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
+                        RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                         break;
                 }
                 SharpPresence.Discord.RunCallbacks();
-                SharpPresence.Discord.UpdatePresence(Parent.rp);
+                SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
 
             }
         }
@@ -146,7 +145,7 @@ namespace RetroED.Tools.BackgroundEditor
         void LoadLevel(string level)
         {
             background.ImportFrom(engineType, level);
-            Chunks.ImportFrom(engineType, level);
+            Chunks.ImportFrom(engineType, mappings);
             using (var fs = new FileStream(tiles, FileMode.Open))
             {
                 var bmp = new Bitmap(fs);

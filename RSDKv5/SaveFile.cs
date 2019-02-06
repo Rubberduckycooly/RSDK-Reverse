@@ -21,6 +21,7 @@ namespace RSDKv5
         public int[] SaveRAM = new int[FileSize / 4];
 
         public int SaveFile = 0;
+        public int EncoreSaveFile = 0;
         public int SaveFilePos
         {
             get
@@ -28,9 +29,17 @@ namespace RSDKv5
                 return (0x400 * SaveFile);
             }
         }
+        public int EncoreSaveFilePos
+        {
+            get
+            {
+                return 0x2800 + (0x400 * EncoreSaveFile);
+            }
+        }
 
         public int BSSID;
         public int curEmerald;
+        public int curEncoreEmerald;
         /// <summary>
         /// what save slot we're using
         /// </summary>
@@ -122,7 +131,7 @@ namespace RSDKv5
         {
             get
             {
-                int emeralds = SaveRAM[SaveFilePos + 0x70];
+                int emeralds = SaveRAM[(SaveFilePos + 0x70)/4];
                 int emeraldActive = 1 << curEmerald;
                 return (emeralds & emeraldActive) != 0;
             }
@@ -130,9 +139,9 @@ namespace RSDKv5
             {
                 int emeraldActive = 1 << curEmerald;
                 if (value)
-                    SaveRAM[SaveFilePos + 0x70] |= (byte)emeraldActive;
+                    SaveRAM[(SaveFilePos + 0x70) / 4] |= (byte)emeraldActive;
                 else
-                    SaveRAM[SaveFilePos + 0x70] &= (byte)~(emeraldActive);
+                    SaveRAM[(SaveFilePos + 0x70) / 4] &= (byte)~(emeraldActive);
             }
         }
         /// <summary>
@@ -223,9 +232,135 @@ namespace RSDKv5
             //else, swap the bytes and return it
         }
 
+
+        //ENCORE
+        public int EncoreZoneID
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x60);
+            }
+            set
+            {
+                SetValue(EncoreSaveFilePos + 0x60, value);
+            }
+        }
+        public int EncoreUnknown1
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x64);
+            }
+            set
+            {
+                SetValue(EncoreSaveFilePos + 0x64, value);
+            }
+        }
+        /// <summary>
+        /// the Save's Score
+        /// </summary>
+        public int EncoreScore
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x68);
+            }
+            set
+            {
+                SetValue(EncoreSaveFilePos + 0x68, value);
+            }
+        }
+        /// <summary>
+        /// the target score
+        /// </summary>
+        public int EncoreTargetScore
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x6C);
+            }
+            set
+            {
+                SetValue(EncoreSaveFilePos + 0x6C, value);
+            }
+        }
+        /// <summary>
+        /// what emeralds have been collected?
+        /// </summary>
+        public bool EncoreEmeraldState
+        {
+            get
+            {
+                int emeralds = SaveRAM[(EncoreSaveFilePos + 0x70) / 4];
+                int emeraldActive = 1 << curEmerald;
+                return (emeralds & emeraldActive) != 0;
+            }
+            set
+            {
+                int emeraldActive = 1 << curEmerald;
+                if (value)
+                    SaveRAM[(EncoreSaveFilePos + 0x70) / 4] |= (byte)emeraldActive;
+                else
+                    SaveRAM[(EncoreSaveFilePos + 0x70) / 4] &= (byte)~(emeraldActive);
+            }
+        }
+        /// <summary>
+        /// what's the next special stage that the player goes to?
+        /// </summary>
+        public int EncoreNextSpecialStage
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x7C);
+            }
+            set
+            {
+                SetValue(EncoreSaveFilePos + 0x7C, value);
+            }
+        }
+        /// <summary>
+        /// was a giant ring used in this zone
+        /// </summary>
+        public bool EncoreGiantRingUsedInZone
+        {
+            get
+            {
+                return GetValue(EncoreSaveFilePos + 0x80) != 0;
+            }
+            set
+            {
+                int i = 0;
+                if (value) i = 1;
+                SetValue(EncoreSaveFilePos + 0x80, i);
+            }
+        }
+        public int EncoreMainChar
+        {
+            get
+            {
+                return (GetValue(EncoreSaveFilePos + 0x110) >> (8 * 0)) & 0xff;
+            }
+            set
+            {
+                SaveRAM[(EncoreSaveFilePos + 0x110) / 4] = (int)((value & 0xFFFFFF00) | 01);
+            }
+        }
+        public int EncoreBuddyChar
+        {
+            get
+            {
+                return (GetValue(EncoreSaveFilePos + 0x110) >> (8 * 1)) & 0xff;
+            }
+            set
+            {
+                SaveRAM[(EncoreSaveFilePos + 0x110) / 4] = (int)((value & 0xFFFFFF) | 01);
+            }
+        }
+
         public int SetValue(int location, int value)
         {
             //get int value from the array, (I put in byte pointers)
+            //AKA I'm hella lazy
             location /= 4;
 
             //get our bytes
@@ -249,13 +384,13 @@ namespace RSDKv5
         {
         }
 
-        internal SaveFiles(Reader reader, bool isPCVer = true)
+        public SaveFiles(Reader reader, bool isPCVer = true)
         {
             IsLittleEndian = isPCVer;
 
             for (int i = 0; i < FileSize / 4; i++)
             {
-                reader.ReadInt32();
+                SaveRAM[i] = reader.ReadInt32();
             }
 
             reader.Close();

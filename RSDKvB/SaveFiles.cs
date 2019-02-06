@@ -327,7 +327,7 @@ namespace RSDKvB
         {
             for (int i = 0; i < FileSize / 4; i++)
             {
-                reader.ReadInt32();
+                SaveRAM[i] = reader.ReadInt32();
             }
 
             reader.Close();

@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED
 {
-    public partial class SelectRSDKForm : Form
+    public partial class SelectRSDKForm : DockContent
     {
         public Retro_Formats.EngineType engineType = 0;
 

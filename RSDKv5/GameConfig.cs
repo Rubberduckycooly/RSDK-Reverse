@@ -10,30 +10,30 @@ namespace RSDKv5
         /// <summary>
         /// the name of the game (also window name)
         /// </summary>
-        public String GameName;
+        public String GameName = "RSDKv5 Game";
         /// <summary>
         /// the game's subname (used for dev menu)
         /// </summary>
-        public String GameSubname;
+        public String GameSubname = "Powered By the Retro Engine!";
         /// <summary>
         /// what version the game is on
         /// </summary>
-        public String Version;
+        public String Version = "1.05.0";
         public String FilePath;
 
         /// <summary>
         /// is this file a plus file?
         /// </summary>
-        public bool _scenesHaveModeFilter;
+        public bool _scenesHaveModeFilter = true;
 
         /// <summary>
         /// the starting category to load from
         /// </summary>
-        public byte StartSceneCategoryIndex;
+        public byte StartSceneCategoryIndex = 0;
         /// <summary>
         /// the starting scene to load from
         /// </summary>
-        public ushort StartSceneIndex;
+        public ushort StartSceneIndex = 0;
         public static int CurrentLevelID = 0;
 
 

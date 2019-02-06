@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.ChunkEditor
 {
-    public partial class AutoSetVisualPlane : Form
+    public partial class AutoSetVisualPlane : DockContent
     {
         public byte Value;
 

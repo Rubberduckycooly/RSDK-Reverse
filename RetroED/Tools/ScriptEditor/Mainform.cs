@@ -8,10 +8,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.ScriptEditor
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DockContent
     {
         string filepath;
         string filename;
@@ -351,11 +352,11 @@ namespace RetroED.Tools.ScriptEditor
                 string tmp = path.Replace(pth, "");
                 DirectoryInfo di = new DirectoryInfo(tmp);
                 dir = di.Name;
-                RetroED.MainForm.Instance.TabControl.SelectedTab.Text = dir + "/" + pth;
+                RetroED.MainForm.Instance.CurrentTabText = dir + "/" + pth;
             }
             else
             {
-                RetroED.MainForm.Instance.TabControl.SelectedTab.Text = "New Script - RSDK Script Editor";
+                RetroED.MainForm.Instance.CurrentTabText = "New Script - RSDK Script Editor";
             }
             try
             {
@@ -382,11 +383,11 @@ namespace RetroED.Tools.ScriptEditor
                 string tmp = path.Replace(pth, "");
                 DirectoryInfo di = new DirectoryInfo(tmp);
                 dir = di.Name;
-                RetroED.MainForm.Instance.TabControl.SelectedTab.Text = dir + "/" + pth;
+                RetroED.MainForm.Instance.CurrentTabText = dir + "/" + pth;
             }
             else
             {
-                RetroED.MainForm.Instance.TabControl.SelectedTab.Text = "New Script - RSDK Script Editor";
+                RetroED.MainForm.Instance.CurrentTabText = "New Script - RSDK Script Editor";
             }
             File.WriteAllText(filepath, TextArea.Text);
         }

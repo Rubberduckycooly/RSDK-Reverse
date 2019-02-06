@@ -28,33 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.renderEachChunkAsAnImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.showGridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.refreshTilesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.refreshChunksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.autoSetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.orientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.visualPlaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collisionAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.collisionBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tile16x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.setAutoOrientationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setAutoVisualPlaneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setAutoCollisionAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setAutoCollisionBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.setAutoTile16x16ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyChunkToToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.components = new System.ComponentModel.Container();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.OptionsPanel = new System.Windows.Forms.Panel();
@@ -88,12 +62,39 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
             this.TileZoomBar = new System.Windows.Forms.TrackBar();
-            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.ChunkZoomBar = new System.Windows.Forms.TrackBar();
+            this.mainMenu1 = new System.Windows.Forms.MainMenu(this.components);
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_New = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Open = new System.Windows.Forms.MenuItem();
+            this.MenuItem_Save = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SaveAs = new System.Windows.Forms.MenuItem();
+            this.menuItem8 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_RenderChunks = new System.Windows.Forms.MenuItem();
+            this.menuItem5 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_PlaceTiles = new System.Windows.Forms.MenuItem();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ShowGrid = new System.Windows.Forms.MenuItem();
+            this.menuItem7 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_RefTiles = new System.Windows.Forms.MenuItem();
+            this.MenuItem_RefChunks = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_AutoSet = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ASOrientation = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ASVisPlane = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ASCollA = new System.Windows.Forms.MenuItem();
+            this.MenuItem_ASCollB = new System.Windows.Forms.MenuItem();
+            this.menuItem18 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SetOrientation = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SetVisPlane = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SetCollA = new System.Windows.Forms.MenuItem();
+            this.MenuItem_SetCollB = new System.Windows.Forms.MenuItem();
+            this.menuItem12 = new System.Windows.Forms.MenuItem();
+            this.MenuItem_CpyChunk = new System.Windows.Forms.MenuItem();
+            this.StageTilesList = new RetroED.Tools.ChunkMappingsEditor.TileList();
             this.StageChunksList = new RetroED.Tools.ChunkMappingsEditor.TileList();
-            this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -124,243 +125,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.ChunkZoomBar)).BeginInit();
             this.SuspendLayout();
             // 
-            // menuStrip1
-            // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.viewToolStripMenuItem,
-            this.toolsToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(981, 28);
-            this.menuStrip1.TabIndex = 0;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // fileToolStripMenuItem
-            // 
-            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openToolStripMenuItem,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.renderEachChunkAsAnImageToolStripMenuItem});
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
-            this.fileToolStripMenuItem.Text = "File";
-            // 
-            // openToolStripMenuItem
-            // 
-            this.openToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
-            this.openToolStripMenuItem.Text = "Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
-            // 
-            // saveToolStripMenuItem
-            // 
-            this.saveToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
-            this.saveToolStripMenuItem.Text = "Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
-            // 
-            // saveAsToolStripMenuItem
-            // 
-            this.saveAsToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
-            this.saveAsToolStripMenuItem.Text = "Save As...";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(291, 6);
-            // 
-            // renderEachChunkAsAnImageToolStripMenuItem
-            // 
-            this.renderEachChunkAsAnImageToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.renderEachChunkAsAnImageToolStripMenuItem.Name = "renderEachChunkAsAnImageToolStripMenuItem";
-            this.renderEachChunkAsAnImageToolStripMenuItem.Size = new System.Drawing.Size(294, 26);
-            this.renderEachChunkAsAnImageToolStripMenuItem.Text = "Render Each Chunk as an Image";
-            this.renderEachChunkAsAnImageToolStripMenuItem.Click += new System.EventHandler(this.renderEachChunkAsAnImageToolStripMenuItem_Click);
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.showGridToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.refreshTilesToolStripMenuItem,
-            this.refreshChunksToolStripMenuItem});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // showGridToolStripMenuItem
-            // 
-            this.showGridToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.showGridToolStripMenuItem.Checked = true;
-            this.showGridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showGridToolStripMenuItem.Name = "showGridToolStripMenuItem";
-            this.showGridToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.showGridToolStripMenuItem.Text = "Show Grid";
-            this.showGridToolStripMenuItem.Click += new System.EventHandler(this.showGridToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(213, 6);
-            // 
-            // refreshTilesToolStripMenuItem
-            // 
-            this.refreshTilesToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.refreshTilesToolStripMenuItem.Name = "refreshTilesToolStripMenuItem";
-            this.refreshTilesToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.refreshTilesToolStripMenuItem.Text = "Refresh Tiles";
-            this.refreshTilesToolStripMenuItem.Click += new System.EventHandler(this.refreshTilesToolStripMenuItem_Click);
-            // 
-            // refreshChunksToolStripMenuItem
-            // 
-            this.refreshChunksToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.refreshChunksToolStripMenuItem.Name = "refreshChunksToolStripMenuItem";
-            this.refreshChunksToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.refreshChunksToolStripMenuItem.Text = "Refresh Chunks";
-            this.refreshChunksToolStripMenuItem.Click += new System.EventHandler(this.refreshChunksToolStripMenuItem_Click);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.autoSetToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.copyChunkToToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(56, 24);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // autoSetToolStripMenuItem
-            // 
-            this.autoSetToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.autoSetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.orientationToolStripMenuItem,
-            this.visualPlaneToolStripMenuItem,
-            this.collisionAToolStripMenuItem,
-            this.collisionBToolStripMenuItem,
-            this.tile16x16ToolStripMenuItem,
-            this.toolStripSeparator2,
-            this.setAutoOrientationToolStripMenuItem,
-            this.setAutoVisualPlaneToolStripMenuItem,
-            this.setAutoCollisionAToolStripMenuItem,
-            this.setAutoCollisionBToolStripMenuItem,
-            this.setAutoTile16x16ToolStripMenuItem});
-            this.autoSetToolStripMenuItem.Name = "autoSetToolStripMenuItem";
-            this.autoSetToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.autoSetToolStripMenuItem.Text = "\"Auto-Set\"";
-            // 
-            // orientationToolStripMenuItem
-            // 
-            this.orientationToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.orientationToolStripMenuItem.Name = "orientationToolStripMenuItem";
-            this.orientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.orientationToolStripMenuItem.Text = "Orientation";
-            this.orientationToolStripMenuItem.Click += new System.EventHandler(this.orientationToolStripMenuItem_Click);
-            // 
-            // visualPlaneToolStripMenuItem
-            // 
-            this.visualPlaneToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.visualPlaneToolStripMenuItem.Name = "visualPlaneToolStripMenuItem";
-            this.visualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.visualPlaneToolStripMenuItem.Text = "Visual Plane";
-            this.visualPlaneToolStripMenuItem.Click += new System.EventHandler(this.visualPlaneToolStripMenuItem_Click);
-            // 
-            // collisionAToolStripMenuItem
-            // 
-            this.collisionAToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.collisionAToolStripMenuItem.Name = "collisionAToolStripMenuItem";
-            this.collisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.collisionAToolStripMenuItem.Text = "Collision A";
-            this.collisionAToolStripMenuItem.Click += new System.EventHandler(this.collisionAToolStripMenuItem_Click);
-            // 
-            // collisionBToolStripMenuItem
-            // 
-            this.collisionBToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.collisionBToolStripMenuItem.Name = "collisionBToolStripMenuItem";
-            this.collisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.collisionBToolStripMenuItem.Text = "Collision B";
-            this.collisionBToolStripMenuItem.Click += new System.EventHandler(this.collisionBToolStripMenuItem_Click);
-            // 
-            // tile16x16ToolStripMenuItem
-            // 
-            this.tile16x16ToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.tile16x16ToolStripMenuItem.Name = "tile16x16ToolStripMenuItem";
-            this.tile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.tile16x16ToolStripMenuItem.Text = "Tile16x16";
-            this.tile16x16ToolStripMenuItem.Click += new System.EventHandler(this.tile16x16ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(223, 6);
-            // 
-            // setAutoOrientationToolStripMenuItem
-            // 
-            this.setAutoOrientationToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.setAutoOrientationToolStripMenuItem.Name = "setAutoOrientationToolStripMenuItem";
-            this.setAutoOrientationToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.setAutoOrientationToolStripMenuItem.Text = "Set Auto-Orientation";
-            this.setAutoOrientationToolStripMenuItem.Click += new System.EventHandler(this.setAutoOrientationToolStripMenuItem_Click);
-            // 
-            // setAutoVisualPlaneToolStripMenuItem
-            // 
-            this.setAutoVisualPlaneToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.setAutoVisualPlaneToolStripMenuItem.Name = "setAutoVisualPlaneToolStripMenuItem";
-            this.setAutoVisualPlaneToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.setAutoVisualPlaneToolStripMenuItem.Text = "Set Auto-Visual Plane";
-            this.setAutoVisualPlaneToolStripMenuItem.Click += new System.EventHandler(this.setAutoVisualPlaneToolStripMenuItem_Click);
-            // 
-            // setAutoCollisionAToolStripMenuItem
-            // 
-            this.setAutoCollisionAToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.setAutoCollisionAToolStripMenuItem.Name = "setAutoCollisionAToolStripMenuItem";
-            this.setAutoCollisionAToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.setAutoCollisionAToolStripMenuItem.Text = "Set Auto-Collision A";
-            this.setAutoCollisionAToolStripMenuItem.Click += new System.EventHandler(this.setAutoCollisionAToolStripMenuItem_Click);
-            // 
-            // setAutoCollisionBToolStripMenuItem
-            // 
-            this.setAutoCollisionBToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.setAutoCollisionBToolStripMenuItem.Name = "setAutoCollisionBToolStripMenuItem";
-            this.setAutoCollisionBToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.setAutoCollisionBToolStripMenuItem.Text = "Set Auto-Collision B";
-            this.setAutoCollisionBToolStripMenuItem.Click += new System.EventHandler(this.setAutoCollisionBToolStripMenuItem_Click);
-            // 
-            // setAutoTile16x16ToolStripMenuItem
-            // 
-            this.setAutoTile16x16ToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.setAutoTile16x16ToolStripMenuItem.Name = "setAutoTile16x16ToolStripMenuItem";
-            this.setAutoTile16x16ToolStripMenuItem.Size = new System.Drawing.Size(226, 26);
-            this.setAutoTile16x16ToolStripMenuItem.Text = "Set Auto-Tile16x16";
-            this.setAutoTile16x16ToolStripMenuItem.Click += new System.EventHandler(this.setAutoTile16x16ToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(213, 6);
-            // 
-            // copyChunkToToolStripMenuItem
-            // 
-            this.copyChunkToToolStripMenuItem.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.copyChunkToToolStripMenuItem.Name = "copyChunkToToolStripMenuItem";
-            this.copyChunkToToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.copyChunkToToolStripMenuItem.Text = "Copy Chunk to...";
-            this.copyChunkToToolStripMenuItem.Click += new System.EventHandler(this.copyChunkToToolStripMenuItem_Click);
-            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 28);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.splitContainer1.Name = "splitContainer1";
             // 
@@ -371,7 +139,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.TileListControl);
-            this.splitContainer1.Size = new System.Drawing.Size(981, 425);
+            this.splitContainer1.Size = new System.Drawing.Size(981, 427);
             this.splitContainer1.SplitterDistance = 734;
             this.splitContainer1.TabIndex = 1;
             // 
@@ -389,7 +157,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.ChunkDisplay);
-            this.splitContainer2.Size = new System.Drawing.Size(734, 425);
+            this.splitContainer2.Size = new System.Drawing.Size(734, 427);
             this.splitContainer2.SplitterDistance = 305;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -409,7 +177,7 @@
             this.OptionsPanel.Location = new System.Drawing.Point(0, 0);
             this.OptionsPanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.OptionsPanel.Name = "OptionsPanel";
-            this.OptionsPanel.Size = new System.Drawing.Size(305, 425);
+            this.OptionsPanel.Size = new System.Drawing.Size(305, 427);
             this.OptionsPanel.TabIndex = 0;
             // 
             // panel2
@@ -425,6 +193,8 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label7.Location = new System.Drawing.Point(4, 7);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(155, 17);
@@ -433,6 +203,8 @@
             // 
             // TileIDNUD
             // 
+            this.TileIDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.TileIDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TileIDNUD.Location = new System.Drawing.Point(195, 5);
             this.TileIDNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TileIDNUD.Maximum = new decimal(new int[] {
@@ -455,7 +227,7 @@
             this.CurChunkChangePanel.Controls.Add(this.PrevChunkButton);
             this.CurChunkChangePanel.Controls.Add(this.NextChunkButton);
             this.CurChunkChangePanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.CurChunkChangePanel.Location = new System.Drawing.Point(0, 372);
+            this.CurChunkChangePanel.Location = new System.Drawing.Point(0, 374);
             this.CurChunkChangePanel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.CurChunkChangePanel.Name = "CurChunkChangePanel";
             this.CurChunkChangePanel.Size = new System.Drawing.Size(305, 53);
@@ -489,6 +261,8 @@
             // 
             // GoToChunkNUD
             // 
+            this.GoToChunkNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.GoToChunkNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GoToChunkNUD.Location = new System.Drawing.Point(247, 6);
             this.GoToChunkNUD.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.GoToChunkNUD.Maximum = new decimal(new int[] {
@@ -504,6 +278,8 @@
             // label5
             // 
             this.label5.AutoSize = true;
+            this.label5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label5.Location = new System.Drawing.Point(155, 6);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(85, 17);
@@ -513,6 +289,8 @@
             // ChunkNumberLabel
             // 
             this.ChunkNumberLabel.AutoSize = true;
+            this.ChunkNumberLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.ChunkNumberLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ChunkNumberLabel.Location = new System.Drawing.Point(4, 6);
             this.ChunkNumberLabel.Name = "ChunkNumberLabel";
             this.ChunkNumberLabel.Size = new System.Drawing.Size(95, 17);
@@ -632,6 +410,8 @@
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label3.Location = new System.Drawing.Point(13, 202);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(192, 17);
@@ -660,6 +440,8 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label2.Location = new System.Drawing.Point(13, 138);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(192, 17);
@@ -685,6 +467,8 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Location = new System.Drawing.Point(13, 78);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 17);
@@ -712,6 +496,8 @@
             // OrientationLabel
             // 
             this.OrientationLabel.AutoSize = true;
+            this.OrientationLabel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.OrientationLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.OrientationLabel.Location = new System.Drawing.Point(13, 9);
             this.OrientationLabel.Name = "OrientationLabel";
             this.OrientationLabel.Size = new System.Drawing.Size(78, 17);
@@ -725,11 +511,12 @@
             this.ChunkDisplay.Location = new System.Drawing.Point(0, 0);
             this.ChunkDisplay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.ChunkDisplay.Name = "ChunkDisplay";
-            this.ChunkDisplay.Size = new System.Drawing.Size(425, 425);
+            this.ChunkDisplay.Size = new System.Drawing.Size(425, 427);
             this.ChunkDisplay.TabIndex = 3;
             this.ChunkDisplay.Paint += new System.Windows.Forms.PaintEventHandler(this.ChunkDisplay_Paint);
             this.ChunkDisplay.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
             this.ChunkDisplay.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseDown);
+            this.ChunkDisplay.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ChunkDisplay_MouseMove);
             // 
             // TileListControl
             // 
@@ -740,7 +527,7 @@
             this.TileListControl.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.TileListControl.Name = "TileListControl";
             this.TileListControl.SelectedIndex = 0;
-            this.TileListControl.Size = new System.Drawing.Size(243, 425);
+            this.TileListControl.Size = new System.Drawing.Size(243, 427);
             this.TileListControl.TabIndex = 0;
             // 
             // tabPage1
@@ -750,7 +537,7 @@
             this.tabPage1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage1.Size = new System.Drawing.Size(235, 396);
+            this.tabPage1.Size = new System.Drawing.Size(235, 398);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Tiles";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -769,39 +556,22 @@
             // splitContainer3.Panel2
             // 
             this.splitContainer3.Panel2.Controls.Add(this.StageTilesList);
-            this.splitContainer3.Size = new System.Drawing.Size(229, 392);
-            this.splitContainer3.SplitterDistance = 51;
+            this.splitContainer3.Size = new System.Drawing.Size(229, 394);
             this.splitContainer3.TabIndex = 0;
             // 
             // TileZoomBar
             // 
-            this.TileZoomBar.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.TileZoomBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.TileZoomBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.TileZoomBar.LargeChange = 1;
             this.TileZoomBar.Location = new System.Drawing.Point(0, 0);
             this.TileZoomBar.Maximum = 5;
             this.TileZoomBar.Minimum = 1;
             this.TileZoomBar.Name = "TileZoomBar";
-            this.TileZoomBar.Size = new System.Drawing.Size(229, 51);
+            this.TileZoomBar.Size = new System.Drawing.Size(229, 50);
             this.TileZoomBar.TabIndex = 0;
             this.TileZoomBar.Value = 4;
             this.TileZoomBar.Scroll += new System.EventHandler(this.TileZoomBar_Scroll);
-            // 
-            // StageTilesList
-            // 
-            this.StageTilesList.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.StageTilesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.StageTilesList.ImageHeight = 64;
-            this.StageTilesList.ImageSize = 64;
-            this.StageTilesList.ImageWidth = 64;
-            this.StageTilesList.Location = new System.Drawing.Point(0, 0);
-            this.StageTilesList.Margin = new System.Windows.Forms.Padding(5);
-            this.StageTilesList.Name = "StageTilesList";
-            this.StageTilesList.ScrollValue = 0;
-            this.StageTilesList.SelectedIndex = -1;
-            this.StageTilesList.Size = new System.Drawing.Size(229, 337);
-            this.StageTilesList.TabIndex = 3;
-            this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageTilesList_SelectedIndexChanged);
             // 
             // tabPage2
             // 
@@ -810,7 +580,7 @@
             this.tabPage2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.tabPage2.Size = new System.Drawing.Size(235, 396);
+            this.tabPage2.Size = new System.Drawing.Size(235, 424);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Chunks";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -829,27 +599,236 @@
             // splitContainer4.Panel2
             // 
             this.splitContainer4.Panel2.Controls.Add(this.StageChunksList);
-            this.splitContainer4.Size = new System.Drawing.Size(229, 392);
-            this.splitContainer4.SplitterDistance = 48;
+            this.splitContainer4.Size = new System.Drawing.Size(229, 420);
+            this.splitContainer4.SplitterDistance = 51;
             this.splitContainer4.TabIndex = 0;
             // 
             // ChunkZoomBar
             // 
-            this.ChunkZoomBar.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.ChunkZoomBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ChunkZoomBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.ChunkZoomBar.LargeChange = 1;
             this.ChunkZoomBar.Location = new System.Drawing.Point(0, 0);
             this.ChunkZoomBar.Maximum = 4;
             this.ChunkZoomBar.Minimum = 1;
             this.ChunkZoomBar.Name = "ChunkZoomBar";
-            this.ChunkZoomBar.Size = new System.Drawing.Size(229, 48);
+            this.ChunkZoomBar.Size = new System.Drawing.Size(229, 56);
             this.ChunkZoomBar.TabIndex = 1;
             this.ChunkZoomBar.Value = 2;
             this.ChunkZoomBar.Scroll += new System.EventHandler(this.ChunkZoomBar_Scroll);
             // 
+            // mainMenu1
+            // 
+            this.mainMenu1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem1,
+            this.menuItem5,
+            this.menuItem2,
+            this.menuItem3});
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 0;
+            this.menuItem1.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_New,
+            this.MenuItem_Open,
+            this.MenuItem_Save,
+            this.MenuItem_SaveAs,
+            this.menuItem8,
+            this.MenuItem_RenderChunks});
+            this.menuItem1.Text = "File";
+            // 
+            // MenuItem_New
+            // 
+            this.MenuItem_New.Index = 0;
+            this.MenuItem_New.Text = "New";
+            this.MenuItem_New.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // MenuItem_Open
+            // 
+            this.MenuItem_Open.Index = 1;
+            this.MenuItem_Open.Shortcut = System.Windows.Forms.Shortcut.CtrlO;
+            this.MenuItem_Open.Text = "&Open";
+            this.MenuItem_Open.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // MenuItem_Save
+            // 
+            this.MenuItem_Save.Index = 2;
+            this.MenuItem_Save.Shortcut = System.Windows.Forms.Shortcut.CtrlS;
+            this.MenuItem_Save.Text = "&Save";
+            this.MenuItem_Save.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // MenuItem_SaveAs
+            // 
+            this.MenuItem_SaveAs.Index = 3;
+            this.MenuItem_SaveAs.Shortcut = System.Windows.Forms.Shortcut.CtrlShiftS;
+            this.MenuItem_SaveAs.Text = "Save &As";
+            this.MenuItem_SaveAs.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            // 
+            // menuItem8
+            // 
+            this.menuItem8.Index = 4;
+            this.menuItem8.Text = "-";
+            // 
+            // MenuItem_RenderChunks
+            // 
+            this.MenuItem_RenderChunks.Index = 5;
+            this.MenuItem_RenderChunks.Shortcut = System.Windows.Forms.Shortcut.CtrlE;
+            this.MenuItem_RenderChunks.Text = "Render Each Chunk As Image";
+            this.MenuItem_RenderChunks.Click += new System.EventHandler(this.renderEachChunkAsAnImageToolStripMenuItem_Click);
+            // 
+            // menuItem5
+            // 
+            this.menuItem5.Index = 1;
+            this.menuItem5.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_PlaceTiles});
+            this.menuItem5.Text = "Edit";
+            // 
+            // MenuItem_PlaceTiles
+            // 
+            this.MenuItem_PlaceTiles.Index = 0;
+            this.MenuItem_PlaceTiles.Text = "Placing Tiles?";
+            this.MenuItem_PlaceTiles.Click += new System.EventHandler(this.MenuItem_PlaceTiles_Click);
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 2;
+            this.menuItem2.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_ShowGrid,
+            this.menuItem7,
+            this.MenuItem_RefTiles,
+            this.MenuItem_RefChunks});
+            this.menuItem2.Text = "View";
+            // 
+            // MenuItem_ShowGrid
+            // 
+            this.MenuItem_ShowGrid.Index = 0;
+            this.MenuItem_ShowGrid.Text = "Show Grid";
+            this.MenuItem_ShowGrid.Click += new System.EventHandler(this.MenuItem_ShowGrid_Click);
+            // 
+            // menuItem7
+            // 
+            this.menuItem7.Index = 1;
+            this.menuItem7.Text = "-";
+            // 
+            // MenuItem_RefTiles
+            // 
+            this.MenuItem_RefTiles.Index = 2;
+            this.MenuItem_RefTiles.Text = "Refresh Tiles";
+            this.MenuItem_RefTiles.Click += new System.EventHandler(this.refreshTilesToolStripMenuItem_Click);
+            // 
+            // MenuItem_RefChunks
+            // 
+            this.MenuItem_RefChunks.Index = 3;
+            this.MenuItem_RefChunks.Text = "Refresh Chunks";
+            this.MenuItem_RefChunks.Click += new System.EventHandler(this.refreshChunksToolStripMenuItem_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 3;
+            this.menuItem3.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_AutoSet,
+            this.menuItem12,
+            this.MenuItem_CpyChunk});
+            this.menuItem3.Text = "Tools";
+            // 
+            // MenuItem_AutoSet
+            // 
+            this.MenuItem_AutoSet.Index = 0;
+            this.MenuItem_AutoSet.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.MenuItem_ASOrientation,
+            this.MenuItem_ASVisPlane,
+            this.MenuItem_ASCollA,
+            this.MenuItem_ASCollB,
+            this.menuItem18,
+            this.MenuItem_SetOrientation,
+            this.MenuItem_SetVisPlane,
+            this.MenuItem_SetCollA,
+            this.MenuItem_SetCollB});
+            this.MenuItem_AutoSet.Text = "Auto-Set";
+            // 
+            // MenuItem_ASOrientation
+            // 
+            this.MenuItem_ASOrientation.Index = 0;
+            this.MenuItem_ASOrientation.Text = "Orientation";
+            this.MenuItem_ASOrientation.Click += new System.EventHandler(this.MenuItem_ASOrientation_Click);
+            // 
+            // MenuItem_ASVisPlane
+            // 
+            this.MenuItem_ASVisPlane.Index = 1;
+            this.MenuItem_ASVisPlane.Text = "Visual Plane";
+            this.MenuItem_ASVisPlane.Click += new System.EventHandler(this.MenuItem_ASVisPlane_Click);
+            // 
+            // MenuItem_ASCollA
+            // 
+            this.MenuItem_ASCollA.Index = 2;
+            this.MenuItem_ASCollA.Text = "Collision A";
+            this.MenuItem_ASCollA.Click += new System.EventHandler(this.MenuItem_ASCollA_Click);
+            // 
+            // MenuItem_ASCollB
+            // 
+            this.MenuItem_ASCollB.Index = 3;
+            this.MenuItem_ASCollB.Text = "Collision B";
+            this.MenuItem_ASCollB.Click += new System.EventHandler(this.MenuItem_ASCollB_Click);
+            // 
+            // menuItem18
+            // 
+            this.menuItem18.Index = 4;
+            this.menuItem18.Text = "-";
+            // 
+            // MenuItem_SetOrientation
+            // 
+            this.MenuItem_SetOrientation.Index = 5;
+            this.MenuItem_SetOrientation.Text = "Set Auto-Orientation";
+            this.MenuItem_SetOrientation.Click += new System.EventHandler(this.setAutoMenuItem_ASOrientation_Click);
+            // 
+            // MenuItem_SetVisPlane
+            // 
+            this.MenuItem_SetVisPlane.Index = 6;
+            this.MenuItem_SetVisPlane.Text = "Set Auto-Visual Plane";
+            this.MenuItem_SetVisPlane.Click += new System.EventHandler(this.setAutoMenuItem_ASVisPlane_Click);
+            // 
+            // MenuItem_SetCollA
+            // 
+            this.MenuItem_SetCollA.Index = 7;
+            this.MenuItem_SetCollA.Text = "Set Auto-Collision A";
+            this.MenuItem_SetCollA.Click += new System.EventHandler(this.setAutoMenuItem_ASCollA_Click);
+            // 
+            // MenuItem_SetCollB
+            // 
+            this.MenuItem_SetCollB.Index = 8;
+            this.MenuItem_SetCollB.Text = "Set Auto-Collision B";
+            this.MenuItem_SetCollB.Click += new System.EventHandler(this.setAutoMenuItem_ASCollB_Click);
+            // 
+            // menuItem12
+            // 
+            this.menuItem12.Index = 1;
+            this.menuItem12.Text = "-";
+            // 
+            // MenuItem_CpyChunk
+            // 
+            this.MenuItem_CpyChunk.Index = 2;
+            this.MenuItem_CpyChunk.Text = "Copy Chunk To";
+            this.MenuItem_CpyChunk.Click += new System.EventHandler(this.copyChunkToToolStripMenuItem_Click);
+            // 
+            // StageTilesList
+            // 
+            this.StageTilesList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
+            this.StageTilesList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.StageTilesList.ImageHeight = 64;
+            this.StageTilesList.ImageSize = 64;
+            this.StageTilesList.ImageWidth = 64;
+            this.StageTilesList.Location = new System.Drawing.Point(0, 0);
+            this.StageTilesList.Margin = new System.Windows.Forms.Padding(5);
+            this.StageTilesList.Name = "StageTilesList";
+            this.StageTilesList.ScrollValue = 0;
+            this.StageTilesList.SelectedIndex = -1;
+            this.StageTilesList.Size = new System.Drawing.Size(229, 340);
+            this.StageTilesList.TabIndex = 3;
+            this.StageTilesList.SelectedIndexChanged += new System.EventHandler(this.StageTilesList_SelectedIndexChanged);
+            // 
             // StageChunksList
             // 
-            this.StageChunksList.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.StageChunksList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(36)))), ((int)(((byte)(36)))), ((int)(((byte)(36)))));
             this.StageChunksList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.StageChunksList.ImageHeight = 128;
             this.StageChunksList.ImageSize = 128;
@@ -859,7 +838,7 @@
             this.StageChunksList.Name = "StageChunksList";
             this.StageChunksList.ScrollValue = 0;
             this.StageChunksList.SelectedIndex = -1;
-            this.StageChunksList.Size = new System.Drawing.Size(229, 340);
+            this.StageChunksList.Size = new System.Drawing.Size(229, 365);
             this.StageChunksList.TabIndex = 3;
             this.StageChunksList.SelectedIndexChanged += new System.EventHandler(this.StageChunksList_SelectedIndexChanged);
             // 
@@ -867,15 +846,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.ClientSize = new System.Drawing.Size(981, 453);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.ClientSize = new System.Drawing.Size(981, 427);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.menuStrip1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Menu = this.mainMenu1;
             this.Name = "MainForm";
             this.Text = "RSDK Chunk Mapping Editor";
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -911,17 +888,10 @@
             this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ChunkZoomBar)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.Panel OptionsPanel;
@@ -933,25 +903,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox OrientationBox;
         private System.Windows.Forms.Label OrientationLabel;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem renderEachChunkAsAnImageToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem showGridToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem autoSetToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem orientationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem visualPlaneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem collisionAToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem collisionBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tile16x16ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem setAutoOrientationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setAutoVisualPlaneToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setAutoCollisionAToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setAutoCollisionBToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem setAutoTile16x16ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-        private System.Windows.Forms.ToolStripMenuItem copyChunkToToolStripMenuItem;
         private System.Windows.Forms.Panel ChunkDisplay;
         private System.Windows.Forms.Panel CurChunkChangePanel;
         private System.Windows.Forms.Button GotoButton;
@@ -963,9 +914,6 @@
         private System.Windows.Forms.TabControl TileListControl;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem refreshTilesToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem refreshChunksToolStripMenuItem;
         private System.Windows.Forms.NumericUpDown TileIDNUD;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button button1;
@@ -982,6 +930,34 @@
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.TrackBar ChunkZoomBar;
         private TileList StageChunksList;
+        private System.Windows.Forms.MainMenu mainMenu1;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem MenuItem_New;
+        private System.Windows.Forms.MenuItem MenuItem_Open;
+        private System.Windows.Forms.MenuItem MenuItem_Save;
+        private System.Windows.Forms.MenuItem MenuItem_SaveAs;
+        private System.Windows.Forms.MenuItem menuItem8;
+        private System.Windows.Forms.MenuItem MenuItem_RenderChunks;
+        private System.Windows.Forms.MenuItem menuItem5;
+        private System.Windows.Forms.MenuItem MenuItem_PlaceTiles;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem MenuItem_ShowGrid;
+        private System.Windows.Forms.MenuItem menuItem7;
+        private System.Windows.Forms.MenuItem MenuItem_RefTiles;
+        private System.Windows.Forms.MenuItem MenuItem_RefChunks;
+        private System.Windows.Forms.MenuItem menuItem3;
+        private System.Windows.Forms.MenuItem MenuItem_AutoSet;
+        private System.Windows.Forms.MenuItem MenuItem_ASOrientation;
+        private System.Windows.Forms.MenuItem MenuItem_ASVisPlane;
+        private System.Windows.Forms.MenuItem MenuItem_ASCollA;
+        private System.Windows.Forms.MenuItem MenuItem_ASCollB;
+        private System.Windows.Forms.MenuItem menuItem18;
+        private System.Windows.Forms.MenuItem MenuItem_SetOrientation;
+        private System.Windows.Forms.MenuItem MenuItem_SetVisPlane;
+        private System.Windows.Forms.MenuItem MenuItem_SetCollA;
+        private System.Windows.Forms.MenuItem MenuItem_SetCollB;
+        private System.Windows.Forms.MenuItem menuItem12;
+        private System.Windows.Forms.MenuItem MenuItem_CpyChunk;
     }
 }
 

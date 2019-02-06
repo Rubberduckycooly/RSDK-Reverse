@@ -46,7 +46,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.panel1.Controls.Add(this.button1);
             this.panel1.Controls.Add(this.DeformNUD);
             this.panel1.Controls.Add(this.SPDNUD);
@@ -59,13 +59,13 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(314, 187);
+            this.panel1.Size = new System.Drawing.Size(314, 134);
             this.panel1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(21, 161);
+            this.button1.Location = new System.Drawing.Point(21, 108);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(119, 23);
             this.button1.TabIndex = 18;
@@ -75,8 +75,9 @@
             // 
             // DeformNUD
             // 
-            this.DeformNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.DeformNUD.Location = new System.Drawing.Point(145, 67);
+            this.DeformNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.DeformNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DeformNUD.Location = new System.Drawing.Point(144, 62);
             this.DeformNUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -94,8 +95,9 @@
             // 
             // SPDNUD
             // 
-            this.SPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.SPDNUD.Location = new System.Drawing.Point(145, 36);
+            this.SPDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SPDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.SPDNUD.Location = new System.Drawing.Point(144, 34);
             this.SPDNUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -114,7 +116,8 @@
             // DeformLabel
             // 
             this.DeformLabel.AutoSize = true;
-            this.DeformLabel.Location = new System.Drawing.Point(12, 72);
+            this.DeformLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.DeformLabel.Location = new System.Drawing.Point(12, 65);
             this.DeformLabel.Name = "DeformLabel";
             this.DeformLabel.Size = new System.Drawing.Size(58, 17);
             this.DeformLabel.TabIndex = 14;
@@ -122,8 +125,9 @@
             // 
             // LineNoNUD
             // 
-            this.LineNoNUD.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.LineNoNUD.Location = new System.Drawing.Point(145, 7);
+            this.LineNoNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.LineNoNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.LineNoNUD.Location = new System.Drawing.Point(144, 6);
             this.LineNoNUD.Maximum = new decimal(new int[] {
             255,
             0,
@@ -142,7 +146,8 @@
             // SPDLabel
             // 
             this.SPDLabel.AutoSize = true;
-            this.SPDLabel.Location = new System.Drawing.Point(12, 38);
+            this.SPDLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.SPDLabel.Location = new System.Drawing.Point(12, 37);
             this.SPDLabel.Name = "SPDLabel";
             this.SPDLabel.Size = new System.Drawing.Size(113, 17);
             this.SPDLabel.TabIndex = 11;
@@ -151,6 +156,7 @@
             // LineNoLabel
             // 
             this.LineNoLabel.AutoSize = true;
+            this.LineNoLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.LineNoLabel.Location = new System.Drawing.Point(12, 9);
             this.LineNoLabel.Name = "LineNoLabel";
             this.LineNoLabel.Size = new System.Drawing.Size(108, 17);
@@ -160,7 +166,7 @@
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.CancelButton.Location = new System.Drawing.Point(146, 161);
+            this.CancelButton.Location = new System.Drawing.Point(146, 108);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 1;
@@ -171,7 +177,7 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Location = new System.Drawing.Point(227, 161);
+            this.OKButton.Location = new System.Drawing.Point(227, 108);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 0;
@@ -183,7 +189,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 187);
+            this.ClientSize = new System.Drawing.Size(314, 134);
             this.Controls.Add(this.panel1);
             this.Name = "RSN_LineScrollForm";
             this.Text = "Line-Scroll Properties";

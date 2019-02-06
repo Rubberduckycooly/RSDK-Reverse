@@ -387,7 +387,7 @@ namespace RSDKv2
 "DrawActName",
 "DrawMenu",
 "SpriteFrame",
-"SetDebugIcon",
+"SetEditorIcon",
 "LoadPalette",
 "RotatePalette",
 "SetScreenFade",
@@ -464,7 +464,7 @@ namespace RSDKv2
 "SetLeaderboard",
 "LoadOnlineMenu",
 "EngineCallback",
-    "QueueHapticEffect"
+"QueueHapticEffect"
 };
 
         readonly byte[] scriptOpcodeSizes = new byte[]

@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.MapEditor
 {
-    public partial class MainView : Form
+    public partial class MainView : DockContent
     {
         enum Placementmode //Placement Modes
         {
@@ -30,8 +31,6 @@ namespace RetroED.Tools.MapEditor
 
         //The Map Viewer
         public StageMapView _mapViewer;
-
-        public RetroED.MainForm Parent;
 
         //Stack<UndoAction> UndoList;
         //Stack<UndoAction> RedoList;
@@ -340,7 +339,7 @@ namespace RetroED.Tools.MapEditor
         private void MenuItem_Open_Click(object sender, EventArgs e)
         {
 
-            switch (MessageBox.Show(this, "Do you want to save the current file?", "RetroED Map Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+            switch (MessageBox.Show("Do you want to save the current file?", "RetroED Map Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
             {
                 case System.Windows.Forms.DialogResult.Cancel:
                     return;
@@ -416,33 +415,33 @@ namespace RetroED.Tools.MapEditor
                         string tmp = folderpath.Replace(pth, "");
                         DirectoryInfo di = new DirectoryInfo(tmp);
                         dir = di.Name;
-                        RetroED.MainForm.Instance.TabControl.SelectedTab.Text = dir + "/" + pth;
+                        RetroED.MainForm.Instance.CurrentTabText = dir + "/" + pth;
                         dispname = dir + "/" + pth;
                     }
                     else
                     {
-                        RetroED.MainForm.Instance.TabControl.SelectedTab.Text = "New Scene - RSDK Map Editor";
+                        RetroED.MainForm.Instance.CurrentTabText = "New Scene - RSDK Map Editor";
                         dispname = "New Scene - RSDK Map Editor";
                     }
 
-                    Parent.rp.state = "RetroED - " + this.Text;
+                    RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
                     switch (engineType)
                     {
                         case Retro_Formats.EngineType.RSDKvB:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvB)";
                             break;
                         case Retro_Formats.EngineType.RSDKv2:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv2)";
                             break;
                         case Retro_Formats.EngineType.RSDKv1:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv1)";
                             break;
                         case Retro_Formats.EngineType.RSDKvRS:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                             break;
                     }
                     SharpPresence.Discord.RunCallbacks();
-                    SharpPresence.Discord.UpdatePresence(Parent.rp);
+                    SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
                 }
                 else
                 {
@@ -473,33 +472,33 @@ namespace RetroED.Tools.MapEditor
                         string tmp = folderpath.Replace(pth, "");
                         DirectoryInfo di = new DirectoryInfo(tmp);
                         dir = di.Name;
-                        RetroED.MainForm.Instance.TabControl.SelectedTab.Text = dir + "/" + pth;
+                        RetroED.MainForm.Instance.CurrentTabText = dir + "/" + pth;
                         dispname = dir + "/" + pth;
                     }
                     else
                     {
-                        RetroED.MainForm.Instance.TabControl.SelectedTab.Text = "New Scene - RSDK Map Editor";
+                        RetroED.MainForm.Instance.CurrentTabText = "New Scene - RSDK Map Editor";
                         dispname = "New Scene - RSDK Map Editor";
                     }
 
-                    Parent.rp.state = "RetroED - " + this.Text;
+                    RetroED.MainForm.Instance.rp.state = "RetroED - " + this.Text;
                     switch (engineType)
                     {
                         case Retro_Formats.EngineType.RSDKvB:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKvB)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvB)";
                             break;
                         case Retro_Formats.EngineType.RSDKv2:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKv2)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv2)";
                             break;
                         case Retro_Formats.EngineType.RSDKv1:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKv1)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKv1)";
                             break;
                         case Retro_Formats.EngineType.RSDKvRS:
-                            Parent.rp.details = "Editing: " + dispname + " (RSDKvRS)";
+                            RetroED.MainForm.Instance.rp.details = "Editing: " + dispname + " (RSDKvRS)";
                             break;
                     }
                     SharpPresence.Discord.RunCallbacks();
-                    SharpPresence.Discord.UpdatePresence(Parent.rp);
+                    SharpPresence.Discord.UpdatePresence(RetroED.MainForm.Instance.rp);
                 }
                 else
                 {

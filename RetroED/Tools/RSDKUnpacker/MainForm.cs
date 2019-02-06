@@ -8,10 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.RSDKUnpacker
 {
-    public partial class MainForm : Form
+    public partial class MainForm : DockContent
     {
         string filename;
         Retro_Formats.EngineType engineType;

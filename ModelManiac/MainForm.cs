@@ -157,10 +157,10 @@ namespace ModelManiac
                         UnknownXNUD.Enabled = true;
                         UnknownYNUD.Enabled = true;
 
-                        if (Modelv5.Unknowns.Count > 1)
+                        if (Modelv5.TexturePositions.Count > 1)
                         {
-                            UnknownXNUD.Value = (decimal)Modelv5.Unknowns[CurVertex].x;
-                            UnknownYNUD.Value = (decimal)Modelv5.Unknowns[CurVertex].y;
+                            UnknownXNUD.Value = (decimal)Modelv5.TexturePositions[CurVertex].X;
+                            UnknownYNUD.Value = (decimal)Modelv5.TexturePositions[CurVertex].Y;
                         }
                     }
                     else
@@ -277,12 +277,12 @@ namespace ModelManiac
             {
                 case 0:
                     Modelv5.HasUnknown = UnknownCB.Checked;
-                    if (Modelv5.Unknowns.Count < Modelv5.VertexCount && Modelv5.HasUnknown)
+                    if (Modelv5.TexturePositions.Count < Modelv5.VertexCount && Modelv5.HasUnknown)
                     {
-                        int Diff = Modelv5.VertexCount - Modelv5.Unknowns.Count;
+                        int Diff = Modelv5.VertexCount - Modelv5.TexturePositions.Count;
                         for (int u = 0; u < Diff; u++)
                         {
-                            Modelv5.Unknowns.Add(new RSDKv5.Model.Unknown());
+                            Modelv5.TexturePositions.Add(new RSDKv5.Model.TexturePosition());
                         }
                     }
                     break;
@@ -298,7 +298,7 @@ namespace ModelManiac
                     Modelv5.HasColours = ColoursCB.Checked;
                     if (Modelv5.Colours.Count < Modelv5.VertexCount && Modelv5.HasColours)
                     {
-                        int Diff = Modelv5.VertexCount - Modelv5.Unknowns.Count;
+                        int Diff = Modelv5.VertexCount - Modelv5.TexturePositions.Count;
                         for (int u = 0; u < Diff; u++)
                         {
                             Modelv5.Colours.Add(new RSDKv5.Model.Colour());

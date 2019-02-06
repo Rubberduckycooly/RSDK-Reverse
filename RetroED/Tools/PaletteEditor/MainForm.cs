@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Text;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.PaletteEditor
 {
@@ -47,23 +48,20 @@ namespace RetroED.Tools.PaletteEditor
 
     #region Properties
 
-    private string PalettePath
-    {
-      get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "palettes"); }
-    }
-        RSDKvRS.Zoneconfig sc1;
-        RSDKv1.StageConfig sc2;
-        RSDKv2.StageConfig sc3;
-        RSDKvB.StageConfig sc4;
-        RSDKvB.GameConfig gc4;
-        //RSDKv5.GameConfig gc5;
-        //RSDKv5.StageConfig sc5;
+        RSDKvRS.Zoneconfig StageconfigvRS = new RSDKvRS.Zoneconfig();
+        RSDKv1.StageConfig Stageconfigv1 = new RSDKv1.StageConfig();
+        RSDKv2.StageConfig Stageconfigv2 = new RSDKv2.StageConfig();
+        RSDKvB.StageConfig StageconfigvB = new RSDKvB.StageConfig();
+        RSDKvB.GameConfig GameconfigvB = new RSDKvB.GameConfig();
 
         public bool ShowPalRotations = true;
 
         public RetroED.MainForm Parent;
 
         Timer palTimer = new Timer();
+
+        public string Filepath;
+        public int Type = 0;
 
         #endregion
 
@@ -91,7 +89,7 @@ namespace RetroED.Tools.PaletteEditor
         {
             SplitContainer.Panel2.BackColor = colorGrid.Color;
 
-            colorToolStripStatusLabel.Text = string.Format("{0}, {1}, {2}", colorGrid.Color.R, colorGrid.Color.G, colorGrid.Color.B);
+            //colorToolStripStatusLabel.Text = string.Format("{0}, {1}, {2}", colorGrid.Color.R, colorGrid.Color.G, colorGrid.Color.B);
 
             colorEditor.Color = colorGrid.Color;
             colorEditor.BackColor = SplitContainer.Panel1.BackColor;
@@ -109,78 +107,103 @@ namespace RetroED.Tools.PaletteEditor
                 GameType = 0;
                 Cyotek.Windows.Forms.ColorCollection pal = new Cyotek.Windows.Forms.ColorCollection();
                 colorGrid.Colors.Clear(); //Clear the colourGrid!
+                string RSDK = "RSDKvB";
                 switch (dlg.FilterIndex-1)
                 {
                     case 0:
-                        sc1 = new RSDKvRS.Zoneconfig(dlg.FileName);
+                        StageconfigvRS = new RSDKvRS.Zoneconfig(dlg.FileName);
 
                         for (int h = 0; h < 2; h++) //For two rows...
                         {
                             for (int w = 0; w < 16; w++)// Get 16 colours...
                             {
-                                Color c = Color.FromArgb(255, sc1.StagePalette.Colors[h][w].R, sc1.StagePalette.Colors[h][w].G, sc1.StagePalette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, StageconfigvRS.StagePalette.Colors[h][w].R, StageconfigvRS.StagePalette.Colors[h][w].G, StageconfigvRS.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
+                        RSDK = "RSDKvRS";
                         break;
                     case 1:
-                        sc2 = new RSDKv1.StageConfig(dlg.FileName);
+                        Stageconfigv1 = new RSDKv1.StageConfig(dlg.FileName);
 
                         for (int h = 0; h < 2; h++)// For six rows...
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc2.StagePalette.Colors[h][w].R, sc2.StagePalette.Colors[h][w].G, sc2.StagePalette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, Stageconfigv1.StagePalette.Colors[h][w].R, Stageconfigv1.StagePalette.Colors[h][w].G, Stageconfigv1.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
+                        RSDK = "RSDKv1";
                         break;
                     case 2:
-                        sc3 = new RSDKv2.StageConfig(dlg.FileName);
+                        Stageconfigv2 = new RSDKv2.StageConfig(dlg.FileName);
 
                         for (int h = 0; h < 2; h++)// For six rows...
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc3.StagePalette.Colors[h][w].R, sc3.StagePalette.Colors[h][w].G, sc3.StagePalette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, Stageconfigv2.StagePalette.Colors[h][w].R, Stageconfigv2.StagePalette.Colors[h][w].G, Stageconfigv2.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
+                        RSDK = "RSDKv2";
                         break;
                     case 3:
-                        sc4 = new RSDKvB.StageConfig(dlg.FileName);
+                        StageconfigvB = new RSDKvB.StageConfig(dlg.FileName);
 
                         for (int h = 0; h < 2; h++)// For six rows...
                         {
                             for (int w = 0; w < 16; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, sc4.StagePalette.Colors[h][w].R, sc4.StagePalette.Colors[h][w].G, sc4.StagePalette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, StageconfigvB.StagePalette.Colors[h][w].R, StageconfigvB.StagePalette.Colors[h][w].G, StageconfigvB.StagePalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
+                        RSDK = "RSDKvB";
                         break;
                     case 4:
-                        gc4 = new RSDKvB.GameConfig(dlg.FileName);
+                        GameconfigvB = new RSDKvB.GameConfig(dlg.FileName);
 
                         for (int h = 0; h < 6; h++)// For six rows...
                         {
-                            for (int w = 0; w < gc4.MasterPalette.COLORS_PER_COLUMN; w++) //Get 16 Colours
+                            for (int w = 0; w < GameconfigvB.MasterPalette.COLORS_PER_COLUMN; w++) //Get 16 Colours
                             {
-                                Color c = Color.FromArgb(255, gc4.MasterPalette.Colors[h][w].R, gc4.MasterPalette.Colors[h][w].G, gc4.MasterPalette.Colors[h][w].B);
+                                Color c = Color.FromArgb(255, GameconfigvB.MasterPalette.Colors[h][w].R, GameconfigvB.MasterPalette.Colors[h][w].G, GameconfigvB.MasterPalette.Colors[h][w].B);
                                 pal.Add(c); //And place them into the grid!
                             }
                         }
+                        RSDK = "RSDKvB";
                         break;
                     case 5:
                         pal = Cyotek.Windows.Forms.ColorCollection.LoadPalette(dlg.FileName); //Load .act file
+                        RSDK = ".Act File";
                         break;
                     default:
                         break;
                 }
+
+                string dispname = "";
+                string folder = Path.GetDirectoryName(dlg.FileName);
+                DirectoryInfo di = new DirectoryInfo(folder);
+                folder = di.Name;
+                string file = Path.GetFileName(dlg.FileName);
+
+                if (dlg.FileName != null)
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = folder + "/" + file;
+                    dispname = folder + "/" + file;
+                }
+                else
+                {
+                    RetroED.MainForm.Instance.CurrentTabText = "New Palette - RSDK Palette Editor";
+                    dispname = "New Palette - RSDK Palette Editor";
+                }
+
                 Text = Path.GetFileName(dlg.FileName) + " - RSDK Palette Editor";
 
                 Parent.rp.state = "RetroED - " + this.Text;
-                Parent.rp.details = "Editing: " + System.IO.Path.GetFileName(dlg.FileName);
+                Parent.rp.details = "Editing: " + dispname + " (" + RSDK + ")";
                 SharpPresence.Discord.RunCallbacks();
                 SharpPresence.Discord.UpdatePresence(Parent.rp);
 
@@ -196,7 +219,8 @@ namespace RetroED.Tools.PaletteEditor
 
             if (dlg.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
             {
-                switch (dlg.FilterIndex - 1)
+                Type = dlg.FilterIndex - 1;
+                switch (Type)
                 {
                     case 0:
                         int i1 = 0;
@@ -207,12 +231,12 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i1].R, colorGrid.Colors[i1].G, colorGrid.Colors[i1].B);
                                 i1++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc1.StagePalette.Colors[h][w].R = c.R;
-                                sc1.StagePalette.Colors[h][w].G = c.G;
-                                sc1.StagePalette.Colors[h][w].B = c.B;
+                                StageconfigvRS.StagePalette.Colors[h][w].R = c.R;
+                                StageconfigvRS.StagePalette.Colors[h][w].G = c.G;
+                                StageconfigvRS.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
-                        sc1.Write(dlg.FileName); //Save that!
+                        StageconfigvRS.Write(dlg.FileName); //Save that!
                         break;
                     case 1:
                         int i2 = 0;
@@ -223,12 +247,12 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i2].R, colorGrid.Colors[i2].G, colorGrid.Colors[i2].B);
                                 i2++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc2.StagePalette.Colors[h][w].R = c.R;
-                                sc2.StagePalette.Colors[h][w].G = c.G;
-                                sc2.StagePalette.Colors[h][w].B = c.B;
+                                Stageconfigv1.StagePalette.Colors[h][w].R = c.R;
+                                Stageconfigv1.StagePalette.Colors[h][w].G = c.G;
+                                Stageconfigv1.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
-                        sc2.Write(dlg.FileName); //Save that!
+                        Stageconfigv1.Write(dlg.FileName); //Save that!
                         break;
                     case 2:
                         int i3 = 0;
@@ -239,12 +263,12 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i3].R, colorGrid.Colors[i3].G, colorGrid.Colors[i3].B);
                                 i3++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc3.StagePalette.Colors[h][w].R = c.R;
-                                sc3.StagePalette.Colors[h][w].G = c.G;
-                                sc3.StagePalette.Colors[h][w].B = c.B;
+                                Stageconfigv2.StagePalette.Colors[h][w].R = c.R;
+                                Stageconfigv2.StagePalette.Colors[h][w].G = c.G;
+                                Stageconfigv2.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
-                        sc3.Write(dlg.FileName); //Save that!
+                        Stageconfigv2.Write(dlg.FileName); //Save that!
                         break;
                     case 3:
                         int is4 = 0;
@@ -255,28 +279,28 @@ namespace RetroED.Tools.PaletteEditor
                                 Color c = Color.FromArgb(255, colorGrid.Colors[is4].R, colorGrid.Colors[is4].G, colorGrid.Colors[is4].B);
                                 is4++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                sc4.StagePalette.Colors[h][w].R = c.R;
-                                sc4.StagePalette.Colors[h][w].G = c.G;
-                                sc4.StagePalette.Colors[h][w].B = c.B;
+                                StageconfigvB.StagePalette.Colors[h][w].R = c.R;
+                                StageconfigvB.StagePalette.Colors[h][w].G = c.G;
+                                StageconfigvB.StagePalette.Colors[h][w].B = c.B;
                             }
                         }
-                        sc3.Write(dlg.FileName); //Save that!
+                        Stageconfigv2.Write(dlg.FileName); //Save that!
                         break;
                     case 4:
                         int i4 = 0;
                         for (int h = 0; h < 6; h++)
                         {
-                            for (int w = 0; w < gc4.MasterPalette.COLORS_PER_COLUMN; w++)
+                            for (int w = 0; w < GameconfigvB.MasterPalette.COLORS_PER_COLUMN; w++)
                             {
                                 Color c = Color.FromArgb(255, colorGrid.Colors[i4].R, colorGrid.Colors[i4].G, colorGrid.Colors[i4].B);
                                 i4++;
                                 //Set the colours in the Stage Config to the modified colours in the ColourGrid!
-                                gc4.MasterPalette.Colors[h][w].R = c.R;
-                                gc4.MasterPalette.Colors[h][w].G = c.G;
-                                gc4.MasterPalette.Colors[h][w].B = c.B;
+                                GameconfigvB.MasterPalette.Colors[h][w].R = c.R;
+                                GameconfigvB.MasterPalette.Colors[h][w].G = c.G;
+                                GameconfigvB.MasterPalette.Colors[h][w].B = c.B;
                             }
                         }
-                        gc4.Write(dlg.FileName); //Save that!
+                        GameconfigvB.Write(dlg.FileName); //Save that!
                         break;
                     case 5:
                         Cyotek.Windows.Forms.IPaletteSerializer serializer;
@@ -491,12 +515,12 @@ namespace RetroED.Tools.PaletteEditor
         {
             if (!ShowPalRotations)
             {
-                showPaletteRotationsToolStripMenuItem.Checked = ShowPalRotations = true;
+                MenuItem_ShowPalRotations.Checked = ShowPalRotations = true;
                 palTimer.Start();
             }
             else
             {
-                showPaletteRotationsToolStripMenuItem.Checked = ShowPalRotations = false;
+                MenuItem_ShowPalRotations.Checked = ShowPalRotations = false;
                 palTimer.Stop();
             }
         }
@@ -621,6 +645,127 @@ namespace RetroED.Tools.PaletteEditor
                 {
                     serializer.Serialize(stream, colorGrid.Colors); //Save a .act file
                 }
+            }
+        }
+
+        private void MenuItem_New_Click(object sender, EventArgs e)
+        {
+            StageconfigvRS = new RSDKvRS.Zoneconfig();
+            Stageconfigv1 = new RSDKv1.StageConfig();
+            Stageconfigv2 = new RSDKv2.StageConfig();
+            StageconfigvB = new RSDKvB.StageConfig();
+            GameconfigvB = new RSDKvB.GameConfig();
+            colorGrid.Colors.Clear();
+            for (int i = 0; i < 256; i++)
+            {
+                colorGrid.Colors.Add(Color.FromArgb(255, 255, 0, 255));
+            }
+            Filepath = null;
+        }
+
+        private void MenuItem_Save_Click(object sender, EventArgs e)
+        {
+            if (Filepath != null)
+            {
+                switch (Type)
+                {
+                    case 0:
+                        int i1 = 0;
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i1].R, colorGrid.Colors[i1].G, colorGrid.Colors[i1].B);
+                                i1++;
+                                //Set the colours in the Stage Config to the modified colours in the ColourGrid!
+                                StageconfigvRS.StagePalette.Colors[h][w].R = c.R;
+                                StageconfigvRS.StagePalette.Colors[h][w].G = c.G;
+                                StageconfigvRS.StagePalette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        StageconfigvRS.Write(Filepath); //Save that!
+                        break;
+                    case 1:
+                        int i2 = 0;
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i2].R, colorGrid.Colors[i2].G, colorGrid.Colors[i2].B);
+                                i2++;
+                                //Set the colours in the Stage Config to the modified colours in the ColourGrid!
+                                Stageconfigv1.StagePalette.Colors[h][w].R = c.R;
+                                Stageconfigv1.StagePalette.Colors[h][w].G = c.G;
+                                Stageconfigv1.StagePalette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        Stageconfigv1.Write(Filepath); //Save that!
+                        break;
+                    case 2:
+                        int i3 = 0;
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i3].R, colorGrid.Colors[i3].G, colorGrid.Colors[i3].B);
+                                i3++;
+                                //Set the colours in the Stage Config to the modified colours in the ColourGrid!
+                                Stageconfigv2.StagePalette.Colors[h][w].R = c.R;
+                                Stageconfigv2.StagePalette.Colors[h][w].G = c.G;
+                                Stageconfigv2.StagePalette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        Stageconfigv2.Write(Filepath); //Save that!
+                        break;
+                    case 3:
+                        int is4 = 0;
+                        for (int h = 0; h < 2; h++)
+                        {
+                            for (int w = 0; w < 16; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[is4].R, colorGrid.Colors[is4].G, colorGrid.Colors[is4].B);
+                                is4++;
+                                //Set the colours in the Stage Config to the modified colours in the ColourGrid!
+                                StageconfigvB.StagePalette.Colors[h][w].R = c.R;
+                                StageconfigvB.StagePalette.Colors[h][w].G = c.G;
+                                StageconfigvB.StagePalette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        Stageconfigv2.Write(Filepath); //Save that!
+                        break;
+                    case 4:
+                        int i4 = 0;
+                        for (int h = 0; h < 6; h++)
+                        {
+                            for (int w = 0; w < GameconfigvB.MasterPalette.COLORS_PER_COLUMN; w++)
+                            {
+                                Color c = Color.FromArgb(255, colorGrid.Colors[i4].R, colorGrid.Colors[i4].G, colorGrid.Colors[i4].B);
+                                i4++;
+                                //Set the colours in the Stage Config to the modified colours in the ColourGrid!
+                                GameconfigvB.MasterPalette.Colors[h][w].R = c.R;
+                                GameconfigvB.MasterPalette.Colors[h][w].G = c.G;
+                                GameconfigvB.MasterPalette.Colors[h][w].B = c.B;
+                            }
+                        }
+                        GameconfigvB.Write(Filepath); //Save that!
+                        break;
+                    case 5:
+                        Cyotek.Windows.Forms.IPaletteSerializer serializer;
+
+                        serializer = new Cyotek.Windows.Forms.AdobeColorTablePaletteSerializer();
+
+                        using (Stream stream = File.Create(Filepath))
+                        {
+                            serializer.Serialize(stream, colorGrid.Colors); //Save a .act file
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                saveAsToolStripMenuItem_Click(this, e);
             }
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.PaletteEditor
 {
@@ -12,7 +13,7 @@ namespace RetroED.Tools.PaletteEditor
 
   // If you use this code in your applications, donations or attribution are welcome
 
-  internal partial class BaseForm : Form
+  internal partial class BaseForm : DockContent
   {
     #region Constructors
 

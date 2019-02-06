@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.RSonicCollisionEditor
 {
-    public partial class Mainform : Form
+    public partial class Mainform : DockContent
     {
 
         List<Bitmap> ColImges = new List<Bitmap>(); //List of images, saves memory

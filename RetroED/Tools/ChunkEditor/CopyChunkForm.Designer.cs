@@ -51,14 +51,14 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(290, 187);
+            this.panel1.Size = new System.Drawing.Size(254, 124);
             this.panel1.TabIndex = 0;
             // 
             // CancelButton
             // 
             this.CancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.CancelButton.Location = new System.Drawing.Point(104, 161);
+            this.CancelButton.Location = new System.Drawing.Point(68, 98);
             this.CancelButton.Name = "CancelButton";
             this.CancelButton.Size = new System.Drawing.Size(78, 23);
             this.CancelButton.TabIndex = 4;
@@ -69,7 +69,7 @@
             // OKButton
             // 
             this.OKButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.OKButton.Location = new System.Drawing.Point(188, 161);
+            this.OKButton.Location = new System.Drawing.Point(152, 98);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(99, 23);
             this.OKButton.TabIndex = 1;
@@ -79,6 +79,8 @@
             // 
             // numericUpDown2
             // 
+            this.numericUpDown2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.numericUpDown2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDown2.Location = new System.Drawing.Point(88, 61);
             this.numericUpDown2.Maximum = new decimal(new int[] {
             512,
@@ -92,6 +94,8 @@
             // 
             // numericUpDown1
             // 
+            this.numericUpDown1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.numericUpDown1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDown1.Location = new System.Drawing.Point(104, 13);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             512,
@@ -106,6 +110,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label2.Location = new System.Drawing.Point(13, 63);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(69, 17);
@@ -115,6 +120,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 17);
@@ -126,10 +132,11 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(290, 187);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
+            this.ClientSize = new System.Drawing.Size(254, 124);
             this.Controls.Add(this.panel1);
             this.Name = "CopyChunkForm";
-            this.Text = "CopyChunkForm";
+            this.Text = "Copy Chunk";
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();

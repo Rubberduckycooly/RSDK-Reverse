@@ -79,7 +79,8 @@
             // 
             // DrawLayerNUD
             // 
-            this.DrawLayerNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.DrawLayerNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.DrawLayerNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.DrawLayerNUD.Location = new System.Drawing.Point(145, 72);
             this.DrawLayerNUD.Maximum = new decimal(new int[] {
             255,
@@ -99,6 +100,7 @@
             // UnknownLabel
             // 
             this.UnknownLabel.AutoSize = true;
+            this.UnknownLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.UnknownLabel.Location = new System.Drawing.Point(12, 72);
             this.UnknownLabel.Name = "UnknownLabel";
             this.UnknownLabel.Size = new System.Drawing.Size(85, 17);
@@ -107,7 +109,8 @@
             // 
             // CSPDNUD
             // 
-            this.CSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.CSPDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.CSPDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CSPDNUD.Location = new System.Drawing.Point(145, 44);
             this.CSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -126,7 +129,8 @@
             // 
             // RSPDNUD
             // 
-            this.RSPDNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.RSPDNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.RSPDNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSPDNUD.Location = new System.Drawing.Point(145, 16);
             this.RSPDNUD.Maximum = new decimal(new int[] {
             255,
@@ -146,6 +150,7 @@
             // CSPDLabel
             // 
             this.CSPDLabel.AutoSize = true;
+            this.CSPDLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.CSPDLabel.Location = new System.Drawing.Point(12, 46);
             this.CSPDLabel.Name = "CSPDLabel";
             this.CSPDLabel.Size = new System.Drawing.Size(113, 17);
@@ -154,7 +159,8 @@
             // 
             // BehaviourNUD
             // 
-            this.BehaviourNUD.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.BehaviourNUD.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BehaviourNUD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.BehaviourNUD.Location = new System.Drawing.Point(145, 100);
             this.BehaviourNUD.Maximum = new decimal(new int[] {
             255,
@@ -174,6 +180,7 @@
             // RSPDLabel
             // 
             this.RSPDLabel.AutoSize = true;
+            this.RSPDLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.RSPDLabel.Location = new System.Drawing.Point(12, 18);
             this.RSPDLabel.Name = "RSPDLabel";
             this.RSPDLabel.Size = new System.Drawing.Size(108, 17);
@@ -183,6 +190,7 @@
             // Unknown1Label
             // 
             this.Unknown1Label.AutoSize = true;
+            this.Unknown1Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.Unknown1Label.Location = new System.Drawing.Point(12, 101);
             this.Unknown1Label.Name = "Unknown1Label";
             this.Unknown1Label.Size = new System.Drawing.Size(76, 17);
@@ -215,7 +223,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(327, 167);
             this.Controls.Add(this.panel1);
             this.Name = "CD12_LineScrollForm";

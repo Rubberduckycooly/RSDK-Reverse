@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ConfigManiac")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An editor for RSDKv5 Gameconfig & Stageconfig Files")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("ConfigManiac")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -86,6 +86,7 @@
             // ValueLabel
             // 
             this.ValueLabel.AutoSize = true;
+            this.ValueLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.ValueLabel.Location = new System.Drawing.Point(12, 27);
             this.ValueLabel.Name = "ValueLabel";
             this.ValueLabel.Size = new System.Drawing.Size(113, 17);
@@ -97,7 +98,7 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(382, 101);
             this.Controls.Add(this.panel1);
             this.Name = "AutoSetVisualPlane";

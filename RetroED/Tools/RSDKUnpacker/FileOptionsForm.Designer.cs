@@ -39,6 +39,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(75, 17);
@@ -47,7 +48,8 @@
             // 
             // FileNameBox
             // 
-            this.FileNameBox.BackColor = System.Drawing.SystemColors.Window;
+            this.FileNameBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.FileNameBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.FileNameBox.Location = new System.Drawing.Point(94, 10);
             this.FileNameBox.Name = "FileNameBox";
             this.FileNameBox.Size = new System.Drawing.Size(205, 22);
@@ -100,7 +102,7 @@
             this.AcceptButton = this.OKButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.CancelButton;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(341, 129);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.CancelButton);
@@ -109,7 +111,7 @@
             this.Controls.Add(this.FileNameBox);
             this.Controls.Add(this.label1);
             this.Name = "FileOptionsForm";
-            this.Text = "FileOptionsForm";
+            this.Text = "File Options";
             this.ResumeLayout(false);
             this.PerformLayout();
 

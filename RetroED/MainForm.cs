@@ -20,6 +20,20 @@ namespace RetroED
 
         public static MainForm Instance;
 
+        public string CurrentTabText
+        {
+            get
+            {
+                if (dpMain.ActiveContent != null)
+                    return dpMain.ActiveContent.DockHandler.TabText;
+                return "";
+            }
+            set
+            {
+                dpMain.ActiveContent.DockHandler.TabText = value;
+            }
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -50,10 +64,9 @@ namespace RetroED
         public void UpdateDiscord()
         {
             SharpPresence.Discord.RunCallbacks();
-            if (TabControl.SelectedTab != null)
+            if (dpMain.ActiveContent != null)
             {
-                rp.details = TabControl.TabPages[TabControl.SelectedIndex].Text;
-                
+                rp.details = dpMain.ActiveContent.DockHandler.TabText;
             }
             else
             {
@@ -104,7 +117,7 @@ namespace RetroED
             UnlinkMenubar();
             try
             {
-                var form = (Form)TabControl.SelectedTab.Controls[0];
+                var form = dpMain.ActiveContent.DockHandler.Form;
                 var menu = form.Menu;
                 if (menu == null)
                     return;
@@ -178,294 +191,133 @@ namespace RetroED
         Tools.MapEditor.MainView OpenMapEditor()
         {
             var frm = new Tools.MapEditor.MainView();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Map Editor (and returns a referece to it)
 
         Tools.ChunkMappingsEditor.MainForm OpenMappingsEditor()
         {
             var frm = new Tools.ChunkMappingsEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Chunk Mappings Editor (and returns a referece to it)
 
         Tools.BackgroundEditor.MainView OpenBackgroundEditor()
         {
             Tools.BackgroundEditor.MainView frm = new Tools.BackgroundEditor.MainView();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage();
-            newTab.Controls.Add(frm);
-            this.TabControl.TabPages.Add(newTab);
-            this.TabControl.SelectedTab = newTab;
-            this.TabControl.SelectedTab.Text = frm.Text;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Background Editor (and returns a referece to it)
 
         Tools.CollisionEditor.Mainform OpenRSDKCollisionEditor() //Opens the RSDK Collision Editor (and returns a referece to it)
         {
             Tools.CollisionEditor.Mainform frm = new Tools.CollisionEditor.Mainform();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage();
-            newTab.Controls.Add(frm);
-            this.TabControl.TabPages.Add(newTab);
-            this.TabControl.SelectedTab = newTab;
-            this.TabControl.SelectedTab.Text = frm.Text;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         }
 
         Tools.RSonicCollisionEditor.Mainform OpenRSonicCollisionEditor() //Opens the Retro-Sonic Collision Editor (and returns a referece to it)
         {
             Tools.RSonicCollisionEditor.Mainform frm = new Tools.RSonicCollisionEditor.Mainform();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage();
-            newTab.Controls.Add(frm);
-            this.TabControl.TabPages.Add(newTab);
-            this.TabControl.SelectedTab = newTab;
-            this.TabControl.SelectedTab.Text = frm.Text;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         }
 
         Tools.PaletteEditor.MainForm OpenPaletteEditor()
         {
             var frm = new Tools.PaletteEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            frm.Parent = this;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Palette Editor (and returns a referece to it)
 
         Tools.GFXTool.MainForm OpenGFXTool()
         {
             var frm = new Tools.GFXTool.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the GFX Tool (and returns a referece to it)
 
         Tools.NexusDecrypt.MainForm OpenNexusDecryptTool()
         {
             var frm = new Tools.NexusDecrypt.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Nexus Decrypter (and returns a referece to it)
 
         Tools.RSDKUnpacker.MainForm OpenRSDKUnpacker()
         {
             var frm = new Tools.RSDKUnpacker.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDK Unpacker (and returns a referece to it)
 
         Tools.RetroSonicStageListEditor.MainForm OpenRSonicMdfEditor()
         {
             var frm = new Tools.RetroSonicStageListEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Retro Sonic Stage List Editor (and returns a referece to it)
 
         Tools.RetroSonicCharacterListEditor.MainForm OpenRSonicCharListEditor()
         {
             var frm = new Tools.RetroSonicCharacterListEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the Retro Sonic Stage List Editor (and returns a referece to it)
 
         Tools.ScriptEditor.MainForm OpenScriptEditor()
         {
             var frm = new Tools.ScriptEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDK Script List Editor (and returns a referece to it)
 
         Tools.GameconfigEditors.RSDKv1GameconfigEditor.MainForm OpenGameconfig1Editor()
         {
             var frm = new Tools.GameconfigEditors.RSDKv1GameconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKv1 Gameconfig Editor (and returns a referece to it)
 
         Tools.GameconfigEditors.RSDKv2GameconfigEditor.MainForm OpenGameconfig2Editor()
         {
             var frm = new Tools.GameconfigEditors.RSDKv2GameconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKv2 Gameconfig Editor (and returns a referece to it)
 
         Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm OpenGameconfigBEditor()
         {
             var frm = new Tools.GameconfigEditors.RSDKvBGameconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKvB Gameconfig Editor (and returns a referece to it)
 
         Tools.StageconfigEditors.RSDKvRSStageconfigEditor.MainForm OpenStageconfigRSEditor()
         {
             var frm = new Tools.StageconfigEditors.RSDKvRSStageconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKvRS Stageconfig Editor (and returns a referece to it)
 
         Tools.StageconfigEditors.RSDKv1StageconfigEditor.MainForm OpenStageconfig1Editor()
         {
             var frm = new Tools.StageconfigEditors.RSDKv1StageconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKv1 Stageconfig Editor (and returns a referece to it)
 
         Tools.StageconfigEditors.RSDKv2StageconfigEditor.MainForm OpenStageconfig2Editor()
         {
             var frm = new Tools.StageconfigEditors.RSDKv2StageconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKv2 Stageconfig Editor (and returns a referece to it)
 
         Tools.StageconfigEditors.RSDKvBStageconfigEditor.MainForm OpenStageconfigBEditor()
         {
             var frm = new Tools.StageconfigEditors.RSDKvBStageconfigEditor.MainForm();
-            frm.TopLevel = false;
-            frm.ControlBox = false;
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Dock = DockStyle.Fill;
-            var newTab = new TabPage(frm.Text);
-            newTab.Controls.Add(frm);
-            TabControl.TabPages.Add(newTab);
-            TabControl.SelectedTab = newTab;
-            frm.Show();
+            frm.Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Document);
             return frm;
         } //Opens the RSDKvB Stageconfig Editor (and returns a referece to it)
 
@@ -511,33 +363,17 @@ namespace RetroED
 
         private void MenuItem_CloseTab_Click(object sender, EventArgs e)
         {
-            if (TabControl.SelectedTab != null)
-            {
-                TabControl.TabPages.Remove(TabControl.SelectedTab);
-                UnlinkMenubar();
-            }
+            dpMain.ActiveContent.DockHandler.Close();
         }
 
         private void MenuItem_About_Click(object sender, EventArgs e)
         {
-            new AboutForm().ShowDialog();
+            new AboutForm().Show(dpMain, WeifenLuo.WinFormsUI.Docking.DockState.Float);
         }
 
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (TabControl.SelectedTab != null)
-            {
-                Text = $"RetroED - {TabControl.SelectedTab.Text}";
-                MenuItem_CloseTab.Enabled = true;
-                LinkMenubar();
-            }
-            else
-            {
-                Text = $"RetroED";
-                MenuItem_CloseTab.Enabled = false;
-                UnlinkMenubar();
-            }
-            UpdateDiscord();
+
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -638,6 +474,37 @@ namespace RetroED
         private void menuItem19_Click(object sender, EventArgs e)
         {
             OpenStageconfigBEditor();
+        }
+
+        private void dpMain_ContentAdded(object sender, WeifenLuo.WinFormsUI.Docking.DockContentEventArgs e)
+        {
+            //LinkMenubar();
+        }
+
+        private void dpMain_ContentRemoved(object sender, WeifenLuo.WinFormsUI.Docking.DockContentEventArgs e)
+        {
+            if (dpMain.ActiveContent != null)
+            {
+                //dpMain.Contents.Remove(dpMain.ActiveContent);
+                UnlinkMenubar();
+            }
+        }
+
+        private void dpMain_ActiveContentChanged(object sender, EventArgs e)
+        {
+            if (CurrentTabText != null)
+            {
+                Text = $"RetroED - {CurrentTabText}";
+                MenuItem_CloseTab.Enabled = true;
+                LinkMenubar();
+            }
+            else
+            {
+                Text = $"RetroED";
+                MenuItem_CloseTab.Enabled = false;
+                UnlinkMenubar();
+            }
+            UpdateDiscord();
         }
     }
 }

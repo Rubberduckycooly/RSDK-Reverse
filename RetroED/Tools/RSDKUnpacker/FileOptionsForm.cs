@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace RetroED.Tools.RSDKUnpacker
 {
-    public partial class FileOptionsForm : Form
+    public partial class FileOptionsForm : DockContent
     {
 
         public RSDKvRS.DataFile.FileInfo FileDatavRS;

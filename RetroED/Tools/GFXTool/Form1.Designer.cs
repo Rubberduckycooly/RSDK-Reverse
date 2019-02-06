@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.SelectPaletteButton = new System.Windows.Forms.Button();
             this.TransparentCB = new System.Windows.Forms.CheckBox();
             this.IMG2GFXLabel = new System.Windows.Forms.Label();
             this.GFX2IMGLabel = new System.Windows.Forms.Label();
@@ -38,7 +39,6 @@
             this.ExportIMGButton = new System.Windows.Forms.Button();
             this.SourceGFXLocation = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.SelectPaletteButton = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,9 +60,20 @@
             this.panel1.Size = new System.Drawing.Size(420, 306);
             this.panel1.TabIndex = 0;
             // 
+            // SelectPaletteButton
+            // 
+            this.SelectPaletteButton.Location = new System.Drawing.Point(133, 109);
+            this.SelectPaletteButton.Name = "SelectPaletteButton";
+            this.SelectPaletteButton.Size = new System.Drawing.Size(264, 33);
+            this.SelectPaletteButton.TabIndex = 9;
+            this.SelectPaletteButton.Text = "Select Palette file";
+            this.SelectPaletteButton.UseVisualStyleBackColor = true;
+            this.SelectPaletteButton.Click += new System.EventHandler(this.SelectPaletteButton_Click);
+            // 
             // TransparentCB
             // 
             this.TransparentCB.AutoSize = true;
+            this.TransparentCB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.TransparentCB.Location = new System.Drawing.Point(133, 82);
             this.TransparentCB.Name = "TransparentCB";
             this.TransparentCB.Size = new System.Drawing.Size(243, 21);
@@ -74,6 +85,7 @@
             // 
             this.IMG2GFXLabel.AutoSize = true;
             this.IMG2GFXLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IMG2GFXLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.IMG2GFXLabel.Location = new System.Drawing.Point(4, 176);
             this.IMG2GFXLabel.Name = "IMG2GFXLabel";
             this.IMG2GFXLabel.Size = new System.Drawing.Size(181, 25);
@@ -84,6 +96,7 @@
             // 
             this.GFX2IMGLabel.AutoSize = true;
             this.GFX2IMGLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.GFX2IMGLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.GFX2IMGLabel.Location = new System.Drawing.Point(13, 13);
             this.GFX2IMGLabel.Name = "GFX2IMGLabel";
             this.GFX2IMGLabel.Size = new System.Drawing.Size(183, 25);
@@ -102,7 +115,8 @@
             // 
             // SourceIMGLocation
             // 
-            this.SourceIMGLocation.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SourceIMGLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SourceIMGLocation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SourceIMGLocation.Location = new System.Drawing.Point(132, 209);
             this.SourceIMGLocation.Name = "SourceIMGLocation";
             this.SourceIMGLocation.ReadOnly = true;
@@ -131,7 +145,8 @@
             // 
             // SourceGFXLocation
             // 
-            this.SourceGFXLocation.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SourceGFXLocation.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.SourceGFXLocation.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.SourceGFXLocation.Location = new System.Drawing.Point(132, 53);
             this.SourceGFXLocation.Name = "SourceGFXLocation";
             this.SourceGFXLocation.ReadOnly = true;
@@ -148,21 +163,11 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // SelectPaletteButton
-            // 
-            this.SelectPaletteButton.Location = new System.Drawing.Point(133, 109);
-            this.SelectPaletteButton.Name = "SelectPaletteButton";
-            this.SelectPaletteButton.Size = new System.Drawing.Size(264, 33);
-            this.SelectPaletteButton.TabIndex = 9;
-            this.SelectPaletteButton.Text = "Select Palette file";
-            this.SelectPaletteButton.UseVisualStyleBackColor = true;
-            this.SelectPaletteButton.Click += new System.EventHandler(this.SelectPaletteButton_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(48)))), ((int)(((byte)(48)))), ((int)(((byte)(48)))));
             this.ClientSize = new System.Drawing.Size(420, 306);
             this.Controls.Add(this.panel1);
             this.Name = "MainForm";
