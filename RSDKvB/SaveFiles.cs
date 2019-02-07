@@ -62,11 +62,13 @@ namespace RSDKvB
         {
             get
             {
-                return SaveRAM[(SaveFilePos + 0x08) / 4];
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[(SaveFilePos + 0x08) / 4]);
+                return intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
             }
             set
             {
-                SaveRAM[(SaveFilePos + 0x08) / 4] = value;
+                byte[] intBytes = BitConverter.GetBytes(value);
+                SaveRAM[(SaveFilePos + 0x08) / 4] = intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
             }
         }
 

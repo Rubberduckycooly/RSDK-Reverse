@@ -8,6 +8,45 @@ namespace RSDKv2
 {
     public class SaveFiles
     {
+
+        public class TimeAttackStageData
+        {
+            public class TimeAttackData
+            {
+                public int Minutes;
+                public int Seconds;
+                public int Milliseconds;
+
+                public TimeAttackData()
+                {
+
+                }
+
+                public TimeAttackData(int Offset)
+                {
+                    //SaveRAM[Offset];
+                }
+            }
+
+            TimeAttackData[] Times = new TimeAttackData[3];
+
+            public TimeAttackStageData()
+            {
+                Times[0] = new TimeAttackData();
+                Times[1] = new TimeAttackData();
+                Times[2] = new TimeAttackData();
+            }
+
+            public TimeAttackStageData(int Offset)
+            {
+                int BaseOffset = Offset;
+                for (int i = Offset; Offset < BaseOffset + 3; Offset++)
+                {
+                    Times[Offset - BaseOffset] = new TimeAttackData(Offset);
+                }
+            }
+        }
+
         public static int FileSize
         {
             get
@@ -16,9 +55,11 @@ namespace RSDKv2
             }
         }
 
-        public int[] SaveRAM = new int[FileSize / 4];
+        public static int[] SaveRAM = new int[FileSize / 4];
 
-        public int SaveFile = 1;
+        public int SaveFile = 0;
+        public int TimeAttackStage = 0;
+        public int TimeAttackPlace = 0; //0 to 2
         public int SaveFilePos
         {
             get
@@ -62,11 +103,13 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[(SaveFilePos + 0x08) / 4];
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[(SaveFilePos + 0x08) / 4]);
+                return intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
             }
             set
             {
-                SaveRAM[(SaveFilePos + 0x08) / 4] = value;
+                byte[] intBytes = BitConverter.GetBytes(value);
+                SaveRAM[(SaveFilePos + 0x08) / 4] = intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
             }
         }
         /// <summary>
@@ -86,7 +129,7 @@ namespace RSDKv2
         /// <summary>
         /// how many timestones are collected
         /// </summary>
-        public int TimeStones// = 127
+        public int TimeStones
         {
             get
             {
@@ -132,7 +175,8 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[(SaveFilePos + 0x1C) / 4];
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[(SaveFilePos + 0x1C) / 4]);
+                return intBytes[2] + (intBytes[3] << 8);
             }
             set
             {
@@ -148,11 +192,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x80];
+                return SaveRAM[0x80 / 4];
             }
             set
             {
-                SaveRAM[0x80] = value;
+                SaveRAM[0x80 / 4] = value;
             }
         }
         /// <summary>
@@ -162,11 +206,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x84];
+                return SaveRAM[0x84 / 4];
             }
             set
             {
-                SaveRAM[0x84] = value;
+                SaveRAM[0x84 / 4] = value;
             }
         }
         /// <summary>
@@ -176,11 +220,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x88];
+                return SaveRAM[0x88 / 4];
             }
             set
             {
-                SaveRAM[0x88] = value;
+                SaveRAM[0x88 / 4] = value;
             }
         }
         /// <summary>
@@ -190,11 +234,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x8C];
+                return SaveRAM[0x8C / 4];
             }
             set
             {
-                SaveRAM[0x8C] = value;
+                SaveRAM[0x8C / 4] = value;
             }
         }
         /// <summary>
@@ -204,11 +248,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x90];
+                return SaveRAM[0x90 / 4];
             }
             set
             {
-                SaveRAM[0x90] = value;
+                SaveRAM[0x90 / 4] = value;
             }
         }
         /// <summary>
@@ -218,11 +262,11 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x94];
+                return SaveRAM[0x94 / 4];
             }
             set
             {
-                SaveRAM[0x94] = value;
+                SaveRAM[0x94 / 4] = value;
             }
         }
         /// <summary>
@@ -232,11 +276,12 @@ namespace RSDKv2
         {
             get
             {
-                return SaveRAM[0x94];
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[0x98 / 4]);
+                return intBytes[0];
             }
             set
             {
-                SaveRAM[0x94] = value;
+                SaveRAM[0x98 / 4] = value;
             }
         }
         /// <summary>
@@ -246,7 +291,7 @@ namespace RSDKv2
         {
             get
             {
-                if (SaveRAM[0x98] == 7)
+                if (SaveRAM[0x9C / 4] == 7)
                 {
                     return true;
                 }
@@ -259,14 +304,29 @@ namespace RSDKv2
             {
                 if (value)
                 {
-                    SaveRAM[0x98] = 7;
+                    SaveRAM[0x9C / 4] = 7;
                 }
                 else
                 {
-                    SaveRAM[0x98] = 0;
+                    SaveRAM[0x9C / 4] = 0;
                 }
             }
         }
+        /// <summary>
+        /// what zones are unlocked in time attack?
+        /// </summary>
+        public int TimeAttackUnlocks
+        {
+            get
+            {
+                return SaveRAM[0x9C / 4];
+            }
+            set
+            {
+                SaveRAM[0x9C / 4] = value;
+            }
+        }
+
 
         public void SetTimeStone(int pos, bool Set)
         {
