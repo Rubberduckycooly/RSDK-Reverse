@@ -286,11 +286,9 @@ namespace RSDKv5
 
         private void InterpretVersion()
         {
-            string[] versionParts = Version.Split('.');
-            int midVersion = Int32.Parse(versionParts[1]);
-            if (midVersion >= 5)
+            if (Version.Contains("1.03."))
             {
-                _scenesHaveModeFilter = true;
+                _scenesHaveModeFilter = false;
             }
         }
 

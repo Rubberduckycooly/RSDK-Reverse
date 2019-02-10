@@ -9,9 +9,32 @@ namespace RSDKv2
     public class ArcContainer
     {
 
+        public class FileInfo
+        {
+            public byte[] Header = new byte[1];
+            public byte[] FileData = new byte[1];
+
+            public FileInfo()
+            {
+
+            }
+
+            public FileInfo(Reader reader)
+            {
+
+            }
+
+            public FileInfo(Writer writer)
+            {
+
+            }
+        }
+
         public static readonly byte[] MAGIC = new byte[] { (byte)'A', (byte)'R', (byte)'C', (byte)'L' };
 
         string FileName = "File";
+
+        public List<FileInfo> header = new List<FileInfo>();
 
         public ArcContainer()
         {
@@ -28,9 +51,15 @@ namespace RSDKv2
                 return;
             }
 
-            ushort unknown = reader.ReadUInt16();
+            ushort Filecount = reader.ReadUInt16();
 
-
+            for (int i = 0; i < Filecount; i++)
+            {
+                FileInfo f = new FileInfo();
+                byte[] data = reader.ReadBytes(0x28);
+                f.Header = data;
+                header.Add(f);
+            }
 
         }
 

@@ -49,6 +49,7 @@
     <Compile Include="BackgroundLayout.cs" />
     <Compile Include="Bytecode.cs" />
     <Compile Include="Script.cs" />
+    <Compile Include="Setup.cs" />
     <Compile Include="StringSet.cs" />
     <Compile Include="TextFont.cs" />
     <Compile Include="Tileconfig.cs" />

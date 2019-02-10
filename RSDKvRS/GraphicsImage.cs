@@ -66,6 +66,7 @@ namespace RSDKvRS
             // Read & Process palette
             for (int i = 0; i < 255; i++)
             {
+                GFXpal[i] = new PaletteColour(); 
                 GFXpal[i].R = reader.ReadByte();
                 GFXpal[i].G = reader.ReadByte();
                 GFXpal[i].B = reader.ReadByte();

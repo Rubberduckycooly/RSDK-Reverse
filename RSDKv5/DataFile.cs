@@ -207,7 +207,17 @@ namespace RSDKv5
 
             public void WriteFileHeader(Writer writer)
             {
-                writer.Write(CalculateMD5Hash(FileName.ToLower()));
+                byte[] md5 = CalculateMD5Hash(FileName.ToLower());
+
+                for (int y = 0; y < 16; y += 4)
+                {
+                    md5Hash[y + 3] = md5[y];
+                    md5Hash[y + 2] = md5[y + 1];
+                    md5Hash[y + 1] = md5[y + 2];
+                    md5Hash[y] = md5[y + 3];
+                }
+
+                writer.Write(md5Hash);
                 writer.Write(DataOffset);
                 writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }

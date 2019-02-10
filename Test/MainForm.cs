@@ -104,22 +104,32 @@ namespace Test
 
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
+                //GAME AND STAGE CONFIGS
+                RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
+
+                //ANIMATIONS
+                //RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
+
+                //Containers
+                //RSDKv2.ArcContainer arc = new RSDKv2.ArcContainer(new RSDKv2.Reader(dlg.FileName));
+
                 //Videos
                 //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
 
                 //SCENES
-                RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
+                //RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
 
                 //SAVES
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));
                 //save.EncoreBuddyChar = 1;
+
                 //Scripts
                 //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
 
-                /*RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
-                RSDKvRS.Script rsf = new RSDKvRS.Script();
+                //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+                //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
 
-                string destName = Path.GetFileNameWithoutExtension(filepath);
+                /*string destName = Path.GetFileNameWithoutExtension(filepath);
                 string destName2 = Path.GetFileName(filepath);
 
                 string dirpath = filepath.Replace(destName2, "");
@@ -152,7 +162,6 @@ namespace Test
                 //MDL.WriteAsSTLBinary(new RSDKv5.Writer(tmp + ".stl"));
                 //MDL.WriteAsOBJ(tmp + ".obj", Path.GetFileName(tmp) + ".mtl");
                 //MDL.WriteMTL(new RSDKv5.Writer(tmp + ".mtl"));
-
 
                 //RSDKvB.Model MDL = new RSDKvB.Model(filepath);
 

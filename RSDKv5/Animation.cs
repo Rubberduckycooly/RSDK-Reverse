@@ -184,7 +184,11 @@ namespace RSDKv5
             /// <summary>
             /// the name of the animtion
             /// </summary>
-            public string AnimName;
+            public string AnimName
+            {
+                get;
+                set;
+            }
             /// <summary>
             /// the list of frames in this animation
             /// </summary>
@@ -229,7 +233,7 @@ namespace RSDKv5
             public void Write(Writer writer)
             {
                 writer.Write(AnimName);
-                writer.Write((ushort)Frames.Count);
+                writer.Write((short)Frames.Count);
                 writer.Write(SpeedMultiplyer);
                 writer.Write(LoopIndex);
                 writer.Write(RotationFlags);
@@ -285,7 +289,15 @@ namespace RSDKv5
 
             int collisionBoxCount = reader.ReadByte();
             for (int i = 0; i < collisionBoxCount; ++i)
+            {
                 CollisionBoxes.Add(reader.ReadRSDKString());
+                string tmp = "";
+                for (int ii = 0; ii < CollisionBoxes[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
+                {
+                    tmp += CollisionBoxes[i][ii];
+                }
+                CollisionBoxes[i] = tmp;
+            }
 
             var animationCount = reader.ReadInt16();
             for (int i = 0; i < animationCount; ++i)

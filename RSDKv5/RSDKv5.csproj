@@ -227,9 +227,11 @@
     <Compile Include="SceneLayer.cs" />
     <Compile Include="SceneObjects.cs" />
     <Compile Include="ScrollInfo.cs" />
+    <Compile Include="Sprite.cs" />
     <Compile Include="StageConfig.cs" />
     <Compile Include="StageTiles.cs" />
     <Compile Include="Stamps.cs" />
+    <Compile Include="StaticObject.cs" />
     <Compile Include="TileConfig.cs" />
     <Compile Include="TimeAttackDB.cs" />
     <Compile Include="WAVConfiguration.cs" />

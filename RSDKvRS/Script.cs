@@ -331,7 +331,7 @@ namespace RSDKvRS
         public Script(string filename): this(new Reader(filename))
         { }
 
-        public Script(Reader reader)
+        public Script(Reader reader, bool EditorMode = false)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -407,6 +407,31 @@ namespace RSDKvRS
                         }
                     }
 
+                    if (EditorMode)
+                    {
+                        while(i < 3)
+                        {
+                            FileBuffer = reader.ReadByte();
+                            if (FileBuffer == 255)
+                            {
+                                FileBuffer = reader.ReadByte();
+                                if (FileBuffer == 255)
+                                {
+                                    FileBuffer = reader.ReadByte();
+                                    if (FileBuffer == 255)
+                                    {
+                                        FileBuffer = reader.ReadByte();
+                                        if (FileBuffer == 255)
+                                        {
+                                            i++;
+                                            FileBuffer = reader.ReadByte();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     Opcode = (uint)FileBuffer;
 
                     if (k < 1)
@@ -416,39 +441,45 @@ namespace RSDKvRS
                         switch (Opcode)
                         {
                             case 0u:
+                            case 4u:
+                            case 5u:
+                            case 0xAu:
+                            case 0xBu:
+                            case 0xDu:
+                            case 0x23u:
+                            case 0x24u:
+                            case 0x28u:
+                            case 0x2Au:
+                            case 0x2Cu:
+                            case 0x2Du:
+                            case 0x31u:
+                            case 0x34u:
+                            case 0x3Eu:
+                            case 0x3Fu:
+                            case 0x42u:
+                                OpcodeSize = 1;
                                 break;
                             case 1u:
-                                break;
                             case 2u:
-                                break;
                             case 3u:
-                                break;
-                            case 4u:
-                                break;
-                            case 5u:
-                                break;
                             case 6u:
-                                break;
                             case 7u:
-                                break;
                             case 8u:
-                                break;
                             case 9u:
-                                break;
-                            case 0xAu:
-                                break;
-                            case 0xBu:
-                                break;
-                            case 0xDu:
-                                break;
                             case 0xCu:
+                            case 0x30u:
+                            case 0x41u:
+                                OpcodeSize = 2;
                                 break;
                             case 0xEu:
                                 OpcodeSize = 6;
                                 break;
                             case 0xFu:
-                                break;
                             case 0x10u:
+                            case 0x39u:
+                            case 0x3Au:
+                            case 0x3Bu:
+                                OpcodeSize = 3;
                                 break;
                             case 0x11u:
                                 OpcodeSize = 6;
@@ -457,16 +488,17 @@ namespace RSDKvRS
                                 OpcodeSize = 1;
                                 break;
                             case 0x13u:
-                                break;
                             case 0x14u:
-                                break;
                             case 0x15u:
-                                break;
                             case 0x16u:
-                                break;
                             case 0x17u:
-                                break;
                             case 0x18u:
+                            case 0x2Eu:
+                            case 0x37u:
+                            case 0x38u:
+                            case 0x3Cu:
+                            case 0x3Du:
+                                OpcodeSize = 4;
                                 break;
                             case 0x19u:
                                 OpcodeSize = 2;
@@ -498,10 +530,6 @@ namespace RSDKvRS
                             case 0x22u:
                                 OpcodeSize = 4;
                                 break;
-                            case 0x23u:
-                                break;
-                            case 0x24u:
-                                break;
                             case 0x25u:
                                 OpcodeSize = 3;
                                 break;
@@ -511,64 +539,21 @@ namespace RSDKvRS
                             case 0x27u:
                                 OpcodeSize = 2;
                                 break;
-                            case 0x28u:
-                                break;
                             case 0x29u:
-                                break;
-                            case 0x2Au:
+                            case 0x40u:
+                                OpcodeSize = 6;
                                 break;
                             case 0x2Bu:
                                 OpcodeSize = 4;
                                 break;
-                            case 0x2Cu:
-                                break;
-                            case 0x2Du:
-                                break;
-                            case 0x2Eu:
-                                break;
                             case 0x2Fu:
                                 OpcodeSize = 5;
-                                break;
-                            case 0x31u:
-                                break;
-                            case 0x34u:
-                                break;
-                            case 0x30u:
                                 break;
                             case 0x35u:
                                 OpcodeSize = 7;
                                 break;
                             case 0x36u:
                                 OpcodeSize = 8;
-                                break;
-                            case 0x37u:
-                                break;
-                            case 0x38u:
-                                break;
-                            case 0x39u:
-                                break;
-                            case 0x3Au:
-                                break;
-                            case 0x3Bu:
-                                OpcodeSize = 3;
-                                break;
-                            case 0x3Cu:
-                                break;
-                            case 0x3Du:
-                                OpcodeSize = 4;
-                                break;
-                            case 0x3Eu:
-                                break;
-                            case 0x3Fu:
-                                break;
-                            case 0x40u:
-                                OpcodeSize = 6;
-                                break;
-                            case 0x41u:
-                                OpcodeSize = 2;
-                                break;
-                            case 0x42u:
-                                OpcodeSize = 1;
                                 break;
                             default:
                                 break;
