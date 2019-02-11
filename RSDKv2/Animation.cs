@@ -13,7 +13,9 @@ namespace RSDKv2
         {
             return this.MemberwiseClone();
         }
-
+        /// <summary>
+        /// a string to be added to the start of the path
+        /// </summary>
         public string PathMod
         {
             get
@@ -22,9 +24,23 @@ namespace RSDKv2
             }
         }
 
+        /// <summary>
+        /// if this is set then only allow one sheet (meaning it'll be used for Objects and not the player)
+        /// </summary>
+        public bool isObjectAni = false;
+
+        /// <summary>
+        /// a List of paths to the spritesheets, relative to "Data/Sprites"
+        /// </summary>
         public List<string> SpriteSheets = new List<string>();
 
+        /// <summary>
+        /// a list of the hitboxes that the animations can use
+        /// </summary>
         public List<sprHitbox> CollisionBoxes = new List<sprHitbox>();
+        /// <summary>
+        /// a list of Animations in the file
+        /// </summary>
         public List<sprAnimation> Animations = new List<sprAnimation>();
 
         [Serializable]
@@ -47,14 +63,41 @@ namespace RSDKv2
                 }
 
                 public List<HitBox> HitBoxes = new List<HitBox>();
+                /// <summary>
+                /// the spritesheet index
+                /// </summary>
                 public byte SpriteSheet = 0;
+                /// <summary>
+                /// the collision box
+                /// </summary>
                 public byte CollisionBox = 0;
+                /// <summary>
+                /// the delay of each frame before advancing to the next one in frames (always 256)
+                /// </summary>
                 public readonly short Delay = 256;
+                /// <summary>
+                /// the Xpos on the sheet
+                /// </summary>
                 public byte X = 0;
+                /// <summary>
+                /// the YPos on the sheet
+                /// </summary>
                 public byte Y = 0;
+                /// <summary>
+                /// the frame's width
+                /// </summary>
                 public byte Width = 0;
+                /// <summary>
+                /// the frame's height
+                /// </summary>
                 public byte Height = 0;
+                /// <summary>
+                /// the offsetX of the frame
+                /// </summary>
                 public SByte PivotX = 0;
+                /// <summary>
+                /// the offsetY of the frame
+                /// </summary>
                 public SByte PivotY = 0;
 
                 public sprFrame()
@@ -88,10 +131,25 @@ namespace RSDKv2
 
             }
 
+            /// <summary>
+            /// the name of the animation
+            /// </summary>
             public string AnimName;
+            /// <summary>
+            /// a list of frames in the animation
+            /// </summary>
             public List<sprFrame> Frames = new List<sprFrame>();
+            /// <summary>
+            /// what frame to loop back from
+            /// </summary>
             public byte LoopIndex;
+            /// <summary>
+            /// the speed multiplyer of the animation
+            /// </summary>
             public byte SpeedMultiplyer;
+            /// <summary>
+            /// the rotation style of the animation
+            /// </summary>
             public byte RotationFlags;
 
             public sprAnimation()

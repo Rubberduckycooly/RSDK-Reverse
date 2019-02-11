@@ -8,27 +8,52 @@ namespace RSDKv5
 {
     public class Palette
     {
+        /// <summary>
+        /// how many columns in the palette
+        /// </summary>
         public const int PALETTE_COLUMNS = 0x10;
+        /// <summary>
+        /// how many colours per column
+        /// </summary>
         public const int COLORS_PER_COLUMN = 0x10;
+        /// <summary>
+        /// how many colours in total
+        /// </summary>
         public const int PALETTE_COLORS = 0x100;
 
-        public PaletteColour[][] Colors = new PaletteColour[PALETTE_COLUMNS][];
+        /// <summary>
+        /// our array of colours in the palette
+        /// </summary>
+        public PaletteColor[][] Colors = new PaletteColor[PALETTE_COLUMNS][];
 
-        internal Palette(Reader reader)
+        public Palette(int pc = 2)
+        {
+            int palColumns = pc;
+
+            Colors = new PaletteColor[palColumns][];
+            for (int i = 0; i < palColumns; i++)
+            {
+                Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
+                for (int j = 0; j < COLORS_PER_COLUMN; ++j)
+                { Colors[i][j] = new PaletteColor(); }
+            }
+        }
+
+        public Palette(Reader reader)
         {
             ushort columns_bitmap = reader.ReadUInt16();
             for (int i = 0; i < PALETTE_COLUMNS; ++i)
             {
                 if ((columns_bitmap & (1 << i)) != 0)
                 {
-                    Colors[i] = new PaletteColour[COLORS_PER_COLUMN];
+                    Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
                     for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                        Colors[i][j] = new PaletteColour(reader);
+                        Colors[i][j] = new PaletteColor(reader);
                 }
             }
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
             ushort columns_bitmap = 0;
             for (int i = 0; i < PALETTE_COLUMNS; ++i)
@@ -36,9 +61,9 @@ namespace RSDKv5
                     columns_bitmap |= (ushort)(1 << i);
             writer.Write(columns_bitmap);
 
-            foreach (PaletteColour[] column in Colors)
+            foreach (PaletteColor[] column in Colors)
                 if (column != null)
-                    foreach (PaletteColour color in column)
+                    foreach (PaletteColor color in column)
                         color.Write(writer);
         }
     }

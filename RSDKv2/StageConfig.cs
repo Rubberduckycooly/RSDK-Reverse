@@ -8,14 +8,26 @@ namespace RSDKv2
 {
     public class StageConfig
     {
-
+        /// <summary>
+        /// the stageconfig palette (index 96-128)
+        /// </summary>
         public Palette StagePalette = new Palette();
-
+        /// <summary>
+        /// the list of Stage SoundFX paths
+        /// </summary>
         public List<string> SoundFX = new List<string>();
-        public List<string> SfxNames = new List<string>();
-
+        /// <summary>
+        /// a list of names for each script
+        /// </summary>
         public List<string> ObjectsNames = new List<string>();
-        public List<string> ScriptFilepaths = new List<string>();
+        /// <summary>
+        /// A list of the script filepaths for the stage-specific objects
+        /// </summary>
+        public List<string> ScriptPaths = new List<string>();
+        /// <summary>
+        /// whether or not to load the global objects in this stage
+        /// </summary>
+        public bool LoadGlobalScripts = false;
 
         public StageConfig()
         {
@@ -34,6 +46,8 @@ namespace RSDKv2
 
         public StageConfig(Reader reader)
         {
+            LoadGlobalScripts = reader.ReadBoolean();
+
             StagePalette.Read(reader, 2);
 
             this.ReadObjectsNames(reader);
@@ -46,23 +60,21 @@ namespace RSDKv2
 
         internal void ReadObjectsNames(Reader reader)
         {
-            byte unknownval = reader.ReadByte();
             byte objects_count = reader.ReadByte();
 
             Console.WriteLine(objects_count);
             for (int i = 0; i < objects_count; ++i)
             { ObjectsNames.Add(reader.ReadRSDKString()); }
             for (int i = 0; i < objects_count; ++i)
-            { ScriptFilepaths.Add(reader.ReadRSDKString()); }
+            { ScriptPaths.Add(reader.ReadRSDKString()); }
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
-            writer.Write((byte)0);
             writer.Write((byte)ObjectsNames.Count);
             foreach (string name in ObjectsNames)
                 writer.WriteRSDKString(name);
-            foreach (string srcname in ScriptFilepaths)
+            foreach (string srcname in ScriptPaths)
                 writer.WriteRSDKString(srcname);
         }
 
@@ -93,8 +105,10 @@ namespace RSDKv2
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
+            writer.Write(LoadGlobalScripts);
+
             StagePalette.Write(writer);
 
             WriteObjectsNames(writer);

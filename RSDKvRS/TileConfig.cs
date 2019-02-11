@@ -8,8 +8,14 @@ namespace RSDKvRS
 {
     public class Tileconfig
     {
+        /// <summary>
+        /// 1024, one for each tile
+        /// </summary>
         public const int TILES_COUNT = 0x400; //1024
 
+        /// <summary>
+        /// A list of 1024 collision masks (one per tile)
+        /// </summary>
         public CollisionMask[] Collision = new CollisionMask[TILES_COUNT];
 
         public Tileconfig()
@@ -21,17 +27,17 @@ namespace RSDKvRS
             }
         }
 
-        public Tileconfig(string filename, bool DCver) : this(new Reader(filename), DCver)
+        public Tileconfig(string filename, bool DCver = false) : this(new Reader(filename), DCver)
         {
 
         }
 
-        public Tileconfig(System.IO.Stream stream, bool DCver) : this(new Reader(stream), DCver)
+        public Tileconfig(System.IO.Stream stream, bool DCver = false) : this(new Reader(stream), DCver)
         {
 
         }
 
-        public Tileconfig(Reader reader, bool DCver)
+        public Tileconfig(Reader reader, bool DCver = false)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -40,19 +46,19 @@ namespace RSDKvRS
             reader.Close();
         }
 
-        public void Write(string filename, bool DCver)
+        public void Write(string filename, bool DCver = false)
         {
             using (Writer writer = new Writer(filename))
                 this.Write(writer, DCver);
         }
 
-        public void Write(System.IO.Stream stream, bool DCver)
+        public void Write(System.IO.Stream stream, bool DCver = false)
         {
             using (Writer writer = new Writer(stream))
                 this.Write(writer, DCver);
         }
 
-        internal void Write(Writer writer, bool DCver)
+        public void Write(Writer writer, bool DCver = false)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {
@@ -98,15 +104,15 @@ namespace RSDKvRS
             {
             }
 
-            public CollisionMask(string filename, bool DCver) : this(new Reader(filename), DCver)
+            public CollisionMask(string filename, bool DCver = false) : this(new Reader(filename), DCver)
             {
             }
 
-            public CollisionMask(System.IO.Stream stream, bool DCver) : this(new Reader(stream), DCver)
+            public CollisionMask(System.IO.Stream stream, bool DCver = false) : this(new Reader(stream), DCver)
             {
             }
 
-            public CollisionMask(Reader reader, bool DCver)
+            public CollisionMask(Reader reader, bool DCver = false)
             {
                 if (DCver)
                 {
@@ -227,19 +233,19 @@ namespace RSDKvRS
                 }
             }
 
-            public void Write(string filename, bool DCver)
+            public void Write(string filename, bool DCver = false)
             {
                 using (Writer writer = new Writer(filename))
                     this.Write(writer, DCver);
             }
 
-            public void Write(System.IO.Stream stream, bool DCver)
+            public void Write(System.IO.Stream stream, bool DCver = false)
             {
                 using (Writer writer = new Writer(stream))
                     this.Write(writer, DCver);
             }
 
-            internal void Write(Writer writer, bool DCver)
+            internal void Write(Writer writer, bool DCver = false)
             {
                 if (DCver)
                 {

@@ -59,9 +59,12 @@ namespace RSDKv2
             public bool isSwitchEnd;
             public bool error;
             public bool SwitchCheck;
+            public bool DefaultFlag;
             public bool EndFlag;
             public bool LoopBreakFlag;
             public bool SwitchBreakFlag;
+            public int[] SwitchValues;
+            public int SwitchCase;
 
             public StateScriptEngine IncDeep()
             {
@@ -70,11 +73,26 @@ namespace RSDKv2
             }
         };
 
-        struct ScriptEngine
+        class ScriptEngine
         {
             public int[] operands;
-            public int[] tempValue;
-            public int[] arrayPosition;
+            public string[] tempValue = new string[]
+            {
+                "TempValue0",
+                "TempValue1",
+                "TempValue2",
+                "TempValue3",
+                "TempValue4",
+                "TempValue5",
+                "TempValue6",
+                "TempValue7",
+            };
+            public string[] arrayPosition = new string[]
+            {
+                "ArrayPos0",
+                "ArrayPos1",
+                "TempObjectPos",
+            };
         };
 
         string[] VARIABLE_NAME = new string[]
@@ -307,145 +325,146 @@ namespace RSDKv2
 	"Engine.PlatformID",				// 0xE1
 	"Engine.TrialMode",					// 0xE2
 	"KeyPress.AnyStart",				// 0xE3
-	"Engine.Haptics",					// 0xE4 ???
+	"Engine.HapticsEnabled",
 };
 
         string[] opcodeList = new string[]
 {
-	"End",
-	"Equal",
-	"Add",
-	"Sub",
-	"Inc",
-	"Dec",
-	"Mul",
-	"Div",
-	"ShR",
-	"ShL",
-	"And",
-	"Or",
-	"Xor",
-	"Mod",
-	"FlipSign",
-	"CheckEqual",
-	"CheckGreater",					// 0x10
-	"CheckLower",
-	"CheckNotEqual",
-	"IfEqual",						// 0x13 19
-	"IfGreater",
-	"IfGreaterOrEqual",
-	"IfLower",
-	"IfLowerOrEqual",
-	"IfNotEqual",					// 0x18
-	"else",							// 0x19 25
-	"endif",						// 0x1A
-	"WEqual",
-	"WGreater",
-	"WGreaterOrEqual",
-	"WLower",
-	"WLowerOrEqual",
-	"WNotEqual",					// 0x20
-	"loop",							// 0x21
-	"switch",						// 0x22
-	"break",						// 0x23
-	"endswitch",
-	"Rand",							// 0x25
-	"Sin",
-	"Cos",
-	"Sin256",
-	"Cos256",
-	"SinChange",					// 0x2A
-	"CosChange",
-	"ATan2",
-	"Interpolate",
-	"InterpolateXY",
-	"LoadSpriteSheet",				// 0x2F
-	"RemoveSpriteSheet",			// 0x30
-	"DrawSprite",
-	"DrawSpriteXY",
-	"DrawSpriteScreenXY",
-	"DrawTintRect",
-	"DrawNumbers",
-	"DrawActName",
-	"DrawMenu",
-	"SpriteFrame",
-	"SetDebugIcon",
-	"LoadPalette",
-	"RotatePalette",
-	"SetScreenFade",
-	"SetActivePalette",
-	"SetPaletteFade",
-	"CopyPalette",
-	"ClearScreen",
-	"DrawSpriteFX",
-	"DrawSpriteScreenFX",
-	"LoadAnimation",				// 0x43
-	"SetupMenu",
-	"AddMenuEntry",
-	"EditMenuEntry",
-	"LoadStage",
-	"DrawRect",
-	"ResetObjectEntity",
-	"PlayerObjectCollision",
-	"CreateTempObject",
-	"BindPlayerToObject",
-	"PlayerTileCollision",
-	"ProcessPlayerControl",
-	"ProcessAnimation",
-	"DrawObjectAnimation",
-	"DrawPlayerAnimation",
-	"SetMusicTrack",				// 0x52
-	"PlayMusic",
-	"StopMusic",
-	"PlaySfx",						// 0x55 85
-	"StopSfx",						// 0x56 86
-	"SetSfxAttributes",
-	"ObjectTileCollision",
-	"ObjectTileGrip",
-	"LoadVideo",
-	"NextVideoFrame",				// 0x5B
-	"PlayStageSfx",
-	"StopStageSfx",
-	"Not",
-	"Draw3DScene",
-	"SetIdentityMatrix",			// 0x60
-	"MatrixMultiply",
-	"MatrixTranslateXYZ",
-	"MatrixScaleXYZ",				// 0x63
-	"MatrixRotateX",
-	"MatrixRotateY",
-	"MatrixRotateZ",
-	"MatrixRotateXYZ",
-	"TransformVertices",
-	"CallFunction",					// 0x69 105
-	"EndFunction",					// 0x6A 106
-	"SetLayerDeformation",
-	"CheckTouchRect",
-	"GetTileLayerEntry",
-	"SetTileLayerEntry",
-	"GetBit",
-	"SetBit",
-	"PauseMusic",
-	"ResumeMusic",
-	"ClearDrawList",
-	"AddDrawListEntityRef",
-	"GetDrawListEntityRef",
-	"SetDrawListEntityRef",
-	"Get16x16TileInfo",
-	"Copy16x16Tile",
-	"Set16x16TileInfo",
-	"GetAnimationByName",
-	"ReadSaveRAM",
-	"WriteSaveRAM",
-	"LoadTextFont",
-	"LoadTextFile",
-	"DrawText",
-	"GetTextInfo",
-	"GetVersionNumber",
-	"SetAchievement",
-	"SetLeaderboard",
-	"LoadOnlineMenu",
-	"EngineCallback"
+"End",
+"Equal",
+"Add",
+"Sub",
+"Inc",
+"Dec",
+"Mul",
+"Div",
+"ShR",
+"ShL",
+"And",
+"Or",
+"Xor",
+"Mod",
+"FlipSign",
+"CheckEqual",
+"CheckGreater",
+"CheckLower",
+"CheckNotEqual",
+"IfEqual",
+"IfGreater",
+"IfGreaterOrEqual",
+"IfLower",
+"IfLowerOrEqual",
+"IfNotEqual",
+"else",
+"endif",
+"WEqual",
+"WGreater",
+"WGreaterOrEqual",
+"WLower",
+"WLowerOrEqual",
+"WNotEqual",
+"loop",
+"switch",
+"break",
+"endswitch",
+"Rand",
+"Sin",
+"Cos",
+"Sin256",
+"Cos256",
+"SinChange",
+"CosChange",
+"ATan2",
+"Interpolate",
+"InterpolateXY",
+"LoadSpriteSheet",
+"RemoveSpriteSheet",
+"DrawSprite",
+"DrawSpriteXY",
+"DrawSpriteScreenXY",
+"DrawTintRect",
+"DrawNumbers",
+"DrawActName",
+"DrawMenu",
+"SpriteFrame",
+"SetEditorIcon",
+"LoadPalette",
+"RotatePalette",
+"SetScreenFade",
+"SetActivePalette",
+"SetPaletteFade",
+"CopyPalette",
+"ClearScreen",
+"DrawSpriteFX",
+"DrawSpriteScreenFX",
+"LoadAnimation",
+"SetupMenu",
+"AddMenuEntry",
+"EditMenuEntry",
+"LoadStage",
+"DrawRect",
+"ResetObjectEntity",
+"PlayerObjectCollision",
+"CreateTempObject",
+"BindPlayerToObject",
+"PlayerTileCollision",
+"ProcessPlayerControl",
+"ProcessAnimation",
+"DrawObjectAnimation",
+"DrawPlayerAnimation",
+"SetMusicTrack",
+"PlayMusic",
+"StopMusic",
+"PlaySfx",
+"StopSfx",
+"SetSfxAttributes",
+"ObjectTileCollision",
+"ObjectTileGrip",
+"LoadVideo",
+"NextVideoFrame",
+"PlayStageSfx",
+"StopStageSfx",
+"Not",
+"Draw3DScene",
+"SetIdentityMatrix",
+"MatrixMultiply",
+"MatrixTranslateXYZ",
+"MatrixScaleXYZ",
+"MatrixRotateX",
+"MatrixRotateY",
+"MatrixRotateZ",
+"MatrixRotateXYZ",
+"TransformVertices",
+"CallFunction",
+"EndFunction",
+"SetLayerDeformation",
+"CheckTouchRect",
+"GetTileLayerEntry",
+"SetTileLayerEntry",
+"GetBit",
+"SetBit",
+"PauseMusic",
+"ResumeMusic",
+"ClearDrawList",
+"AddDrawListEntityRef",
+"GetDrawListEntityRef",
+"SetDrawListEntityRef",
+"Get16x16TileInfo",
+"Copy16x16Tile",
+"Set16x16TileInfo",
+"GetAnimationByName",
+"ReadSaveRAM",
+"WriteSaveRAM",
+"LoadTextFont",
+"LoadTextFile",
+"DrawText",
+"GetTextInfo",
+"GetVersionNumber",
+"SetAchievement",
+"SetLeaderboard",
+"LoadOnlineMenu",
+"EngineCallback",
+"QueueHapticEffect"
 };
 
         readonly byte[] scriptOpcodeSizes = new byte[]
@@ -461,15 +480,82 @@ namespace RSDKv2
     5, 2, 2, 2, 1, 1, 4
 };
 
+        string[] BoolAliases = new string[]
+        {
+            "false",
+            "true",
+        }; //ADDED
+
+        string[] FXAliases = new string[]
+{
+"FX_SCALE",
+"FX_ROTATE",
+"FX_ROTOZOOM",
+"FX_INK",
+"FX_TINT",
+"FX_FLIP",
+}; //ADDED
+
+        string[] StagesAliases = new string[]
+{
+"PRESENTATION_STAGE",
+"REGULAR_STAGE",
+"BONUS_STAGE",
+"SPECIAL_STAGE",
+}; //ADDED
+
+        string[] MenuAliases = new string[]
+{
+"MENU_1",
+"MENU_2",
+}; //NOT YET ADDED
+
+        string[] CollisionAliases = new string[]
+{
+"C_TOUCH",
+"C_BOX",
+"C_BOX", //???
+//"C_BOX2",
+"C_PLATFORM",
+}; //ADDED
+
+        string[] MatAliases = new string[]
+{
+"MAT_WORLD",
+"MAT_VIEW",
+"MAT_TEMP",
+}; //NOT YET ADDED
+
+        string[] DirectionAliases = new string[]
+{
+"FACING_LEFT",
+"FACING_RIGHT",
+}; //NOT YET ADDED
+
+        string[] StageStateAliases = new string[]
+{
+"STAGE_PAUSED",
+"STAGE_RUNNING",
+"RESET_GAME",
+}; //ADDED
+
+        string[] PlatformAliases = new string[]
+        {
+        "RETRO_WIN",
+        "RETRO_OSX",
+        "RETRO_X_360",
+        "RETRO_PS3",
+        "RETRO_IOS",
+        "RETRO_ANDROID",
+        "RETRO_WP7",
+        }; //ADDED
+
         #region Misc
         public string[] functionNames = new string[0x200];
         public string[] typeNames = new string[0x100];
         public string[] sourceNames = new string[0x100];
         public string[] globalVariableNames = new string[0x100];
         public int[] globalVariables = new int[0x100];
-
-        public int numGlobalSfx;
-        public string[] sfxNames = new string[0x100];
 
         int m_stageVarsIndex;
 
@@ -479,39 +565,46 @@ namespace RSDKv2
         int scriptDataPos;
         int jumpTableDataPos;
         int[] scriptData = new int[0x40000];
-        int[] jumpTableData = new int[0x4000];
-        int[] jumpTableStack = new int[0x400];
-        int[] functionStack = new int[0x400];
+        int[] jumpTableData = new int[0x40000];
+        int[] jumpTableStack = new int[0x4000];
+        int[] functionStack = new int[0x4000];
 
-        ScriptEngine scriptEng;
+        ScriptEngine scriptEng = new ScriptEngine();
         StateScriptEngine state = new StateScriptEngine();
-        ObjectScript[] objectScriptList =new ObjectScript[0x100];
-        FunctionScript[] functionScriptList = new FunctionScript[0x200];
+        ObjectScript[] objectScriptList = new ObjectScript[0x100];
+        FunctionScript[] functionScriptList = new FunctionScript[0x100];
+        int functionCount = 0;
         #endregion
 
         int Read32(Reader reader)
         {
             return reader.ReadInt32();
+            //return reader.ReadByte() + (reader.ReadByte() << 8) + (reader.ReadByte() << 16) + (reader.ReadByte() << 24);
         }
-        int Read16(Reader reader)
+        short Read16(Reader reader)
         {
             return reader.ReadInt16();
+            //return (short)(reader.ReadByte() + (reader.ReadByte() << 8));
         }
-        int Read8(Reader reader)
+        byte Read8(Reader reader)
         {
             return reader.ReadByte();
         }
 
-        public Bytecode(Reader reader, int ScriptCount = 0)
+        public Bytecode(Reader reader, int ScriptCount = 0, bool MobileVer = false)
         {
-            //ClearScriptData();
+            ClearScriptData();
             scriptEng.operands = new int[10];
-            scriptEng.tempValue = new int[8];
-            scriptEng.arrayPosition = new int[3];
+
+            if (MobileVer)
+            {
+                LoadMobileBytecode(reader, ScriptCount);
+                return;
+            }
 
             for (int opcount = Read32(reader); opcount > 0;)
             {
-                int data = Read8(reader);
+                byte data = Read8(reader);
                 int blocksCount = data & 0x7F;
 
                 if ((data & 0x80) == 0)
@@ -530,7 +623,7 @@ namespace RSDKv2
 
             for (int opcount = Read32(reader); opcount > 0;)
             {
-                int data = Read8(reader);
+                byte data = Read8(reader);
                 int blocksCount = data & 0x7F;
                 if ((data & 0x80) == 0)
                 {
@@ -552,24 +645,311 @@ namespace RSDKv2
 
             for (int i = 0; i < count; i++)
             {
-                objectScriptList[m_stageVarsIndex + i].mainScript = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].playerScript = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].drawScript = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].startupScript = Read32(reader);
+                objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                objectScriptList[ScriptCount + i].startupScript = Read32(reader);
             }
             for (int i = 0; i < count; i++)
             {
-                objectScriptList[m_stageVarsIndex + i].mainJumpTable = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].playerJumpTable = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].drawJumpTable = Read32(reader);
-                objectScriptList[m_stageVarsIndex + i].startupJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
             }
 
             count = Read16(reader);
+
             for (int i = 0; i < count; i++)
                 functionScriptList[i].mainScript = Read32(reader);
             for (int i = 0; i < count; i++)
                 functionScriptList[i].mainJumpTable = Read32(reader);
+
+            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+
+        }
+
+        public void LoadMobileBytecode(Reader reader, int ScriptCount = 0)
+        {
+            scriptEng.operands = new int[10];
+
+            for (int opcount1 = Read32(reader); opcount1 > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read8(reader); }
+                    opcount1 -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read32(reader); }
+                    opcount1 -= blocksCount;
+                }
+            }
+
+            int opcount = Read32(reader);
+            int count;
+
+            if (opcount <= 0)
+            {
+                count = Read16(reader); //File count
+
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
+                }
+
+                count = Read16(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainScript = Read32(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainJumpTable = Read32(reader);
+
+            }
+
+
+            for (; opcount > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read8(reader);
+                    opcount -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read32(reader);
+                    opcount -= blocksCount;
+                }
+            }
+
+            if (opcount > 0)
+            {
+                count = Read16(reader); //File count
+
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
+                }
+
+                count = Read16(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainScript = Read32(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainJumpTable = Read32(reader);
+            }
+
+            m_stageVarsIndex = ScriptCount;
+
+            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+
+        }
+
+        public void LoadStageBytecodeData(Reader reader, int ScriptCount = 0, bool MobileVer = false)
+        {
+            //ClearScriptData();
+            scriptEng.operands = new int[10];
+
+            if (MobileVer)
+            {
+                LoadStageBytecodeDataMobile(reader, ScriptCount);
+                return;
+            }
+
+            for (int opcount = Read32(reader); opcount > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read8(reader); }
+                    opcount -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read32(reader); }
+                    opcount -= blocksCount;
+                }
+            }
+
+            for (int opcount = Read32(reader); opcount > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read8(reader);
+                    opcount -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read32(reader);
+                    opcount -= blocksCount;
+                }
+            }
+
+            m_stageVarsIndex = ScriptCount;
+
+            int count = Read16(reader); //File count
+
+            for (int i = 0; i < count; i++)
+            {
+                objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                objectScriptList[ScriptCount + i].startupScript = Read32(reader);
+            }
+            for (int i = 0; i < count; i++)
+            {
+                objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
+            }
+
+            functionCount = Read16(reader);
+
+            for (int i = 0; i < functionCount; i++)
+                functionScriptList[i].mainScript = Read32(reader);
+            for (int i = 0; i < functionCount; i++)
+                functionScriptList[i].mainJumpTable = Read32(reader);
+
+            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+
+        }
+
+        public void LoadStageBytecodeDataMobile(Reader reader, int ScriptCount = 0)
+        {
+            scriptEng.operands = new int[10];
+
+            for (int opcount1 = Read32(reader); opcount1 > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read8(reader); }
+                    opcount1 -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                    { scriptData[scriptDataPos++] = Read32(reader); }
+                    opcount1 -= blocksCount;
+                }
+            }
+
+            int opcount = Read32(reader);
+            int count;
+
+            if (opcount <= 0)
+            {
+                count = Read16(reader); //File count
+
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
+                }
+
+                count = Read16(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainScript = Read32(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainJumpTable = Read32(reader);
+
+            }
+
+
+            for (; opcount > 0;)
+            {
+                byte data = Read8(reader);
+                int blocksCount = data & 0x7F;
+                if ((data & 0x80) == 0)
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read8(reader);
+                    opcount -= blocksCount;
+                }
+                else
+                {
+                    for (int i = 0; i < blocksCount; i++)
+                        jumpTableData[jumpTableDataPos++] = Read32(reader);
+                    opcount -= blocksCount;
+                }
+            }
+
+            if (opcount > 0)
+            {
+                count = Read16(reader); //File count
+
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
+                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
+                }
+
+                count = Read16(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainScript = Read32(reader);
+                for (int i = 0; i < count; i++)
+                    functionScriptList[i].mainJumpTable = Read32(reader);
+            }
+
+            m_stageVarsIndex = ScriptCount;
 
             Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
@@ -602,20 +982,17 @@ namespace RSDKv2
                 objectScriptList[i].animationFile = AnimationSystem.GetDefaultAnimationRef();
                 functionScriptList[i].mainScript = 0x3FFFF;
                 functionScriptList[i].mainJumpTable = 0x3FFF;
-                typeNames[i] = "";
             }
-
-            //SetObjectTypeName("BlankObject", 0);
         }
 
-        string _SetArrayValue(string strIn, int index)
+        string _SetArrayValue(string strIn, string index)
         {
             string strOut = strIn;
             int point = -1;
 
             if (strIn == "Global")
             {
-                strOut = globalVariableNames[index];
+                strOut = globalVariableNames[Int32.Parse(index)];
                 if (strOut == "") return strIn;
                 return strOut;
             }
@@ -670,6 +1047,7 @@ namespace RSDKv2
                     path = "Scripts/" + sourceNames[i];
                 }
 
+
                 StreamWriter writer = new StreamWriter(path);
 
                 Console.WriteLine("Decompiling: " + typeNames[i]);
@@ -680,52 +1058,91 @@ namespace RSDKv2
 
                 writer.Write(Environment.NewLine);
 
-                writer.WriteLine("//-------Object Definitions-------//");
+                writer.WriteLine("//-------Aliases-------//");
 
-                for (int j = 0; j < typeNames.Length; j++)
-                    writer.Write("#define " + typeNames[j] + " " + j + Environment.NewLine);
+                writer.Write("#alias " + i + ": TYPE_" + typeNames[i] + Environment.NewLine);
 
                 ObjectScript objectScript = objectScriptList[i];
 
-
-                FunctionScript functionScript = functionScriptList[i];
-
                 writer.Write(Environment.NewLine);
                 writer.Write(Environment.NewLine);
 
-                try
+                //if (i == 34 && typeNames[i] == "R1_TitleCard")
+                if (i == 6)
+                {
+                    Console.WriteLine();
+                }
+
+                //try
+                //{
+                if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0)
                 {
                     Console.Write("Main script, ");
                     writer.WriteLine("//---------------------------Main Sub---------------------------//");
                     writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
-                    DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0);
+                    DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
+                }
 
+                if (objectScript.playerScript > 0 && objectScript.playerJumpTable > 0)
+                {
                     writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
                     writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
                     Console.Write("Player script, ");
-                    DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1);
+                    DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1, false);
+                }
 
+                if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0)
+                {
                     writer.WriteLine("//----------------------Drawing Sub-------------------//");
                     writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
                     Console.Write("Draw script, ");
-                    DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2);
+                    DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2, false);
+                }
 
+                if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0)
+                {
                     writer.WriteLine("//--------------------Startup Sub---------------------//");
                     writer.WriteLine("//-------Called once when the object is spawned-------//");
-                    Console.WriteLine("Startup script.");
-                    DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3);
+                    Console.Write("Startup script, ");
+                    DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
                 }
-                catch (Exception ex)
+
+                if (i == 1 && typeNames[i] == "PlayerObject")
                 {
-                    Console.WriteLine(ex.Message);
+                    for (int ii = 0; ii < functionScriptList.Length; ii++)
+                    {
+                        if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0)
+                        {
+                            writer.WriteLine("//--------------------Function Sub---------------------//");
+                            writer.WriteLine("//-------it do shit-------//");
+                            Console.WriteLine("Function script " + ii + ".");
+                            DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
+                        }
+                    }
                 }
+
+                writer.WriteLine("//--------------------RSDK Sub---------------------//");
+                writer.WriteLine("//-----------Used for editor functionality---------//");
+                Console.WriteLine("RSDK script.");
+                writer.WriteLine("sub RSDK");
+                writer.WriteLine();
+                writer.WriteLine("//I put a 'dummy' sprite here so it shows up in retroED/RSDK! :)");
+                writer.WriteLine("LoadSpriteSheet(" + "\"Global/Display.gif\"" + ")");
+                writer.WriteLine("SetEditorIcon(Icon0,SingleIcon,0,0,32,32,1,143)");
+                writer.WriteLine();
+                writer.WriteLine("endsub");
+                //}
+                //catch (Exception ex)
+                //{
+                //    Console.WriteLine(ex.Message);
+                //}
 
                 writer.Write(Environment.NewLine);
                 writer.Close();
             }
         }
 
-        public void DecompileScript(StreamWriter writer, int scriptCodePtr, int jumpTablePtr, int scriptSub)
+        public void DecompileScript(StreamWriter writer, int scriptCodePtr, int jumpTablePtr, int scriptSub, bool isFunction)
         {
             string strFuncName = "";
             switch (scriptSub)
@@ -742,12 +1159,24 @@ namespace RSDKv2
                 case 3:
                     strFuncName = "ObjectStartup";
                     break;
-                default:
-                    strFuncName = "Function";
+                case 4:
+                    strFuncName = "RSDK";
                     break;
             }
 
-            writer.Write("sub" + strFuncName + Environment.NewLine);
+            if (scriptCodePtr == 0 && jumpTablePtr == 0)
+            {
+                return;
+            }
+
+            if (!isFunction)
+            {
+                writer.Write("sub" + strFuncName + Environment.NewLine);
+            }
+            else
+            {
+                writer.Write("function " + scriptSub + Environment.NewLine);
+            }
 
             state = new StateScriptEngine();
             state.scriptCodePtr = scriptCodePtr;
@@ -757,18 +1186,27 @@ namespace RSDKv2
             state.isSwitchEnd = false;
             state.error = false;
 
-            DecompileSub(writer);
+            if (isFunction)
+            {
+                DecompileFunction(writer);
+            }
+            else
+            {
+                DecompileSub(writer);
+            }
             writer.Write(Environment.NewLine);
         }
 
         public void DecompileSub(StreamWriter writer)
         {
             int objectLoop = 0;
-            int index1 = 0;
+            string index1 = "0";
             state.EndFlag = false;
             state.LoopBreakFlag = false;
             state.SwitchBreakFlag = false;
             writer.Write(Environment.NewLine);
+
+            int test = jumpTableData[state.jumpTablePtr];
 
             while (!state.EndFlag)
             {
@@ -794,30 +1232,32 @@ namespace RSDKv2
                             switch (scriptData[state.scriptCodePtr++])
                             {
                                 case 0:
-                                    index1 = objectLoop;
+                                    index1 = objectLoop.ToString();
+                                    int tmp2 = scriptData[state.scriptCodePtr];
                                     variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
                                     break;
                                 case 1: // ARRAY
                                     if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                    { index1 = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]]; }
                                     else
-                                        index1 = scriptData[state.scriptCodePtr++];
+                                        index1 = scriptData[state.scriptCodePtr++].ToString();
                                     num2 += 2;
-                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1);
+
+                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1.ToString());
                                     break;
                                 case 2:
                                     if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = objectLoop + scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
                                     else
-                                        index1 = objectLoop + scriptData[state.scriptCodePtr++];
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
                                     num2 += 2;
                                     variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
                                     break;
                                 case 3:
                                     if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = objectLoop - scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
                                     else
-                                        index1 = objectLoop - scriptData[state.scriptCodePtr++];
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
                                     num2 += 2;
                                     variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
                                     break;
@@ -838,13 +1278,33 @@ namespace RSDKv2
                             {
                                 state.scriptCodePtr++;
                                 num2++;
-                                if (j < strLen) tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] >> 24));
+                                if (j < strLen)
+                                {
+                                    int val = scriptData[state.scriptCodePtr] >> 24;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
                                 j++;
-                                if (j < strLen) tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16));
+                                if (j < strLen)
+                                {
+                                    int val = (scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
                                 j++;
-                                if (j < strLen) tmp = tmp + Convert.ToChar(((scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8));
+                                if (j < strLen)
+                                {
+                                    int val = (scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
                                 j++;
-                                if (j < strLen) tmp = tmp + Convert.ToChar((scriptData[state.scriptCodePtr] & 0x000000FF));
+                                if (j < strLen)
+                                {
+                                    int val = scriptData[state.scriptCodePtr] & 0x000000FF;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
                                 j++;
                             }
                             variableName[i] = '"' + tmp + '"';
@@ -866,7 +1326,7 @@ namespace RSDKv2
                     case 0x00: // end sub
                         break;
                     case 0x19: // else
-                        for (int i = 0; i < state.deep-1; i++) writer.Write("\t");
+                        for (int i = 0; i < state.deep - 1; i++) writer.Write("\t");
                         break;
                     case 0x1A: // end if
                         state.deep--;
@@ -897,14 +1357,6 @@ namespace RSDKv2
                         break;
                 }
 
-                // Use specific operands in some situation
-                switch (opcode)
-                {
-                    case 0x55: // PlaySfx
-                    case 0x56: // StopSfx
-                        break;
-                }
-
 
                 if (opcode >= 134)
                 {
@@ -923,6 +1375,76 @@ namespace RSDKv2
                     {
                         variableName[i] = "Object.Value0";
                     }
+                }
+
+                if (variableName[0].Contains("Type"))
+                {
+                    //variableName[1] = "TypeNames[" + typeNames[Convert.ToInt32(variableName[1])] + "]";
+                    variableName[1] = "TypeNames[" + Convert.ToInt32(variableName[1]) + "]";
+                }
+
+                // Special Aliases for some functions
+                switch (operand)
+                {
+                    case "DrawSpriteFX":
+                        int o = 0;
+                        Int32.TryParse((variableName[1]), out o);
+                        o--;
+                        if (o < 0) o = 0;
+                        variableName[1] = FXAliases[o];
+                        break;
+                    case "DrawSpriteScreenFX":
+                        int oo = 0;
+                        Int32.TryParse((variableName[1]), out oo);
+                        oo--;
+                        if (oo < 0) oo = 0;
+                        variableName[1] = FXAliases[oo];
+                        break;
+                    case "PlayerObjectCollision":
+                        int ooo = 0;
+                        Int32.TryParse(variableName[0], out ooo);
+                        if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
+                        break;
+                }
+
+                if (opcode < 0x21)
+                {
+                    switch (variableName[0])
+                    {
+                        case "Engine.PlatformID":
+                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                            break;
+                        case "Stage.ActiveList":
+                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                            break;
+                        case "Stage.Stage":
+                            variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
+                            break;
+                    }
+
+                    switch (variableName[1])
+                    {
+                        case "Engine.PlatformID":
+                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                            break;
+                        case "Stage.ActiveList":
+                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                            break;
+                        case "Stage.Stage":
+                            variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
+                            break;
+                    }
+
+                    //I'll do it later
+                    /*switch (variableName[2])
+                    {
+                        case "0":
+                            variableName[2] = BoolAliases[0];
+                            break;
+                        case "1":
+                            variableName[2] = BoolAliases[1];
+                            break;
+                    }*/
                 }
 
                 switch (opcode)
@@ -945,123 +1467,118 @@ namespace RSDKv2
                     case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
                     case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
                     case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
-                    case 0x0E: writer.Write(variableName[0] + "-=" + variableName[0]); break;
-                    case 0x0F:
-                        writer.Write("if " + variableName[0] + "!=" + variableName[1]);
-                        state.deep += 1;
-                        break;
-                    case 0x10:
-                        writer.Write("if " + variableName[0] + "<=" + variableName[1]);
-                        state.deep += 1;
-                        break;
-                    case 0x11:
-                        writer.Write("if " + variableName[0] + ">=" + variableName[1]);
-                        state.deep += 1;
-                        break;
-                    case 0x12:
-                        writer.Write("if " + variableName[0] + "==" + variableName[1]);
-                        state.deep += 1;
-                        break;
                     case 0x13:
                         writer.Write("if " + variableName[1] + "==" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x14:
                         writer.Write("if " + variableName[1] + ">" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x15:
                         writer.Write("if " + variableName[1] + ">=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x16:
                         writer.Write("if " + variableName[1] + "<" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x17:
                         writer.Write("if " + variableName[1] + "<=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x18:
                         writer.Write("if " + variableName[1] + "!=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x19:
                         writer.Write("else");
+                        //state.jumpTablePtr++;
                         break;
                     case 0x1A:
                         writer.Write("endif");
+                        //state.jumpTablePtr--;
                         break;
                     case 0x1B:
                         writer.Write("while " + variableName[1] + "==" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x1C:
                         writer.Write("while " + variableName[1] + ">" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x1D:
                         writer.Write("while " + variableName[1] + ">=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x1E:
                         writer.Write("while " + variableName[1] + "<" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x1F:
                         writer.Write("while " + variableName[1] + "<=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x20:
                         writer.Write("while " + variableName[1] + "!=" + variableName[2]);
                         state.deep += 1;
-                        //DecompileSub(writer);
+                        state.jumpTablePtr++;
                         break;
                     case 0x21:
                         writer.Write("loop");
+                        //state.jumpTablePtr++;
                         break;
                     case 0x22:
                         writer.Write("switch " + variableName[1] + Environment.NewLine);
                         state.SwitchCheck = false;
                         state.SwitchDeep++;
-                        
+                        state.jumpTablePtr++;
+                        //???
+                        state.jumpTablePtr++;
+                        int Jmp = jumpTableData[state.jumpTablePtr];
+                        state.jumpTablePtr++;
+                        int swvalma = jumpTableData[state.jumpTablePtr];
+                        int[] SwitchValues = new int[swvalma+1];
+
+                        int ID = 0;
+                        for (int i = Jmp; i < swvalma+1; i++)
+                        {
+                            SwitchValues[ID++] = i-Jmp; 
+                        }
+
                         for (int i = 0; !state.isSwitchEnd;)
                         {
-                            //LABEL_1:
                             if (!state.SwitchCheck)
                             {
                                 for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
-                                writer.Write("case " + i);
+                                writer.Write("case " + SwitchValues[i]);
                                 state.SwitchCheck = true;
                                 state.deep += 1;
+                                //i++;
                                 i++;
                             }
                             DecompileSub(writer);
-                            /*if (state.SwitchDeep >= 1 && state.isSwitchEnd)
-                            {
-                                state.isSwitchEnd = false;
-                                //goto LABEL_1;
-                                return;
-                            }*/
                         }
                         state.isSwitchEnd = false;
                         break;
                     case 0x23:
                         writer.Write("break");
+                        state.jumpTablePtr++;
                         if (scriptData[state.scriptCodePtr] == 0x24)
                         {
                             state.scriptCodePtr++;
+                            state.jumpTablePtr++;
                             writer.Write(Environment.NewLine);
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
                             writer.Write("endswitch");
@@ -1074,6 +1591,7 @@ namespace RSDKv2
                     case 0x24:
                         writer.Write("endswitch");
                         state.SwitchDeep--;
+                        //state.jumpTablePtr++;
                         state.SwitchCheck = false;
                         state.isSwitchEnd = true;
                         return;
@@ -1115,6 +1633,442 @@ namespace RSDKv2
 
                 //if (!state.isSwitchEnd && !state.EndFlag)
                     writer.Write(Environment.NewLine);
+
+                if (state.SwitchBreakFlag)
+                {
+                    state.SwitchBreakFlag = false;
+                    return;
+                }
+
+                if (state.LoopBreakFlag)
+                {
+                    state.LoopBreakFlag = false;
+                    //return;
+                }
+            }
+        }
+
+        public void DecompileFunction(StreamWriter writer)
+        {
+            int objectLoop = 0;
+            string index1 = "0";
+            state.EndFlag = false;
+            state.LoopBreakFlag = false;
+            state.SwitchBreakFlag = false;
+            writer.Write(Environment.NewLine);
+
+            while (!state.EndFlag)
+            {
+                int num2 = 0;
+                int opcode = scriptData[state.scriptCodePtr++];
+                int paramsCount = scriptOpcodeSizes[opcode];
+
+                //state.isSwitchEnd = false;
+
+                string[] variableName = new string[10];
+
+                for (int i = 0; i < variableName.Length; i++)
+                {
+                    variableName[i] = "UNKNOWN VARIABLE";
+                }
+
+                for (int i = 0; i < paramsCount; i++)
+                {
+                    int paramId = scriptData[state.scriptCodePtr++];
+                    switch (paramId)
+                    {
+                        case 1: // Read value from RSDK
+                            switch (scriptData[state.scriptCodePtr++])
+                            {
+                                case 0:
+                                    index1 = objectLoop.ToString();
+                                    int tmp2 = scriptData[state.scriptCodePtr];
+                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    break;
+                                case 1: // ARRAY
+                                    if (scriptData[state.scriptCodePtr++] == 1)
+                                    { index1 = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]]; }
+                                    else
+                                        index1 = scriptData[state.scriptCodePtr++].ToString();
+                                    num2 += 2;
+
+                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1.ToString());
+                                    break;
+                                case 2:
+                                    if (scriptData[state.scriptCodePtr++] == 1)
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    else
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    num2 += 2;
+                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    break;
+                                case 3:
+                                    if (scriptData[state.scriptCodePtr++] == 1)
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    else
+                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    num2 += 2;
+                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    break;
+                            }
+                            num2 += 3;
+                            break;
+                        case 2: // Read constant value from bytecode
+                            scriptEng.operands[i] = scriptData[state.scriptCodePtr++];
+                            variableName[i] = "";
+                            variableName[i] = variableName[i] + scriptEng.operands[i]; //it's an int!!
+                            num2 += 2;
+                            break;
+                        case 3: // Read string
+                            string tmp = "";
+                            num2++;
+                            int strLen = scriptData[state.scriptCodePtr];
+                            for (int j = 0; j < strLen;)
+                            {
+                                state.scriptCodePtr++;
+                                num2++;
+                                if (j < strLen)
+                                {
+                                    int val = scriptData[state.scriptCodePtr] >> 24;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
+                                j++;
+                                if (j < strLen)
+                                {
+                                    int val = (scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
+                                j++;
+                                if (j < strLen)
+                                {
+                                    int val = (scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
+                                j++;
+                                if (j < strLen)
+                                {
+                                    int val = scriptData[state.scriptCodePtr] & 0x000000FF;
+                                    if (val < 0) val = 0;
+                                    tmp = tmp + Convert.ToChar(val);
+                                }
+                                j++;
+                            }
+                            variableName[i] = '"' + tmp + '"';
+                            if ((strLen & 3) == 0)
+                            {
+                                state.scriptCodePtr += 2;
+                                num2 += 2;
+                                break;
+                            }
+                            state.scriptCodePtr++;
+                            num2++;
+                            break;
+                    }
+                }
+
+                // Check what opcodes terminates a statement
+                switch (opcode)
+                {
+                    case 0x00: // end sub
+                        break;
+                    case 0x19: // else
+                        for (int i = 0; i < state.deep - 1; i++) writer.Write("\t");
+                        break;
+                    case 0x1A: // end if
+                        state.deep--;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                    case 0x21: // loop 
+                        state.LoopBreakFlag = true;
+                        state.deep--;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                    case 0x23: // break
+                        state.SwitchBreakFlag = true;
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        state.deep--;
+                        // do a peek if the next statement is an endswitch
+                        if (scriptData[state.scriptCodePtr] == 0x24)
+                        {
+                            //state.isSwitchEnd = true;
+                        }
+                        break;
+                    case 0x24: // end switch
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        //state.deep--;
+                        state.isSwitchEnd = true;
+                        break;
+                    default:
+                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                        break;
+                }
+
+
+                if (opcode >= 134)
+                {
+                    writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
+                    Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
+                    state.error = true;
+                    return;
+                }
+
+                string operand = opcodeList[opcode];
+
+
+                for (int i = 0; i < variableName.Length; i++)
+                {
+                    if (variableName[i] == "" || variableName[i] == null)
+                    {
+                        variableName[i] = "Object.Value0";
+                    }
+                }
+
+                // Special Aliases for some functions
+                switch (operand)
+                {
+                    case "DrawSpriteFX":
+                        int o = 0;
+                        Int32.TryParse((variableName[1]), out o);
+                        o--;
+                        if (o < 0) o = 0;
+                        variableName[1] = FXAliases[o];
+                        break;
+                    case "DrawSpriteScreenFX":
+                        int oo = 0;
+                        Int32.TryParse((variableName[1]), out oo);
+                        oo--;
+                        if (oo < 0) oo = 0;
+                        variableName[1] = FXAliases[oo];
+                        break;
+                    case "PlayerObjectCollision":
+                        int ooo = 0;
+                        Int32.TryParse(variableName[0], out ooo);
+                        if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
+                        break;
+                    case "EndFunction":
+                        writer.Write("EndFunction");
+                        state.EndFlag = true;
+                        state.deep = 0;
+                        return;
+                }
+
+                if (opcode < 0x21) //Arithmatic, if or while statements only
+                {
+                    switch (variableName[0])
+                    {
+                        case "Engine.PlatformID":
+                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                            break;
+                        case "Stage.ActiveList":
+                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                            break;
+                        case "Stage.Stage":
+                            variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
+                            break;
+                    }
+
+                    switch (variableName[1])
+                    {
+                        case "Engine.PlatformID":
+                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                            break;
+                        case "Stage.ActiveList":
+                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                            break;
+                        case "Stage.Stage":
+                            variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
+                            break;
+                    }
+
+                    //I'll do it later
+                    /*switch (variableName[2])
+                    {
+                        case "0":
+                            variableName[2] = BoolAliases[0];
+                            break;
+                        case "1":
+                            variableName[2] = BoolAliases[1];
+                            break;
+                    }*/
+                }
+
+                switch (opcode)
+                {
+                    case 0x00:
+                        writer.Write("endsub");
+                        state.EndFlag = true;
+                        state.deep = 0;
+                        break;
+                    case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
+                    case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
+                    case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
+                    case 0x04: writer.Write(variableName[0] + "++"); break;
+                    case 0x05: writer.Write(variableName[0] + "--"); break;
+                    case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
+                    case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
+                    case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
+                    case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
+                    case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
+                    case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
+                    case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
+                    case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
+                    case 0x13:
+                        writer.Write("if " + variableName[1] + "==" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x14:
+                        writer.Write("if " + variableName[1] + ">" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x15:
+                        writer.Write("if " + variableName[1] + ">=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x16:
+                        writer.Write("if " + variableName[1] + "<" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x17:
+                        writer.Write("if " + variableName[1] + "<=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x18:
+                        writer.Write("if " + variableName[1] + "!=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x19:
+                        writer.Write("else");
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1A:
+                        writer.Write("endif");
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1B:
+                        writer.Write("while " + variableName[1] + "==" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1C:
+                        writer.Write("while " + variableName[1] + ">" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1D:
+                        writer.Write("while " + variableName[1] + ">=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1E:
+                        writer.Write("while " + variableName[1] + "<" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x1F:
+                        writer.Write("while " + variableName[1] + "<=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x20:
+                        writer.Write("while " + variableName[1] + "!=" + variableName[2]);
+                        state.deep += 1;
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x21:
+                        writer.Write("loop");
+                        state.jumpTablePtr++;
+                        break;
+                    case 0x22:
+                        writer.Write("switch " + variableName[1] + Environment.NewLine);
+                        state.SwitchCheck = false;
+                        state.SwitchDeep++;
+                        state.jumpTablePtr++;
+                        for (int i = 0; !state.isSwitchEnd;)
+                        {
+                            if (!state.SwitchCheck)
+                            {
+                                for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
+                                state.jumpTablePtr++;
+                                int Jmp = jumpTableData[state.jumpTablePtr];
+                                writer.Write("case " + Jmp);
+                                state.SwitchCheck = true;
+                                state.deep += 1;
+                                i++;
+                            }
+                            DecompileFunction(writer);
+                        }
+                        state.isSwitchEnd = false;
+                        break;
+                    case 0x23:
+                        writer.Write("break");
+                        state.jumpTablePtr++;
+                        if (scriptData[state.scriptCodePtr] == 0x24)
+                        {
+                            state.scriptCodePtr++;
+                            state.jumpTablePtr++;
+                            writer.Write(Environment.NewLine);
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            writer.Write("endswitch");
+                            state.SwitchDeep--;
+                            state.SwitchCheck = false;
+                            state.isSwitchEnd = true;
+                        }
+                        state.SwitchCheck = false;
+                        break;
+                    case 0x24:
+                        writer.Write("endswitch");
+                        state.SwitchDeep--;
+                        state.jumpTablePtr++;
+                        state.SwitchCheck = false;
+                        state.isSwitchEnd = true;
+                        return;
+                    default:
+                        writer.Write(operand + "(");
+                        switch (paramsCount)
+                        {
+                            case 1:
+                                writer.Write(variableName[0]);
+                                break;
+                            case 2:
+                                writer.Write(variableName[0] + "," + variableName[1]);
+                                break;
+                            case 3:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
+                                break;
+                            case 4:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
+                                break;
+                            case 5:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
+                                break;
+                            case 6:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
+                                break;
+                            case 7:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
+                                break;
+                            case 8:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
+                                break;
+                            case 9:
+                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
+                                break;
+                        }
+                        writer.Write(")");
+                        break;
+                }
+
+                //if (!state.isSwitchEnd && !state.EndFlag)
+                writer.Write(Environment.NewLine);
 
                 if (state.SwitchBreakFlag)
                 {

@@ -11,9 +11,21 @@ namespace RSDKvRS
     {
         public class Level
         {
+            /// <summary>
+            /// the Stage's Name
+            /// </summary>
             public string StageName = "";
+            /// <summary>
+            /// the folder of the Stage
+            /// </summary>
             public string StageFolder = "";
+            /// <summary>
+            /// the Identifier after "Act" (like Act1 or Act2)
+            /// </summary>
             public string ActNo = "";
+            /// <summary>
+            /// I have actually no idea, it's called unknown for a reason lol
+            /// </summary>
             public string Unknown = "";
 
             public Level()

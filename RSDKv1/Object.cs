@@ -8,19 +8,61 @@ namespace RSDKv1
 {
     public class Object
     {
-        public int type;
-        public int subtype;
-        public int xPos;
-        public int yPos;
-        static int cur_id = 0;
+        /// <summary>
+        /// the Object's Name (used for entity list)
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
+        /// <summary>
+        /// The Type of the object
+        /// </summary>
+        public byte type;
+        /// <summary>
+        /// The Object's SubType/PropertyValue
+        /// </summary>
+        public byte subtype;
+        /// <summary>
+        /// The Object's X Position
+        /// </summary>
+        public short xPos;
+        /// <summary>
+        /// The Object's Y Position
+        /// </summary>
+        public short yPos;
+        /// <summary>
+        /// how to load the "attribute"?
+        /// </summary>
+        public static int cur_id = 0;
+        /// <summary>
+        /// the Index of the object in the loaded Object List
+        /// </summary>
         public int id;
 
-        public Object(int type, int subtype, int xPos, int yPos) : this(type, subtype, xPos, yPos, cur_id++)
+        public Object()
+        {
+
+        }
+
+        public Object(byte type, byte subtype, short xPos, short yPos) : this(type, subtype, xPos, yPos, cur_id++)
         {
         }
 
-        private Object(int type, int subtype, int xPos, int yPos, int id)
+        public Object(byte type, byte subtype, short xPos, short yPos, int id)
         {
+            Name = "Unknown Object";
+            this.type = type;
+            this.subtype = subtype;
+            this.xPos = xPos;
+            this.yPos = yPos;
+            this.id = id;
+        }
+
+        public Object(byte type, byte subtype, short xPos, short yPos, int id, string name)
+        {
+            this.Name = name;
             this.type = type;
             this.subtype = subtype;
             this.xPos = xPos;
@@ -39,12 +81,12 @@ namespace RSDKv1
             subtype = reader.ReadByte();
 
             // X Position, 2 bytes, big-endian, signed			
-            xPos = reader.ReadSByte() << 8;
-            xPos |= reader.ReadByte();
+            xPos = (short)(reader.ReadSByte() << 8);
+            xPos |= (short)reader.ReadByte();
 
             // Y Position, 2 bytes, big-endian, signed
-            yPos = reader.ReadSByte() << 8;
-            yPos |= reader.ReadByte();
+            yPos = (short)(reader.ReadSByte() << 8);
+            yPos |= (short)reader.ReadByte();
 
             Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
         }
@@ -63,8 +105,8 @@ namespace RSDKv1
             if (yPos < -32768 || yPos > 32767)
                 throw new Exception("Cannot save as Type v1. Object Y Position can't fit in 16-bits");
 
-            writer.Write((byte)(type));
-            writer.Write((byte)(subtype));
+            writer.Write(type);
+            writer.Write(subtype);
 
             writer.Write((byte)(xPos >> 8));
             writer.Write((byte)(xPos & 0xFF));
@@ -74,5 +116,5 @@ namespace RSDKv1
 
             Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
         }
-}
+    }
 }

@@ -12,7 +12,7 @@ namespace RSDKv5
 
         public class Header
         {
-            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K',(byte)'v', (byte)'5'};
+            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
             public ushort FileCount;
 
             public Header(Reader reader)
@@ -115,7 +115,7 @@ namespace RSDKv5
                 uint tmp = reader.ReadUInt32();
 
                 Encrypted = (tmp & 0x80000000) != 0;
-                FileSize  = (tmp & 0x7FFFFFFF);
+                FileSize = (tmp & 0x7FFFFFFF);
 
                 long tmp2 = reader.BaseStream.Position;
                 reader.BaseStream.Position = DataOffset;
@@ -125,7 +125,7 @@ namespace RSDKv5
                 // Decrypt File if Encrypted
                 if (Encrypted)
                     Filedata = Decrypt(Filedata);
-                
+
                 reader.BaseStream.Position = tmp2;
 
                 Extension = GetExtensionFromData();
@@ -207,7 +207,17 @@ namespace RSDKv5
 
             public void WriteFileHeader(Writer writer)
             {
-                writer.Write(CalculateMD5Hash(FileName.ToLower()));
+                byte[] md5 = CalculateMD5Hash(FileName.ToLower());
+
+                for (int y = 0; y < 16; y += 4)
+                {
+                    md5Hash[y + 3] = md5[y];
+                    md5Hash[y + 2] = md5[y + 1];
+                    md5Hash[y + 1] = md5[y + 2];
+                    md5Hash[y] = md5[y + 3];
+                }
+
+                writer.Write(md5Hash);
                 writer.Write(DataOffset);
                 writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }
@@ -227,7 +237,7 @@ namespace RSDKv5
                 {
                     tmpcheck = tmpcheck + FileName[i];
                 }
-                
+
                 //Do we know the filename of the file?
                 if (tmpcheck != "Data" && tmpcheck != "Byte")
                 {
@@ -538,6 +548,17 @@ namespace RSDKv5
                 if (f.FileName == fileName)
                 {
                     f.Write(NewFileName);
+                }
+            }
+        }
+
+        public void GetFileinfoFromDataFile(string filename)
+        {
+            for (int i = 0; i < Files.Count; i++)
+            {
+                if (string.Equals(Files[i].FileName, filename))
+                {
+
                 }
             }
         }

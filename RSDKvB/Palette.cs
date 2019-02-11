@@ -8,8 +8,14 @@ namespace RSDKvB
 {
     public class Palette
     {
+        /// <summary>
+        /// how many colours for each row (always 16)
+        /// </summary>
         public int COLORS_PER_COLUMN = 0x10;
 
+        /// <summary>
+        /// an array of the colours
+        /// </summary>
         public PaletteColour[][] Colors;
 
         public Palette(int pc = 2)
@@ -46,7 +52,6 @@ namespace RSDKvB
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
                 {
                     Colors[i][j] = new PaletteColour(reader);
-                    //Console.WriteLine("R = " + Colors[i][j].R + " G = " + Colors[i][j].G + "B = " + Colors[i][j].B);
                 }
             }
         }
@@ -62,6 +67,11 @@ namespace RSDKvB
                 for (int j = 0; j < COLORS_PER_COLUMN; ++j)
                 { Colors[i][j] = new PaletteColour(reader);}
             }
+        }
+
+        public void ReadSuperPalette(Reader reader, int offset)
+        {
+
         }
 
         public void Write(string filename)

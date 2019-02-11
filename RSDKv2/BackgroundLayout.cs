@@ -9,64 +9,97 @@ namespace RSDKv2
     /* Background Layout */
     public class BGLayout
     {
-        public class ParallaxValues
+        public class ScrollInfo
         {
+            /// <summary>
+            /// how fast the line moves while the player is moving
+            /// </summary>
             public byte RelativeSpeed;
+            /// <summary>
+            /// How fast the line moves without the player moving
+            /// </summary>
             public byte ConstantSpeed;
-            public byte Unknown1;
-            public byte Unknown; //Flips when walking?
+            /// <summary>
+            /// the draw order of the layer
+            /// </summary>
+            public byte DrawLayer;
+            /// <summary>
+            /// a special byte that tells the game what "behaviour" property the layer has
+            /// </summary>
+            public byte Behaviour;
 
-            public ParallaxValues()
+            public ScrollInfo()
             {
-                Unknown1 = 0;
                 RelativeSpeed = 0;
                 ConstantSpeed = 0;
-                Unknown = 0;
+                DrawLayer = 0;
+                Behaviour = 0;
             }
 
-            public ParallaxValues(byte r, byte c, byte u1, byte u2)
+            public ScrollInfo(byte r, byte c, byte d, byte b)
             {
-                Unknown1 = u1;
                 RelativeSpeed = r;
                 ConstantSpeed = c;
-                Unknown = u2;
+                DrawLayer = d;
+                Behaviour = b;
             }
 
-            public ParallaxValues(Reader reader)
+            public ScrollInfo(Reader reader)
             {
                 RelativeSpeed = reader.ReadByte();
                 ConstantSpeed = reader.ReadByte();
-                Unknown1 = reader.ReadByte();
-                Unknown = reader.ReadByte();
+                DrawLayer = reader.ReadByte();
+                Behaviour = reader.ReadByte();
             }
 
             public void Write(Writer writer)
             {
                 writer.Write(RelativeSpeed);
                 writer.Write(ConstantSpeed);
-                writer.Write(Unknown1);
-                writer.Write(Unknown);
+                writer.Write(DrawLayer);
+                writer.Write(Behaviour);
             }
 
         }
 
         public class BGLayer
         {
-
+            /// <summary>
+            /// the array of Chunks IDs for the Layer
+            /// </summary>
             public ushort[][] MapLayout { get; set; }
 
-            public int width, height = 0;
-            public byte Unknown1; //Has something to do with the layer shown, since most values cause a blank BG
-            public byte Unknown2; //makes the background do weird things
-            public byte RelativeVSpeed;
-            public byte ConstantVSpeed;
+            /// <summary>
+            /// Layer Width
+            /// </summary>
+            public byte width = 0;
+            /// <summary>
+            /// Layer Height
+            /// </summary>
+            public byte height = 0;
+            /// <summary>
+            /// the draw order of the layer
+            /// </summary>
+            public byte DrawLayer;
+            /// <summary>
+            /// a special byte that tells the game what "behaviour" property the layer has
+            /// </summary>
+            public byte Behaviour;
+            /// <summary>
+            /// how fast the Layer moves while the player is moving
+            /// </summary>
+            public byte RelativeSpeed;
+            /// <summary>
+            /// how fast the layer moves while the player isn't moving
+            /// </summary>
+            public byte ConstantSpeed;
 
             public List<byte> LineIndexes = new List<byte>();
 
             public BGLayer()
             {
                 width = height = 1;
-                Unknown1 = Unknown2 = RelativeVSpeed = ConstantVSpeed = 0;
+                DrawLayer = Behaviour = RelativeSpeed = ConstantSpeed = 0;
 
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -75,11 +108,11 @@ namespace RSDKv2
                 }
             }
 
-            public BGLayer(ushort w, ushort h)
+            public BGLayer(byte w, byte h)
             {
                 width = w;
                 height = h;
-                Unknown1 = Unknown2 = RelativeVSpeed = ConstantVSpeed = 0;
+                Behaviour = DrawLayer = RelativeSpeed = ConstantSpeed = 0;
 
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -92,12 +125,10 @@ namespace RSDKv2
             {
                 width = reader.ReadByte();
                 height = reader.ReadByte();
-                RelativeVSpeed = reader.ReadByte();
-                ConstantVSpeed = reader.ReadByte();
-                Unknown1 = reader.ReadByte();
-                Unknown2 = reader.ReadByte();
-
-                //Console.WriteLine("Width = " + width + " Height = " + height + " Unknown 1 = " + Unknown1 + " Unknown 2 = " + Unknown2 + " Unknown 3 = " + Unknown3);
+                RelativeSpeed = reader.ReadByte();
+                ConstantSpeed = reader.ReadByte();
+                DrawLayer = reader.ReadByte();
+                Behaviour = reader.ReadByte();
 
                 int j = 0;
                 while (j < 1)
@@ -142,12 +173,12 @@ namespace RSDKv2
 
             public void Write(Writer writer)
             {
-                writer.Write((byte)width);
-                writer.Write((byte)height);
-                writer.Write(RelativeVSpeed);
-                writer.Write(ConstantVSpeed);
-                writer.Write(Unknown1);
-                writer.Write(Unknown2);
+                writer.Write(width);
+                writer.Write(height);
+                writer.Write(RelativeSpeed);
+                writer.Write(ConstantSpeed);
+                writer.Write(DrawLayer);
+                writer.Write(Behaviour);
 
                 for (int i = 0; i < LineIndexes.Count; i++)
                 {
@@ -168,10 +199,17 @@ namespace RSDKv2
 
         }
 
-        public List<ParallaxValues> HLines = new List<ParallaxValues>();
-
-        public List<ParallaxValues> VLines = new List<ParallaxValues>();
-
+        /// <summary>
+        /// A list of Horizontal Line Scroll Values
+        /// </summary>
+        public List<ScrollInfo> HLines = new List<ScrollInfo>();
+        /// <summary>
+        /// A list of Vertical Line Scroll Values
+        /// </summary>
+        public List<ScrollInfo> VLines = new List<ScrollInfo>();
+        /// <summary>
+        /// A list of Background layers
+        /// </summary>
         public List<BGLayer> Layers = new List<BGLayer>();
 
         public BGLayout()
@@ -198,13 +236,13 @@ namespace RSDKv2
 
             for (int i = 0; i < HLineCount; i++)
             {
-                ParallaxValues p = new ParallaxValues(reader);
+                ScrollInfo p = new ScrollInfo(reader);
                 HLines.Add(p);
             }
 
             for (int i = 0; i < VLineCount; i++)
             {
-                ParallaxValues p = new ParallaxValues(reader);
+                ScrollInfo p = new ScrollInfo(reader);
                 VLines.Add(p);
             }
 

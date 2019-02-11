@@ -14,6 +14,50 @@ namespace RSDKvRS
             return this.MemberwiseClone();
         }
 
+        /// <summary>
+        /// the default names for the animations
+        /// </summary>
+        public string[] AnimNames = new string[]
+{
+            "Stopped",
+            "Waiting",
+            "Looking Up",
+            "Looking Down",
+            "Walking",
+            "Running",
+            "Skidding",
+            "SuperPeelOut",
+            "Spin Dash",
+            "Jumping",
+            "Bouncing",
+            "Hurt",
+            "Dying",
+            "Life Icon",
+            "Drowning",
+            "Fan Rotate",
+            "Breathing",
+            "Pushing",
+            "Flailing Left",
+            "Flailing Right",
+            "Sliding",
+            "Hanging",
+            "Dropping",
+            "FinishPose",
+            "Cork Screw",
+            "Retro Sonic Animation #26",
+            "Retro Sonic Animation #27",
+            "Retro Sonic Animation #28",
+            "Retro Sonic Animation #29",
+            "Retro Sonic Animation #30",
+            "BonusSpin",
+            "SpecialStop",
+            "SpecialWalk",
+            "SpecialJump",
+};
+
+        /// <summary>
+        /// a string to be added to the start of the path
+        /// </summary>
         public string PathMod
         {
             get
@@ -22,12 +66,25 @@ namespace RSDKvRS
             }
         }
 
+        public bool DreamcastVer = false;
 
+        /// <summary>
+        /// Unknown Value
+        /// </summary>
         public byte Unknown = 0;
+        /// <summary>
+        /// What Moves to give the player
+        /// </summary>
         public byte PlayerType = 0;
 
-        public List<string> SpriteSheets = new List<string>();
+        /// <summary>
+        /// a List of paths to the spritesheets, relative to "Data/Sprites"
+        /// </summary>
+        public string[] SpriteSheets = new string[3];
 
+        /// <summary>
+        /// a list of Animations in the file
+        /// </summary>
         public List<sprAnimation> Animations = new List<sprAnimation>();
 
         [Serializable]
@@ -45,15 +102,42 @@ namespace RSDKvRS
                     return this.MemberwiseClone();
                 }
 
+                /// <summary>
+                /// the spritesheet index
+                /// </summary>
                 public byte SpriteSheet = 0;
+                /// <summary>
+                /// the collision box
+                /// </summary>
                 public byte[] CollisionBox = new byte[4];
+                /// <summary>
+                /// the delay of each frame before advancing to the next one in frames (always 256)
+                /// </summary>
                 public readonly short Delay = 256;
+                /// <summary>
+                /// the Xpos on the sheet
+                /// </summary>
                 public byte X = 0;
+                /// <summary>
+                /// the YPos on the sheet
+                /// </summary>
                 public byte Y = 0;
+                /// <summary>
+                /// the frame's width
+                /// </summary>
                 public byte Width = 0;
+                /// <summary>
+                /// the frame's height
+                /// </summary>
                 public byte Height = 0;
-                public byte PivotX = 0;
-                public byte PivotY = 0;
+                /// <summary>
+                /// the offsetX of the frame
+                /// </summary>
+                public SByte PivotX = 0;
+                /// <summary>
+                /// the offsetY of the frame
+                /// </summary>
+                public SByte PivotY = 0;
 
                 public sprFrame()
                 {
@@ -69,15 +153,15 @@ namespace RSDKvRS
                     SpriteSheet = reader.ReadByte();
 
                     for (int k = 0; k < 4; k++)
-                    CollisionBox[k] = reader.ReadByte();
+                        CollisionBox[k] = reader.ReadByte();
 
                     byte[] PivotVals = new byte[2];
 
-                    PivotVals[0] = reader.ReadByte();
-                    PivotVals[1] = reader.ReadByte();
+                    PivotVals[0] = (byte)-reader.ReadByte();
+                    PivotVals[1] = (byte)-reader.ReadByte();
 
-                    PivotX = (byte)(CollisionBox[2] - PivotVals[0]); //PivotVal[0] is the true Value, this calculation is just done so the animation looks right upon playback
-                    PivotY = (byte)(CollisionBox[3] - PivotVals[1]); //PivotVal[1] is the true Value, this calculation is just done so the animation looks right upon playback
+                    PivotX = (SByte)PivotVals[0];
+                    PivotY = (SByte)PivotVals[1];
                 }
 
                 public void Write(Writer writer)
@@ -91,22 +175,33 @@ namespace RSDKvRS
                     {
                         writer.Write(CollisionBox[c]);
                     }
-                    writer.Write(PivotX);
-                    writer.Write(PivotY);
+                    byte px = (byte)PivotX;
+                    byte py = (byte)PivotY;
+                    writer.Write(-px);
+                    writer.Write(-py);
                 }
 
             }
 
+            /// <summary>
+            /// the name of the animation (RSDKvRS doesn't have one, so we use a "Plain one")
+            /// </summary>
             public string AnimationName
             {
-                get
-                {
-                    return "RSDKvRS Animation ";
-                }
+                get;
+                set;
             }
-
+            /// <summary>
+            /// a list of frames in the animation
+            /// </summary>
             public List<sprFrame> Frames = new List<sprFrame>();
+            /// <summary>
+            /// what frame to loop back from
+            /// </summary>
             public byte LoopIndex;
+            /// <summary>
+            /// the speed multiplyer of the animation
+            /// </summary>
             public byte SpeedMultiplyer;
 
             public sprAnimation()
@@ -117,7 +212,7 @@ namespace RSDKvRS
             public sprAnimation(Reader reader)
             {
                 byte frameCount = reader.ReadByte();
-                SpeedMultiplyer = reader.ReadByte();
+                SpeedMultiplyer = (byte)(reader.ReadByte() * 4);
                 LoopIndex = reader.ReadByte();
                 for (int i = 0; i < frameCount; ++i)
                 {
@@ -167,6 +262,8 @@ namespace RSDKvRS
             Unknown = reader.ReadByte();
             PlayerType = reader.ReadByte();
 
+            this.DreamcastVer = DreamcastVer;
+
             int spriteSheetCount = 3;
             if (DreamcastVer) //The Dreamcast Demo of retro-sonic only had 2 spritesheets per animation...
             {
@@ -179,8 +276,23 @@ namespace RSDKvRS
 
             var animationCount = reader.ReadByte();
 
-            for (int i = 0; i < spriteSheetCount; ++i)
-                SpriteSheets.Add(reader.ReadString());
+            for (int i = 0; i < 3; ++i)
+            {
+                if (i == 2 && DreamcastVer)
+                {
+                    SpriteSheets[i] = "<NULL>";
+                }
+                else
+                {
+                    SpriteSheets[i] = reader.ReadRSDKString();
+                    string tmp = "";
+                    for (int ii = 0; ii < SpriteSheets[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
+                    {
+                        tmp += SpriteSheets[i][ii];
+                    }
+                    SpriteSheets[i] = tmp;
+                }
+            }
 
             for (int i = 0; i < animationCount; ++i)
                 Animations.Add(new sprAnimation(reader));
@@ -194,24 +306,11 @@ namespace RSDKvRS
 
             writer.Write((byte)Animations.Count);
 
-            byte SheetCnt = (byte)SpriteSheets.Count;
+            byte SheetCnt = (byte)SpriteSheets.Length;
 
-            if (SpriteSheets.Count > 3)
-            {
-                SheetCnt = 3;
-            }
-
-            for (int i = 0; i < SheetCnt; ++i)
+            for (int i = 0; i < SpriteSheets.Length; ++i)
             {
                 writer.WriteRSDKString(SpriteSheets[i]);
-            }
-
-            if (SpriteSheets.Count < 3)
-            {
-                for (int i = 0; i < 3 - SpriteSheets.Count; ++i)
-                {
-                    writer.WriteRSDKString("NULL");
-                }
             }
 
             for (int i = 0; i < Animations.Count; ++i)

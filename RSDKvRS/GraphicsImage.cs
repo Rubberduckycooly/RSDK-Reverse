@@ -8,35 +8,43 @@ namespace RSDKvRS
 {
     public class gfx
     {
-        public class gfxPalette
-        {
-            public byte[] r = new byte[256];
-            public byte[] g = new byte[256];
-            public byte[] b = new byte[256];
-        }
-
+        /// <summary>
+        /// the data of the image layed out in a bitmap form for easy use
+        /// </summary>
         public Bitmap gfxImage;
-        public gfxPalette GFXpal;
-        int width;
-        int height;
-        int[] data;
+        /// <summary>
+        /// the Image's palette
+        /// </summary>
+        public PaletteColour[] GFXpal = new PaletteColour[255];
+        /// <summary>
+        /// the width of the image
+        /// </summary>
+        public ushort width;
+        /// <summary>
+        /// the height of the image
+        /// </summary>
+        public ushort height;
+        /// <summary>
+        /// the image data 
+        /// </summary>
+        public byte[] data;
 
         public gfx()
         {
 
         }
 
-        public gfx(string filename, bool dcGFX) : this(new Reader(filename),dcGFX)
+        public gfx(string filename, bool dcGFX = false) : this(new Reader(filename),dcGFX)
         {
 
         }
 
-        public gfx(System.IO.Stream stream, bool dcGFX) : this(new Reader(stream),dcGFX)
+        public gfx(System.IO.Stream stream, bool dcGFX = false) : this(new Reader(stream),dcGFX)
         {
 
         }
 
-        public gfx(Reader reader, bool dcGFX)
+        public gfx(Reader reader, bool dcGFX = false)
         {
 
             if (dcGFX)
@@ -44,16 +52,13 @@ namespace RSDKvRS
                 reader.ReadByte();
             }
 
-            width = reader.ReadByte() << 8;
+            width = (ushort)(reader.ReadByte() << 8);
             width |= reader.ReadByte();
 
-            height = reader.ReadByte() << 8;
+            height = (ushort)(reader.ReadByte() << 8);
             height |= reader.ReadByte();
 
             // Create image
-
-            GFXpal = new gfxPalette();
-
             gfxImage = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
 
             ColorPalette cp = gfxImage.Palette;
@@ -61,44 +66,43 @@ namespace RSDKvRS
             // Read & Process palette
             for (int i = 0; i < 255; i++)
             {
-                GFXpal.r[i] = reader.ReadByte();
-                GFXpal.g[i] = reader.ReadByte();
-                GFXpal.b[i] = reader.ReadByte();
-                cp.Entries[i] = Color.FromArgb(255, GFXpal.r[i], GFXpal.g[i], GFXpal.b[i]);
+                GFXpal[i] = new PaletteColour(); 
+                GFXpal[i].R = reader.ReadByte();
+                GFXpal[i].G = reader.ReadByte();
+                GFXpal[i].B = reader.ReadByte();
+                cp.Entries[i] = Color.FromArgb(255, GFXpal[i].R, GFXpal[i].G, GFXpal[i].B);
                 
             }
             gfxImage.Palette = cp;
             
             //Read Image Data
-            int[] buf = new int[3];
+            byte[] buf = new byte[3];
             bool finished = false;
             int cnt = 0;
             int loop = 0;
 
-            data = new int[width * height];
+            data = new byte[(width * height) + 1];
 
-            while (!reader.IsEof)
+            while(!finished)
             {
                 buf[0] = reader.ReadByte();
-
-                if (buf[0] != 0xFF && !reader.IsEof)
-                { data[cnt++] = buf[0]; }
-
-                else
+                if (buf[0] == 255)
                 {
                     buf[1] = reader.ReadByte();
-
-                    if (buf[1] != 0xFF && !reader.IsEof)
+                    if (buf[1] == 255)
+                    {
+                        finished = true;
+                        break;
+                    }
+                    else
                     {
                         buf[2] = reader.ReadByte();
                         loop = 0;
 
                         // Repeat value needs to decreased by one to decode 
                         // the graphics from the Dreamcast demo
-                            if (dcGFX)
-                            {buf[2]--; }
-
-
+                        if (dcGFX)
+                        { buf[2]--; }
 
                         while (loop < buf[2] && !reader.IsEof)
                         {
@@ -106,10 +110,14 @@ namespace RSDKvRS
                             loop++;
                         }
                     }
-                    else
-                        finished = true;
+                }
+                else
+                {
+                    data[cnt++] = buf[0];
                 }
             }
+
+            Console.Write("file Length = " + reader.BaseStream.Length + " file pos = " + reader.Pos + " data remaining = " + (reader.BaseStream.Length - reader.Pos));
 
             // Write data to image
             int pixel = 0;
@@ -119,12 +127,41 @@ namespace RSDKvRS
                 {
                     BitmapData ImgData = gfxImage.LockBits(new Rectangle(new Point(w, h), new Size(1, 1)), System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
                     byte b = System.Runtime.InteropServices.Marshal.ReadByte(ImgData.Scan0);
-                    System.Runtime.InteropServices.Marshal.WriteByte(ImgData.Scan0, (byte)(data[pixel]));
+                    System.Runtime.InteropServices.Marshal.WriteByte(ImgData.Scan0, (data[pixel]));
                     gfxImage.UnlockBits(ImgData);
                     pixel++;
                 }
             }
+
             reader.Close();
+        }
+
+        public void ReDrawImage()
+        {
+            gfxImage = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
+
+            ColorPalette cp = gfxImage.Palette;
+
+            // Read & Process palette
+            for (int i = 0; i < 255; i++)
+            {
+                cp.Entries[i] = Color.FromArgb(255, GFXpal[i].R, GFXpal[i].G, GFXpal[i].B);
+            }
+            gfxImage.Palette = cp;
+
+            // Write data to image
+            int pixel = 0;
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    BitmapData ImgData = gfxImage.LockBits(new Rectangle(new Point(w, h), new Size(1, 1)), System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                    byte b = System.Runtime.InteropServices.Marshal.ReadByte(ImgData.Scan0);
+                    System.Runtime.InteropServices.Marshal.WriteByte(ImgData.Scan0, (data[pixel]));
+                    gfxImage.UnlockBits(ImgData);
+                    pixel++;
+                }
+            }
         }
 
         public void export(string exportLocation, System.Drawing.Imaging.ImageFormat format)
@@ -135,17 +172,17 @@ namespace RSDKvRS
         public void importFromBitmap(Bitmap IMG)
         {
             gfxImage = IMG;
-            width = IMG.Width; 
-            height = IMG.Height;
+            width = (ushort)IMG.Width; 
+            height = (ushort)IMG.Height;
         }
 
-        public void Write(string filename, bool dcGFX)
+        public void Write(string filename, bool dcGFX = false)
         {
             using (Writer writer = new Writer(filename))
                 this.Write(writer,dcGFX);
         }
 
-        public void Write(System.IO.Stream stream, bool dcGFX)
+        public void Write(System.IO.Stream stream, bool dcGFX = false)
         {
             using (Writer writer = new Writer(stream))
                 this.Write(writer,dcGFX);
@@ -158,7 +195,7 @@ namespace RSDKvRS
             return (byte)pixel8bpp;
         }
 
-        internal void Write(Writer writer, bool dcGFX)
+        public void Write(Writer writer, bool dcGFX = false, bool raw = false)
         {
             if (gfxImage == null)
                 throw new Exception("Image is NULL");
@@ -167,12 +204,10 @@ namespace RSDKvRS
 			throw new Exception("Only indexed images can be converted to GFX format.");
 
             if (gfxImage.Width > 65535)
-                throw new Exception("Images to be converted to GFX format can't be wider than 65535 pixels");
+                throw new Exception("GFX Images can't be wider than 65535 pixels");
 
             if (gfxImage.Height > 65535)
-                throw new Exception("Images to be converted to GFX format can't be higher than 65535 pixels");
-
-            GFXpal = new gfxPalette();
+                throw new Exception("GFX Images can't be higher than 65535 pixels");
 
             int num_pixels = gfxImage.Width * gfxImage.Height;
             int[] pixels = new int[num_pixels]; //Pallete Indexes
@@ -185,11 +220,25 @@ namespace RSDKvRS
             }
 
             int pix = 0;
-            for (int h = 0; h < gfxImage.Height; h++)
+            if (raw) //get data from "data" array
             {
-                for (int w = 0; w < gfxImage.Width; w++)
+                for (int h = 0; h < height; h++)
                 {
-                    pixels[pix++] = Get8bppImagePixel(gfxImage, new Point(w, h));
+                    for (int w = 0; w < width; w++)
+                    {
+                        pixels[pix] = data[pix];
+                        pix++;
+                    }
+                }
+            }
+            else //Get Data from Bitmap Class
+            {
+                for (int h = 0; h < gfxImage.Height; h++)
+                {
+                    for (int w = 0; w < gfxImage.Width; w++)
+                    {
+                        pixels[pix++] = Get8bppImagePixel(gfxImage, new Point(w, h));
+                    }
                 }
             }
 
@@ -208,17 +257,17 @@ namespace RSDKvRS
 
             for (int i = 0; i < gfxImage.Palette.Entries.Length; i++)
             {
-                GFXpal.r[i] = gfxImage.Palette.Entries[i].R;
-                GFXpal.g[i] = gfxImage.Palette.Entries[i].G;
-                GFXpal.b[i] = gfxImage.Palette.Entries[i].B;
+                GFXpal[i].R = gfxImage.Palette.Entries[i].R;
+                GFXpal[i].G = gfxImage.Palette.Entries[i].G;
+                GFXpal[i].B = gfxImage.Palette.Entries[i].B;
             }
 
             // Output palette
             for (int x = 0; x < 255; x++)
             {
-                writer.Write(GFXpal.r[x]);
-                writer.Write(GFXpal.g[x]);
-                writer.Write(GFXpal.b[x]);
+                writer.Write(GFXpal[x].R);
+                writer.Write(GFXpal[x].G);
+                writer.Write(GFXpal[x].B);
             }
 
             // Output data
@@ -245,34 +294,34 @@ namespace RSDKvRS
             writer.Close();
         }
 
-        private static void rle_write(Writer file, int pixel, int count, bool dcGfx)
+        private static void rle_write(Writer file, int pixel, int count, bool dcGfx = false)
         {
-		if(count <= 2)
-		{
-			for(int y = 0; y<count; y++)
-				file.Write((byte)pixel);
-		}
-		else
-		{
-			while(count > 0)
-			{
-				file.Write((byte)0xFF);
-				
-				file.Write((byte)pixel);
-				
-				if(dcGfx)
-				{
-					file.Write((byte)((count>253) ? 254 : (count + 1)));
-					count -= 253;
-				}
-				else
-				{
-					file.Write((byte)((count>254) ? 254 : count));
-					count -= 254;
-				}
-			}
-		}
-	}
+            if (count <= 2)
+            {
+                for (int y = 0; y < count; y++)
+                    file.Write((byte)pixel);
+            }
+            else
+            {
+                while (count > 0)
+                {
+                    file.Write((byte)0xFF);
+
+                    file.Write((byte)pixel);
+
+                    if (dcGfx)
+                    {
+                        file.Write((byte)((count > 253) ? 254 : (count + 1)));
+                        count -= 253;
+                    }
+                    else
+                    {
+                        file.Write((byte)((count > 254) ? 254 : count));
+                        count -= 254;
+                    }
+                }
+            }
+        }
 
     }
 }

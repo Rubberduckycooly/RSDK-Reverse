@@ -9,8 +9,18 @@ namespace RSDKvRS
 {
     public class PaletteColour
     {
-
-        public byte R, G, B;
+        /// <summary>
+        /// Colour Red Value
+        /// </summary>
+        public byte R;
+        /// <summary>
+        /// Colour Green Value
+        /// </summary>
+        public byte G;
+        /// <summary>
+        /// Colour Blue Value
+        /// </summary>
+        public byte B;
 
         public PaletteColour(byte R = 0, byte G = 0, byte B = 0)
         {

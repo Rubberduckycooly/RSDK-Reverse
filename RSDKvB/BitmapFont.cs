@@ -12,8 +12,17 @@ namespace RSDKvB
         public class Header
         {
             string IntroFace = "";
+            /// <summary>
+            /// the font size
+            /// </summary>
             public int Size;
+            /// <summary>
+            /// is the font bold?
+            /// </summary>
             public bool Bold;
+            /// <summary>
+            /// is the font in italics?
+            /// </summary>
             public bool Italic;
             public string CharSet = "";
             public int Unicode;
@@ -29,6 +38,9 @@ namespace RSDKvB
             public int Pages;
             public bool Packed;
             public int PageID;
+            /// <summary>
+            /// the file name for the sheet to display the font
+            /// </summary>
             public string Filename = "";
             public int CharCount;
 

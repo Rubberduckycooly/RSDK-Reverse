@@ -12,38 +12,52 @@ namespace RSDKv1
         {
             public class SceneInfo
             {
-                public byte StageCount;
+                /// <summary>
+                /// not entirely sure
+                /// </summary>
+                public byte Unknown;
+                /// <summary>
+                /// the folder of the scene
+                /// </summary>
                 public string SceneFolder = "Folder";
+                /// <summary>
+                /// the scene's identifier (E.G Act1 or Act2)
+                /// </summary>
                 public string ActID = "1";
+                /// <summary>
+                /// the scene name (shows up on the dev menu)
+                /// </summary>
                 public string Name = "Scene";
 
-                internal SceneInfo()
+                public SceneInfo()
                 {
                     SceneFolder = "";
                     ActID = "";
                     Name = "";
-                    StageCount = 0;
+                    Unknown = 0;
                 }
 
-                internal SceneInfo(Reader reader)
+                public SceneInfo(Reader reader)
                 {
                     SceneFolder = reader.ReadRSDKString();
                     ActID = reader.ReadRSDKString();
                     Name = reader.ReadRSDKString();
-                    StageCount = reader.ReadByte();
+                    Unknown = reader.ReadByte();
                     Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder);
                 }
 
-                internal void Write(Writer writer)
+                public void Write(Writer writer)
                 {
                     writer.WriteRSDKString(SceneFolder);
                     writer.WriteRSDKString(ActID);
                     writer.WriteRSDKString(Name);
-                    writer.Write(StageCount);
+                    writer.Write(Unknown);
                 }
             }
 
-            public byte SceneCount;
+            /// <summary>
+            /// the list of stages in this category
+            /// </summary>
             public List<SceneInfo> Scenes = new List<SceneInfo>();
 
             public Category()
@@ -63,7 +77,7 @@ namespace RSDKv1
 
             internal Category(Reader reader)
             {
-                SceneCount = reader.ReadByte();
+                byte SceneCount = reader.ReadByte();
 
                 for (int i = 0; i < SceneCount; i++)
                 {
@@ -86,8 +100,8 @@ namespace RSDKv1
 
             internal void Write(Writer writer)
             {
-                writer.Write(SceneCount);
-                for (int i = 0; i < SceneCount; i++)
+                writer.Write((byte)Scenes.Count);
+                for (int i = 0; i < Scenes.Count; i++)
                 {
                     Scenes[i].Write(writer);
                 }
@@ -97,47 +111,52 @@ namespace RSDKv1
 
         public class GlobalVariable
         {
-
-            string Name;
-            byte UnknownValue1;
-            byte UnknownValue2;
-            byte UnknownValue3;
-            byte UnknownValue4;
+            /// <summary>
+            /// the name of the variable
+            /// </summary>
+            public string Name;
+            /// <summary>
+            /// the variable's value
+            /// </summary>
+            public int Value = 0;
 
             public GlobalVariable()
             {
-                Name = "";
-                UnknownValue1 = 0;
-                UnknownValue2 = 0;
-                UnknownValue3 = 0;
-                UnknownValue4 = 0;
+
             }
 
-            internal GlobalVariable(Reader reader)
+            public GlobalVariable(string name)
+            {
+                Name = name;
+            }
+
+            public GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
                 Console.WriteLine(Name);
-                UnknownValue1 = reader.ReadByte();
-                UnknownValue2 = reader.ReadByte();
-                UnknownValue3 = reader.ReadByte();
-                UnknownValue4 = reader.ReadByte();
+                Value = reader.ReadInt32();
             }
 
-            internal void Write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.WriteRSDKString(Name);
-                writer.Write(UnknownValue1);
-                writer.Write(UnknownValue2);
-                writer.Write(UnknownValue3);
-                writer.Write(UnknownValue4);
+                writer.Write(Value);
             }
         }
 
         public class PlayerData
         {
-
+            /// <summary>
+            /// The location of the player sprite mappings
+            /// </summary>
             public string PlayerAnimLocation;
+            /// <summary>
+            /// the location of the player script
+            /// </summary>
             public string PlayerScriptLocation;
+            /// <summary>
+            /// the name of the player
+            /// </summary>
             public string PlayerName;
 
             public PlayerData()
@@ -163,15 +182,47 @@ namespace RSDKv1
 
         }
 
+        /// <summary>
+        /// the game name, appears on the window
+        /// </summary>
         public string GameWindowText;
+        /// <summary>
+        /// i have no idea
+        /// </summary>
         public string DataFileName;
+        /// <summary>
+        /// the string the appears in the about window
+        /// </summary>
         public string GameDescriptionText;
 
-        public List<string> ScriptFilepaths = new List<string>();
+        /// <summary>
+        /// the list of filepaths for the global objects
+        /// </summary>
+        public List<string> ScriptPaths = new List<string>();
+        /// <summary>
+        /// the list of global SoundFX
+        /// </summary>
         public List<string> SoundFX = new List<string>();
+        /// <summary>
+        /// the list of global variable names and values
+        /// </summary>
         public List<GlobalVariable> GlobalVariables = new List<GlobalVariable>();
+        /// <summary>
+        /// the list of playerdata needed for players
+        /// </summary>
         public List<PlayerData> playerData = new List<PlayerData>();
+        /// <summary>
+        /// the category list (stage list)
+        /// </summary>
         public List<Category> Categories = new List<Category>();
+
+        public GameConfig()
+        {
+            Categories.Add(new Category()); //Menus
+            Categories.Add(new Category()); //Stages              
+            Categories.Add(new Category()); //Special Stages
+            Categories.Add(new Category()); //Bonus Stages
+        }
 
         public GameConfig(string filename) : this(new Reader(filename))
         {
@@ -182,7 +233,7 @@ namespace RSDKv1
 
         }
 
-        private GameConfig(Reader reader)
+        public GameConfig(Reader reader)
         {
             GameWindowText = reader.ReadRSDKString();
             DataFileName = reader.ReadRSDKString();
@@ -231,7 +282,7 @@ namespace RSDKv1
                 this.Write(writer);
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.WriteRSDKString(GameWindowText);
             writer.WriteRSDKString(DataFileName);
@@ -255,7 +306,7 @@ namespace RSDKv1
                 playerData[i].Write(writer);
             }
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 4; i++)
             {
                 Categories[i].Write(writer);
             }
@@ -268,13 +319,13 @@ namespace RSDKv1
         {
             byte srctxt_count = reader.ReadByte();
             for (int i = 0; i < srctxt_count; ++i)
-            { ScriptFilepaths.Add(reader.ReadRSDKString()); Console.WriteLine(ScriptFilepaths[i]); }
+            { ScriptPaths.Add(reader.ReadRSDKString()); Console.WriteLine(ScriptPaths[i]); }
         }
 
         internal void WriteObjectsNames(Writer writer)
         {
-            writer.Write((byte)ScriptFilepaths.Count);
-            foreach (string name in ScriptFilepaths)
+            writer.Write((byte)ScriptPaths.Count);
+            foreach (string name in ScriptPaths)
                 writer.WriteRSDKString(name);
         }
 

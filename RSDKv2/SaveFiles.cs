@@ -8,93 +8,342 @@ namespace RSDKv2
 {
     public class SaveFiles
     {
-        public class SaveData
+
+        public class TimeAttackStageData
         {
-            public int CharacterID;
-            public int Lives;
-            public byte[] Score = new byte[4];
-            public int LevelID;
-            public int TimeStones = 127;
-            public int unknown2 = 0;
-            public byte[] GoodFutures = new byte[4];
-            public ushort RoboMachines;
-            public ushort MSHolograms;
-
-            public SaveData(Stream stream) : this(new Reader(stream))
+            public class TimeAttackData
             {
-            }
+                public int Minutes;
+                public int Seconds;
+                public int Milliseconds;
 
-            public SaveData(string file) : this(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-            }
-
-            internal SaveData(Reader reader)
-            {
-                //CharacterID = reader.ReadInt32();
-                CharacterID = reader.ReadByte();
-                reader.ReadBytes(3);
-                Lives = reader.ReadInt32();
-                Score = reader.ReadBytes(4);
-                LevelID = reader.ReadInt32();
-                TimeStones = reader.ReadInt32();
-                unknown2 = reader.ReadInt32();
-                GoodFutures = reader.ReadBytes(4);
-                RoboMachines = reader.ReadUInt16();
-                MSHolograms = reader.ReadUInt16();
-            }
-
-            public void Write(string filename)
-            {
-                using (Writer writer = new Writer(filename))
-                    this.Write(writer);
-            }
-
-            public void Write(System.IO.Stream stream)
-            {
-                using (Writer writer = new Writer(stream))
-                    this.Write(writer);
-            }
-
-            internal void Write(Writer writer)
-            {
-                writer.Write(CharacterID);//Characters
-                writer.Write(Lives);//Lives
-                writer.Write(Score); //Unknown 
-                writer.Write(LevelID);//Levels
-                writer.Write(TimeStones);
-                writer.Write(unknown2);//RDC made me do it!
-                writer.Write(GoodFutures);
-                writer.Write(RoboMachines);
-                writer.Write(MSHolograms);//Metal Sonic holograms
-            }
-
-            public void SetTimeStone(int pos, bool Set)
-            {
-                if (Set)
+                public TimeAttackData()
                 {
-                    TimeStones |= 1 << pos;
+
                 }
-                if (!Set)
+
+                public TimeAttackData(int Offset)
                 {
-                    TimeStones &= ~(1 << pos);
+                    //SaveRAM[Offset];
                 }
             }
 
+            TimeAttackData[] Times = new TimeAttackData[3];
+
+            public TimeAttackStageData()
+            {
+                Times[0] = new TimeAttackData();
+                Times[1] = new TimeAttackData();
+                Times[2] = new TimeAttackData();
+            }
+
+            public TimeAttackStageData(int Offset)
+            {
+                int BaseOffset = Offset;
+                for (int i = Offset; Offset < BaseOffset + 3; Offset++)
+                {
+                    Times[Offset - BaseOffset] = new TimeAttackData(Offset);
+                }
+            }
         }
 
-        public SaveData[] Saves = new SaveData[4];
+        public static int FileSize
+        {
+            get
+            {
+                return 0x8000;
+            }
+        }
+
+        public static int[] SaveRAM = new int[FileSize / 4];
+
+        public int SaveFile = 0;
+        public int TimeAttackStage = 0;
+        public int TimeAttackPlace = 0; //0 to 2
+        public int SaveFilePos
+        {
+            get
+            {
+                return (SaveFile * 0x20);
+            }
+        }
+
+        /// <summary>
+        /// what character you are
+        /// </summary>
+        public int CharacterID
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x00) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x00) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// how many lives you have
+        /// </summary>
+        public int Lives
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x04) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x04) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// current score
+        /// </summary>
+        public int Score
+        {
+            get
+            {
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[(SaveFilePos + 0x08) / 4]);
+                return intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
+            }
+            set
+            {
+                byte[] intBytes = BitConverter.GetBytes(value);
+                SaveRAM[(SaveFilePos + 0x08) / 4] = intBytes[0] + (intBytes[1] << 8) + (intBytes[2] << 16);
+            }
+        }
+        /// <summary>
+        /// what zone the player is upto
+        /// </summary>
+        public int ZoneID
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x0C) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x0C) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// how many timestones are collected
+        /// </summary>
+        public int TimeStones
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x10) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x10) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// what special stage the user is upto
+        /// </summary>
+        public int SpecialZoneID
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x14) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x14) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// what stages have good futures
+        /// </summary>
+        public int GoodFutures
+        {
+            get
+            {
+                return SaveRAM[(SaveFilePos + 0x18) / 4];
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x18) / 4] = value;
+            }
+        }
+        /// <summary>
+        /// how many robo machines have been broken
+        /// </summary>
+        public int FuturesSaved
+        {
+            get
+            {
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[(SaveFilePos + 0x1C) / 4]);
+                return intBytes[2] + (intBytes[3] << 8);
+            }
+            set
+            {
+                SaveRAM[(SaveFilePos + 0x1C) / 4] = value;
+            }
+        }
 
         //Global Vars
-        public int unknown1;
-        public int MusVolume;
-        public int SFXVolume;
-        public int SpindashStyle;
-        public int unknown2;
-        public int Filter;
-        public int OSTStyle;
-        public bool TailsUnlocked;
+        /// <summary>
+        /// if set to 0 the engine resets everything
+        /// </summary>
+        public int NewSave
+        {
+            get
+            {
+                return SaveRAM[0x80 / 4];
+            }
+            set
+            {
+                SaveRAM[0x80 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// how loud the music is
+        /// </summary>
+        public int MusVolume
+        {
+            get
+            {
+                return SaveRAM[0x84 / 4];
+            }
+            set
+            {
+                SaveRAM[0x84 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// how loud the SoundFX is
+        /// </summary>
+        public int SFXVolume
+        {
+            get
+            {
+                return SaveRAM[0x88 / 4];
+            }
+            set
+            {
+                SaveRAM[0x88 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// using CD or MD spindash style
+        /// </summary>
+        public int SpindashStyle
+        {
+            get
+            {
+                return SaveRAM[0x8C / 4];
+            }
+            set
+            {
+                SaveRAM[0x8C / 4] = value;
+            }
+        }
+        /// <summary>
+        /// no idea
+        /// </summary>
+        public int unknown3
+        {
+            get
+            {
+                return SaveRAM[0x90 / 4];
+            }
+            set
+            {
+                SaveRAM[0x90 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// the screen filter
+        /// </summary>
+        public int Filter
+        {
+            get
+            {
+                return SaveRAM[0x94 / 4];
+            }
+            set
+            {
+                SaveRAM[0x94 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// JP or US OST?
+        /// </summary>
+        public int OSTStyle
+        {
+            get
+            {
+                byte[] intBytes = BitConverter.GetBytes(SaveRAM[0x98 / 4]);
+                return intBytes[0];
+            }
+            set
+            {
+                SaveRAM[0x98 / 4] = value;
+            }
+        }
+        /// <summary>
+        /// do we have tails unlocked?
+        /// </summary>
+        public bool TailsUnlocked
+        {
+            get
+            {
+                if (SaveRAM[0x9C / 4] == 7)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (value)
+                {
+                    SaveRAM[0x9C / 4] = 7;
+                }
+                else
+                {
+                    SaveRAM[0x9C / 4] = 0;
+                }
+            }
+        }
+        /// <summary>
+        /// what zones are unlocked in time attack?
+        /// </summary>
+        public int TimeAttackUnlocks
+        {
+            get
+            {
+                return SaveRAM[0x9C / 4];
+            }
+            set
+            {
+                SaveRAM[0x9C / 4] = value;
+            }
+        }
 
-        public List<byte> UnknownGarbo = new List<byte>();
+
+        public void SetTimeStone(int pos, bool Set)
+        {
+            if (Set)
+            {
+                TimeStones |= 1 << pos;
+            }
+            if (!Set)
+            {
+                TimeStones &= ~(1 << pos);
+            }
+        }
+
+        public SaveFiles()
+        {
+            SaveFile = 1;
+        }
 
         public SaveFiles(Stream stream) : this(new Reader(stream))
         {
@@ -106,76 +355,33 @@ namespace RSDKv2
 
         internal SaveFiles(Reader reader)
         {
-            for (int i = 0; i < 4; i++)
+            SaveFile = 1;
+            for (int i = 0; i < FileSize / 4; i++)
             {
-                Saves[i] = new SaveData(reader);
-            }
-
-            unknown1 = reader.ReadInt32();
-            MusVolume = reader.ReadInt32();
-            SFXVolume = reader.ReadInt32();
-            SpindashStyle = reader.ReadInt32();
-            unknown2 = reader.ReadInt32();
-            Filter = reader.ReadInt32();
-            OSTStyle = reader.ReadInt32();
-            int TA = reader.ReadInt32();
-            if (TA == 7)
-            {
-                TailsUnlocked = true;
-            }
-            else if (TA != 7)
-            {
-                TailsUnlocked = false;
-            }
-
-            while (!reader.IsEof)
-            {
-                UnknownGarbo.Add(reader.ReadByte());
+                SaveRAM[i] = reader.ReadInt32();
             }
 
             reader.Close();
         }
 
-            public void Write(string filename)
-            {
-                using (Writer writer = new Writer(filename))
-                    this.Write(writer);
-            }
+        public void Write(string filename)
+        {
+            using (Writer writer = new Writer(filename))
+                this.Write(writer);
+        }
 
-            public void Write(System.IO.Stream stream)
-            {
-                using (Writer writer = new Writer(stream))
-                    this.Write(writer);
-            }
+        public void Write(System.IO.Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                this.Write(writer);
+        }
 
-            internal void Write(Writer writer)
+        public void Write(Writer writer)
+        {
+            for (int i = 0; i < SaveRAM.Length; i++)
             {
-            for (int i = 0; i < 4; i++)
-            {
-                Saves[i].Write(writer);
+                writer.Write(SaveRAM[i]);
             }
-
-            writer.Write(unknown1);
-            writer.Write(MusVolume);
-            writer.Write(SFXVolume);
-            writer.Write(SpindashStyle);
-            writer.Write(unknown2);
-            writer.Write(Filter);
-            writer.Write(OSTStyle);
-            if (TailsUnlocked)
-            {
-                writer.Write(7);
-            }
-            else
-            {
-                writer.Write(0);
-            }
-
-            for (int i = 0; i < UnknownGarbo.Count; i++)
-            {
-                writer.Write(UnknownGarbo[i]);
-            }
-
             writer.Close();
         }
 

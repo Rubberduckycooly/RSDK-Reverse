@@ -8,7 +8,95 @@ namespace RSDKv2
 {
     public class Tiles128x128
     {
+        public class Tile128
+        {
+            public class Tile16
+            {
+                /// <summary>
+                /// if tile is on the high or low layer
+                /// </summary>
+                public byte VisualPlane { get; set; }
+                /// <summary>
+                /// the flip value of the tile
+                /// </summary>
+                public byte Direction { get; set; }
+                /// <summary>
+                /// the Tile's index
+                /// </summary>
+                public ushort Tile16x16 { get; set; }
+                /// <summary>
+                /// the flags for Collision Path A
+                /// </summary>
+                public byte CollisionFlag0 { get; set; }
+                /// <summary>
+                /// the flags for Collision Path B
+                /// </summary>
+                public byte CollisionFlag1 { get; set; }
+            }
 
+            /// <summary>
+            /// the list of 16x16Tiles in this chunk
+            /// </summary>
+            public Tile16[][] Mapping;
+            public Tile128()
+            {
+                Mapping = new Tile16[8][];
+                for (int i = 0; i < 8; i++)
+                {
+                    Mapping[i] = new Tile16[8];
+                }
+
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        Mapping[y][x] = new Tile16();
+                    }
+                }
+
+            }
+
+            public Bitmap Render(Image tiles)
+            {
+                Bitmap retval = new Bitmap(128, 128);
+                using (Graphics rg = Graphics.FromImage(retval))
+                {
+                    for (int y = 0; y < 8; y++)
+                    {
+                        for (int x = 0; x < 8; x++)
+                        {
+                            Rectangle destRect = new Rectangle(x * 16, y * 16, 16, 16);
+                            Rectangle srcRect = new Rectangle(0, Mapping[y][x].Tile16x16 * 16, 16, 16);
+                            using (Bitmap tile = new Bitmap(16, 16))
+                            {
+                                using (Graphics tg = Graphics.FromImage(tile))
+                                {
+                                    tg.DrawImage(tiles, 0, 0, srcRect, GraphicsUnit.Pixel);
+                                }
+                                if (Mapping[y][x].Direction == 1)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                                }
+                                else if (Mapping[y][x].Direction == 2)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                                }
+                                else if (Mapping[y][x].Direction == 3)
+                                {
+                                    tile.RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                                }
+                                rg.DrawImage(tile, destRect);
+                            }
+                        }
+                    }
+                }
+                return retval;
+            }
+        }
+
+        /// <summary>
+        /// the list of chunks in the file
+        /// </summary>
         public Tile128[] BlockList = new Tile128[512];
 
         public Tiles128x128()
@@ -129,73 +217,5 @@ namespace RSDKv2
             return Copy;
         }
 
-    }
-
-    public class Tile128
-    {
-        public Tile16[][] Mapping;
-        public Tile128()
-        {
-            Mapping = new Tile16[8][];
-            for (int i = 0; i < 8; i++)
-            {
-                Mapping[i] = new Tile16[8];
-            }
-
-            for (int y = 0; y < 8; y++)
-            {
-                for (int x = 0; x < 8; x++)
-                {
-                    Mapping[y][x] = new Tile16();
-                }
-            }
-
-        }
-
-        public Bitmap Render(Image tiles)
-        {
-            Bitmap retval = new Bitmap(128, 128);
-            using (Graphics rg = Graphics.FromImage(retval))
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        Rectangle destRect = new Rectangle(x * 16, y * 16, 16, 16);
-                        Rectangle srcRect = new Rectangle(0, Mapping[y][x].Tile16x16 * 16, 16, 16);
-                        using (Bitmap tile = new Bitmap(16, 16))
-                        {
-                            using (Graphics tg = Graphics.FromImage(tile))
-                            {
-                                tg.DrawImage(tiles, 0, 0, srcRect, GraphicsUnit.Pixel);
-                            }
-                            if (Mapping[y][x].Direction == 1)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                            }
-                            else if (Mapping[y][x].Direction == 2)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                            }
-                            else if (Mapping[y][x].Direction == 3)
-                            {
-                                tile.RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                            }
-                            rg.DrawImage(tile, destRect);
-                        }
-                    }
-                }
-            }
-            return retval;
-        }
-    }
-
-    public class Tile16
-    {
-        public byte VisualPlane { get; set; }
-        public byte Direction { get; set; }
-        public ushort Tile16x16 { get; set; }
-        public byte CollisionFlag0 { get; set; }
-        public byte CollisionFlag1 { get; set; }
     }
 }

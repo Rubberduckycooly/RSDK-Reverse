@@ -10,8 +10,17 @@ namespace RSDKvRS
     {
         class SaveData
         {
+            /// <summary>
+            /// what level the player is upto
+            /// </summary>
             byte CurrentLevel;
+            /// <summary>
+            /// how many chaos emeralds the player has
+            /// </summary>
             byte EmeraldCount;
+            /// <summary>
+            /// How many lives the player has
+            /// </summary>
             byte Lives;
 
             public SaveData(Stream stream) : this(new Reader(stream))

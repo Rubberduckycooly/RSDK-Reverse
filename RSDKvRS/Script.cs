@@ -37,6 +37,16 @@ namespace RSDKvRS
             public int[] arrayPosition;
         };
 
+        public class SpriteFrame
+        {
+            public int PivotX;
+            public int PivotY;
+            public int Width;
+            public int Height;
+            public int Xpos;
+            public int Ypos;
+        }
+
         string[] VARIABLE_NAME = new string[]
 {
 "Object.Type",
@@ -88,7 +98,7 @@ namespace RSDKvRS
 
         string[] opcodeList = new string[]
 {
-    "End",
+//NULL
     "Equal",
     "Add",
     "Sub",
@@ -98,112 +108,61 @@ namespace RSDKvRS
     "Div",
     "ShR",
     "ShL",
-    "Blank?",
-    "Blank?",
+    "Unknown1",
     "Rand",
-    "Unknown",
-    "Unknown",
-    "CheckEqual",
-    //"CheckEqual",
-    "CreateObject",					// 0x10						// 0x25
-	"Sin",
-    "Cos",
-    "Sin256",
-    "Cos256",
-    "SinChange",					// 0x2A
-	"CosChange",
-    "ATan2",
-    "Interpolate",
-    "InterpolateXY",
-    "LoadSpriteSheet",				// 0x2F
-	"RemoveSpriteSheet",			// 0x30
-	"DrawSprite",
-    "DrawSpriteXY",
-    "DrawSpriteScreenXY",
-    "DrawTintRect",
-    "DrawNumbers",
-    "DrawActName",
-    "DrawMenu",
-    "SpriteFrame",
-    "SetDebugIcon",
-    "LoadPalette",
-    "RotatePalette",
-    "SetScreenFade",
-    "SetActivePalette",
-    "SetPaletteFade",
-    "CopyPalette",
-    "ClearScreen",
-    "DrawSpriteFX",
-    "DrawSpriteScreenFX",
-    "LoadAnimation",				// 0x43
-	"SetupMenu",
-    "AddMenuEntry",
-    "EditMenuEntry",
-    "LoadStage",
-    "DrawRect",
-    "ResetObjectEntity",
-    "PlayerObjectCollision",
-    "CreateTempObject",
-    "BindPlayerToObject",
-    "PlayerTileCollision",
-    "ProcessPlayerControl",
-    "ProcessAnimation",
-    "DrawObjectAnimation",
-    "DrawPlayerAnimation",
-    "SetMusicTrack",				// 0x52
-	"PlayMusic",
-    "StopMusic",
-    "PlaySfx",						// 0x55 85
-	"StopSfx",						// 0x56 86
-	"SetSfxAttributes",
-    "ObjectTileCollision",
-    "ObjectTileGrip",
-    "LoadVideo",
-    "NextVideoFrame",				// 0x5B
-	"PlayStageSfx",
-    "StopStageSfx",
-    "Not",
-    "Draw3DScene",
-    "SetIdentityMatrix",			// 0x60
-	"MatrixMultiply",
-    "MatrixTranslateXYZ",
-    "MatrixScaleXYZ",				// 0x63
-	"MatrixRotateX",
-    "MatrixRotateY",
-    "MatrixRotateZ",
-    "MatrixRotateXYZ",
-    "TransformVertices",
-    "CallFunction",					// 0x69 105
-	"EndFunction",					// 0x6A 106
-	"SetLayerDeformation",
-    "CheckTouchRect",
-    "GetTileLayerEntry",
-    "SetTileLayerEntry",
-    "GetBit",
-    "SetBit",
-    "PauseMusic",
-    "ResumeMusic",
-    "ClearDrawList",
-    "AddDrawListEntityRef",
-    "GetDrawListEntityRef",
-    "SetDrawListEntityRef",
-    "Get16x16TileInfo",
-    "Copy16x16Tile",
-    "Set16x16TileInfo",
-    "GetAnimationByName",
-    "ReadSaveRAM",
-    "WriteSaveRAM",
-    "LoadTextFont",
-    "LoadTextFile",
-    "DrawText",
-    "GetTextInfo",
-    "GetVersionNumber",
-    "SetAchievement",
-    "SetLeaderboard",
-    "LoadOnlineMenu",
-    "EngineCallback"
+                        "Unknown2",
+                        "Unknown3",
+                        "DrawSprite",
+                        "Unknown4",
+                        "Unknown5",
+                        "Unknown6",
+                        "SetEditorIcon",
+                        "Unknown8",
+                        "Unknown9",
+                        "CheckEqual",
+                        "CheckGreater",
+                        "CheckLower",
+                        "CheckNotEqual",
+                        "Unknown10",
+                        "Unknown11",
+                        "Unknown12",
+                        "Unknown13",
+                        "Unknown14",
+                        "Unknown15",
+                        "Unknown16",
+                        "Unknown17",
+                        "Unknown18",
+                        "Unknown19",
+                        "Unknown20",
+                        "Unknown21",
+                        "Unknown22",
+                        "Unknown23",
+                        "Unknown24",
+                        "Unknown25",
+                        "Unknown26",
+                        "Unknown27",
+                        "Unknown28",
+                        "Unknown29",
+                        "Unknown30",
+                        "Unknown31",
+                        "Unknown32",
+                        "Unknown33",
+                        "Unknown34",
+                        "Unknown35",
+                        "SetObjValue",
+                        "GetObjValue",
+                        "Unknown36",
+                        "Unknown37",
+                        "Unknown38",
+                        "DrawSpriteFX",
+                        "Unknown40",
+                        "Unknown41",
+                        "Unknown42",
 };
 
+        /// <summary>
+        /// how many paramaters each Function has
+        /// </summary>
         readonly byte[] scriptOpcodeSizes = new byte[]
 {
 1,
@@ -283,6 +242,9 @@ namespace RSDKvRS
 0,
 };
 
+        /// <summary>
+        /// How Many Subs per Script
+        /// </summary>
         public byte SubCount
         {
             get
@@ -294,18 +256,71 @@ namespace RSDKvRS
         int scriptDataPos;
         int jumpTableDataPos;
 
+        /// <summary>
+        /// the scriptdata for the Main Sub
+        /// </summary>
         int[] scriptData_Main = new int[0x40000];
-        int[] scriptData_Draw = new int[0x40000];
-        int[] scriptData_Startup = new int[0x40000];
-        int[] scriptData_RSDK = new int[0x40000];
-
+        int Endpoint_Main = 0;
+        /// <summary>
+        /// the Jumptabledata for the Main Sub
+        /// </summary>
         int[] jumpTableData_Main = new int[0x40000];
+        /// <summary>
+        /// No idea but it's for main
+        /// </summary>
+        int[] unknownArray1 = new int[0x40000];
+
+        /// <summary>
+        /// the ScriptData for the Draw sub
+        /// </summary>
+        int[] scriptData_Draw = new int[0x40000];
+        int Endpoint_Draw = 0;
+        /// <summary>
+        /// the JumpTable data for the Draw sub
+        /// </summary>
         int[] jumpTableData_Draw = new int[0x40000];
+        /// <summary>
+        /// No idea but it's for draw
+        /// </summary>
+        int[] unknownArray2 = new int[0x40000];
+
+        /// <summary>
+        /// the scriptdata for the Startup Sub
+        /// </summary>
+        int[] scriptData_Startup = new int[0x40000];
+        int Endpoint_Startup = 0;
+        /// <summary>
+        /// the jumptableData for the Startup Sub
+        /// </summary>
         int[] jumpTableData_Startup = new int[0x40000];
+        /// <summary>
+        /// no idea but it's for Startup
+        /// </summary>
+        int[] unknownArray3 = new int[0x40000];
+
+        /// <summary>
+        /// the scriptData for the Editor sub
+        /// </summary>
+        int[] scriptData_RSDK = new int[0x40000];
+        int Endpoint_RSDK = 0;
+        /// <summary>
+        /// the JumptableData for the Editor sub
+        /// </summary>
         int[] jumpTableData_RSDK = new int[0x40000];
 
+        /// <summary>
+        /// a list of the SpriteFrames
+        /// </summary>
+        public List<SpriteFrame> spriteFrames = new List<SpriteFrame>();
+
+        /// <summary>
+        /// index in the scriptCode
+        /// </summary>
         int scriptCodePtr = 0;
+        int spriteframePtr = 0;
         int jumpTablePtr = 0;
+        int scriptEndPtr = 0;
+        int opcode = 0;
 
         ScriptEngine scriptEng;
         StateScriptEngine state = new StateScriptEngine();
@@ -316,7 +331,7 @@ namespace RSDKvRS
         public Script(string filename): this(new Reader(filename))
         { }
 
-        public Script(Reader reader)
+        public Script(Reader reader, bool EditorMode = false)
         {
             scriptEng.operands = new int[10];
             scriptEng.tempValue = new int[8];
@@ -325,7 +340,6 @@ namespace RSDKvRS
             for (int i = 0; i < SubCount; i++)
             {
                 uint Opcode = 0;
-                int Opcode2 = 0;
                 uint OpcodeSize = 0;
                 uint OpcodeSizea = 0;
                 uint OpcodeSizeb = 0;
@@ -346,10 +360,32 @@ namespace RSDKvRS
                 int FileBuffer = 0;
                 int k = 0;
 
-                FileBuffer = reader.ReadByte();
-                Value1 = FileBuffer << 8;
-                FileBuffer = reader.ReadByte();
-                Value1 += FileBuffer;
+                Value1 = reader.ReadByte() << 8;
+                Value1 |= reader.ReadByte();
+
+                if (i != 0)
+                {
+                    if (i == 1)
+                    {
+                        Endpoint_Main = Value1;
+                        scriptData_Main = new int[0xFFFu];
+                    }
+                    else if (i == 2)
+                    {
+                        Endpoint_Draw = Value1;
+                        scriptData_Main = new int[0xFFFu];
+                    }
+                    else if (i == 3)
+                    {
+                        Endpoint_RSDK = Value1;
+                        scriptData_RSDK = new int[0xFFFu];
+                    }
+                }
+                else
+                {
+                    Endpoint_Startup = Value1;
+                    scriptData_Main = new int[0xFFFu];
+                }
 
                 while (k == 0)
                 {
@@ -371,48 +407,79 @@ namespace RSDKvRS
                         }
                     }
 
+                    if (EditorMode)
+                    {
+                        while(i < 3)
+                        {
+                            FileBuffer = reader.ReadByte();
+                            if (FileBuffer == 255)
+                            {
+                                FileBuffer = reader.ReadByte();
+                                if (FileBuffer == 255)
+                                {
+                                    FileBuffer = reader.ReadByte();
+                                    if (FileBuffer == 255)
+                                    {
+                                        FileBuffer = reader.ReadByte();
+                                        if (FileBuffer == 255)
+                                        {
+                                            i++;
+                                            FileBuffer = reader.ReadByte();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Opcode = (uint)FileBuffer;
+
                     if (k < 1)
                     {
-                        Opcode2 = FileBuffer;
-
                         SetScriptData(i, FileBuffer);
 
                         switch (Opcode)
                         {
                             case 0u:
+                            case 4u:
+                            case 5u:
+                            case 0xAu:
+                            case 0xBu:
+                            case 0xDu:
+                            case 0x23u:
+                            case 0x24u:
+                            case 0x28u:
+                            case 0x2Au:
+                            case 0x2Cu:
+                            case 0x2Du:
+                            case 0x31u:
+                            case 0x34u:
+                            case 0x3Eu:
+                            case 0x3Fu:
+                            case 0x42u:
+                                OpcodeSize = 1;
                                 break;
                             case 1u:
-                                break;
                             case 2u:
-                                break;
                             case 3u:
-                                break;
-                            case 4u:
-                                break;
-                            case 5u:
-                                break;
                             case 6u:
-                                break;
                             case 7u:
-                                break;
                             case 8u:
-                                break;
                             case 9u:
-                                break;
-                            case 0xAu:
-                                break;
-                            case 0xBu:
-                                break;
-                            case 0xDu:
-                                break;
                             case 0xCu:
+                            case 0x30u:
+                            case 0x41u:
+                                OpcodeSize = 2;
                                 break;
                             case 0xEu:
                                 OpcodeSize = 6;
                                 break;
                             case 0xFu:
-                                break;
                             case 0x10u:
+                            case 0x39u:
+                            case 0x3Au:
+                            case 0x3Bu:
+                                OpcodeSize = 3;
                                 break;
                             case 0x11u:
                                 OpcodeSize = 6;
@@ -421,16 +488,17 @@ namespace RSDKvRS
                                 OpcodeSize = 1;
                                 break;
                             case 0x13u:
-                                break;
                             case 0x14u:
-                                break;
                             case 0x15u:
-                                break;
                             case 0x16u:
-                                break;
                             case 0x17u:
-                                break;
                             case 0x18u:
+                            case 0x2Eu:
+                            case 0x37u:
+                            case 0x38u:
+                            case 0x3Cu:
+                            case 0x3Du:
+                                OpcodeSize = 4;
                                 break;
                             case 0x19u:
                                 OpcodeSize = 2;
@@ -462,10 +530,6 @@ namespace RSDKvRS
                             case 0x22u:
                                 OpcodeSize = 4;
                                 break;
-                            case 0x23u:
-                                break;
-                            case 0x24u:
-                                break;
                             case 0x25u:
                                 OpcodeSize = 3;
                                 break;
@@ -475,29 +539,15 @@ namespace RSDKvRS
                             case 0x27u:
                                 OpcodeSize = 2;
                                 break;
-                            case 0x28u:
-                                break;
                             case 0x29u:
-                                break;
-                            case 0x2Au:
+                            case 0x40u:
+                                OpcodeSize = 6;
                                 break;
                             case 0x2Bu:
                                 OpcodeSize = 4;
                                 break;
-                            case 0x2Cu:
-                                break;
-                            case 0x2Du:
-                                break;
-                            case 0x2Eu:
-                                break;
                             case 0x2Fu:
                                 OpcodeSize = 5;
-                                break;
-                            case 0x31u:
-                                break;
-                            case 0x34u:
-                                break;
-                            case 0x30u:
                                 break;
                             case 0x35u:
                                 OpcodeSize = 7;
@@ -505,39 +555,11 @@ namespace RSDKvRS
                             case 0x36u:
                                 OpcodeSize = 8;
                                 break;
-                            case 0x37u:
-                                break;
-                            case 0x38u:
-                                break;
-                            case 0x39u:
-                                break;
-                            case 0x3Au:
-                                break;
-                            case 0x3Bu:
-                                OpcodeSize = 3;
-                                break;
-                            case 0x3Cu:
-                                break;
-                            case 0x3Du:
-                                OpcodeSize = 4;
-                                break;
-                            case 0x3Eu:
-                                break;
-                            case 0x3Fu:
-                                break;
-                            case 0x40u:
-                                OpcodeSize = 6;
-                                break;
-                            case 0x41u:
-                                OpcodeSize = 2;
-                                break;
-                            case 0x42u:
-                                OpcodeSize = 1;
-                                break;
                             default:
                                 break;
                         }
-
+                        
+                        //Error?
                         for (int j = 0; j < OpcodeSize; j++)
                         {
                             FileBuffer = reader.ReadByte();
@@ -554,7 +576,7 @@ namespace RSDKvRS
                                 FileBuffer = reader.ReadByte();
                                 Value1 = FileBuffer;
 
-                                if (Value1 > 128) { Value1 -= 128; }
+                                if (Value1 > 128) { Value1 = 128 - Value1; }
 
                                 SetScriptData(i, Value1);
                             }
@@ -563,16 +585,14 @@ namespace RSDKvRS
                                 FileBuffer = reader.ReadByte();
                                 if (FileBuffer < 128)
                                 {
-                                    Value2 = FileBuffer << 8;
-                                    FileBuffer = reader.ReadByte();
-                                    Value2 += FileBuffer;
+                                    Value2 = reader.ReadByte() << 8;
+                                    Value2 |= reader.ReadByte();
                                 }
                                 else
                                 {
-                                    FileBuffer -= 128;
-                                    Value2 = FileBuffer << 8;
-                                    FileBuffer = reader.ReadByte();
-                                    Value2 += FileBuffer;
+                                    FileBuffer = FileBuffer + -128;
+                                    Value2 = reader.ReadByte() << 8;
+                                    Value2 |= reader.ReadByte();
                                     Value2 = -Value2;
                                 }
                                 switch (i)
@@ -587,21 +607,33 @@ namespace RSDKvRS
                                         scriptData_Draw[scriptDataPos++] = Value2;
                                         break;
                                     case 3:
-                                        if (Opcode2 == 17)
+                                        if (Opcode == 17) //SetEditorIcon?
                                         {
+                                            if (spriteFrames.Count <= spriteframePtr)
+                                            {
+                                                spriteFrames.Add(new SpriteFrame());
+                                            }
                                             switch(j)
                                             {
                                                 case 0:
+                                                    spriteFrames[spriteframePtr].Width = Value2;
                                                     break;
                                                 case 1:
+                                                    spriteFrames[spriteframePtr].Height = Value2;
                                                     break;
                                                 case 2:
+                                                    spriteFrames[spriteframePtr].PivotX = Value2;
                                                     break;
                                                 case 3:
+                                                    spriteFrames[spriteframePtr].PivotY = Value2;
                                                     break;
                                                 case 4:
+                                                    spriteFrames[spriteframePtr].Xpos = Value2;
                                                     break;
                                                 case 5:
+                                                    spriteFrames[spriteframePtr++].Ypos = Value2;
+                                                    break;
+                                                default:
                                                     break;
                                             }
                                         }
@@ -630,18 +662,8 @@ namespace RSDKvRS
 
                 for (int j = 0; j < OpcodeSizeb; j++)
                 {
-                    /*FileBuffer = reader.ReadByte();
-                    Value1 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value1 += FileBuffer;*/
-
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
-
-                    /*FileBuffer = reader.ReadByte();
-                    Value3 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value4 += FileBuffer + Value3;*/
 
                     Value4 = reader.ReadByte() << 8;
                     Value4 |= reader.ReadByte();
@@ -653,11 +675,11 @@ namespace RSDKvRS
                     {
                         if (i == 1)
                         {
-                            //dword_AFD294[16129 * ScriptID + v20] = Value1;
+                            unknownArray1[scriptDataPos++] = Value1;
                         }
                         else if (i == 2)
                         {
-                            //dword_AFDA94[16129 * ScriptID + v20] = Value1;
+                            unknownArray2[scriptDataPos++] = Value1;
                         }
                         else if (i == 3)
                         {
@@ -666,7 +688,7 @@ namespace RSDKvRS
                     }
                     else
                     {
-                        //dword_AFCA94[16129 * ScriptID + v20] = Value1;
+                        unknownArray3[scriptDataPos++] = Value1;
                     }
                 }
                 k = 0;
@@ -675,33 +697,23 @@ namespace RSDKvRS
                 FileBuffer = reader.ReadByte();
                 OpcodeSize = (uint)FileBuffer;
 
+                Value8 = 0;
+
                 for (int j = 0; j < 512; ++j) //Clear out space
                 {
                     SetJumptableData(i, 0);
                 }
-
-                Value8 = 0;
 
                 for (int j = 0; j < OpcodeSize; ++j)
                 {
                     Value0 = 0x8000;
                     Value9 = 0;
 
-                    /*FileBuffer = reader.ReadByte();
-                    Value1 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value1 += FileBuffer;*/
-
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
 
-                    /*FileBuffer = reader.ReadByte();
-                    Value3 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value4 += FileBuffer + Value3;*/
-
-                    Value4 = reader.ReadByte() << 8;
-                    Value4 |= reader.ReadByte();
+                    Value3 = reader.ReadByte() << 8;
+                    Value4 = reader.ReadByte() + Value3;
 
                     Value7 = Value8;
                     if (i != 0)
@@ -728,11 +740,6 @@ namespace RSDKvRS
                         jumpTableData_Startup[jumpTableDataPos++] = 0;
                     }
 
-                    /*FileBuffer = reader.ReadByte();
-                    Value1 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value1 += FileBuffer;*/
-
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
 
@@ -740,10 +747,6 @@ namespace RSDKvRS
 
                     FileBuffer = reader.ReadByte();
                     FileBuffer = reader.ReadByte();
-                    /*FileBuffer = reader.ReadByte();
-                    Value1 = FileBuffer << 8;
-                    FileBuffer = reader.ReadByte();
-                    Value1 += FileBuffer;*/
 
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
@@ -981,27 +984,22 @@ namespace RSDKvRS
                 writer.WriteLine("//--------------------Startup Sub---------------------//");
                 writer.WriteLine("//-------Called once when the object is spawned-------//");
                 Console.Write("Startup script, ");
-                DecompileScript(writer, 3);
+                DecompileScript(writer, 2);
 
                 Console.Write("Main script, ");
                 writer.WriteLine("//---------------------------Main Sub---------------------------//");
                 writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
                 DecompileScript(writer, 0);
 
-                /*writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
-                writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
-                Console.Write("Player script, ");
-                DecompileScript(writer, 1);*/
-
                 writer.WriteLine("//----------------------Drawing Sub-------------------//");
                 writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
                 Console.Write("Draw script, ");
-                DecompileScript(writer, 2);
+                DecompileScript(writer, 1);
 
                 writer.WriteLine("//--------------------RSDK Sub---------------------//");
                 writer.WriteLine("//-------Used for editor functionality-------//");
                 Console.WriteLine("RSDK script.");
-                DecompileScript(writer, 4);
+                DecompileScript(writer, 3);
             }
             catch (Exception ex)
             {
@@ -1010,9 +1008,6 @@ namespace RSDKvRS
 
             writer.Write(Environment.NewLine);
             writer.Close();
-            {
-
-            }
         }
 
         public void DecompileScript(StreamWriter writer, int scriptSub)
@@ -1021,19 +1016,16 @@ namespace RSDKvRS
             switch (scriptSub)
             {
                 case 0:
-                    strFuncName = "Main_Routine";
+                    strFuncName = "Main";
                     break;
                 case 1:
-                    strFuncName = "PlayerInteraction_Routine";
+                    strFuncName = "Draw";
                     break;
                 case 2:
-                    strFuncName = "Draw_Routine";
+                    strFuncName = "Startup";
                     break;
                 case 3:
-                    strFuncName = "Startup_Routine";
-                    break;
-                case 4:
-                    strFuncName = "RSDK_Routine";
+                    strFuncName = "RSDK";
                     break;
                 default:
                     strFuncName = "Function";
@@ -1054,20 +1046,21 @@ namespace RSDKvRS
 
         public void DecompileSub(StreamWriter writer, int scriptSub)
         {
-            int index1 = 0;
-            int objectLoop = 0;
             scriptCodePtr = 0;
             state.EndFlag = false;
             state.LoopBreakFlag = false;
             state.SwitchBreakFlag = false;
             writer.Write(Environment.NewLine);
 
+            bool newline = true;
+
             while (!state.EndFlag)
             {
-                int opcode = GetScriptData(scriptSub);
-                int paramsCount = scriptOpcodeSizes[opcode];
+                scriptEndPtr++;
 
-                //state.isSwitchEnd = false;
+                opcode = GetScriptData(scriptSub);
+
+                int paramsCount = 0;
 
                 string[] variableName = new string[10];
 
@@ -1076,21 +1069,299 @@ namespace RSDKvRS
                     variableName[i] = "UNKNOWN VARIABLE";
                 }
 
-                int Val = opcode;
-
-                for (int i = 0; i < paramsCount; i++)
+                switch (opcode)
                 {
-                    variableName[i] = GetVariable(scriptSub, Val+=4);
-                    //scriptCodePtr++;
+                    case 0:
+
+                        paramsCount = 0;
+                        break;
+                    case 1:
+
+                        paramsCount = 2;
+                        break;
+                    case 2:
+
+                        paramsCount = 2;
+                        break;
+                    case 3:
+
+                        paramsCount = 2;
+                        break;
+                    case 4:
+
+                        paramsCount = 2;
+                        break;
+                    case 5:
+
+                        paramsCount = 2;
+                        break;
+                    case 6:
+
+                        paramsCount = 2;
+                        break;
+                    case 7:
+
+                        paramsCount = 2;
+                        break;
+                    case 8:
+
+                        paramsCount = 2;
+                        break;
+                    case 9:
+
+                        paramsCount = 2;
+                        break;
+                    case 0xB:
+
+                        paramsCount = 1;
+                        if (scriptSub != 0)
+                        {
+                            if (scriptSub == 1)
+                            {
+                                scriptCodePtr = scriptData_Main[scriptCodePtr];
+                                scriptCodePtr = scriptData_Main[scriptCodePtr + unknownArray1[scriptCodePtr]];
+                                scriptEndPtr = 0;
+                                scriptEndPtr = unknownArray1[scriptCodePtr];
+                            }
+                            else if (scriptSub == 2)
+                            {
+                                scriptCodePtr = scriptData_Draw[scriptCodePtr];
+                                scriptCodePtr = scriptData_Draw[scriptCodePtr + unknownArray2[scriptCodePtr]];
+                                scriptEndPtr = 0;
+                                scriptEndPtr = unknownArray2[scriptCodePtr];
+                            }
+                        }
+                        else
+                        {
+                            scriptCodePtr = scriptData_Startup[scriptCodePtr];
+                            scriptCodePtr = scriptData_Startup[scriptCodePtr + unknownArray3[scriptCodePtr]];
+                            scriptEndPtr = 0;
+                            scriptEndPtr = unknownArray3[scriptCodePtr];
+                        }
+                        scriptCodePtr++;
+                        break;
+                    case 0xC:
+
+                        paramsCount = 2;
+                        break;
+                    case 0xF:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x10:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x11: //SetEditorIcon
+
+                        paramsCount = 1;
+                        break;
+                    case 0x12:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x13:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x14:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x15:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x16:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x17:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x18:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x19:
+
+                        paramsCount = 2; //CheckEqual
+                        break;
+                    case 0x1A:
+
+                        paramsCount = 2; //CheckGreater
+                        break;
+                    case 0x1B:
+
+                        paramsCount = 2; //CheckLower
+                        break;
+                    case 0x1C:
+
+                        paramsCount = 2; //CheckNotEqual
+                        break;
+                    case 0x1D:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x1E:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x1F:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x20:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x21:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x22:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x23:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x24:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x25:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x26:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x27:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x28:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x29:
+
+                        paramsCount = 6; //
+                        break;
+                    case 0x2A:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2B:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x2C:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2D:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2E:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x2F:
+
+                        paramsCount = 5;
+                        break;
+                    case 0x30:
+
+                        paramsCount = 2;
+                        //do shit here
+                        break;
+                    case 0x31:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x34:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x35:
+
+                        paramsCount = 7;
+                        break;
+                    case 0x36:
+
+                        paramsCount = 8;
+                        break;
+                    case 0x37:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x38:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x39:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3A:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3B:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3C:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x3D:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x3E:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x3F: //DrawScaledSprite
+
+                        paramsCount = 1;
+                        break;
+                    case 0x40:
+
+                        paramsCount = 6;
+                        break;
+                    case 0x41:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x42:
+
+                        paramsCount = 1;
+                        break;
+                    default:
+                        break;
                 }
 
-
-                if (opcode >= 134)
+                if (opcode != 17)
                 {
-                    writer.Write("ERROR AT: " + scriptCodePtr + " : " + opcode);
-                    Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
-                    state.error = true;
-                    return;
+                    int opcde = opcode;
+
+                    for (int i = 0; i < paramsCount; i++)
+                    {
+                        variableName[i] = GetVariable(scriptSub, opcde);
+                        //opcde = GetScriptData(scriptSub);
+                    }
+                }
+                else
+                {
+                    variableName[0] = GetScriptData(scriptSub).ToString();
                 }
 
                 string operand = opcodeList[opcode];
@@ -1106,11 +1377,7 @@ namespace RSDKvRS
 
                 switch (opcode)
                 {
-                    case 0x00:
-                        writer.Write("endsub");
-                        state.EndFlag = true;
-                        state.deep = 0;
-                        break;
+                    case 0x00: newline = false; break;
                     case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
                     case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
                     case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
@@ -1156,21 +1423,19 @@ namespace RSDKvRS
                         break;
                 }
 
-                //if (!state.isSwitchEnd && !state.EndFlag)
+
+                if (scriptEndPtr >= Endpoint_Startup)
+                {
+                    state.EndFlag = true;
+                }
+
                 writer.Write(Environment.NewLine);
 
-                if (state.SwitchBreakFlag)
-                {
-                    state.SwitchBreakFlag = false;
-                    return;
-                }
-
-                if (state.LoopBreakFlag)
-                {
-                    state.LoopBreakFlag = false;
-                    //return;
-                }
             }
+            if (newline)
+                writer.Write(Environment.NewLine);
+            else
+                newline = true;
         }
 
         int GetScriptData(int SubID)
@@ -1194,7 +1459,7 @@ namespace RSDKvRS
             }
             else
             {
-                data = scriptData_Startup[scriptCodePtr += 4];
+                data = scriptData_Startup[scriptCodePtr++];
             }
 
             return data;
@@ -1209,49 +1474,431 @@ namespace RSDKvRS
                 case 0x2:
                     return "Object.SubType";
                 case 0x3:
-                    return "Object.Priority";
-                case 0x4:
                     return "Object.Xpos";
-                case 0x5:
+                case 0x4:
                     return "Object.Ypos";
-                case 0x6:
+                case 0x5:
                     return "Object.ValueA";
-                case 0x7:
+                case 0x6:
                     return "Object.ValueB";
-                case 0x8:
+                case 0x7:
                     return "Object.ValueC";
-                case 0x9:
+                case 0x8:
                     return "Object.ValueD";
-                case 0xA:
+                case 0x9:
                     return "Object.ValueE";
-                case 0xB:
+                case 0xA:
                     return "Object.ValueF";
-                case 0xC:
+                case 0xB:
                     return "TempObject.Type";
-                case 0xD:
+                case 0xC:
                     return "TempObject.SubType";
-                case 0xE:
-                    return "TempObject.Priority";
-                case 0xF:
+                case 0xD:
                     return "TempObject.Xpos";
-                case 0x10:
+                case 0xE:
                     return "TempObject.Ypos";
-                case 0x11:
+                case 0xF:
                     return "TempObject.ValueA";
-                case 0x12:
+                case 0x10:
                     return "TempObject.ValueB";
-                case 0x13:
+                case 0x11:
                     return "TempObject.ValueC";
-                case 0x14:
+                case 0x12:
                     return "TempObject.ValueD";
-                case 0x15:
+                case 0x13:
                     return "TempObject.ValueE";
-                case 0x16:
+                case 0x14:
                     return "TempObject.ValueF";
+                case 0x15:
+                    return "UnknownValue";
+                case 0x17:
+                    return "UnknownValue";
+                case 0x19:
+                    return "Player.XPos";
+                case 0x1A:
+                    return "Player.YPos";
+                case 0x1E:
+                    return "UnknownValue";
+                case 0x20:
+                    return "UnknownValue";
+                case 0x21:
+                    return "UnknownValue";
+                case 0x22:
+                    return "UnknownValue";
+                case 0x24:
+                    return "UnknownValue";
+                case 0x25:
+                    return "UnknownValue";
+                case 0x26:
+                    return "UnknownValue";
+                case 0x27:
+                    return "UnknownValue";
+                case 0x28:
+                    return "TempObjectPos";
+                case 0x29:
+                    return "UnknownValue";
+                case 0x2A:
+                    return "MusicSFXCount";
+                case 0x2B:
+                    return "UnknownValue";
+                case 0x2C:
+                    return "CheckResult";
+                case 0x2D:
+                    return "UnknownValue";
+                case 0x2E:
+                    return "ObjectPos";
+                case 0x2F:
+                    return "UnknownValue";
+                case 0x30:
+                    return "UnknownValue";
+                case 0x31:
+                    return "UnknownValue";
+                case 0x32:
+                    return "UnknownValue";
+                case 0x33:
+                    return "UnknownValue";
+                case 0x34:
+                    return "UnknownValue";
+                case 0x35:
+                    return "UnknownValue";
+                case 0x36:
+                    return "UnknownValue";
+                case 0x37:
+                    return "UnknownValue";
+                case 0x38:
+                    return "UnknownValue";
+                case 0x39:
+                    return "UnknownValue";
+                case 0x3A:
+                    return "Player.FullEngineRotation";
+                case 0x3B:
+                    return "UnknownValue";
+                case 0x3C:
+                    return "UnknownValue";
+                case 0x3D:
+                    return "UnknownValue";
+                case 0x3E:
+                    return "UnknownValue";
+                case 0x3F:
+                    return "UnknownValue";
+                case 0x40:
+                    return "UnknownValue";
+                case 0x41:
+                    return "UnknownValue";
+                case 0x42:
+                    return "Player.ID";
+                case 0x43:
+                    return "Object.Priority";
+                case 0x44:
+                    return "UnknownValue";
                 default:
                     return GetScriptData(SubID).ToString();
             }
-            return "0";
+        }
+
+        public int EditorDecompile()
+        {
+            state = new StateScriptEngine();
+            scriptCodePtr = 0;
+            state.EndFlag = false;
+            state.LoopBreakFlag = false;
+            state.SwitchBreakFlag = false;
+
+            while (!state.EndFlag)
+            {
+                scriptEndPtr++;
+
+                opcode = GetScriptData(3);
+
+                int paramsCount = 0;
+
+                string[] variableName = new string[10];
+
+                for (int i = 0; i < variableName.Length; i++)
+                {
+                    variableName[i] = "UNKNOWN VARIABLE";
+                }
+
+                switch (opcode)
+                {
+                    case 0:
+
+                        paramsCount = 0;
+                        break;
+                    case 1:
+
+                        paramsCount = 2;
+                        break;
+                    case 2:
+
+                        paramsCount = 2;
+                        break;
+                    case 3:
+
+                        paramsCount = 2;
+                        break;
+                    case 4:
+
+                        paramsCount = 2;
+                        break;
+                    case 5:
+
+                        paramsCount = 2;
+                        break;
+                    case 6:
+
+                        paramsCount = 2;
+                        break;
+                    case 7:
+
+                        paramsCount = 2;
+                        break;
+                    case 8:
+
+                        paramsCount = 2;
+                        break;
+                    case 9:
+
+                        paramsCount = 2;
+                        break;
+                    case 0xB:
+
+                        paramsCount = 1;
+                        scriptCodePtr++;
+                        break;
+                    case 0xC:
+
+                        paramsCount = 2;
+                        break;
+                    case 0xF:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x10:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x11: //SetEditorIcon
+
+                        paramsCount = 1;
+                        break;
+                    case 0x12:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x13:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x14:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x15:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x16:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x17:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x18:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x19:
+
+                        paramsCount = 2; //CheckEqual
+                        break;
+                    case 0x1A:
+
+                        paramsCount = 2; //CheckGreater
+                        break;
+                    case 0x1B:
+
+                        paramsCount = 2; //CheckLower
+                        break;
+                    case 0x1C:
+
+                        paramsCount = 2; //CheckNotEqual
+                        break;
+                    case 0x1D:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x1E:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x1F:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x20:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x21:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x22:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x23:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x24:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x25:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x26:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x27:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x28:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x29:
+
+                        paramsCount = 6; //
+                        break;
+                    case 0x2A:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2B:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x2C:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2D:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x2E:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x2F:
+
+                        paramsCount = 5;
+                        break;
+                    case 0x30:
+
+                        paramsCount = 2;
+                        //do shit here
+                        break;
+                    case 0x31:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x34:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x35:
+
+                        paramsCount = 7;
+                        break;
+                    case 0x36:
+
+                        paramsCount = 8;
+                        break;
+                    case 0x37:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x38:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x39:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3A:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3B:
+
+                        paramsCount = 3;
+                        break;
+                    case 0x3C:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x3D:
+
+                        paramsCount = 4;
+                        break;
+                    case 0x3E:
+
+                        paramsCount = 1;
+                        break;
+                    case 0x3F: //DrawScaledSprite
+
+                        paramsCount = 1;
+                        break;
+                    case 0x40:
+
+                        paramsCount = 6;
+                        break;
+                    case 0x41:
+
+                        paramsCount = 2;
+                        break;
+                    case 0x42:
+
+                        paramsCount = 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                if (opcode != 17)
+                {
+                    int opcde = opcode;
+
+                    for (int i = 0; i < paramsCount; i++)
+                    {
+                        variableName[i] = GetVariable(3, opcde);
+                        //opcde = GetScriptData(scriptSub);
+                    }
+                }
+                else
+                {
+                    variableName[0] = GetScriptData(3).ToString();
+                }
+
+                string operand = opcodeList[opcode];
+
+                if (opcode == 17)
+                {
+                    return Int32.Parse(variableName[0]);
+                }
+            }
+
+            return 0;
         }
 
         public void Write(string filename)

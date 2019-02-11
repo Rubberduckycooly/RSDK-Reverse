@@ -10,7 +10,13 @@ namespace RSDKv5
     [Serializable]
     public class NameIdentifier
     {
+        /// <summary>
+        /// the MD5 hash of the name in bytes
+        /// </summary>
         private readonly byte[] Hash;
+        /// <summary>
+        /// the name in plain text
+        /// </summary>
         public readonly String Name = null;
 
         public NameIdentifier(string name)

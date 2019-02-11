@@ -28,6 +28,7 @@ namespace RSDKvRS
             BaseStream.Seek(position, org);
         }
 
+
         public long Pos
         {
             get { return BaseStream.Position; }
