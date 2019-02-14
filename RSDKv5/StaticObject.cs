@@ -27,7 +27,7 @@ namespace RSDKv5
             uint[] TmpData = new uint[reader.BaseStream.Length];
             DataPos = 0;
 
-            reader.ReadBytes(4);
+            reader.ReadBytes(4); //"OBJ" Header
 
             while(!reader.IsEof)
             {
@@ -60,20 +60,31 @@ namespace RSDKv5
                         case 1:
                             for (int i = 0; i < Unknown3; i++)
                             {
-                                TmpData[DataPos++] = reader.ReadUInt16();
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                int Value = valA + (valB << 8);
+                                TmpData[DataPos++] = (uint)Value;
                             }
                             break;
                         case 4:
                             for (int i = 0; i < Unknown3; i++)
                             {
-                                TmpData[DataPos++] = reader.ReadUInt16();
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                int Value = valA + (valB << 8);
+                                TmpData[DataPos++] = (uint)Value;
                             }
                             break;
                             //INT32
                         case 2:
                             for (int i = 0; i < Unknown3; i++)
                             {
-                                TmpData[DataPos++] = reader.ReadUInt32();
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                byte valC = reader.ReadByte();
+                                byte valD = reader.ReadByte();
+                                int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
+                                TmpData[DataPos++] = (uint)Value;
                             }
                             break;
                         case 5:
@@ -90,7 +101,12 @@ namespace RSDKv5
                         case 6:
                             for (int i = 0; i < Unknown3; i++)
                             {
-                                TmpData[DataPos++] = reader.ReadUInt32();
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                byte valC = reader.ReadByte();
+                                byte valD = reader.ReadByte();
+                                int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
+                                TmpData[DataPos++] = (uint)Value;
                             }
                             break;
                     }
@@ -176,6 +192,5 @@ namespace RSDKv5
 
             writer.Close();
         }
-
     }
 }

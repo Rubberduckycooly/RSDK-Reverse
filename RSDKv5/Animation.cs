@@ -30,17 +30,17 @@ namespace RSDKv5
         public List<string> SpriteSheets = new List<string>();
         public List<string> CollisionBoxes = new List<string>();
 
-        public List<sprAnimation> Animations = new List<sprAnimation>();
+        public List<AnimationEntry> Animations = new List<AnimationEntry>();
 
         [Serializable]
-        public class sprAnimation : ICloneable
+        public class AnimationEntry : ICloneable
         {
             public object Clone()
             {
                 return this.MemberwiseClone();
             }
             [Serializable]
-            public class sprFrame : ICloneable
+            public class Frame : ICloneable
             {
                 public object Clone()
                 {
@@ -111,12 +111,12 @@ namespace RSDKv5
                 /// </summary>
                 public short PivotY = 0;
 
-                public sprFrame()
+                public Frame()
                 {
 
                 }
 
-                public sprFrame(Reader reader, Animation anim = null)
+                public Frame(Reader reader, Animation anim = null)
                 {
                     SpriteSheet = reader.ReadByte();
                     CollisionBox = 0;
@@ -192,7 +192,7 @@ namespace RSDKv5
             /// <summary>
             /// the list of frames in this animation
             /// </summary>
-            public List<sprFrame> Frames = new List<sprFrame>();
+            public List<Frame> Frames = new List<Frame>();
             /// <summary>
             /// the frame to loop back from
             /// </summary>
@@ -206,12 +206,12 @@ namespace RSDKv5
             /// </summary>
             public byte RotationFlags;
 
-            public sprAnimation()
+            public AnimationEntry()
             {
 
             }
 
-            public sprAnimation(Reader reader, Animation anim = null)
+            public AnimationEntry(Reader reader, Animation anim = null)
             {
                 AnimName = reader.ReadRSDKString();
                 string tmp = "";
@@ -226,7 +226,7 @@ namespace RSDKv5
                 RotationFlags = reader.ReadByte();
                 for (int i = 0; i < frameCount; ++i)
                 {
-                    Frames.Add(new sprFrame(reader,anim));
+                    Frames.Add(new Frame(reader,anim));
                 }
             }
 
@@ -245,12 +245,12 @@ namespace RSDKv5
 
             public void NewFrame()
             {
-                Frames.Add(new sprFrame());
+                Frames.Add(new Frame());
             }
 
             public void CloneFrame(int frame)
             {
-                Frames.Add((sprFrame)Frames[frame].Clone());
+                Frames.Add((Frame)Frames[frame].Clone());
             }
 
             public void DeleteFrame(int frame)
@@ -301,7 +301,7 @@ namespace RSDKv5
 
             var animationCount = reader.ReadInt16();
             for (int i = 0; i < animationCount; ++i)
-                Animations.Add(new sprAnimation(reader, this));
+                Animations.Add(new AnimationEntry(reader, this));
             reader.Close();
         }
 
@@ -332,13 +332,13 @@ namespace RSDKv5
 
         public void NewAnimation()
         {
-            sprAnimation a = new sprAnimation();
+            AnimationEntry a = new AnimationEntry();
             Animations.Add(a);
         }
 
         public void CloneAnimation(int anim)
         {
-            sprAnimation a = new sprAnimation();
+            AnimationEntry a = new AnimationEntry();
 
             a.AnimName = Animations[anim].AnimName;
             byte FrameAmount = (byte)Animations[anim].Frames.Count;
@@ -350,7 +350,7 @@ namespace RSDKv5
 
             for (int i = 0; i < FrameAmount; i++)
             {
-                a.Frames.Add((sprAnimation.sprFrame)Animations[anim].Frames[i].Clone());
+                a.Frames.Add((AnimationEntry.Frame)Animations[anim].Frames[i].Clone());
             }
 
             Animations.Add(a);

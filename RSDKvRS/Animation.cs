@@ -85,17 +85,17 @@ namespace RSDKvRS
         /// <summary>
         /// a list of Animations in the file
         /// </summary>
-        public List<sprAnimation> Animations = new List<sprAnimation>();
+        public List<AnimationEntry> Animations = new List<AnimationEntry>();
 
         [Serializable]
-        public class sprAnimation : ICloneable
+        public class AnimationEntry : ICloneable
         {
             public object Clone()
             {
                 return this.MemberwiseClone();
             }
             [Serializable]
-            public class sprFrame : ICloneable
+            public class Frame : ICloneable
             {
                 public object Clone()
                 {
@@ -139,12 +139,12 @@ namespace RSDKvRS
                 /// </summary>
                 public SByte PivotY = 0;
 
-                public sprFrame()
+                public Frame()
                 {
 
                 }
 
-                public sprFrame(Reader reader, Animation anim = null)
+                public Frame(Reader reader, Animation anim = null)
                 {
                     X = reader.ReadByte();
                     Y = reader.ReadByte();
@@ -194,7 +194,7 @@ namespace RSDKvRS
             /// <summary>
             /// a list of frames in the animation
             /// </summary>
-            public List<sprFrame> Frames = new List<sprFrame>();
+            public List<Frame> Frames = new List<Frame>();
             /// <summary>
             /// what frame to loop back from
             /// </summary>
@@ -204,19 +204,19 @@ namespace RSDKvRS
             /// </summary>
             public byte SpeedMultiplyer;
 
-            public sprAnimation()
+            public AnimationEntry()
             {
 
             }
 
-            public sprAnimation(Reader reader)
+            public AnimationEntry(Reader reader)
             {
                 byte frameCount = reader.ReadByte();
                 SpeedMultiplyer = (byte)(reader.ReadByte() * 4);
                 LoopIndex = reader.ReadByte();
                 for (int i = 0; i < frameCount; ++i)
                 {
-                    Frames.Add(new sprFrame(reader));
+                    Frames.Add(new Frame(reader));
                 }
             }
 
@@ -234,12 +234,12 @@ namespace RSDKvRS
 
             public void NewFrame()
             {
-                Frames.Add(new sprFrame());
+                Frames.Add(new Frame());
             }
 
             public void CloneFrame(int frame)
             {
-                Frames.Add((sprFrame)Frames[frame].Clone());
+                Frames.Add((Frame)Frames[frame].Clone());
             }
 
             public void DeleteFrame(int frame)
@@ -295,7 +295,7 @@ namespace RSDKvRS
             }
 
             for (int i = 0; i < animationCount; ++i)
-                Animations.Add(new sprAnimation(reader));
+                Animations.Add(new AnimationEntry(reader));
             reader.Close();
         }
 
@@ -322,13 +322,13 @@ namespace RSDKvRS
 
         public void NewAnimation()
         {
-            sprAnimation a = new sprAnimation();
+            AnimationEntry a = new AnimationEntry();
             Animations.Add(a);
         }
 
         public void CloneAnimation(int anim)
         {
-            sprAnimation a = new sprAnimation();
+            AnimationEntry a = new AnimationEntry();
 
             byte FrameAmount = (byte)Animations[anim].Frames.Count;
             a.LoopIndex = Animations[anim].LoopIndex;
@@ -338,7 +338,7 @@ namespace RSDKvRS
 
             for (int i = 0; i < FrameAmount; i++)
             {
-                a.Frames.Add((sprAnimation.sprFrame)Animations[anim].Frames[i].Clone());
+                a.Frames.Add((AnimationEntry.Frame)Animations[anim].Frames[i].Clone());
             }
 
             Animations.Add(a);

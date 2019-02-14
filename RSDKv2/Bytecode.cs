@@ -1107,7 +1107,7 @@ namespace RSDKv2
                     DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
                 }
 
-                if (i == 1 && typeNames[i] == "PlayerObject")
+                if (i == 1 )//&& typeNames[i] == "PlayerObject")
                 {
                     for (int ii = 0; ii < functionScriptList.Length; ii++)
                     {
