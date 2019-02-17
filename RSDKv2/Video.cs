@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
 using System.Drawing;
 
 /* Taxman sure loves leaving support for fileformats in his code */

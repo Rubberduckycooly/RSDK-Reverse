@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Threading.Tasks;
+using System.Drawing.Imaging;
+using System.IO;
 using SharpDX.Direct3D9;
 using SystemColor = System.Drawing.Color;
-using System.IO;
-using System.Drawing.Imaging;
-using System.Diagnostics;
 
 namespace RSDKv5
 {
