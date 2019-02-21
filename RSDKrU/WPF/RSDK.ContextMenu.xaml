@@ -251,6 +251,7 @@
                     <ColumnDefinition SharedSizeGroup="MenuItemIGTColumnGroup" Width="Auto"/>
                     <ColumnDefinition Width="17"/>
                 </Grid.ColumnDefinitions>
+                <Rectangle Margin="-1" Fill="{DynamicResource ContextMenuBackground2}"></Rectangle>
                 <ContentPresenter Visibility="Hidden" x:Name="Icon" ContentSource="Icon" Margin="1" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
                 <Border x:Name="GlyphPanel" BorderBrush="{DynamicResource ContextMenuSelectedColor}" BorderThickness="1" Background="{DynamicResource ContextMenuSelectedColorBack}" CornerRadius="0" Height="22" Margin="1" Visibility="Hidden" Width="22">
                     <Path x:Name="Glyph" Data="{StaticResource Checkmark}" Fill="{DynamicResource ContextMenuCheckboxColor}" FlowDirection="LeftToRight" Height="11" Width="9"/>

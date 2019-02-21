@@ -216,27 +216,27 @@ namespace RSDKrU
 			{
 				case MessageBoxImage.Exclamation:       // Enumeration value 48 - also covers "Warning"
 					icon.BeginInit();
-					icon.UriSource = new Uri("pack://application:,,,/Dialog/Monitors/WarningStatic2.gif");
+					icon.UriSource = new Uri("pack://application:,,,/RSDKrU;component/Dialog/Monitors/WarningStatic2.gif");
 					icon.EndInit();
 					break;
 				case MessageBoxImage.Error:             // Enumeration value 16, also covers "Hand" and "Stop"
 					icon.BeginInit();
-					icon.UriSource = new Uri("pack://application:,,,/Dialog/Monitors/ErrorStatic2.gif");
+					icon.UriSource = new Uri("pack://application:,,,/RSDKrU;component/Dialog/Monitors/ErrorStatic2.gif");
 					icon.EndInit();
 					break;
 				case MessageBoxImage.Information:       // Enumeration value 64 - also covers "Asterisk"
 					icon.BeginInit();
-					icon.UriSource = new Uri("pack://application:,,,/Dialog/Monitors/InfoStatic2.gif");
+					icon.UriSource = new Uri("pack://application:,,,/RSDKrU;component/Dialog/Monitors/InfoStatic2.gif");
 					icon.EndInit();
 					break;
 				case MessageBoxImage.Question:        // Question Mark 
 					icon.BeginInit();
-					icon.UriSource = new Uri("pack://application:,,,/Dialog/Monitors/QuestionStatic2.gif");
+					icon.UriSource = new Uri("pack://application:,,,/RSDKrU;component/Dialog/Monitors/QuestionStatic2.gif");
 					icon.EndInit();
 					break;
 				default:
 					icon.BeginInit();
-					icon.UriSource = new Uri("pack://application:,,,/Dialog/Monitors/InfoStatic2.gif");
+					icon.UriSource = new Uri("pack://application:,,,/RSDKrU;component/Monitors/InfoStatic2.gif");
 					icon.EndInit();
 					break;
 			}
