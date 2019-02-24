@@ -2,7 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RSDKrU"
                     xmlns:wpfTool="http://schemas.xceed.com/wpf/xaml/toolkit"
-                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2" xmlns:Themes1="clr-namespace:Xceed.Wpf.Toolkit.Themes;assembly=DotNetProjects.Wpf.Extended.Toolkit" xmlns:Themes2="clr-namespace:Xceed.Wpf.Toolkit.Themes;assembly=Xceed.Wpf.Toolkit">
+                    xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" xmlns:Themes1="clr-namespace:Xceed.Wpf.Toolkit.Themes;assembly=DotNetProjects.Wpf.Extended.Toolkit" xmlns:Themes2="clr-namespace:Xceed.Wpf.Toolkit.Themes;assembly=Xceed.Wpf.Toolkit">
     <Style TargetType="{x:Type Label}">
         <Setter Property="Foreground" Value="{DynamicResource NormalText}" />
     </Style>
