@@ -75,6 +75,15 @@ namespace RSDKv5
             return attributesMap[name];
         }
 
+        public bool AttributeExists(string name, AttributeTypes type)
+        {
+            if (attributesMap.ContainsKey(name)) {
+                if (attributesMap[name].Type != type) return false;
+                else return true;
+            } 
+            else return false;
+        }
+
         public AttributeValue GetAttribute(NameIdentifier name)
         {
             return GetAttribute(name.ToString());
