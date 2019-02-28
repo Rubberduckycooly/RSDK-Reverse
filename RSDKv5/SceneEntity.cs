@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 
 namespace RSDKv5
 {
@@ -76,6 +73,15 @@ namespace RSDKv5
         public AttributeValue GetAttribute(string name)
         {
             return attributesMap[name];
+        }
+
+        public bool AttributeExists(string name, AttributeTypes type)
+        {
+            if (attributesMap.ContainsKey(name)) {
+                if (attributesMap[name].Type != type) return false;
+                else return true;
+            } 
+            else return false;
         }
 
         public AttributeValue GetAttribute(NameIdentifier name)

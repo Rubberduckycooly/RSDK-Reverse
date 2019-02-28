@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 
 //------------------RSDKv5 Stamps format---------------------//
 //--------first format revision by: Carjem Generations-------//
