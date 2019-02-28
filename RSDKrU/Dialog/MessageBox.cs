@@ -27,7 +27,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(string messageBoxText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText);
-
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
 
@@ -43,6 +43,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(string messageBoxText, string caption)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -57,7 +58,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(Window owner, string messageBoxText)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText);
-            msg.Owner = owner;
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -73,7 +74,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(Window owner, string messageBoxText, string caption)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption);
-            msg.Owner = owner;
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -89,6 +90,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, button);
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -105,6 +107,7 @@ namespace RSDKrU
         public static MessageBoxResult Show(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon)
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, button, icon);
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
             msg.ShowDialog();
 
             return msg.Result;
@@ -121,6 +124,7 @@ namespace RSDKrU
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, MessageBoxButton.OK);
             msg.OkButtonText = okButtonText;
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
 
             msg.ShowDialog();
             
@@ -139,6 +143,8 @@ namespace RSDKrU
         {
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, MessageBoxButton.OK, icon);
             msg.OkButtonText = okButtonText;
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
+
 
             msg.ShowDialog();
 
@@ -159,6 +165,8 @@ namespace RSDKrU
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, MessageBoxButton.OKCancel);
             msg.OkButtonText = okButtonText;
             msg.CancelButtonText = cancelButtonText;
+
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
 
             msg.ShowDialog();
             
@@ -181,6 +189,8 @@ namespace RSDKrU
             msg.OkButtonText = okButtonText;
             msg.CancelButtonText = cancelButtonText;
 
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
+
             msg.ShowDialog();
 
             return msg.Result;
@@ -200,6 +210,8 @@ namespace RSDKrU
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, MessageBoxButton.YesNo);
             msg.YesButtonText = yesButtonText;
             msg.NoButtonText = noButtonText;
+
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
 
             msg.ShowDialog();
 
@@ -221,6 +233,8 @@ namespace RSDKrU
             CustomMessageBoxWindow msg = new CustomMessageBoxWindow(messageBoxText, caption, MessageBoxButton.YesNo, icon);
             msg.YesButtonText = yesButtonText;
             msg.NoButtonText = noButtonText;
+
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
 
             msg.ShowDialog();
 
@@ -244,6 +258,8 @@ namespace RSDKrU
             msg.NoButtonText = noButtonText;
             msg.CancelButtonText = cancelButtonText;
 
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
+
             msg.ShowDialog();
 
             return msg.Result;
@@ -266,6 +282,8 @@ namespace RSDKrU
             msg.YesButtonText = yesButtonText;
             msg.NoButtonText = noButtonText;
             msg.CancelButtonText = cancelButtonText;
+
+            if (Application.Current.MainWindow != null) msg.Owner = Application.Current.MainWindow;
 
             msg.ShowDialog();
 

@@ -6,7 +6,6 @@
         xmlns:local="clr-namespace:RSDKrU"
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
-        Icon="blankicon.ico"
         ShowInTaskbar="False"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight"
         TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType" UseLayoutRounding="True"
