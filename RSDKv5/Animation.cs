@@ -230,7 +230,7 @@ namespace RSDKv5
 
             public void Write(Writer writer)
             {
-                writer.Write(AnimName);
+                writer.WriteRSDKString(AnimName + '\0');
                 writer.Write((short)Frames.Count);
                 writer.Write(SpeedMultiplyer);
                 writer.Write(LoopIndex);
@@ -311,13 +311,13 @@ namespace RSDKv5
             writer.Write((byte)SpriteSheets.Count);
             for (int i = 0; i < SpriteSheets.Count; ++i)
             {
-                writer.WriteRSDKString(SpriteSheets[i]);
+                writer.WriteRSDKString(SpriteSheets[i] + '\0');
             }
 
             writer.Write((byte)CollisionBoxes.Count);
             for (int i = 0; i < CollisionBoxes.Count; ++i)
             {
-                writer.WriteRSDKString(CollisionBoxes[i]);
+                writer.WriteRSDKString(CollisionBoxes[i] + '\0');
             }
 
             writer.Write((ushort)Animations.Count);
