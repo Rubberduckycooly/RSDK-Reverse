@@ -24,7 +24,6 @@ namespace RSDKv5
         /// the name of the attribute
         /// </summary>
         public readonly NameIdentifier Name;
-        public readonly NameIdentifier ManiacEditorObject;
         /// <summary>
         /// the type of the attribute
         /// </summary>
@@ -40,7 +39,6 @@ namespace RSDKv5
 
         internal AttributeInfo(Reader reader, ObjectInfo info = null)
         {
-            ManiacEditorObject = new NameIdentifier("ManiacEditorObject");
             Name = new NameIdentifier(reader);
             Type = (AttributeTypes)reader.ReadByte();
             if (info != null)

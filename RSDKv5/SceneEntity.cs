@@ -23,6 +23,7 @@ namespace RSDKv5
         
         private string extObjName = null;
 
+
         /// <summary>
         /// a list of all the attribute values for this entity
         /// </summary>
@@ -30,7 +31,8 @@ namespace RSDKv5
         /// <summary>
         /// the attribute values list sorted by the attribute names
         /// </summary>
-        public Dictionary<string, AttributeValue> attributesMap = new Dictionary<string, AttributeValue>();
+        public DictionaryWithDefault<string, AttributeValue> attributesMap = new DictionaryWithDefault<string, AttributeValue>(FallbackValue);
+        private static AttributeValue FallbackValue = new AttributeValue(AttributeTypes.VAR);
 
         public SceneEntity(SceneObject obj, ushort slotID)
         {
@@ -43,6 +45,7 @@ namespace RSDKv5
                 attributesMap[attribute.Name.ToString()] = Attributes.Last();
             }
         }
+
 
         public SceneEntity(SceneEntity other, ushort slotID)
         {
@@ -200,6 +203,31 @@ namespace RSDKv5
             // No matching Object found, so nothing is created
             // Be sure to handle the null return or else a null Entity might get left floating around
             return null;
+        }
+
+
+        public class DictionaryWithDefault<TKey, TValue> : Dictionary<TKey, TValue>
+        {
+            TValue _default;
+            public TValue DefaultValue
+            {
+                get { return _default; }
+                set { _default = value; }
+            }
+            public DictionaryWithDefault() : base() { }
+            public DictionaryWithDefault(TValue defaultValue) : base()
+            {
+                _default = defaultValue;
+            }
+            public new TValue this[TKey key]
+            {
+                get
+                {
+                    TValue t;
+                    return base.TryGetValue(key, out t) ? t : _default;
+                }
+                set { base[key] = value; }
+            }
         }
     }
 }
