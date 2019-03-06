@@ -167,19 +167,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="INIFileParser, Version=2.5.2.0, Culture=neutral, PublicKeyToken=79af7b307b65cf3c, processorArchitecture=MSIL">
-      <HintPath>..\packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\ini-parser.2.5.2\lib\net20\INIFileParser.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
     <Reference Include="SharpDX.Direct3D9, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpDX.Direct3D9.4.2.0\lib\net45\SharpDX.Direct3D9.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\SharpDX.Direct3D9.4.2.0\lib\net45\SharpDX.Direct3D9.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+      <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
   </ItemGroup>
