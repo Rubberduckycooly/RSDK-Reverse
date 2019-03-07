@@ -31,14 +31,13 @@ namespace RSDKv5
         /// <summary>
         /// the attribute values list sorted by the attribute names
         /// </summary>
-        public DictionaryWithDefault<string, AttributeValue> attributesMap = new DictionaryWithDefault<string, AttributeValue>(FallbackValue);
-        private static AttributeValue FallbackValue = new AttributeValue(AttributeTypes.VAR);
+        public DictionaryWithDefault<string, AttributeValue> attributesMap = new DictionaryWithDefault<string, AttributeValue>(RSDKv5.Scene.FallbackValue);
+
 
         public SceneEntity(SceneObject obj, ushort slotID)
         {
             Object = obj;
             SlotID = slotID;
-
             foreach (AttributeInfo attribute in Object.Attributes)
             {
                 Attributes.Add(new AttributeValue(attribute.Type));
