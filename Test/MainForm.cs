@@ -99,9 +99,19 @@ namespace Test
                 //GAME AND STAGE CONFIGS
                 //RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
 
-                //ANIMATIONS
-                //RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
+                RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
 
+                //ANIMATIONS
+                /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
+
+                for (int i = 0; i < anim.Animations.Count; i++)
+                {
+                    for (int ii = 0; ii < anim.Animations[i].Frames.Count; ii++)
+                    {
+                        anim.Animations[i].Frames[ii].X += 256;
+                    }
+                }
+                anim.Write(new RSDKv5.Writer(dlg.FileName + "2"));*/
                 //Containers
                 //RSDKv2.ArcContainer arc = new RSDKv2.ArcContainer(new RSDKv2.Reader(dlg.FileName));
 
@@ -116,7 +126,7 @@ namespace Test
                 //save.EncoreBuddyChar = 1;
 
                 //Scripts
-                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
 
                 //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
                 //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);

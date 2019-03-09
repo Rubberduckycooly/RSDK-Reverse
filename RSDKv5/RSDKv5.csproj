@@ -203,6 +203,7 @@
     <Compile Include="Reader.cs" />
     <Compile Include="Replay.cs" />
     <Compile Include="ReplayDB.cs" />
+    <Compile Include="RSDKConfig.cs" />
     <Compile Include="SaveFile.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="SceneEditorMetadata.cs" />
