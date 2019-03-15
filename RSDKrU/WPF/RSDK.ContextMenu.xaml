@@ -103,7 +103,7 @@
                     <Border x:Name="GlyphPanel" BorderBrush="{DynamicResource ContextMenuSelectedColor}" BorderThickness="1" Background="{DynamicResource ContextMenuSelectedColorBack}" CornerRadius="0" Height="22" Margin="1" Visibility="Hidden" Width="22">
                         <Path x:Name="Glyph" Data="{StaticResource Checkmark}" Fill="{DynamicResource ContextMenuCheckboxColor}" FlowDirection="LeftToRight" Height="11" Width="9"/>
                     </Border>
-                    <ContentPresenter Grid.Column="2" Margin="0,2,0,0" ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <ContentPresenter x:Name="Presenter" Grid.Column="2" Margin="0,2,0,0" ContentSource="Header" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     <TextBlock x:Name="ContentText" Grid.Column="4" Text="{TemplateBinding InputGestureText}" Foreground="{DynamicResource HintedText}" VerticalAlignment="Center"/>
 
                 </Grid>
@@ -126,7 +126,8 @@
                 <Setter Property="Background" TargetName="InnerTextBorder" Value="{DynamicResource ContextMenuSelectedColorBack}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="#FF9A9A9A"/>
+                <Setter Property="TextBlock.Foreground" Value="{DynamicResource DisabledText}" TargetName="Presenter"/>
+                <Setter Property="Foreground" Value="{DynamicResource DisabledText}"/>
                 <Setter Property="Fill" TargetName="Glyph" Value="#848589"/>
                 <Setter Property="Foreground" TargetName="ContentText" Value="#FF9A9A9A"/>
             </Trigger>
@@ -195,7 +196,7 @@
                 <Setter Property="Fill" TargetName="Bg" Value="{DynamicResource ContextMenuSelectedColorBack}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="#FF9A9A9A"/>
+                <Setter Property="Foreground" Value="{DynamicResource DisabledText}"/>
                 <Setter Property="Fill" TargetName="GlyphPanel" Value="#848589"/>
             </Trigger>
         </ControlTemplate.Triggers>
@@ -208,7 +209,7 @@
             <DockPanel>
                 <ContentPresenter x:Name="Icon" ContentSource="Icon" Margin="4,0,6,0" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Center"/>
                 <Path x:Name="GlyphPanel" Data="{StaticResource Checkmark}" Fill="{TemplateBinding Foreground}" FlowDirection="LeftToRight" Margin="7,0,0,0" Visibility="Collapsed" VerticalAlignment="Center"/>
-                <ContentPresenter ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                <ContentPresenter x:Name="Presenter" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
             </DockPanel>
         </Grid>
         <ControlTemplate.Triggers>
@@ -232,6 +233,7 @@
                 <Setter Property="Fill" TargetName="Bg" Value="{DynamicResource ContextMenuSelectedColorBack}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="TextBlock.Foreground" Value="{DynamicResource DisabledText}" TargetName="Presenter"/>
                 <Setter Property="Foreground" Value="#FF9A9A9A"/>
                 <Setter Property="Fill" TargetName="GlyphPanel" Value="#848589"/>
             </Trigger>
@@ -328,7 +330,6 @@
     <Style TargetType="{x:Type ContextMenu}">
         <Setter Property="Background" Value="{StaticResource ContextMenuBackground}" />
         <Setter Property="BorderBrush" Value="{StaticResource ContextMenuBorder}" />
-        <Setter Property="Foreground" Value="{DynamicResource NormalText}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContextMenu}">
