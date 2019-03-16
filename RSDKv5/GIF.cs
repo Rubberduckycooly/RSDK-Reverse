@@ -86,9 +86,14 @@ namespace RSDKv5
             _bitmap = _bitmapEditMemory;
         }
 
-        private GIF(Bitmap bitmap)
+        public GIF(Bitmap bitmap)
         {
             this._bitmap = new Bitmap(bitmap);
+        }
+
+        public GIF(Image image)
+        {
+            this._bitmap = new Bitmap(image);
         }
 
         private Bitmap CropImage(Bitmap source, Rectangle section)
@@ -123,6 +128,11 @@ namespace RSDKv5
 
             _bitmapCache[new Tuple<Rectangle, bool, bool>(section, flipX, flipY)] = bmp;
             return bmp;
+        }
+
+        public Bitmap ToBitmap()
+        {
+            return _bitmap;
         }
 
         // TOREMOVE

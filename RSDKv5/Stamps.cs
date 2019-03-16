@@ -30,58 +30,79 @@ namespace RSDKv5
 			/// <summary>
 			/// the layout of the stamp (Layer A)
 			/// </summary>
-			public ushort[,] TileMapA;
+			public ushort[][] TileMapA;
 			/// <summary>
 			/// the layout of the stamp (Layer B)
 			/// </summary>
-			public ushort[,] TileMapB;
+			public ushort[][] TileMapB;
 			/// <summary>
 			/// how big the stamp is (value * 16)
 			/// </summary>
 			public ushort ChunkSize = 8;
 
+            public string KeyString = "";
+
+            public string TileMapCodeA { get => GetTileMapCode(false); }
+            public string TileMapCodeB { get => GetTileMapCode(true); }
+
+            public string GetTileMapCode(bool useB = false)
+            {
+                if (useB) return string.Join(",", TileMapA.SelectMany(row => row));
+                else return string.Join(",", TileMapB.SelectMany(row => row));
+            }
             public TileChunk(Dictionary<Point, ushort> points)
             {
-                TileMapA = new ushort[ChunkSize, ChunkSize];
+                TileMapA = new ushort[ChunkSize][];
                 for (int x = 0; x < ChunkSize; x++)
                 {
+                    TileMapA[x] = new ushort[ChunkSize];
                     for (int y = 0; y < ChunkSize; y++)
                     {
                         Point p = new Point(x, y);
-                        if (points.ContainsKey(p)) TileMapA[x, y] = points[p];
-                        else TileMapA[x, y] = 0xffff;
+                        if (points.ContainsKey(p)) TileMapA[x][y] = points[p];
+                        else TileMapA[x][y] = 0xffff;
                     }
                 }
-				TileMapB = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapB = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapB[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
-						TileMapB[x, y] = 0xffff;
+						TileMapB[x][y] = 0xffff;
 					}
 				}
 			}
 
-			public TileChunk(Dictionary<Point, ushort> pointsA, Dictionary<Point, ushort> pointsB)
+            public TileChunk(ushort[][] mapA, ushort[][] mapB, ushort size)
+            {
+                TileMapA = mapA;
+                TileMapB = mapB;
+                ChunkSize = size;
+            }
+
+            public TileChunk(Dictionary<Point, ushort> pointsA, Dictionary<Point, ushort> pointsB)
 			{
-				TileMapA = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapA = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapA[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
 						Point p = new Point(x, y);
-						if (pointsA.ContainsKey(p)) TileMapA[x, y] = pointsA[p];
-						else TileMapA[x, y] = 0xffff;
+						if (pointsA.ContainsKey(p)) TileMapA[x][y] = pointsA[p];
+						else TileMapA[x][y] = 0xffff;
 					}
 				}
-				TileMapB = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapB = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapB[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
 						Point p = new Point(x, y);
-						if (pointsB.ContainsKey(p)) TileMapB[x, y] = pointsB[p];
-						else TileMapB[x, y] = 0xffff;
+						if (pointsB.ContainsKey(p)) TileMapB[x][y] = pointsB[p];
+						else TileMapB[x][y] = 0xffff;
 					}
 				}
 			}
@@ -89,20 +110,22 @@ namespace RSDKv5
 			public TileChunk(Reader reader)
 			{
 				ChunkSize = reader.ReadUInt16();
-				TileMapA = new ushort[ChunkSize, ChunkSize];
-				TileMapB = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapA = new ushort[ChunkSize][];
+                TileMapB = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapA[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
-						TileMapA[x, y] = reader.ReadUInt16();
+						TileMapA[x][y] = reader.ReadUInt16();
 					}
 				}
 				for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapB[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
-						TileMapB[x, y] = reader.ReadUInt16();
+						TileMapB[x][y] = reader.ReadUInt16();
 					}
 				}
 			}
@@ -115,20 +138,22 @@ namespace RSDKv5
 			public void TileChunkR0(Reader reader)
 			{
 				ChunkSize = reader.ReadUInt16();
-				TileMapA = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapA = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapA[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
-						TileMapA[x, y] = reader.ReadUInt16();
+						TileMapA[x][y] = reader.ReadUInt16();
 					}
 				}
-				TileMapB = new ushort[ChunkSize, ChunkSize];
-				for (int x = 0; x < ChunkSize; x++)
+				TileMapB = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
 				{
-					for (int y = 0; y < ChunkSize; y++)
+                    TileMapB[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
 					{
-						TileMapB[x, y] = 0xffff;
+						TileMapB[x][y] = 0xffff;
 					}
 				}
 			}
@@ -140,14 +165,14 @@ namespace RSDKv5
                 {
                     for (int y = 0; y < ChunkSize; y++)
                     {
-                        writer.Write(TileMapA[x, y]);
+                        writer.Write(TileMapA[x][y]);
                     }
                 }
 				for (int x = 0; x < ChunkSize; x++)
 				{
 					for (int y = 0; y < ChunkSize; y++)
 					{
-						writer.Write(TileMapB[x, y]);
+						writer.Write(TileMapB[x][y]);
 					}
 				}
 			}
