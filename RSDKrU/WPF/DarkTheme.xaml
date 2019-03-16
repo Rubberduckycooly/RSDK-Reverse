@@ -28,7 +28,8 @@
     <SolidColorBrush x:Key="AnimationEditor_IconInside" Color="#FFA8A8A8"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconGreen" Color="#FF38A533"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconBlue" Color="#FF004785"></SolidColorBrush>
-    <SolidColorBrush x:Key="AnimationEditor_IconBlue2" Color="#FF0079E7"></SolidColorBrush>
+    <SolidColorBrush x:Key="AnimationEditor_IconBlue2" Color="#FF0086FF"></SolidColorBrush>
+    <SolidColorBrush x:Key="AnimationEditor_IconBlue3" Color="#FF1863A6"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconRed" Color="#FFD92E0C"></SolidColorBrush>
 
     <SolidColorBrush x:Key="EditLayerSelectedColor" Color="Blue"/>

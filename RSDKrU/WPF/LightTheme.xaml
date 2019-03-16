@@ -28,6 +28,7 @@
     <SolidColorBrush x:Key="AnimationEditor_IconGreen" Color="#FF388A34"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconBlue" Color="#FF00539C"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconBlue2" Color="#FF00529C"></SolidColorBrush>
+    <SolidColorBrush x:Key="AnimationEditor_IconBlue3" Color="#FF00529C"></SolidColorBrush>
     <SolidColorBrush x:Key="AnimationEditor_IconRed" Color="#FFA1260D"></SolidColorBrush> 
 
     <SolidColorBrush x:Key="EditLayerSelectedColor" Color="Blue"/>

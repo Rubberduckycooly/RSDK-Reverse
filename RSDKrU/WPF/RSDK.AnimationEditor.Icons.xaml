@@ -23,6 +23,20 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+    <DrawingImage x:Key="Arrow">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup.Children>
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconBorder}" Geometry="M66.743113,149.00094L63.557061,152.30808 60.371012,155.61509 63.593136,155.61509 63.593136,163.99741 69.641721,163.99741 69.641721,155.61509 73.11544,155.61509 69.929387,152.30808z" >
+                        <GeometryDrawing.Pen>
+                            <Pen Thickness="2.5" Brush="{DynamicResource AnimationEditor_IconBorder}"/>
+                        </GeometryDrawing.Pen>
+                    </GeometryDrawing>
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconBlue3}" Geometry="M66.743113,149.00094L63.557061,152.30808 60.371012,155.61509 63.593136,155.61509 63.593136,163.99741 69.641721,163.99741 69.641721,155.61509 73.11544,155.61509 69.929387,152.30808z" />
+                </DrawingGroup.Children>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
     <DrawingImage x:Key="Add_16x">
         <DrawingImage.Drawing>
             <DrawingGroup>
