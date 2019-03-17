@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
         <Label x:Name="textLabel" Content="Label" VerticalAlignment="Bottom"></Label>
         <TextBox x:Name="textBox1" Grid.Row="1" Margin="5"></TextBox>
-        <Button HorizontalAlignment="Right" Margin="5,0" Grid.Row="2" Width="60" Height="20" Content="OK"></Button>
+        <Button HorizontalAlignment="Right" Margin="5,0" Grid.Row="2" Width="60" Height="20" Content="OK" Click="btnOk_Click"></Button>
     </Grid>
     <Window.Resources>
         <Style TargetType="{x:Type Label}">

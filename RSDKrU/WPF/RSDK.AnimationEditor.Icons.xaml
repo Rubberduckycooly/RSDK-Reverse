@@ -92,9 +92,9 @@
             <DrawingGroup>
                 <DrawingGroup.Children>
                     <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M18,16L0,16 0,0 18,0z" />
-                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconBorder}" Geometry="F1M0,15L18,15 18,1.999 0,1.999z" />
-                    <GeometryDrawing Brush="#FF424242" Geometry="F1M15,12L3,12 3,5 15,5z M16,13L2,13 2,4 16,4z M1,14L17,14 17,3 1,3z" />
-                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M15,12L3,12 3,5 15,5z M2,13L16,13 16,4 2,4z" />
+                    <GeometryDrawing Brush="#FF424242" Geometry="F1M0,15L18,15 18,1.999 0,1.999z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconRed}" Geometry="F1M15,12L3,12 3,5 15,5z M16,13L2,13 2,4 16,4z M1,14L17,14 17,3 1,3z" />
+                    <GeometryDrawing Brush="#FF424242" Geometry="F1M15,12L3,12 3,5 15,5z M2,13L16,13 16,4 2,4z" />
                 </DrawingGroup.Children>
             </DrawingGroup>
         </DrawingImage.Drawing>
@@ -384,27 +384,27 @@
                 <DrawingGroup.Children>
                     <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
                     <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconBorder}" Geometry="F1M13,6L10,6 10,3 13,3z M13,12L10,12 10,9 13,9z M4,9L7,9 7,12 4,12z M4,3L7,3 7,6 4,6z M1,15L16,15 16,0 1,0z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,4L3,4 3,3 2,3z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,5.75L3,5.75 3,5.251 2,5.251z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,9.75L3,9.75 3,9.25 2,9.25z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,12L3,12 3,10.999 2,10.999z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M12,2L13,2 13,1 12,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M10.25,2L10.749,2 10.749,1 10.25,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M4,14L5.001,14 5.001,13 4,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,2L3,2 3,1 2,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M4,2L5.001,2 5.001,1 4,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M6.25,2L6.75,2 6.75,1 6.25,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M2,14L3,14 3,13 2,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,9.75L15,9.75 15,9.25 14,9.25z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M9,1L8,1 8,7 2,7 2,8 8,8 8,14 9,14 9,8 15,8 15,7 9,7z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,5.75L15,5.75 15,5.251 14,5.251z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,4L15,4 15,3 14,3z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,2L15,2 15,1 14,1z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M6.25,14L6.75,14 6.75,13 6.25,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M12,14L13,14 13,13 12,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M10.25,14L10.749,14 10.749,13 10.25,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,14L15,14 15,13 14,13z" />
-                    <GeometryDrawing Brush="#FF414141" Geometry="F1M14,12L15,12 15,10.999 14,10.999z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,4L3,4 3,3 2,3z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,5.75L3,5.75 3,5.251 2,5.251z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,9.75L3,9.75 3,9.25 2,9.25z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,12L3,12 3,10.999 2,10.999z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M12,2L13,2 13,1 12,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M10.25,2L10.749,2 10.749,1 10.25,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M4,14L5.001,14 5.001,13 4,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,2L3,2 3,1 2,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M4,2L5.001,2 5.001,1 4,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M6.25,2L6.75,2 6.75,1 6.25,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M2,14L3,14 3,13 2,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,9.75L15,9.75 15,9.25 14,9.25z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M9,1L8,1 8,7 2,7 2,8 8,8 8,14 9,14 9,8 15,8 15,7 9,7z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,5.75L15,5.75 15,5.251 14,5.251z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,4L15,4 15,3 14,3z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,2L15,2 15,1 14,1z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M6.25,14L6.75,14 6.75,13 6.25,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M12,14L13,14 13,13 12,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M10.25,14L10.749,14 10.749,13 10.25,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,14L15,14 15,13 14,13z" />
+                    <GeometryDrawing Brush="{DynamicResource AnimationEditor_IconInside}" Geometry="F1M14,12L15,12 15,10.999 14,10.999z" />
                 </DrawingGroup.Children>
             </DrawingGroup>
         </DrawingImage.Drawing>
