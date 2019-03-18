@@ -12,7 +12,7 @@ namespace RSDKv5
         /// <summary>
         /// the name in plain text
         /// </summary>
-        public readonly String Name = null;
+        public String Name = null;
 
         public NameIdentifier(string name)
         {

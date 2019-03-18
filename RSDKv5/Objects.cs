@@ -1,70 +1,90 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Text;
 using System.IO;
-using System.Linq;
-using IniParser.Model;
+using System.Security.Cryptography;
+//using IniParser.Model;
 
 namespace RSDKv5
 {
     public class Objects
     {
-        static List<ObjectInfo> objects = new List<ObjectInfo>();
-        static List<String> ObjectNames = new List<String>();
-        static List<String> AttributeNames = new List<String>();
-        static Dictionary<string, ObjectInfo> hashToObject = new Dictionary<string, ObjectInfo>();
+        public static Dictionary<string, string> ObjectNames = new Dictionary<string, string>();
+        public static Dictionary<string, string> AttributeNames = new Dictionary<string, string>();
 
-        public static void InitObjects(Stream stream, bool skipHash = false)
+        public static void InitObjectNames(StreamReader reader, bool closeReader = true)
         {
-            var parser = new IniParser.StreamIniDataParser();
-            IniData data = parser.ReadData(new StreamReader(stream));
-            foreach (var section in data.Sections)
+            MD5 md5hash = MD5.Create();
+            ObjectNames.Clear();
+            while (!reader.EndOfStream)
             {
-                List<AttributeInfo> attributes = new List<AttributeInfo>();
-                foreach (var key in section.Keys)
+                try
                 {
-                    AttributeTypes type;
-                    if(!Enum.TryParse(key.Value, out type))
-                    {
-                        // unknown attribute, what to do?
-                        Debug.WriteLine($"Unknown type in object_attributes.ini! [{key.Value}]");
-                    }
-                    
-                    attributes.Add(new AttributeInfo(new NameIdentifier(key.KeyName), type));
-                    if (!AttributeNames.Contains(key.KeyName))
-                    {
-                        AttributeNames.Add(key.KeyName);
-                    }
+                    string input = reader.ReadLine();
+                    string hash = GetMd5HashString(input);
+                    ObjectNames.Add(hash, input);
                 }
-                objects.Add(new ObjectInfo(new NameIdentifier(section.SectionName), attributes));
-                if (!ObjectNames.Contains(section.SectionName))
+                catch (Exception ex)
                 {
-                    ObjectNames.Add(section.SectionName);
+                    //oop
                 }
             }
-            if (skipHash != true)
-            {
-                hashToObject = objects.ToDictionary(x => x.Name.HashString());
-            }
-
-
+            if (closeReader) reader.Close();
         }
 
-        public static ObjectInfo GetObjectInfo(NameIdentifier name)
+        public static void InitAttributeNames(StreamReader reader, bool closeReader = true)
         {
-            ObjectInfo res = null;
-            hashToObject.TryGetValue(name.HashString(), out res);
+            MD5 md5hash = MD5.Create();
+            AttributeNames.Clear();
+            while (!reader.EndOfStream)
+            {
+                try
+                {
+                    string input = reader.ReadLine();
+                    string hash = GetMd5HashString(input);
+                    AttributeNames.Add(hash, input);
+                }
+                catch (Exception ex)
+                {
+                    //oop
+                }
+            }
+            if (closeReader) reader.Close();
+        }
+
+        public static string GetObjectName(NameIdentifier name)
+        {
+            string res = name.HashString();
+            ObjectNames.TryGetValue(name.HashString(), out res);
             return res;
         }
 
-        public static List<String> GetGlobalAttributes()
+        public static string GetAttributeName(NameIdentifier name)
         {
-            return AttributeNames;
+            string res = name.HashString();
+            AttributeNames.TryGetValue(name.HashString(), out res);
+            return res;
         }
 
-        public static List<String> GetGlobalNames()
+        public static string GetMd5HashString(string input)
         {
-            return ObjectNames;
+            MD5 md5Hash = MD5.Create();
+            // Convert the input string to a byte array and compute the hash.
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+
+            // Create a new Stringbuilder to collect the bytes
+            // and create a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop through each byte of the hashed data 
+            // and format each one as a hexadecimal string.
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            // Return the hexadecimal string.
+            return sBuilder.ToString();
         }
     }
 }

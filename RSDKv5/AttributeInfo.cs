@@ -37,32 +37,29 @@ namespace RSDKv5
 
         public AttributeInfo(string name, AttributeTypes type) : this(new NameIdentifier(name), type) { }
 
-        internal AttributeInfo(Reader reader, ObjectInfo info = null)
+        internal AttributeInfo(Reader reader)
         {
             Name = new NameIdentifier(reader);
             Type = (AttributeTypes)reader.ReadByte();
-            if (info != null)
+            string attribute = Objects.GetAttributeName(Name);
+            if (attribute != null)
             {
-                var attribute = info.GetAttributeInfo(Name);
-                if (attribute != null)
+                // Type mismatch
+                //if (attribute.Type != Type) return;
+                Name.Name = attribute;
+            }
+            else
+            {
+                var everyAttribute = Objects.AttributeNames;
+                string hashString = Name.HashString();
+                foreach (System.Collections.Generic.KeyValuePair<string, string> s in everyAttribute)
                 {
-                    // Type mismatch
-                    //if (attribute.Type != Type) return;
-                    Name = attribute.Name;
-                }
-                else
-                {
-                    var everyAttribute = Objects.GetGlobalAttributes();
-                    string hashString = Name.HashString();
-                    for (int i = 0; i < everyAttribute.Count; i++)
+                    NameIdentifier currentName = new NameIdentifier(s.Value);
+                    String currentHashedName = currentName.HashString();
+                    if (currentHashedName == hashString)
                     {
-                        NameIdentifier currentName = new NameIdentifier(everyAttribute[i]);
-                        String currentHashedName = currentName.HashString();
-                        if (currentHashedName == hashString)
-                        {
-                            Name = currentName;
-                            i = everyAttribute.Count;
-                        }
+                        Name = currentName;
+                        break;
                     }
                 }
             }

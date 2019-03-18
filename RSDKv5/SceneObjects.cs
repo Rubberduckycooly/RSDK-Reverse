@@ -36,12 +36,14 @@ namespace RSDKv5
         internal SceneObject(Reader reader)
         {
             Name = new NameIdentifier(reader);
-            var info = Objects.GetObjectInfo(Name);
-            if (info != null) Name = info.Name;
+            var info = Objects.GetObjectName(Name);
+            if (info != null) Name.Name = info;
 
             byte attributes_count = reader.ReadByte();
             for (int i = 1; i < attributes_count; ++i)
-                Attributes.Add(new AttributeInfo(reader, info));
+            {
+                Attributes.Add(new AttributeInfo(reader));
+            }
 
             ushort entities_count = reader.ReadUInt16();
             for (int i = 0; i < entities_count; ++i)

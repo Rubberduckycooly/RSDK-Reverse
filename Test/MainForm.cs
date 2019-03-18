@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Test
 {
@@ -96,10 +97,13 @@ namespace Test
 
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
-                //GAME AND STAGE CONFIGS
+                //CONFIGS
                 //RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
 
-                RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
+                //RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
+
+                //TIME ATTACK
+                RSDKv5.ReplayDB replayDB = new RSDKv5.ReplayDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
@@ -197,10 +201,10 @@ namespace Test
 
                 //MATH
                 //MANIA HEADER CHECKER
-                /*BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
+                BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
                 int value = reader.ReadInt32();
                 Console.WriteLine(value);
-                reader.Close();*/
+                reader.Close();
                 #region Exe Scanning
 
                 /*
