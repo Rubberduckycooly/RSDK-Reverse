@@ -8,7 +8,7 @@ namespace RSDKv5
         /// <summary>
         /// the MD5 hash of the name in bytes
         /// </summary>
-        private readonly byte[] Hash;
+        private byte[] Hash;
         /// <summary>
         /// the name in plain text
         /// </summary>

@@ -23,11 +23,11 @@ namespace RSDKv5
         /// <summary>
         /// the name of the attribute
         /// </summary>
-        public readonly NameIdentifier Name;
+        public NameIdentifier Name;
         /// <summary>
         /// the type of the attribute
         /// </summary>
-        public readonly AttributeTypes Type;
+        public AttributeTypes Type;
 
         public AttributeInfo(NameIdentifier name, AttributeTypes type)
         {
