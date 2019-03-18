@@ -194,7 +194,6 @@
     <Compile Include="GIF.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="NameIdentifier.cs" />
-    <Compile Include="ObjectInfo.cs" />
     <Compile Include="Objects.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="PaletteColor.cs" />

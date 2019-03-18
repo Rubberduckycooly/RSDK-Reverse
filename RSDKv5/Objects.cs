@@ -22,7 +22,10 @@ namespace RSDKv5
                 {
                     string input = reader.ReadLine();
                     string hash = GetMd5HashString(input);
-                    ObjectNames.Add(hash, input);
+                    if (!ObjectNames.ContainsKey(hash))
+                    {
+                        ObjectNames.Add(hash, input);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -42,7 +45,11 @@ namespace RSDKv5
                 {
                     string input = reader.ReadLine();
                     string hash = GetMd5HashString(input);
-                    AttributeNames.Add(hash, input);
+                    if (!AttributeNames.ContainsKey(hash))
+                    {
+                        AttributeNames.Add(hash, input);
+                    }
+
                 }
                 catch (Exception ex)
                 {
