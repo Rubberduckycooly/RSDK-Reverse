@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RSDKv2
 {
@@ -46,6 +48,7 @@ namespace RSDKv2
 
             public void Write(Writer writer, bool SingleFile = false)
             {
+                Directory = Directory.Replace('\\', '/');
                 int ss = Directory.Length;
                 writer.Write((byte)ss);
 
@@ -66,6 +69,7 @@ namespace RSDKv2
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Directory);
                 if (!di.Exists) di.Create();
                 Writer writer = new Writer(dataFolder);
+                Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
                 writer.Write(Address);
                 writer.Close();
@@ -199,6 +203,8 @@ namespace RSDKv2
 
             public void Write(Writer writer, bool SingleFile = false)
             {
+                FileName = FileName.Replace('\\', '/');
+
                 int ss = FileName.Length;
                 writer.Write((byte)ss);
 
@@ -220,28 +226,23 @@ namespace RSDKv2
                 }
                 else
                 {
+                    byte[] outfbuf = Filedata;
+
                     // Encrypt file
-                    decryptKeyZ = ((int)fileSize & 0x1fc) >> 2;
+                    decryptKeyZ = (byte)(fileSize & 0x1fc) >> 2;
                     decryptKeyIndex2 = (decryptKeyZ % 9) + 1;
                     decryptKeyIndex1 = (decryptKeyZ % decryptKeyIndex2) + 1;
 
                     decryptKeyIndexZ = 0;
 
-                    int[] outbuf = new int[Filedata.Length];
-
-                    for (int i = 0; i < (int)fileSize; i++)
+                    for (ulong i = 0; i < fileSize; i++)
                     {
-                        outbuf[i] = Filedata[i];
-                    }
-
-                    for (int i = 0; i < (int)fileSize; i++)
-                    {
-                        outbuf[i] ^= decryptKey1[decryptKeyIndex1++];
+                        outfbuf[i] ^= (byte)decryptKey1[decryptKeyIndex1++];
 
                         if (decryptKeyIndexZ == 1) // swap nibbles
-                            outbuf[i] = (outbuf[i] >> 4) | ((outbuf[i] & 0xf) << 4);
+                            outfbuf[i] = (byte)((outfbuf[i] >> 4) | ((outfbuf[i] & 0xf) << 4));
 
-                        outbuf[i] ^= decryptKey2[decryptKeyIndex2++] ^ decryptKeyZ;
+                        outfbuf[i] ^= (byte)(decryptKey2[decryptKeyIndex2++] ^ decryptKeyZ);
 
                         if ((decryptKeyIndex1 <= 19) || (decryptKeyIndex2 <= 11))
                         {
@@ -276,13 +277,9 @@ namespace RSDKv2
                         }
                     }
 
-                    Filedata = new byte[outbuf.Length];
-                    for (int i = 0; i < outbuf.Length; i++)
-                    {
-                        Filedata[i] = (byte)outbuf[i];
-                    }
+                    Filedata = outfbuf;
 
-                    writer.Write(fileSize);
+                    writer.Write((uint)fileSize);
                     writer.Write(Filedata);
                 }
             }
@@ -357,6 +354,7 @@ namespace RSDKv2
                     }
                 }
             }
+            reader.Close();
         }
 
         public void Write(Writer writer)
@@ -404,6 +402,21 @@ namespace RSDKv2
             for (int i = 0; i < Directories.Count; i++)
             {
                 Directories[i].Write(writer);
+            }
+
+            Dir = 0;
+
+            for (int i = 0; i < Files.Count; i++)
+            {
+                if (Files[i].DirID == Dir)
+                {
+                    Files[i].Write(writer);
+                }
+                else
+                {
+                    Dir++;
+                    Files[i].Write(writer);
+                }
             }
 
             writer.Close();

@@ -49,7 +49,6 @@ namespace RSDKv5
                     {
                         AttributeNames.Add(hash, input);
                     }
-
                 }
                 catch (Exception ex)
                 {
@@ -63,6 +62,10 @@ namespace RSDKv5
         {
             string res = name.HashString();
             ObjectNames.TryGetValue(name.HashString(), out res);
+            if (res == null)
+            {
+                res = name.HashString();
+            }
             return res;
         }
 
@@ -70,7 +73,41 @@ namespace RSDKv5
         {
             string res = name.HashString();
             AttributeNames.TryGetValue(name.HashString(), out res);
+            if (res == null)
+            {
+                res = name.HashString();
+            }
             return res;
+        }
+
+        public static void AddObjectName(string input)
+        {
+            MD5 md5hash = MD5.Create();
+            string hash = GetMd5HashString(input);
+
+            if (!ObjectNames.ContainsKey(hash))
+            {
+                ObjectNames.Add(hash, input);
+            }
+            else
+            {
+                ObjectNames[hash] = input;
+            }
+        }
+
+        public static void AddAttributeName(string input)
+        {
+            MD5 md5hash = MD5.Create();
+            string hash = GetMd5HashString(input);
+
+            if (!AttributeNames.ContainsKey(hash))
+            {
+                AttributeNames.Add(hash, input);
+            }
+            else
+            {
+                AttributeNames[hash] = input;
+            }
         }
 
         public static string GetMd5HashString(string input)

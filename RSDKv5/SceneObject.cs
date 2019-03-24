@@ -13,16 +13,22 @@ namespace RSDKv5
         public NameIdentifier Name
         {
             get;
-            private set;
+            set;
         }
         /// <summary>
         /// the names and types of each attribute of this object
         /// </summary>
-        public readonly List<AttributeInfo> Attributes = new List<AttributeInfo>();
+        public List<AttributeInfo> Attributes = new List<AttributeInfo>();
         /// <summary>
         /// a list of entities using this type
         /// </summary>
         public List<SceneEntity> Entities = new List<SceneEntity>();
+
+        public SceneObject()
+        {
+            Name = new NameIdentifier("Object");
+            Attributes = new List<AttributeInfo>();
+        }
 
 
         public SceneObject(NameIdentifier name, List<AttributeInfo> attributes)

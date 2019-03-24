@@ -9,25 +9,6 @@ namespace RSDKvB
 {
     public class DataFile
     {
-        public class Header
-        {
-            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K',(byte)'v', (byte)'B'};
-            public ushort FileCount;
-
-            public Header(Reader reader)
-            {
-                if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
-                    throw new Exception("Invalid config file header magic");
-
-                FileCount = reader.ReadUInt16();
-            }
-
-            public void Write(Writer writer)
-            {
-                writer.Write(MAGIC);
-                writer.Write(FileCount);
-            }
-        }
 
         public class FileInfo
         {
@@ -187,7 +168,19 @@ namespace RSDKvB
 
             public void WriteFileHeader(Writer writer)
             {
-                writer.Write(CalculateMD5Hash(FileName.ToLower()));
+                FileName = FileName.Replace('\\', '/');
+
+                byte[] md5 = CalculateMD5Hash(FileName.ToLower());
+
+                for (int y = 0; y < 16; y += 4)
+                {
+                    md5Hash[y + 3] = md5[y];
+                    md5Hash[y + 2] = md5[y + 1];
+                    md5Hash[y + 1] = md5[y + 2];
+                    md5Hash[y] = md5[y + 3];
+                }
+
+                writer.Write(md5Hash);
                 writer.Write(DataOffset);
                 writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
             }
@@ -445,8 +438,8 @@ namespace RSDKvB
             }
         }
 
-        public Header header;
-        /** Header */
+        public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'B' };
+        public ushort FileCount;
 
         public List<FileInfo> Files = new List<FileInfo>();
         /** Sequentially, a file description block for every file stored inside the data file. */
@@ -460,25 +453,33 @@ namespace RSDKvB
 
         public DataFile(Reader reader, List<string> FileList)
         {
-            header = new Header(reader); //read the header data
+            if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
+            {
+                Console.WriteLine("Invalid Signature! aborting!");
+                reader.Close();
+                return;
+            }
 
-            Console.WriteLine("File Count = " + header.FileCount);
+            FileCount = reader.ReadUInt16(); //read the header data
 
-            for (int i = 0; i < header.FileCount; i++)
+            Console.WriteLine("File Count = " + FileCount);
+
+            for (int i = 0; i < FileCount; i++)
             {
                 Files.Add(new FileInfo(reader,FileList,i)); //read each file's header
             }
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
         {
-            header.FileCount = (ushort)Files.Count; //get the file count
+            FileCount = (ushort)Files.Count; //get the file count
 
             //firstly we setout the file
             //write a bunch of blanks
 
-            header.Write(writer); //write the header
+            writer.Write(MAGIC);
+            writer.Write(FileCount); //write the header
 
             foreach (FileInfo f in Files) //write each file's header
             {
@@ -496,7 +497,8 @@ namespace RSDKvB
 
             writer.BaseStream.Position = 0; //jump back to the start of the file
 
-            header.Write(writer); //re-write our header
+            writer.Write(MAGIC);
+            writer.Write(FileCount); //re-write our header
 
             foreach (FileInfo f in Files) //for each file
             {

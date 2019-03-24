@@ -199,11 +199,29 @@ namespace Test
                 ushort paltest = (ushort)(((ushort)(r >> 3) << 11) | ((ushort)(g >> 3) << 6) | 1 | 2 * (b >> 3));
                 Console.WriteLine(paltest);*/
 
+                /*StreamReader reader = new StreamReader(File.OpenRead(filepath));
+                string data = reader.ReadToEnd();
+                reader.Close();
+                StreamWriter writer = new StreamWriter(File.OpenWrite(filepath));
+                for (int i = 0; i < data.Length; i++)
+                {                
+                    if (data[i] == 0x2E)
+                    {
+                        writer.WriteLine();
+                    }
+                    else
+                    {
+                        writer.Write(data[i]);
+                    }
+                }
+                //writer.Write(data);
+                writer.Close();*/
+
                 //MATH
                 //MANIA HEADER CHECKER
                 BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
                 int value = reader.ReadInt32();
-                Console.WriteLine(value);
+                Console.WriteLine(Path.GetFileNameWithoutExtension(filepath) + ": " + value);
                 reader.Close();
                 #region Exe Scanning
 

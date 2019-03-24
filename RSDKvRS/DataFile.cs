@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RSDKvRS
 {
@@ -33,6 +35,7 @@ namespace RSDKvRS
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Directory);
                 if (!di.Exists) di.Create();
                 Writer writer = new Writer(dataFolder);
+                Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
                 writer.Write(Address);
                 writer.Close();
@@ -40,6 +43,7 @@ namespace RSDKvRS
 
             public void Write(Writer writer)
             {
+                Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
                 writer.Write(Address);
             }
@@ -88,6 +92,8 @@ namespace RSDKvRS
                 string fullDir = Datadirectory + "\\" + tmp;
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(fullDir);
                 if (!di.Exists) di.Create();
+                string name = fullDir + FileName;
+                name = name.Replace('\\', '/');
                 Writer writer = new Writer(fullDir + FileName);
                 writer.Write(Filedata);
                 writer.Close();
@@ -162,6 +168,7 @@ namespace RSDKvRS
             }
 
             Console.WriteLine("File count: " + Files.Count);
+            reader.Close();
         }
 
         public void Write(Writer writer)

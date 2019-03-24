@@ -21,7 +21,10 @@ namespace RSDKv5
 
         public StageConfig()
         {
-
+            for (int i = 0; i < Palettes.Length; i++)
+            {
+                Palettes[i] = new Palette();
+            }
         }
 
         public StageConfig(Stream stream) : this(new Reader(stream))

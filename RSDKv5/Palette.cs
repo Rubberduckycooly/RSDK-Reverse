@@ -5,7 +5,8 @@
         /// <summary>
         /// how many columns in the palette
         /// </summary>
-        public const int PALETTE_COLUMNS = 0x10;
+        public const int MAX_PALETTE_COLUMNS = 0x10;
+        public int PALETTE_COLUMNS = 0x10;
         /// <summary>
         /// how many colours per column
         /// </summary>
@@ -18,11 +19,11 @@
         /// <summary>
         /// our array of colours in the palette
         /// </summary>
-        public PaletteColor[][] Colors = new PaletteColor[PALETTE_COLUMNS][];
+        public PaletteColor[][] Colors = new PaletteColor[MAX_PALETTE_COLUMNS][];
 
-        public Palette(int pc = 2)
+        public Palette(int pc = 0)
         {
-            int palColumns = pc;
+            int palColumns = PALETTE_COLUMNS = pc;
 
             Colors = new PaletteColor[palColumns][];
             for (int i = 0; i < palColumns; i++)

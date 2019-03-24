@@ -50,6 +50,30 @@ namespace RSDKv5
                 if (useB) return string.Join(",", TileMapA.SelectMany(row => row));
                 else return string.Join(",", TileMapB.SelectMany(row => row));
             }
+
+            public TileChunk(ushort Size = 8)
+            {
+                ChunkSize = Size;
+                TileMapA = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
+                {
+                    TileMapA[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
+                    {
+                        TileMapA[x][y] = 0xffff;
+                    }
+                }
+                TileMapB = new ushort[ChunkSize][];
+                for (int x = 0; x < ChunkSize; x++)
+                {
+                    TileMapB[x] = new ushort[ChunkSize];
+                    for (int y = 0; y < ChunkSize; y++)
+                    {
+                        TileMapB[x][y] = 0xffff;
+                    }
+                }
+            }
+
             public TileChunk(Dictionary<Point, ushort> points)
             {
                 TileMapA = new ushort[ChunkSize][];

@@ -29,6 +29,11 @@ namespace RSDKv5
         /// </summary>
         public AttributeTypes Type;
 
+        public AttributeInfo()
+        {
+            this.Name = new NameIdentifier("attribute");
+            this.Type = 0;
+        }
         public AttributeInfo(NameIdentifier name, AttributeTypes type)
         {
             this.Name = name;

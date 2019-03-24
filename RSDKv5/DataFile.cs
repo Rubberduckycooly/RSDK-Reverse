@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -9,25 +9,6 @@ namespace RSDKv5
 {
     public class DataFile
     {
-
-        public class Header
-        {
-            public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
-            public ushort FileCount;
-
-            public Header(Reader reader)
-            {
-                if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
-                    throw new Exception("Invalid config file header magic");
-                FileCount = reader.ReadUInt16();
-            }
-
-            public void Write(Writer writer)
-            {
-                writer.Write(MAGIC);
-                writer.Write(FileCount);
-            }
-        }
 
         public class FileInfo
         {
@@ -207,6 +188,8 @@ namespace RSDKv5
 
             public void WriteFileHeader(Writer writer)
             {
+                FileName = FileName.Replace('\\', '/');
+
                 byte[] md5 = CalculateMD5Hash(FileName.ToLower());
 
                 for (int y = 0; y < 16; y += 4)
@@ -283,18 +266,6 @@ namespace RSDKv5
 
                 // Return the hexadecimal string.
                 return sBuilder.ToString();
-            }
-
-            // Verify a hash against a string.
-            static bool VerifyMd5Hash(MD5 md5Hash, string input, string hash)
-            {
-                // Hash the input.
-                string hashOfInput = GetMd5Hash(md5Hash, input);
-
-                // Create a StringComparer an compare the hashes.
-                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-                return comparer.Compare(hashOfInput, hash) == 0;
             }
 
             public byte[] CalculateMD5Hash(string input)
@@ -403,11 +374,6 @@ namespace RSDKv5
                 return ReturnData;
             }
 
-            public int MulUnsignedHigh(uint arg1, int arg2)
-            {
-                return (int)(((ulong)arg1 * (ulong)arg2) >> 32);
-            }
-
             public ExtensionTypes GetExtensionFromData()
             {
                 byte[] header = new byte[5];
@@ -472,8 +438,8 @@ namespace RSDKv5
 
         }
 
-        public Header header;
-        /** Header */
+        public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
+        public ushort FileCount;
 
         public List<FileInfo> Files = new List<FileInfo>();
         /** Sequentially, a file description block for every file stored inside the data file. */
@@ -487,25 +453,33 @@ namespace RSDKv5
 
         public DataFile(Reader reader, List<string> FileList)
         {
-            header = new Header(reader); //read the header data
+            if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
+            {
+                Console.WriteLine("Invalid Signature! aborting!");
+                reader.Close();
+                return;
+            }
 
-            Console.WriteLine("File Count = " + header.FileCount);
+            FileCount = reader.ReadUInt16(); //read the header data
 
-            for (int i = 0; i < header.FileCount; i++)
+            Console.WriteLine("File Count = " + FileCount);
+
+            for (int i = 0; i < FileCount; i++)
             {
                 Files.Add(new FileInfo(reader, FileList, i)); //read each file's header
             }
-
+            reader.Close();
         }
 
         public void Write(Writer writer)
         {
-            header.FileCount = (ushort)Files.Count; //get the file count
+            FileCount = (ushort)Files.Count; //get the file count
 
             //firstly we setout the file
             //write a bunch of blanks
 
-            header.Write(writer); //write the header
+            writer.Write(MAGIC);
+            writer.Write(FileCount); //write the header
 
             foreach (FileInfo f in Files) //write each file's header
             {
@@ -523,7 +497,8 @@ namespace RSDKv5
 
             writer.BaseStream.Position = 0; //jump back to the start of the file
 
-            header.Write(writer); //re-write our header
+            writer.Write(MAGIC);
+            writer.Write(FileCount); //re-write our header
 
             foreach (FileInfo f in Files) //for each file
             {

@@ -50,7 +50,7 @@ namespace RSDKv5
         /// </summary>
         Color value_color;
 
-        public readonly AttributeTypes Type;
+        public AttributeTypes Type;
 
         Position no_position = new Position(0, 0);
 
@@ -155,6 +155,11 @@ namespace RSDKv5
         {
             get { CheckType(AttributeTypes.COLOR); return value_color; }
             set { CheckType(AttributeTypes.COLOR); value_color = value; }
+        }
+
+        public AttributeValue()
+        {
+            Type = 0;
         }
 
         public AttributeValue(AttributeTypes type)

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace RSDKv1
 {
@@ -30,6 +32,7 @@ namespace RSDKv1
 
             public void Write(Writer writer)
             {
+                Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
                 writer.Write(Address);
             }
@@ -39,6 +42,7 @@ namespace RSDKv1
                 System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Directory);
                 if (!di.Exists) di.Create();
                 Writer writer = new Writer(dataFolder);
+                Directory = Directory.Replace('\\', '/');
                 writer.Write(Directory);
                 writer.Write(Address);
                 writer.Close();
@@ -118,6 +122,7 @@ namespace RSDKv1
             public void Write(Writer writer, bool SingleFile = false)
             {
                 bool DontFlip = false;
+                FileName = FileName.Replace('\\', '/');
                 writer.Write(FileName);
 
                 string ext = System.IO.Path.GetExtension(FileName);
@@ -137,12 +142,12 @@ namespace RSDKv1
 
                 if (DontFlip)
                 {
-                    writer.Write(fileSize);
+                    writer.Write((uint)fileSize);
                     writer.Write(Filedata);
                 }
                 else if (!DontFlip)
                 {
-                    writer.Write(fileSize);
+                    writer.Write((uint)fileSize);
                     byte[] fdata = new byte[Filedata.Length];                  
                     for (int i = 0; i < Filedata.Length; i++)
                     {
@@ -195,7 +200,7 @@ namespace RSDKv1
 
             for (int d = 0; d < dircount; d++)
             {
-                Directories[d] = new DirInfo(reader);
+                Directories.Add(new DirInfo(reader));
             }
 
             for (int d = 0; d < dircount; d++)
@@ -219,6 +224,7 @@ namespace RSDKv1
                     }
                 }
             }
+            reader.Close();
         }
 
         public void Write(Writer writer)
