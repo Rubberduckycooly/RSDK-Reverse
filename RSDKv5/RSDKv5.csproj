@@ -208,7 +208,7 @@
     <Compile Include="SceneEditorMetadata.cs" />
     <Compile Include="SceneEntity.cs" />
     <Compile Include="SceneLayer.cs" />
-    <Compile Include="SceneObjects.cs" />
+    <Compile Include="SceneObject.cs" />
     <Compile Include="ScrollInfo.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="StageConfig.cs" />
