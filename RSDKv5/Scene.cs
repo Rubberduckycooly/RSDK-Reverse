@@ -5,6 +5,7 @@ using System.IO;
 
 namespace RSDKv5
 {
+    [Serializable]
     public class Scene
     {   
         /// <summary>

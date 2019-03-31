@@ -89,6 +89,11 @@ namespace RSDKv5
                 if (scenesHaveModeFilter) ModeFilter = reader.ReadByte();
             }
 
+            public string GetFilePath(string DataFolder)
+            {
+                return Path.Combine(DataFolder, "Stages", Zone, "Scene" + SceneID + ".bin");
+            }
+
             internal void Write(Writer writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);

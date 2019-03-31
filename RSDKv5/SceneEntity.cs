@@ -5,8 +5,12 @@ using System.Linq;
 namespace RSDKv5
 {
     [Serializable]
-    public class SceneEntity
+    public class SceneEntity : ICloneable
     {
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
         /// <summary>
         /// what slotID this entity is in the level
         /// </summary>
@@ -204,7 +208,7 @@ namespace RSDKv5
             return null;
         }
 
-
+        [Serializable]
         public class DictionaryWithDefault<TKey, TValue> : Dictionary<TKey, TValue>
         {
             TValue _default;

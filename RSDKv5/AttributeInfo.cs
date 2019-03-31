@@ -2,6 +2,7 @@
 
 namespace RSDKv5
 {
+    [Serializable]
     public enum AttributeTypes
     {
         UINT8 = 0,
