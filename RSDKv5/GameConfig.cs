@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace RSDKv5
 {
@@ -205,46 +206,16 @@ namespace RSDKv5
 
         public GameConfig(Reader reader, bool closeReader = false)
         {
-            ReadMagic(reader);
-
-            GameName = reader.ReadRSDKString();
-            GameSubname = reader.ReadRSDKString();
-            Version = reader.ReadRSDKString();
-
-            InterpretVersion();
-
-            StartSceneCategoryIndex = reader.ReadByte();
-            StartSceneIndex = reader.ReadUInt16();
-
-            ReadCommonConfig(reader);
-
-            ushort TotalScenes = reader.ReadUInt16();
-            byte categories_count = reader.ReadByte();
-
-            CurrentLevelID = 0;
-            for (int i = 0; i < categories_count; ++i)
-            {
-                Categories.Add(new Category(reader, _scenesHaveModeFilter));
-            }
-            CurrentLevelID = 0;
-
-            try
-            {
-                byte config_memory_count = reader.ReadByte();
-
-                for (int i = 0; i < config_memory_count; ++i)
-                    ConfigMemory.Add(new ConfigurableMemoryEntry(reader));
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine("Error reading config memory! you potentially have a bad gameconfig!");
-                Console.WriteLine("Error: " + ex.Message);
-            }
-
-            if (closeReader) reader.Close();
+            ReadConfig(reader, closeReader);
         }
 
         public void Read(Reader reader, bool closeReader = false)
+        {
+            ReadConfig(reader, closeReader);
+        }
+
+
+        public void ReadConfig(Reader reader, bool closeReader = false)
         {
             ReadMagic(reader);
 
@@ -294,8 +265,16 @@ namespace RSDKv5
 
         public void Write(string filename)
         {
-            using (Writer writer = new Writer(filename))
-                Write(writer);
+            if (File.Exists(filename))
+            {
+                using (Writer writer = new Writer(filename))
+                    Write(writer);
+            }
+            else
+            {
+                System.Diagnostics.Debug.Print(string.Format("Unable to Save to the following File: {0}", filename));
+            }
+
         }
 
         public void Write(Stream stream)
