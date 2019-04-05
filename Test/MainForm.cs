@@ -103,7 +103,7 @@ namespace Test
                 //RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
 
                 //TIME ATTACK
-                RSDKv5.ReplayDB replayDB = new RSDKv5.ReplayDB(new RSDKv5.Reader(filepath));
+                //RSDKv5.ReplayDB replayDB = new RSDKv5.ReplayDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
@@ -121,9 +121,10 @@ namespace Test
 
                 //Videos
                 //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
+                //RSDKv2.Video rsv = new RSDKv2.Video(filepath);
 
                 //SCENES
-                //RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
+                RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
 
                 //SAVES
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));
