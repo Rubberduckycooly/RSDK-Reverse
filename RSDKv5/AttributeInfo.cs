@@ -15,6 +15,7 @@ namespace RSDKv5
         BOOL = 7,
         STRING = 8,
         POSITION = 9,
+        VECTOR3 = 10, //A wild guess, but nonetheless likely
         COLOR = 11,
     }
 

@@ -124,14 +124,37 @@ namespace Test
                 //RSDKv2.Video rsv = new RSDKv2.Video(filepath);
 
                 //SCENES
-                RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
+                //RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
 
                 //SAVES
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));
                 //save.EncoreBuddyChar = 1;
 
                 //Scripts
-                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+
+                RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");
+
+                for (int i = 0; i < 256; i++)
+                {
+                    byte red, green, blue;
+
+                    red = 255;
+                    green = 0;
+                    blue = 255;
+
+                    if (i < Obj.Data.Length)
+                    {
+                        blue = (byte)((Obj.Data[i] & 0x00FF0000) >> 16);
+                        green = (byte)((Obj.Data[i] & 0x0000FF00) >> 8);
+                        red = (byte)((Obj.Data[i] & 0x000000FF));
+                    }
+
+                    writer.Write(red);
+                    writer.Write(green);
+                    writer.Write(blue);
+                }
+                writer.Close();
 
                 //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
                 //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
@@ -220,10 +243,10 @@ namespace Test
 
                 //MATH
                 //MANIA HEADER CHECKER
-                BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
+                /*BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
                 int value = reader.ReadInt32();
                 Console.WriteLine(Path.GetFileNameWithoutExtension(filepath) + ": " + value);
-                reader.Close();
+                reader.Close();*/
                 #region Exe Scanning
 
                 /*

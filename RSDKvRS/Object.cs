@@ -29,7 +29,7 @@ namespace RSDKvRS
         /// </summary>
         public short yPos;
         /// <summary>
-        /// how to load the "attribute"?
+        /// how many objects we've loaded
         /// </summary>
         public static int cur_id = 0;
         /// <summary>
@@ -84,7 +84,7 @@ namespace RSDKvRS
             yPos = (short)(reader.ReadSByte() << 8);
             yPos |= (short)reader.ReadByte();
 
-            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
+            //Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
         }
 
         public void Write(Writer writer)
@@ -110,7 +110,7 @@ namespace RSDKvRS
             writer.Write((byte)(yPos >> 8));
             writer.Write((byte)(yPos & 0xFF));
 
-            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
+            //Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos);
         }
     }
 }

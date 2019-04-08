@@ -197,7 +197,7 @@ namespace RSDKvB
 
             END_LOOP:
 
-            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos + ", Attribute Type = " + AttributeType + ", Attribute = " + attribute);
+           Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos + ", Attribute Type = " + AttributeType + ", Attribute = " + attribute);
         }
 
         public void Write(Writer writer)

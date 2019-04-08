@@ -177,7 +177,6 @@ namespace RSDKv1
                     byte g = reader.ReadByte(); //g
                     byte b = reader.ReadByte(); //b
                     c = Color.FromArgb(255, r, g, b);
-                    //Console.WriteLine("Colour " + i + " = " + c.R + " " + c.G + " " + c.B);
                     FramePalette.Add(c);
                 }
 
@@ -187,7 +186,6 @@ namespace RSDKv1
                 {
                     byte tmp = reader.ReadByte();
                     idkMan.Add(tmp);
-                    //Console.WriteLine("idk lol = " + tmp);
                     if (tmp == 44) { Next = true; } // AKA ','
                 }
 
@@ -198,13 +196,8 @@ namespace RSDKv1
 
                 PaletteType = reader.ReadByte();
 
-                //Console.WriteLine("Palette Type = " + PaletteType);
 
                 isInterlaced = (uint)PaletteType << 25 >> 31;
-
-                //Console.WriteLine("Interlaced? = " + isInterlaced);
-
-                //Console.WriteLine("Use full Palette = " + (PaletteType >> 7));
 
                 FullPallete = PaletteType >> 7 == 1;
 
@@ -217,14 +210,11 @@ namespace RSDKv1
                         byte g = reader.ReadByte(); //g
                         byte b = reader.ReadByte(); //b
                         c = Color.FromArgb(255, r, g, b);
-                        //Console.WriteLine("(Extra) Colour " + i + " = " + c.R + "," + c.G + "," + c.B);
                         FramePalette.Add(c);
                     }
                 }
 
                 ReadGIFData(reader);
-                Console.WriteLine("Loaded Video Frame!");
-                //reader.BaseStream.Position = FilePos + 6;
                 endOffset = (int)reader.Pos;
             }
 
@@ -267,41 +257,6 @@ namespace RSDKv1
                     }
 
                     reader.ReadBytes(BlockSize);
-
-                    /*if (!ExtendedCodeTable)
-                    {
-
-                        while ((c = reader.ReadByte()) != EndCode)
-                        {
-
-                            if (c == ClearCode)
-                            {
-                                //do clearcode shit
-
-                                while ((c = reader.ReadByte()) == ClearCode)
-                                {
-                                    //skip
-                                }
-
-                                if (c == EndCode)
-                                {
-                                    notEnd = false;
-                                    break;
-                                }
-
-                            }
-                            else
-                            {
-                                //Process data
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine("wtf no");
-                        break;                    
-                        //gonna haveta do special stuff for 256 colour images
-                    }*/
                 }
             }
 
@@ -325,17 +280,12 @@ namespace RSDKv1
 
             Height = reader.ReadUInt16();
 
-            Console.WriteLine("VideoInfo = " + VideoInfo);
-            Console.WriteLine("Width = " + Width);
-            Console.WriteLine("Height = " + Height);
-
             //GET IMAGE DATA LOADING
             for (int f = 0; f < VideoInfo; f++)
             {
                 LoadVideoFrame(reader);
             }
 
-            Console.WriteLine("Reader Position = " + reader.Pos + " FileSize = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.Pos));
             reader.Close();
         }
 

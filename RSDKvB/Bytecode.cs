@@ -669,7 +669,7 @@ namespace RSDKvB
             for (int i = 0; i < count; i++)
                 functionScriptList[i].mainJumpTable = Read32(reader);
 
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+            //Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
         }
 
@@ -745,7 +745,7 @@ namespace RSDKvB
                 ScriptDataBytes[i] = scriptData[i];
             }
 
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+            //Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
         }
 
@@ -821,7 +821,7 @@ namespace RSDKvB
                 ScriptDataBytes[i] = scriptData[i];
             }
 
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+            //Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
         }
 

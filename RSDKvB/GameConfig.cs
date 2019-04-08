@@ -46,7 +46,7 @@ namespace RSDKvB
                     ActID = reader.ReadRSDKString();
                     Name = reader.ReadRSDKString();
                     Unknown = reader.ReadByte();
-                    Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,Unknown = " + Unknown);
+                    //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,Unknown = " + Unknown);
                 }
 
                 public void Write(Writer writer)
@@ -130,7 +130,7 @@ namespace RSDKvB
             public GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
-                Console.WriteLine(Name);
+                //Console.WriteLine(Name);
                 Value = reader.ReadInt32();
             }
 
@@ -206,7 +206,7 @@ namespace RSDKvB
             GameWindowText = reader.ReadRSDKString();
             GameDescriptionText = reader.ReadRSDKString();
 
-            Console.WriteLine("Game Title: " + GameWindowText);
+            //Console.WriteLine("Game Title: " + GameWindowText);
 
             this.ReadPalettes(reader);
             this.ReadObjectsNames(reader);

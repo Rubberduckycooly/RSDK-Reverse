@@ -177,7 +177,7 @@ namespace RSDKv2
                 }*/
 
                 ReadGIFData(reader);
-                Console.WriteLine("Loaded Video Frame!");
+                //Console.WriteLine("Loaded Video Frame!");
                 //reader.Basereader.Position = FilePos + 6;
                 endOffset = (int)reader.Pos;
             }
@@ -493,9 +493,9 @@ namespace RSDKv2
 
             Height = reader.ReadUInt16();
 
-            Console.WriteLine("VideoInfo = " + VideoInfo);
-            Console.WriteLine("Width = " + Width);
-            Console.WriteLine("Height = " + Height);
+            //Console.WriteLine("VideoInfo = " + VideoInfo);
+            //Console.WriteLine("Width = " + Width);
+            //Console.WriteLine("Height = " + Height);
 
             //GET IMAGE DATA LOADING
             for (int f = 0; f < VideoInfo; f++)

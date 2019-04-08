@@ -99,6 +99,26 @@ namespace RSDKvRS
                     return this.MemberwiseClone();
                 }
 
+                public struct HitBox
+                {
+                    /// <summary>
+                    /// the Xpos of the hitbox
+                    /// </summary>
+                    public sbyte X;
+                    /// <summary>
+                    /// the Width of the hitbox
+                    /// </summary>
+                    public sbyte Width;
+                    /// <summary>
+                    /// the Ypos of the hitbox
+                    /// </summary>
+                    public sbyte Y;
+                    /// <summary>
+                    /// the height of the hitbox
+                    /// </summary>
+                    public sbyte Height;
+                }
+
                 /// <summary>
                 /// the spritesheet index
                 /// </summary>
@@ -106,7 +126,7 @@ namespace RSDKvRS
                 /// <summary>
                 /// the collision box
                 /// </summary>
-                public byte[] CollisionBox = new byte[4];
+                public HitBox CollisionBox = new HitBox();
                 /// <summary>
                 /// the delay of each frame before advancing to the next one in frames (always 256)
                 /// </summary>
@@ -149,16 +169,18 @@ namespace RSDKvRS
                     Height = reader.ReadByte();
                     SpriteSheet = reader.ReadByte();
 
-                    for (int k = 0; k < 4; k++)
-                        CollisionBox[k] = reader.ReadByte();
+                    CollisionBox.X = reader.ReadSByte();
+                    CollisionBox.Width = reader.ReadSByte();
+                    CollisionBox.Y = reader.ReadSByte();
+                    CollisionBox.Height = reader.ReadSByte();
 
                     byte[] PivotVals = new byte[2];
 
                     PivotVals[0] = (byte)-reader.ReadByte();
                     PivotVals[1] = (byte)-reader.ReadByte();
 
-                    PivotX = (SByte)PivotVals[0];
-                    PivotY = (SByte)PivotVals[1];
+                    PivotX = (sbyte)PivotVals[0];
+                    PivotY = (sbyte)PivotVals[1];
                 }
 
                 public void Write(Writer writer)
@@ -168,10 +190,12 @@ namespace RSDKvRS
                     writer.Write(Width);
                     writer.Write(Height);
                     writer.Write(SpriteSheet);
-                    for (int c = 0; c < 4; ++c)
-                    {
-                        writer.Write(CollisionBox[c]);
-                    }
+
+                    writer.Write(CollisionBox.X);
+                    writer.Write(CollisionBox.Width);
+                    writer.Write(CollisionBox.Y);
+                    writer.Write(CollisionBox.Height);
+                    
                     byte px = (byte)PivotX;
                     byte py = (byte)PivotY;
                     writer.Write(-px);
@@ -282,12 +306,6 @@ namespace RSDKvRS
                 else
                 {
                     SpriteSheets[i] = reader.ReadRSDKString();
-                    string tmp = "";
-                    for (int ii = 0; ii < SpriteSheets[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
-                    {
-                        tmp += SpriteSheets[i][ii];
-                    }
-                    SpriteSheets[i] = tmp;
                 }
             }
 

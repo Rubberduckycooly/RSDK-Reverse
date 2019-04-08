@@ -42,7 +42,7 @@ namespace RSDKv2
                     DecryptedString = DecryptedString + buf;
                 }
                 Directory = DecryptedString;
-                Console.WriteLine(Directory);
+                //Console.WriteLine(Directory);
                 Address = reader.ReadInt32();
             }
 
@@ -134,7 +134,7 @@ namespace RSDKv2
 
                 FileName = DecryptedString;
 
-                Console.WriteLine(FileName);
+                //Console.WriteLine(FileName);
 
                 fileSize = reader.ReadUInt32();
 
@@ -321,10 +321,10 @@ namespace RSDKv2
         {
 
             headerSize = reader.ReadInt32();
-            Console.WriteLine("Header Size = " + headerSize);
+            //Console.WriteLine("Header Size = " + headerSize);
 
             int dircount = reader.ReadUInt16();
-            Console.WriteLine("Directory Count = " + dircount);
+            //Console.WriteLine("Directory Count = " + dircount);
 
             Directories = new List<DirInfo>();
 

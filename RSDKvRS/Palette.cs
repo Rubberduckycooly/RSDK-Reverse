@@ -79,7 +79,7 @@ namespace RSDKvRS
         internal void Write(Writer writer)
         {
             int palColumns = Colors.Length/16;
-            Console.WriteLine(palColumns);
+            //Console.WriteLine(palColumns);
             foreach (PaletteColour[] column in Colors)
                 if (column != null)
                     foreach (PaletteColour color in column)
