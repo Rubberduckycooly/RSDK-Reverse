@@ -26,7 +26,7 @@ namespace RSDKvRS
             public DirInfo(Reader reader)
             {
                 Directory = reader.ReadString();
-                Console.WriteLine(Directory);
+               // Console.WriteLine(Directory);
                 Address = reader.ReadInt32();
             }
 
@@ -81,7 +81,7 @@ namespace RSDKvRS
             public FileInfo(Reader reader)
             {
                 FileName = reader.ReadString();
-                Console.WriteLine(FileName);
+                //Console.WriteLine(FileName);
                 fileSize = reader.ReadUInt32();
                 Filedata = reader.ReadBytes(fileSize);           
             }
@@ -129,10 +129,10 @@ namespace RSDKvRS
         {
 
             int DirBlockSize = reader.ReadInt32();
-            Console.WriteLine("Directory Size: " + DirBlockSize);
+            //Console.WriteLine("Directory Size: " + DirBlockSize);
 
             int dircount = reader.ReadByte();
-            Console.WriteLine("Directory Count: " + dircount);
+            //Console.WriteLine("Directory Count: " + dircount);
 
             Directories = new List<DirInfo>();
 
@@ -141,7 +141,7 @@ namespace RSDKvRS
                 Directories.Add(new DirInfo(reader));
             }
 
-            Console.WriteLine("Pos: " + reader.BaseStream.Position);
+            //Console.WriteLine("Pos: " + reader.BaseStream.Position);
 
             for (int d = 0; d < dircount; d++)
             {
@@ -167,7 +167,7 @@ namespace RSDKvRS
                 }
             }
 
-            Console.WriteLine("File count: " + Files.Count);
+            //Console.WriteLine("File count: " + Files.Count);
             reader.Close();
         }
 

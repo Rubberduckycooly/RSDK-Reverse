@@ -236,7 +236,7 @@ namespace RSDKv1
                 Layers.Add(new BGLayer(reader));
             }
 
-            Console.WriteLine("Max Pos " + reader.BaseStream.Length + ", cur pos " + reader.Pos);
+            //Console.WriteLine("Max Pos " + reader.BaseStream.Length + ", cur pos " + reader.Pos);
             reader.Close();
 
         }

@@ -137,7 +137,7 @@ namespace RSDKv1
         public Scene(Reader reader)
         {
             Title = reader.ReadRSDKString();
-            Console.WriteLine("Stage Name: " + Title);
+            //Console.WriteLine("Stage Name: " + Title);
 
             byte[] buffer = new byte[5];
 
@@ -183,7 +183,7 @@ namespace RSDKv1
                 string name = reader.ReadRSDKString();
 
                 objectTypeNames.Add(name);
-                Console.WriteLine(name);
+                //Console.WriteLine(name);
             }
 
             // Read object data

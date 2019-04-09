@@ -133,7 +133,7 @@ namespace RSDKvB
         public Scene(Reader reader)
         {
             Title = reader.ReadRSDKString();
-            Console.WriteLine(Title);
+            //Console.WriteLine(Title);
             byte[] buffer = new byte[5];
 
             ActiveLayer0 = reader.ReadByte();
@@ -153,7 +153,7 @@ namespace RSDKvB
             reader.Read(buffer, 0, 2); //Read Height
             height = (ushort)(buffer[0] + (buffer[1] << 8));
 
-            Console.WriteLine("Width " + width + " Height " + height);
+            //Console.WriteLine("Width " + width + " Height " + height);
 
             MapLayout = new ushort[height][];
             for (int i = 0; i < height; i++)
@@ -181,7 +181,7 @@ namespace RSDKvB
 
             ObjCount = (t2 << 8) + t1;
 
-            Console.WriteLine("Object Count = " + ObjCount);
+            //Console.WriteLine("Object Count = " + ObjCount);
 
             Object.cur_id = 0;
 
@@ -200,14 +200,14 @@ namespace RSDKvB
             {
                 if (reader.IsEof)
                 {
-                    Console.WriteLine("Fuck, not the end! Objects Left: " + (ObjCount-n));
-                    Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
+                    //Console.WriteLine("Fuck, not the end! Objects Left: " + (ObjCount-n));
+                    //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
                     reader.Close();
                     return;
                 }
             }
 
-            Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
+            //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
             reader.Close();
         }
 

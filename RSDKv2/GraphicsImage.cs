@@ -116,7 +116,7 @@ namespace RSDKv2
                 }
             }
 
-            Console.Write("file Length = " + reader.BaseStream.Length + " file pos = " + reader.Pos + " data remaining = " + (reader.BaseStream.Length - reader.Pos));
+            //Console.Write("file Length = " + reader.BaseStream.Length + " file pos = " + reader.Pos + " data remaining = " + (reader.BaseStream.Length - reader.Pos));
 
             // Write data to image
             int pixel = 0;

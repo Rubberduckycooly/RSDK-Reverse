@@ -59,7 +59,6 @@ namespace RSDKv2
         {
             byte objects_count = reader.ReadByte();
 
-            Console.WriteLine(objects_count);
             for (int i = 0; i < objects_count; ++i)
             { ObjectsNames.Add(reader.ReadRSDKString()); }
             for (int i = 0; i < objects_count; ++i)

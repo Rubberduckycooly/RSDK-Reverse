@@ -455,14 +455,14 @@ namespace RSDKvB
         {
             if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
             {
-                Console.WriteLine("Invalid Signature! aborting!");
+                //Console.WriteLine("Invalid Signature! aborting!");
                 reader.Close();
                 return;
             }
 
             FileCount = reader.ReadUInt16(); //read the header data
 
-            Console.WriteLine("File Count = " + FileCount);
+            //Console.WriteLine("File Count = " + FileCount);
 
             for (int i = 0; i < FileCount; i++)
             {

@@ -1,4 +1,8 @@
-﻿namespace RSDKv5
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace RSDKv5
 {
     public class StaticObject
     {
@@ -21,12 +25,12 @@
             uint[] TmpData = new uint[reader.BaseStream.Length];
             DataPos = 0;
 
-            reader.ReadBytes(4); //"OBJ" Header
+            if (!reader.ReadBytes(4).SequenceEqual(MAGIC)) //"OBJ" Header
+                throw new Exception("Invalid config file header magic");
 
-            while(!reader.IsEof)
+            while (!reader.IsEof)
             {
                 int Unknown1 = reader.ReadByte();
-                //TmpData[DataPos++] = reader.ReadUInt32(); //Unknown
                 reader.ReadUInt32(); //Unknown
 
                 if ((Unknown1 & 0x80) != 0)
@@ -39,11 +43,6 @@
                     {
                         //INT8
                         case 0:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                TmpData[DataPos++] = reader.ReadByte();
-                            }
-                            break;
                         case 3:
                             for (int i = 0; i < Unknown3; i++)
                             {
@@ -52,14 +51,6 @@
                             break;
                             //IN16
                         case 1:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                byte valA = reader.ReadByte();
-                                byte valB = reader.ReadByte();
-                                int Value = valA + (valB << 8);
-                                TmpData[DataPos++] = (uint)Value;
-                            }
-                            break;
                         case 4:
                             for (int i = 0; i < Unknown3; i++)
                             {
@@ -71,27 +62,7 @@
                             break;
                             //INT32
                         case 2:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                byte valA = reader.ReadByte();
-                                byte valB = reader.ReadByte();
-                                byte valC = reader.ReadByte();
-                                byte valD = reader.ReadByte();
-                                int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
-                                TmpData[DataPos++] = (uint)Value;
-                            }
-                            break;
                         case 5:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                byte valA = reader.ReadByte();
-                                byte valB = reader.ReadByte();
-                                byte valC = reader.ReadByte();
-                                byte valD = reader.ReadByte();
-                                int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
-                                TmpData[DataPos++] = (uint)Value;
-                            }
-                            break;
                         case 6:
                             for (int i = 0; i < Unknown3; i++)
                             {

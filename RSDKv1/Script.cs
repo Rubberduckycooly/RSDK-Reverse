@@ -165,8 +165,6 @@ namespace RSDKv1
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
 
-                                //////Console.WriteLine(FuncName); //Write the func name
-
                                 Func.Name = FuncName; //set our func name
 
                                 sub.Functions.Add(Func); //add our func
@@ -218,8 +216,6 @@ namespace RSDKv1
                                 }
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
-
-                                ////Console.WriteLine(FuncName); //Write the func name
 
                                 Func.Name = FuncName; //set our func name
 
@@ -273,8 +269,6 @@ namespace RSDKv1
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
 
-                                ////Console.WriteLine(FuncName); //Write the func name
-
                                 Func.Name = FuncName; //set our func name
 
                                 sub.Functions.Add(Func); //add our func
@@ -327,8 +321,6 @@ namespace RSDKv1
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
 
-                                ////Console.WriteLine(FuncName); //Write the func name
-
                                 Func.Name = FuncName; //set our func name
 
                                 sub.Functions.Add(Func); //add our func
@@ -378,8 +370,6 @@ namespace RSDKv1
                                 Param.Replace("\"", "");
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
-
-                                //////Console.WriteLine(FuncName); //Write the func name
 
                                 Func.Name = FuncName; //set our func name
 
@@ -432,8 +422,6 @@ namespace RSDKv1
                                 }
 
                                 Func.Paramaters.Add(Param); //Add the Last Parameter
-
-                                ////Console.WriteLine(FuncName); //Write the func name
 
                                 Func.Name = FuncName; //set our func name
 

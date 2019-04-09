@@ -26,7 +26,7 @@ namespace RSDKv1
             public DirInfo(Reader reader)
             {
                 Directory = reader.ReadString();
-                Console.WriteLine(Directory);
+                //Console.WriteLine(Directory);
                 Address = reader.ReadInt32();
             }
 
@@ -101,7 +101,7 @@ namespace RSDKv1
                     DontFlip = false;
                 }
 
-                Console.WriteLine(FileName + " Test " + DontFlip);
+                //Console.WriteLine(FileName + " Test " + DontFlip);
                 if (DontFlip)
                 {
                     fileSize = reader.ReadUInt32();
@@ -138,7 +138,7 @@ namespace RSDKv1
                     DontFlip = false;
                 }
 
-                Console.WriteLine(FileName + " Test " + DontFlip);
+                //Console.WriteLine(FileName + " Test " + DontFlip);
 
                 if (DontFlip)
                 {
@@ -191,10 +191,10 @@ namespace RSDKv1
             int DataFileSize = (int)reader.BaseStream.Length;
 
             int headerSize = reader.ReadInt32();
-            Console.WriteLine(headerSize);
+            //Console.WriteLine(headerSize);
 
             int dircount = reader.ReadByte();
-            Console.WriteLine(dircount);
+            //Console.WriteLine(dircount);
 
             Directories = new List<DirInfo>();
 
