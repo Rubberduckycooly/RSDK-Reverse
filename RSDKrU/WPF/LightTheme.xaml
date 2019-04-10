@@ -38,8 +38,8 @@
     <SolidColorBrush x:Key="EditLayerBSelectedColor" Color="#D900FF"/>
     <SolidColorBrush x:Key="EditLayerBSelectedColorBack" Color="#EEB3F3"/>
 
-    <SolidColorBrush x:Key="EnabledTab" Color="#C3C3C3"/>
-    <SolidColorBrush x:Key="DisabledTab" Color="White"/>
+    <SolidColorBrush x:Key="EnabledTab" Color="#FFC2B8EE"/>
+    <SolidColorBrush x:Key="DisabledTab" Color="#FFC1C1C1"/>
 
     <SolidColorBrush x:Key="StartScreenBackground" Color="#76F5F5F5"/>
     <SolidColorBrush x:Key="DialogBoxButtonBackgroundColor" Color="White"/>
