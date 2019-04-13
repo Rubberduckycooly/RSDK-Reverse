@@ -92,9 +92,7 @@
     </LinearGradientBrush>
 
 
-
     <Geometry x:Key="ToolBarCheckmark">M 0,2.5 L 2.5,5 L 7,0.5</Geometry>
-
     <Style x:Key="ToolBarMainPanelBorderStyle" TargetType="{x:Type Border}">
         <Setter Property="Margin" Value="0,0,0,0" />
         <Setter Property="CornerRadius" Value="3,3,3,3" />
@@ -104,7 +102,6 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="ToolBarThumbStyle"
    TargetType="{x:Type Thumb}">
         <Setter Property="Template">
@@ -261,7 +258,6 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="{x:Type ToolBar}"
    TargetType="{x:Type ToolBar}">
         <Setter Property="Background" Value="{StaticResource ToolBarHorizontalBackground}"/>
@@ -431,7 +427,6 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
     <Style x:Key="{x:Type ToolBarTray}" TargetType="{x:Type ToolBarTray}">
         <Setter Property="Background" 
     Value="{StaticResource ToolBarTrayBackground}"/>

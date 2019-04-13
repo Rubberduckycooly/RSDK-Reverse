@@ -163,4 +163,81 @@
     <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextColorKey }" Color="Orange" />
     <SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightTextBrushKey }" Color="Orange" />-->
 
+    <SolidColorBrush x:Key="Expander.MouseOver.Circle.Stroke" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.MouseOver.Circle.Fill" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.MouseOver.Arrow.Stroke" Color="{Binding Color, Source={StaticResource DisabledText}}"/>
+    <SolidColorBrush x:Key="Expander.Pressed.Circle.Stroke" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Pressed.Circle.Fill" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Pressed.Arrow.Stroke" Color="{Binding Color, Source={StaticResource DisabledText}}"/>
+    <SolidColorBrush x:Key="Expander.Disabled.Circle.Stroke" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Disabled.Circle.Fill" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Disabled.Arrow.Stroke" Color="{Binding Color, Source={StaticResource DisabledText}}"/>
+    <SolidColorBrush x:Key="Expander.Static.Circle.Fill" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Static.Circle.Stroke" Color="Transparent"/>
+    <SolidColorBrush x:Key="Expander.Static.Arrow.Stroke" Color="{Binding Color, Source={StaticResource NormalText}}"/>
+    <SolidColorBrush x:Key="RadioButton.Static.Background" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Static_Background}}"/>
+    <SolidColorBrush x:Key="RadioButton.Static.Border" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Static_Border}}"/>
+    <SolidColorBrush x:Key="RadioButton.MouseOver.Background" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_MouseOver_Background}}"/>
+    <SolidColorBrush x:Key="RadioButton.MouseOver.Border" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_MouseOver_Border}}"/>
+    <SolidColorBrush x:Key="RadioButton.MouseOver.Glyph" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_MouseOver_Glyph}}"/>
+    <SolidColorBrush x:Key="RadioButton.Disabled.Background" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Disabled_Background}}"/>
+    <SolidColorBrush x:Key="RadioButton.Disabled.Border" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Disabled_Border}}"/>
+    <SolidColorBrush x:Key="RadioButton.Disabled.Glyph" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Disabled_Glyph}}"/>
+    <SolidColorBrush x:Key="RadioButton.Pressed.Background" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Pressed_Background}}"/>
+    <SolidColorBrush x:Key="RadioButton.Pressed.Border" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Pressed_Border}}"/>
+    <SolidColorBrush x:Key="RadioButton.Pressed.Glyph" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Pressed_Glyph}}"/>
+    <SolidColorBrush x:Key="RadioButton.Static.Glyph" Color="{Binding Color, Source={StaticResource RSDK_RadioButton_Static_Glyph}}"/>
+    <SolidColorBrush x:Key="OptionMark.Static.Background" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Static_Background}}"/>
+    <SolidColorBrush x:Key="OptionMark.Static.Border" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Static_Border}}"/>
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_MouseOver_Background}}"/>
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_MouseOver_Border}}"/>
+    <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_MouseOver_Glyph}}"/>
+    <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Disabled_Background}}"/>
+    <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Disabled_Border}}"/>
+    <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Disabled_Glyph}}"/>
+    <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Pressed_Background}}"/>
+    <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Pressed_Border}}"/>
+    <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Pressed_Glyph}}"/>
+    <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="{Binding Color, Source={StaticResource RSDK_OptionMark_Static_Glyph}}"/>
+    <SolidColorBrush x:Key="Button.Static.Background" Color="{Binding Color, Source={StaticResource ButtonBackground}}"/>
+    <SolidColorBrush x:Key="Button.Static.Border" Color="{Binding Color, Source={StaticResource ButtonBorder}}"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Background" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Background}}"/>
+    <SolidColorBrush x:Key="Button.MouseOver.Border" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Border}}"/>
+    <SolidColorBrush x:Key="Button.Pressed.Background" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Background}}"/>
+    <SolidColorBrush x:Key="Button.Pressed.Border" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Border}}"/>
+    <SolidColorBrush x:Key="Button.Disabled.Background" Color="{Binding Color, Source={StaticResource RSDK_ButtonDisabled_Background}}"/>
+    <SolidColorBrush x:Key="Button.Disabled.Border" Color="{Binding Color, Source={StaticResource RSDK_ButtonDisabled_Border}}"/>
+    <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="{Binding Color, Source={StaticResource RSDK_ButtonDisabled_Foreground}}"/>
+    <SolidColorBrush x:Key="TextBox.Static.Border" Color="{Binding Color, Source={StaticResource ButtonBorder}}"/>
+    <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Border}}"/>
+    <SolidColorBrush x:Key="TextBox.Focus.Border" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Border}}"/>
+    <SolidColorBrush x:Key="ListItemHoverFill" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Background}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedFill" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Background}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedInactiveFill" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Background}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedHoverFill" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Background}}"/>
+    <SolidColorBrush x:Key="ListItemHoverBorder" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Border}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedBorder" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Border}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedInactiveBorder" Color="{Binding Color, Source={StaticResource RSDK_ButtonPressed_Border}}"/>
+    <SolidColorBrush x:Key="ListItemSelectedHoverBorder" Color="{Binding Color, Source={StaticResource RSDK_ButtonMouseOver_Border}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Background" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Static_Background}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Border" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Static_Border}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Pressed.Glyph" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Pressed_Glyph}}"/>
+    <SolidColorBrush x:Key="ScrollBar.MouseOver.Glyph" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_MouseOver_Glyph}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Disabled.Glyph" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Disabled_Glyph}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Glyph" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Static_Glyph}}"/>
+    <SolidColorBrush x:Key="ScrollBar.MouseOver.Background" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_MouseOver_Background}}"/>
+    <SolidColorBrush x:Key="ScrollBar.MouseOver.Border" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_MouseOver_Border}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Pressed.Background" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Pressed_Background}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Pressed.Border" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Pressed_Border}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Disabled.Background" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Disabled_Background}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Disabled.Border" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Disabled_Border}}"/>
+    <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_MouseOver_Thumb}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Pressed_Thumb}}"/>
+    <SolidColorBrush x:Key="ScrollBar.Static.Thumb" Color="{Binding Color, Source={StaticResource RSDK_ScrollBar_Static_Thumb}}"/>
+    <SolidColorBrush x:Key="ListBox.Static.Background" Color="{Binding Color, Source={StaticResource TextBoxBackground}}"/>
+    <SolidColorBrush x:Key="ListBox.Static.Border" Color="{Binding Color, Source={StaticResource ButtonBorder}}"/>
+    <SolidColorBrush x:Key="ListBox.Disabled.Background" Color="{Binding Color, Source={StaticResource TextBoxBackground}}"/>
+    <SolidColorBrush x:Key="ListBorder" Color="#828790"/>
+    <SolidColorBrush x:Key="ListBox.Disabled.Border" Color="{Binding Color, Source={StaticResource ButtonBorder}}"/>
+
 </ResourceDictionary>
