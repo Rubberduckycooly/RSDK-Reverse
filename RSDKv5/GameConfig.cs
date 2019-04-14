@@ -306,15 +306,11 @@ namespace RSDKv5
             writer.Write((byte)Categories.Count);
             foreach (Category cat in Categories)
                 cat.Write(writer, _scenesHaveModeFilter);
-
-
-            ConfigMemory.FirstOrDefault().Write(writer);
-
-            /*
+    
             writer.Write((byte)ConfigMemory.Count);
             foreach (ConfigurableMemoryEntry c in ConfigMemory)
                 c.Write(writer);
-                */
+                
         }
     }
 }

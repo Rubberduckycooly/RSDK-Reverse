@@ -98,7 +98,7 @@ namespace Test
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
                 //CONFIGS
-                //RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
+                RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
 
                 //RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
 
@@ -131,9 +131,9 @@ namespace Test
                 //save.EncoreBuddyChar = 1;
 
                 //Scripts
-                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
 
-                RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");
+                /*RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");
 
                 for (int i = 0; i < 256; i++)
                 {
@@ -154,7 +154,7 @@ namespace Test
                     writer.Write(green);
                     writer.Write(blue);
                 }
-                writer.Close();
+                writer.Close();*/
 
                 //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
                 //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);

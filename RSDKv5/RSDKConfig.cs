@@ -30,12 +30,12 @@ namespace RSDKv5
             }
         }
 
-        public class Achievement
+        public class Alias
         {
             public string Name;
             public string Value;
 
-            public Achievement(Reader reader)
+            public Alias(Reader reader)
             {
                 Name = reader.ReadString();
                 Value = reader.ReadString();
@@ -49,7 +49,7 @@ namespace RSDKv5
         }
 
         public List<Variable> Variables = new List<Variable>();
-        public List<Achievement> Achievements = new List<Achievement>();
+        public List<Alias> Aliases = new List<Alias>();
 
         public RSDKConfig()
         {
@@ -73,13 +73,15 @@ namespace RSDKv5
             for (int i = 0; i < vcount; i++)
             {
                 Variables.Add(new Variable(reader));
+                Console.WriteLine(Variables[i].Name + ", " + Variables[i].Type + ", " + Variables[i].Value);
             }
 
             byte acount = reader.ReadByte();
 
             for (int i = 0; i < acount; i++)
             {
-                Achievements.Add(new Achievement(reader));
+                Aliases.Add(new Alias(reader));
+                Console.WriteLine(Aliases[i].Name + ", " + Aliases[i].Value);
             }
         }
 
@@ -104,11 +106,11 @@ namespace RSDKv5
                 Variables[i].Write(writer);
             }
 
-            writer.Write((byte)Achievements.Count);
+            writer.Write((byte)Aliases.Count);
 
-            for (int i = 0; i < Achievements.Count; i++)
+            for (int i = 0; i < Aliases.Count; i++)
             {
-                Achievements[i].Write(writer);
+                Aliases[i].Write(writer);
             }
         }
 
