@@ -27,9 +27,16 @@ namespace RSDKv5
         /// the stage's tileconfig data
         /// </summary>
         public readonly TileConfig Config;
-        public readonly GIF CollisionA;
+        /// <summary>
+        /// the stage's collision mask rendered (Layer A)
+        /// </summary>
+        public readonly GIF CollisionMaskA;
+        /// <summary>
+        /// the stage's collision mask rendered (Layer B)
+        /// </summary>
+        public readonly GIF CollisionMaskB;
 
-		public StageTiles(string stage_directory, string palleteDir = null)
+        public StageTiles(string stage_directory, string palleteDir = null)
 		{
 			Image = new GIF(Path.Combine(stage_directory, "16x16Tiles.gif"), palleteDir);
             ImageTransparent = new GIF(SetImageOpacity(Image.ToBitmap(), (float)0.1));
@@ -38,7 +45,29 @@ namespace RSDKv5
 			if (File.Exists(Path.Combine(stage_directory, "TileConfig.bin")))
 			{
 				Config = new TileConfig(Path.Combine(stage_directory, "TileConfig.bin"));
-			}
+                Bitmap SheetA = new Bitmap(16, 16 * 1024);
+                Bitmap SheetB = new Bitmap(16, 16 * 1024);
+
+                using (Graphics g = Graphics.FromImage(SheetA))
+                {
+                    for (int i = 0; i < 1024; i++)
+                    {
+                        g.DrawImage(Config.CollisionPath1[i].DrawCMask(System.Drawing.Color.FromArgb(0, 0, 0, 0), System.Drawing.Color.White), new Point(0, 16 * i));
+                    }
+                }
+
+                using (Graphics g = Graphics.FromImage(SheetB))
+                {
+                    for (int i = 0; i < 1024; i++)
+                    {
+                        g.DrawImage(Config.CollisionPath2[i].DrawCMask(System.Drawing.Color.FromArgb(0, 0, 0, 0), System.Drawing.Color.White), new Point(0, 16 * i));
+                    }
+                }
+
+                CollisionMaskA = new GIF(SheetA);
+                CollisionMaskB = new GIF(SheetB);
+
+            }
 
         }
 
