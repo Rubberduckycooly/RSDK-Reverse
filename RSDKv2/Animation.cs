@@ -238,7 +238,7 @@ namespace RSDKv2
             for (int i = 0; i < spriteSheetCount; ++i)
                 SpriteSheets.Add(reader.ReadString());
 
-            var animationCount = reader.ReadInt16();
+            var animationCount = reader.ReadByte();
             for (int i = 0; i < animationCount; ++i)
                 Animations.Add(new AnimationEntry(reader));
 
