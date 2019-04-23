@@ -98,12 +98,13 @@ namespace Test
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
                 //CONFIGS
-                RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
+                //RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
 
                 //RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
 
                 //TIME ATTACK
-                //RSDKv5.ReplayDB replayDB = new RSDKv5.ReplayDB(new RSDKv5.Reader(filepath));
+                //RSDKv5.Replay replay = new RSDKv5.Replay(new RSDKv5.Reader(filepath));
+                RSDKv5.UserDB UserDBDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
@@ -124,7 +125,7 @@ namespace Test
                 //RSDKv2.Video rsv = new RSDKv2.Video(filepath);
 
                 //SCENES
-                //RSDKv5.Scene scene = new RSDKv5.Scene(filepath);
+                //RSDKv5.Scene scene = new RSDKv5.Scene(new RSDKv5.Reader(filepath));
 
                 //SAVES
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));

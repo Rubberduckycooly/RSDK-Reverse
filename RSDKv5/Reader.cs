@@ -87,9 +87,25 @@ namespace RSDKv5
             }
         }
 
+        public byte[] ReadCompressedRaw()
+        {
+            using (MemoryStream outMemoryStream = new MemoryStream())
+            using (ZOutputStream decompress = new ZOutputStream(outMemoryStream))
+            {
+                decompress.Write(ReadBytes(BaseStream.Length), 0, (int)BaseStream.Length);
+                decompress.finish();
+                return outMemoryStream.ToArray();
+            }
+        }
+
         public Reader GetCompressedStream()
         {
             return new Reader(new MemoryStream(this.ReadCompressed()));
+        }
+
+        public Reader GetCompressedStreamRaw()
+        {
+            return new Reader(new MemoryStream(this.ReadCompressedRaw()));
         }
     }
 }

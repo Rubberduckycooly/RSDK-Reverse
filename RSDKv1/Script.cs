@@ -50,6 +50,7 @@ namespace RSDKv1
         public List<Sub> Subs = new List<Sub>();
 
         public List<string> Lines = new List<string>();
+        public List<string> RawLines = new List<string>();
 
         public Script()
         {
@@ -69,6 +70,7 @@ namespace RSDKv1
                     string FuncName = ""; //hold our func name
 
                     Line = reader.ReadLine();
+                    RawLines.Add(Line);
                     Line = Line.Replace('\t'.ToString(), ""); //tell the tabs to fuck right off
 
                     if (Line.Contains("sub")) // ok so it's a sub/endsub

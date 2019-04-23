@@ -42,7 +42,7 @@ namespace RSDKv5
 
         }
 
-        private Scene(Reader reader)
+        public Scene(Reader reader)
         {
             if (!readTilesOnly)
             {

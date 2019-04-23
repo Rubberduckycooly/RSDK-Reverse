@@ -40,13 +40,13 @@ namespace RSDKv1
             /// <summary>
             /// a list of Line positions
             /// </summary>
-            public List<byte> LineIndexes = new List<byte>();
+            public byte[] LineIndexes;
 
             public BGLayer()
             {
                 width = height = 1;
                 Deform = RelativeSpeed = ConstantSpeed = 0;
-
+                LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
                 {
@@ -59,7 +59,7 @@ namespace RSDKv1
                 width = w;
                 height = h;
                 Deform = RelativeSpeed = ConstantSpeed = 0;
-
+                LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
                 {
@@ -75,28 +75,40 @@ namespace RSDKv1
                 RelativeSpeed = reader.ReadByte();
                 ConstantSpeed = reader.ReadByte();
 
-                int j = 0;
-                while (j < 1)
+                byte[] buf = new byte[3];
+                bool finished = false;
+                int cnt = 0;
+                int loop = 0;
+
+                LineIndexes = new byte[height * 128];
+
+                while (!finished)
                 {
-                    byte b;
-
-                    b = reader.ReadByte();
-
-                    if (b == 255)
+                    buf[0] = reader.ReadByte();
+                    if (buf[0] == 255)
                     {
-                        byte tmp2 = reader.ReadByte();
-
-                        if (tmp2 == 255)
+                        buf[1] = reader.ReadByte();
+                        if (buf[1] == 255)
                         {
-                            j = 1;
+                            finished = true;
+                            break;
                         }
                         else
                         {
-                            b = reader.ReadByte();
+                            buf[2] = (byte)(reader.ReadByte() - 1);
+                            loop = 0;
+
+                            while (loop < buf[2] && !reader.IsEof)
+                            {
+                                LineIndexes[cnt++] = buf[1];
+                                loop++;
+                            }
                         }
                     }
-
-                    LineIndexes.Add(b);
+                    else
+                    {
+                        LineIndexes[cnt++] = buf[0];
+                    }
                 }
 
                 MapLayout = new ushort[height][];
@@ -121,11 +133,25 @@ namespace RSDKv1
                 writer.Write(RelativeSpeed);
                 writer.Write(ConstantSpeed);
 
-                for (int i = 0; i < LineIndexes.Count; i++)
+                // Output data
+                int l = 0;
+                int cnt = 0;
+
+                for (int x = 0; x < LineIndexes.Length; x++)
                 {
-                    writer.Write(LineIndexes[i]);
+                    if (LineIndexes[x] != l && x > 0)
+                    {
+                        rle_write(writer, l, cnt);
+                        cnt = 0;
+                    }
+                    l = LineIndexes[x];
+                    cnt++;
                 }
-                writer.Write(0xFF);
+
+                rle_write(writer, l, cnt);
+
+                writer.Write((byte)0xFF);
+                writer.Write((byte)0xFF);
 
                 for (int h = 0; h < height; h++)
                 {
@@ -135,6 +161,27 @@ namespace RSDKv1
                     }
                 }
 
+            }
+
+            private static void rle_write(Writer file, int pixel, int count)
+            {
+                if (count <= 2)
+                {
+                    for (int y = 0; y < count; y++)
+                        file.Write((byte)pixel);
+                }
+                else
+                {
+                    while (count > 0)
+                    {
+                        file.Write((byte)0xFF);
+
+                        file.Write((byte)pixel);
+
+                        file.Write((byte)((count > 253) ? 254 : (count + 1)));
+                        count -= 253;
+                    }
+                }
             }
 
         }

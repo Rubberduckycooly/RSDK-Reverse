@@ -49,18 +49,17 @@ namespace RSDKvB
             }
         }
         /// <summary>
-        /// how to load the "attribute"?
+        /// determines what "attributes" to load
         /// </summary>
         public ushort AttributeType;
         /// <summary>
-        /// the attribute?
+        /// the "attributes"
         /// </summary>
-        public int attribute;
+        public uint[] attributes = new uint[15];
         /// <summary>
         /// the raw position values
         /// </summary>
         public Position position = new Position();
-
         /// <summary>
         /// How Many Objects have been loaded
         /// </summary>
@@ -103,7 +102,11 @@ namespace RSDKvB
             cur_id++;
             id = cur_id;
 
-            AttributeType = reader.ReadUInt16();
+            //Attribute bits, 2 bytes, unsigned
+            byte t1 = reader.ReadByte();
+            byte t2 = reader.ReadByte();
+
+            AttributeType = (ushort)((t2 << 8) + t1);
 
             // Object type, 1 byte, unsigned
             type = reader.ReadByte(); //Type
@@ -114,90 +117,71 @@ namespace RSDKvB
             //a position, made of 8 bytes, 4 for X, 4 for Y
             position = new Position(reader);
 
-            //Console.WriteLine("ATTRIBUTE COUNT:" + Pad(AttributeType,16));
-
-            string Pad(int b, int length)
+            for (int i = 0; i < attributes.Length; i++)
             {
-                return Convert.ToString(b, 2).PadLeft(length, '0');
+                attributes[i] = uint.MaxValue;
             }
 
-            if ((AttributeType & 1) != 0)
+            if ((AttributeType & 0x1) != 0)
             {
-                if ((AttributeType & 2) == 0)
-                {
-                    if ((AttributeType & 4) == 0)
-                    {
-                        if ((AttributeType & 8) == 0)
-                        {
-                            if ((AttributeType & 0x10) == 0)
-                            {
-                                if ((AttributeType & 0x20) == 0)
-                                {
-                                    if ((AttributeType & 0x40) == 0)
-                                    {
-                                        if ((AttributeType & 0x80) == 0)
-                                        {
-                                            if ((AttributeType & 0x100) == 0)
-                                            {
-                                                if ((AttributeType & 0x200) == 0)
-                                                {
-                                                    if ((AttributeType & 0x400) == 0)
-                                                    {
-                                                        if ((AttributeType & 0x800) == 0)
-                                                        {
-                                                            if ((AttributeType & 0x1000) == 0)
-                                                            {
-                                                                if ((AttributeType & 0x2000) == 0)
-                                                                {
-                                                                    if ((AttributeType & 0x4000) != 0)
-                                                                    {
-                                                                        ReadAttribute(reader, 13);
-                                                                    }
-                                                                    goto END_LOOP;
-                                                                }
-                                                                ReadAttribute(reader, 12);
-                                                                goto END_LOOP;
-                                                            }
-                                                            ReadAttribute(reader, 11);
-                                                            goto END_LOOP;
-                                                        }
-                                                        ReadAttribute(reader, 10);
-                                                        goto END_LOOP;
-                                                    }
-                                                    ReadAttribute(reader, 9);
-                                                    goto END_LOOP;
-                                                }
-                                                ReadAttribute(reader, 8);
-                                                goto END_LOOP;
-                                            }
-                                            ReadAttribute(reader, 7);
-                                            goto END_LOOP;
-                                        }
-                                        ReadAttribute(reader, 6);
-                                        goto END_LOOP;
-                                    }
-                                    ReadAttribute(reader, 5);
-                                    goto END_LOOP;
-                                }
-                                ReadAttribute(reader, 4);
-                                goto END_LOOP;
-                            }
-                            ReadAttribute(reader, 3);
-                            goto END_LOOP;
-                        }
-                        ReadAttribute(reader, 2);
-                        goto END_LOOP;
-                    }
-                    ReadAttribute(reader,1);
-                    goto END_LOOP;
-                }
-                ReadAttribute(reader, 0);
-                goto END_LOOP;
+                attributes[0] = reader.ReadUInt32();
             }
-
-            END_LOOP:
-
-           Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos + ", Attribute Type = " + AttributeType + ", Attribute = " + attribute);
+            if ((AttributeType & 0x2) != 0)
+            {
+                attributes[1] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x4) != 0)
+            {
+                attributes[2] = reader.ReadUInt32();
+            }
+            if ((AttributeType & 0x8) != 0)
+            {
+                attributes[3] = reader.ReadUInt32();
+            }
+            if ((AttributeType & 0x10) != 0)
+            {
+                attributes[4] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x20) != 0)
+            {
+                attributes[5] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x40) != 0)
+            {
+                attributes[6] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x80) != 0)
+            {
+                attributes[7] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x100) != 0)
+            {
+                attributes[8] = reader.ReadUInt32();
+            }
+            if ((AttributeType & 0x200) != 0)
+            {
+                attributes[9] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x400) != 0)
+            {
+                attributes[10] = reader.ReadByte();
+            }
+            if ((AttributeType & 0x800) != 0)
+            {
+                attributes[11] = reader.ReadUInt32();
+            }
+            if ((AttributeType & 0x1000) != 0)
+            {
+                attributes[12] = reader.ReadUInt32();
+            }
+            if ((AttributeType & 0x2000) != 0)
+            {
+                attributes[13] = reader.ReadUInt32();
+            }
+            else if ((AttributeType & 0x4000) != 0)
+            {
+                attributes[14] = reader.ReadUInt32();
+            }
         }
 
         public void Write(Writer writer)
@@ -226,141 +210,71 @@ namespace RSDKvB
 
             writer.Write(AttributeType);
 
+
             writer.Write(type);
             writer.Write(subtype);
 
             position.Write(writer);
 
-            if ((AttributeType & 1) != 0)
+            if ((AttributeType & 0x1) != 0)
             {
-                if ((AttributeType & 2) != 0)
-                {
-                    if ((AttributeType & 4) != 0)
-                    {
-                        if ((AttributeType & 8) != 0)
-                        {
-                            if ((AttributeType & 0x10) != 0)
-                            {
-                                if ((AttributeType & 0x20) != 0)
-                                {
-                                    if ((AttributeType & 0x40) != 0)
-                                    {
-                                        if ((AttributeType & 0x80) != 0)
-                                        {
-                                            if ((AttributeType & 0x100) != 0)
-                                            {
-                                                if ((AttributeType & 0x200) != 0)
-                                                {
-                                                    if ((AttributeType & 0x400) != 0)
-                                                    {
-                                                        if ((AttributeType & 0x800) != 0)
-                                                        {
-                                                            if ((AttributeType & 0x1000) != 0)
-                                                            {
-                                                                if ((AttributeType & 0x2000) != 0)
-                                                                {
-                                                                    if ((AttributeType & 0x4000) != 0)
-                                                                    {
-                                                                        writer.Write(attribute);
-                                                                    }
-                                                                    goto END_LOOP;
-                                                                }
-                                                                writer.Write(attribute);
-                                                                goto END_LOOP;
-                                                            }
-                                                            writer.Write(attribute);
-                                                            goto END_LOOP;
-                                                        }
-                                                        writer.Write(attribute);
-                                                        goto END_LOOP;
-                                                    }
-                                                    writer.Write((byte)attribute);
-                                                    goto END_LOOP;
-                                                }
-                                                writer.Write((byte)attribute);
-                                                goto END_LOOP;
-                                            }
-                                            writer.Write(attribute);
-                                            goto END_LOOP;
-                                        }
-                                        writer.Write((byte)attribute);
-                                        goto END_LOOP;
-                                    }
-                                    writer.Write((byte)attribute);
-                                    goto END_LOOP;
-                                }
-                                writer.Write((byte)attribute);
-                                goto END_LOOP;
-                            }
-                            writer.Write((byte)attribute);
-                            goto END_LOOP;
-                        }
-                        writer.Write(attribute);
-                        goto END_LOOP;
-                    }
-                    writer.Write(attribute);
-                    goto END_LOOP;
-                }
-                writer.Write(attribute);
-                goto END_LOOP;
+                writer.Write(attributes[0]);
             }
-            else
+            if ((AttributeType & 0x2) != 0)
             {
-                writer.Write((byte)attribute);
+                writer.Write((byte)attributes[1]);
             }
-
-            END_LOOP:
-
-            Console.WriteLine(id + " Obj Values: Type: " + type + ", Subtype: " + subtype + ", Xpos = " + xPos + ", Ypos = " + yPos + ", Attribute Type = " + AttributeType + ", Attribute = " + attribute);
-        }
-        
-
-        private void ReadAttribute(Reader reader, int ID)
-        {
-            switch(ID)
+            if ((AttributeType & 0x4) != 0)
             {
-                case 0:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 1:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 2:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 3:
-                    attribute = reader.ReadByte();
-                    break;
-                case 4:
-                    attribute = reader.ReadByte();
-                    break;
-                case 5:
-                    attribute = reader.ReadByte();
-                    break;
-                case 6:
-                    attribute = reader.ReadByte();
-                    break;
-                case 7:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 8:
-                    attribute = reader.ReadByte();
-                    break;
-                case 9:
-                    attribute = reader.ReadByte();
-                    break;
-                case 10:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 11:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 12:
-                    attribute = reader.ReadInt32();
-                    break;
-                case 13:
-                    attribute = reader.ReadInt32();
-                    break;
+                writer.Write(attributes[2]);
+            }
+            if ((AttributeType & 0x8) != 0)
+            {
+                writer.Write(attributes[3]);
+            }
+            if ((AttributeType & 0x10) != 0)
+            {
+                writer.Write((byte)attributes[4]);
+            }
+            if ((AttributeType & 0x20) != 0)
+            {
+                writer.Write((byte)attributes[5]);
+            }
+            if ((AttributeType & 0x40) != 0)
+            {
+                writer.Write((byte)attributes[6]);
+            }
+            if ((AttributeType & 0x80) != 0)
+            {
+                writer.Write((byte)attributes[7]);
+            }
+            if ((AttributeType & 0x100) != 0)
+            {
+                writer.Write(attributes[8]);
+            }
+            if ((AttributeType & 0x200) != 0)
+            {
+                writer.Write((byte)attributes[9]);
+            }
+            if ((AttributeType & 0x400) != 0)
+            {
+                writer.Write((byte)attributes[10]);
+            }
+            if ((AttributeType & 0x800) != 0)
+            {
+                writer.Write(attributes[11]);
+            }
+            if ((AttributeType & 0x1000) != 0)
+            {
+                writer.Write(attributes[12]);
+            }
+            if ((AttributeType & 0x2000) != 0)
+            {
+                writer.Write(attributes[13]);
+            }
+            else if ((AttributeType & 0x4000) != 0)
+            {
+                writer.Write(attributes[14]);
             }
         }
 

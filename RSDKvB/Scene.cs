@@ -166,7 +166,7 @@ namespace RSDKvB
                 for (int x = 0; x < width; x++)
                 {
                     //128x128 Block number is 16-bit
-                    //Little-Endian in RSDKv4	
+                    //Little-Endian in RSDKvB	
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[0] + (buffer[1] << 8));
                 }
@@ -175,39 +175,22 @@ namespace RSDKvB
             // Read object data
             int ObjCount = 0;
 
-            // 4 bytes, little-endian, unsigned
+            // 2 bytes, little-endian, unsigned
             byte t1 = reader.ReadByte();
             byte t2 = reader.ReadByte();
 
             ObjCount = (t2 << 8) + t1;
 
-            //Console.WriteLine("Object Count = " + ObjCount);
-
             Object.cur_id = 0;
 
             int n = 0;
 
-            try
+            for (n = 0; n < ObjCount; n++)
             {
-                for (n = 0; n < ObjCount; n++)
-                {
-                    // Add object
-                    objects.Add(new Object(reader));
-                }
-                //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
+                // Add object
+                objects.Add(new Object(reader));
             }
-            catch (Exception ex)
-            {
-                if (reader.IsEof)
-                {
-                    //Console.WriteLine("Fuck, not the end! Objects Left: " + (ObjCount-n));
-                    //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
-                    reader.Close();
-                    return;
-                }
-            }
-
-            //Console.WriteLine("Current Reader Position = " + reader.BaseStream.Position + " Current File Length = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.BaseStream.Position));
+            
             reader.Close();
         }
 
@@ -254,24 +237,18 @@ namespace RSDKvB
             }
 
             // Write number of objects
-            int num_of_obj = objects.Count;
-
-            if (num_of_obj >= MaxObjectCount)
+            if (objects.Count >= MaxObjectCount)
             {
                 Console.WriteLine("Object Count > Max Objects!");
                 return;
             }
 
-            writer.Write((byte)(num_of_obj & 0xff));
-            writer.Write((byte)((num_of_obj >> 8) & 0xff));
-            writer.Write((byte)((num_of_obj >> 16) & 0xff));
-            writer.Write((byte)((num_of_obj >> 24) & 0xff));
+            writer.Write((ushort)objects.Count);
 
             // Write objects
-
             objects = objects.OrderBy(o => o.id).ToList();
 
-            for (int n = 0; n < num_of_obj; n++)
+            for (int n = 0; n < objects.Count; n++)
             {
                 Object obj = objects[n];
 
