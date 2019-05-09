@@ -49,19 +49,19 @@ namespace RSDKv5
             /// <summary>
             /// the name of this scene (used for dev menu)
             /// </summary>
-            public string Name;
+            public string Name = "Scene";
             /// <summary>
             /// the folder this scene is located in
             /// </summary>
-            public string Zone;
+            public string Zone = "";
             /// <summary>
             /// the SceneID (e.g. Scene1 or SceneA or Scene3)
             /// </summary>
-            public string SceneID;
+            public string SceneID = "";
             /// <summary>
             /// what "mode" of the stage is (normal, encore, etc)
             /// </summary>
-            public byte ModeFilter;
+            public byte ModeFilter  = 0;
             /// <summary>
             /// For GameConfig Position; Used for Auto Booting
             /// </summary>
@@ -109,7 +109,7 @@ namespace RSDKv5
             /// <summary>
             /// the category name (used for dev menu)
             /// </summary>
-            public string Name;
+            public string Name = "New Category";
             /// <summary>
             /// a list of the scenes in the category
             /// </summary>

@@ -206,7 +206,7 @@ namespace RSDKv5
 
         }
 
-        private TileConfig(Reader reader)
+        public TileConfig(Reader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid tiles config file header magic");

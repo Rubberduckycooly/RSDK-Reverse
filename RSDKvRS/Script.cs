@@ -335,7 +335,7 @@ namespace RSDKvRS
             scriptEng.tempValue = new int[8];
             scriptEng.arrayPosition = new int[3];
 
-            for (int i = 0; i < SubCount; i++)
+            for (int CurrentSub = 0; CurrentSub < SubCount; ++CurrentSub)
             {
                 uint Opcode = 0;
                 uint OpcodeSize = 0;
@@ -361,19 +361,19 @@ namespace RSDKvRS
                 Value1 = reader.ReadByte() << 8;
                 Value1 |= reader.ReadByte();
 
-                if (i != 0)
+                if (CurrentSub != 0)
                 {
-                    if (i == 1)
+                    if (CurrentSub == 1)
                     {
                         Endpoint_Main = Value1;
                         scriptData_Main = new int[0xFFFu];
                     }
-                    else if (i == 2)
+                    else if (CurrentSub == 2)
                     {
                         Endpoint_Draw = Value1;
                         scriptData_Main = new int[0xFFFu];
                     }
-                    else if (i == 3)
+                    else if (CurrentSub == 3)
                     {
                         Endpoint_RSDK = Value1;
                         scriptData_RSDK = new int[0xFFFu];
@@ -407,7 +407,7 @@ namespace RSDKvRS
 
                     if (EditorMode)
                     {
-                        while(i < 3)
+                        while(CurrentSub < 3)
                         {
                             FileBuffer = reader.ReadByte();
                             if (FileBuffer == 255)
@@ -421,7 +421,7 @@ namespace RSDKvRS
                                         FileBuffer = reader.ReadByte();
                                         if (FileBuffer == 255)
                                         {
-                                            i++;
+                                            CurrentSub++;
                                             FileBuffer = reader.ReadByte();
                                         }
                                     }
@@ -434,7 +434,7 @@ namespace RSDKvRS
 
                     if (k < 1)
                     {
-                        SetScriptData(i, FileBuffer);
+                        SetScriptData(CurrentSub, FileBuffer);
 
                         switch (Opcode)
                         {
@@ -558,25 +558,22 @@ namespace RSDKvRS
                         }
                         
                         //Error?
-                        for (int j = 0; j < OpcodeSize; j++)
+                        for (int i = 0; i < OpcodeSize; ++i)
                         {
                             FileBuffer = reader.ReadByte();
 
-                            SetScriptData(i, FileBuffer);
+                            SetScriptData(CurrentSub, FileBuffer);
 
-                            int temp = FileBuffer;
-
-                            if (temp != 0)
+                            if (FileBuffer != 0)
                             {
                                 FileBuffer = reader.ReadByte();
-                                SetScriptData(i, FileBuffer);
+                                SetScriptData(CurrentSub, FileBuffer);
 
-                                FileBuffer = reader.ReadByte();
-                                Value1 = FileBuffer;
+                                Value1 = reader.ReadByte();
 
                                 if (Value1 > 128) { Value1 = 128 - Value1; }
 
-                                SetScriptData(i, Value1);
+                                SetScriptData(CurrentSub, Value1);
                             }
                             else
                             {
@@ -593,7 +590,7 @@ namespace RSDKvRS
                                     Value2 |= reader.ReadByte();
                                     Value2 = -Value2;
                                 }
-                                switch (i)
+                                switch (CurrentSub)
                                 {
                                     case 0:
                                         scriptData_Startup[scriptDataPos++] = Value2;
@@ -611,7 +608,7 @@ namespace RSDKvRS
                                             {
                                                 spriteFrames.Add(new SpriteFrame());
                                             }
-                                            switch(j)
+                                            switch(i)
                                             {
                                                 case 0:
                                                     spriteFrames[spriteframePtr].Width = Value2;
@@ -635,10 +632,9 @@ namespace RSDKvRS
                                                     break;
                                             }
                                         }
-                                        break;
+                                    break;
                                 }
                             }
-
                         }
                     }
                 }
@@ -646,8 +642,8 @@ namespace RSDKvRS
                 FileBuffer = reader.ReadByte();
                 FileBuffer = reader.ReadByte();
 
-                OpcodeSizea = (uint)FileBuffer;
-                for (int j = 0; j < OpcodeSizea; j++)
+                OpcodeSize = (uint)FileBuffer;
+                for (int j = 0; j < OpcodeSize; ++j)
                 {
                     FileBuffer = reader.ReadByte();
                     FileBuffer = reader.ReadByte();
@@ -656,9 +652,9 @@ namespace RSDKvRS
                 FileBuffer = reader.ReadByte();
                 FileBuffer = reader.ReadByte();
 
-                OpcodeSizeb = (uint)FileBuffer;
+                OpcodeSize = (uint)FileBuffer;
 
-                for (int j = 0; j < OpcodeSizeb; j++)
+                for (int j = 0; j < OpcodeSize; ++j)
                 {
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
@@ -669,17 +665,17 @@ namespace RSDKvRS
                     FileBuffer = reader.ReadByte();
                     FileBuffer = reader.ReadByte();
 
-                    if (i != 0)
+                    if (CurrentSub != 0)
                     {
-                        if (i == 1)
+                        if (CurrentSub == 1)
                         {
                             unknownArray1[scriptDataPos++] = Value1;
                         }
-                        else if (i == 2)
+                        else if (CurrentSub == 2)
                         {
                             unknownArray2[scriptDataPos++] = Value1;
                         }
-                        else if (i == 3)
+                        else if (CurrentSub == 3)
                         {
                             
                         }
@@ -699,7 +695,7 @@ namespace RSDKvRS
 
                 for (int j = 0; j < 512; ++j) //Clear out space
                 {
-                    SetJumptableData(i, 0);
+                    SetJumptableData(CurrentSub, 0);
                 }
 
                 for (int j = 0; j < OpcodeSize; ++j)
@@ -714,19 +710,19 @@ namespace RSDKvRS
                     Value4 = reader.ReadByte() + Value3;
 
                     Value7 = Value8;
-                    if (i != 0)
+                    if (CurrentSub != 0)
                     {
-                        if (i == 1)
+                        if (CurrentSub == 1)
                         {
                             jumpTableData_Main[jumpTableDataPos] = 0;
                             jumpTableData_Main[jumpTableDataPos++] = 0;
                         }
-                        else if (i == 2)
+                        else if (CurrentSub == 2)
                         {
                             jumpTableData_Draw[jumpTableDataPos] = 0;
                             jumpTableData_Draw[jumpTableDataPos++] = 0;
                         }
-                        else if (i == 3)
+                        else if (CurrentSub == 3)
                         {
                             jumpTableData_RSDK[jumpTableDataPos] = 0;
                             jumpTableData_RSDK[jumpTableDataPos++] = 0;
@@ -741,7 +737,7 @@ namespace RSDKvRS
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
 
-                    SetJumptableData(i, Value1);
+                    SetJumptableData(CurrentSub, Value1);
 
                     FileBuffer = reader.ReadByte();
                     FileBuffer = reader.ReadByte();
@@ -749,18 +745,18 @@ namespace RSDKvRS
                     Value1 = reader.ReadByte() << 8;
                     Value1 |= reader.ReadByte();
 
-                    if (i != 0)
+                    if (CurrentSub != 0)
                     {
-                        if (i == 1)
+                        if (CurrentSub == 1)
                         {
                             if (jumpTableData_Main[jumpTableDataPos] == 0)
                                 jumpTableData_Main[jumpTableDataPos++] = Value1;
                         }
-                        else if (i == 2 && jumpTableData_Draw[jumpTableDataPos] == 0)
+                        else if (CurrentSub == 2 && jumpTableData_Draw[jumpTableDataPos] == 0)
                         {
                             jumpTableData_Draw[jumpTableDataPos++] = Value1;
                         }
-                        else if (i == 3 && jumpTableData_RSDK[jumpTableDataPos] == 0)
+                        else if (CurrentSub == 3 && jumpTableData_RSDK[jumpTableDataPos] == 0)
                         {
                             jumpTableData_RSDK[jumpTableDataPos++] = Value1;
                         }
@@ -770,9 +766,9 @@ namespace RSDKvRS
                         jumpTableData_Startup[jumpTableDataPos++] = Value1;
                     }
 
-                    SetJumptableData(i, Value1);
+                    SetJumptableData(CurrentSub, Value1);
 
-                    for (int v = 0; v < Value4; v++)
+                    for (int v = 0; v < Value4; ++v)
                     {
                         /*FileBuffer = reader.ReadByte();
                         Value1 = FileBuffer << 8;
@@ -799,21 +795,21 @@ namespace RSDKvRS
                         FileBuffer = reader.ReadByte();
                         FileBuffer = reader.ReadByte();
 
-                        SetJumptableData(i, Value1);
+                        SetJumptableData(CurrentSub, Value1);
                     }
-                    if (i != 0)
+                    if (CurrentSub != 0)
                     {
-                        if (i == 1)
+                        if (CurrentSub == 1)
                         {
                             jumpTableData_Main[jumpTableDataPos] = Value0;
                             //dword_AFEA98[jumpTableDataPos] = Value9;
                         }
-                        else if (i == 2)
+                        else if (CurrentSub == 2)
                         {
                             jumpTableData_Draw[jumpTableDataPos] = Value0;
                             //dword_AFF298[jumpTableDataPos] = Value9;
                         }
-                        else if (i == 3)
+                        else if (CurrentSub == 3)
                         {
                             jumpTableData_RSDK[jumpTableDataPos] = Value0;
                             //dword_AFF298[jumpTableDataPos] = Value9;
@@ -828,9 +824,9 @@ namespace RSDKvRS
 
                     for (int m = Value0 - 1; m < Value9; ++m)
                     {
-                        if (i != 0)
+                        if (CurrentSub != 0)
                         {
-                            if (i == 1)
+                            if (CurrentSub == 1)
                             {
                                 jumpTableData_Main[jumpTableDataPos] = jumpTableData_Main[jumpTableDataPos + Value0];
                                 if (jumpTableData_Main[jumpTableDataPos] != 0)
@@ -838,7 +834,7 @@ namespace RSDKvRS
                                     //jumpTableData_Main[jumpTableDataPos] = dword_AFEA9C[16129 * ScriptID + Value7];
                                 }
                             }
-                            else if (i == 2)
+                            else if (CurrentSub == 2)
                             {
                                 jumpTableData_Draw[jumpTableDataPos] = jumpTableData_Draw[jumpTableDataPos + Value0];
                                 if (jumpTableData_Draw[jumpTableDataPos] != 0)
@@ -846,7 +842,7 @@ namespace RSDKvRS
                                     //jumpTableData_Draw[jumpTableDataPos] = dword_AFF29C[16129 * ScriptID + Value7];
                                 }
                             }
-                            else if (i == 4)
+                            else if (CurrentSub == 4)
                             {
                                 jumpTableData_RSDK[jumpTableDataPos] = jumpTableData_RSDK[jumpTableDataPos + Value0];
                                 if (jumpTableData_RSDK[jumpTableDataPos] != 0)
@@ -866,9 +862,9 @@ namespace RSDKvRS
                         jumpTableDataPos++;
                     }
 
-                    /*if (i != 0)
+                    /*if (CurrentSub != 0)
                     {
-                        if (i == 1)
+                        if (CurrentSub == 1)
                         {
                             if (dword_AF4A98[jumpTableDataPos] <= 0)
                             {
@@ -877,7 +873,7 @@ namespace RSDKvRS
                             else
                                 dword_AF4AA8[jumpTableDataPos] = Value7;
                         }
-                        else if (i == 2)
+                        else if (CurrentSub == 2)
                         {
                             if (dword_AF8A98[jumpTableDataPos] <= 0)
                             {
@@ -888,7 +884,7 @@ namespace RSDKvRS
                                 dword_AF8AA8[jumpTableDataPos] = Value7;
                             }
                         }
-                        else if (i == 3)
+                        else if (CurrentSub == 3)
                         {
                             if (dword_AF8A98[jumpTableDataPos] <= 0)
                             {
@@ -915,48 +911,40 @@ namespace RSDKvRS
             reader.Close();
         }
 
-        private void SetScriptData(int i, int Data)
+        private void SetScriptData(int CurrentSub, int Data)
         {
-            if (i != 0)
+            switch (CurrentSub)
             {
-                if (i == 1)
-                {
-                    scriptData_Main[scriptDataPos++] = Data;
-                }
-                else if (i == 2)
-                {
-                    scriptData_Draw[scriptDataPos++] = Data;
-                }
-                else if (i == 3)
-                {
+                case 0:
+                    scriptData_Startup[jumpTableDataPos++] = Data;
+                    break;
+                case 1:
+                    scriptData_Main[jumpTableDataPos++] = Data;
+                    break;
+                case 2:
+                    scriptData_Draw[jumpTableDataPos++] = Data;
+                    break;
+                case 3:
                     scriptData_RSDK[scriptDataPos++] = Data;
-                }
-            }
-            else
-            {
-                scriptData_Startup[scriptDataPos++] = Data;
+                    break;
             }
         }
-        private void SetJumptableData(int i, int Data)
+        private void SetJumptableData(int CurrentSub, int Data)
         {
-            if (i != 0)
+            switch(CurrentSub)
             {
-                if (i == 1)
-                {
+                case 0:
+                    jumpTableData_Startup[jumpTableDataPos++] = Data;
+                    break;
+                case 1:
                     jumpTableData_Main[jumpTableDataPos++] = Data;
-                }
-                else if (i == 2)
-                {
+                    break;
+                case 2:
                     jumpTableData_Draw[jumpTableDataPos++] = Data;
-                }
-                else if (i == 3)
-                {
+                    break;
+                case 3:
                     jumpTableData_RSDK[scriptDataPos++] = Data;
-                }
-            }
-            else
-            {
-                jumpTableData_Startup[jumpTableDataPos++] = Data;
+                    break;
             }
         }
 
@@ -1062,9 +1050,9 @@ namespace RSDKvRS
 
                 string[] variableName = new string[10];
 
-                for (int i = 0; i < variableName.Length; i++)
+                for (int CurrentSub = 0; CurrentSub < variableName.Length; CurrentSub++)
                 {
-                    variableName[i] = "UNKNOWN VARIABLE";
+                    variableName[CurrentSub] = "UNKNOWN VARIABLE";
                 }
 
                 switch (opcode)
@@ -1351,9 +1339,9 @@ namespace RSDKvRS
                 {
                     int opcde = opcode;
 
-                    for (int i = 0; i < paramsCount; i++)
+                    for (int CurrentSub = 0; CurrentSub < paramsCount; CurrentSub++)
                     {
-                        variableName[i] = GetVariable(scriptSub, opcde);
+                        variableName[CurrentSub] = GetVariable(scriptSub, opcde);
                         //opcde = GetScriptData(scriptSub);
                     }
                 }
@@ -1365,11 +1353,11 @@ namespace RSDKvRS
                 string operand = opcodeList[opcode];
 
 
-                for (int i = 0; i < variableName.Length; i++)
+                for (int CurrentSub = 0; CurrentSub < variableName.Length; CurrentSub++)
                 {
-                    if (variableName[i] == "" || variableName[i] == null)
+                    if (variableName[CurrentSub] == "" || variableName[CurrentSub] == null)
                     {
-                        variableName[i] = "Object.ValueA";
+                        variableName[CurrentSub] = "Object.ValueA";
                     }
                 }
 
@@ -1612,9 +1600,9 @@ namespace RSDKvRS
 
                 string[] variableName = new string[10];
 
-                for (int i = 0; i < variableName.Length; i++)
+                for (int CurrentSub = 0; CurrentSub < variableName.Length; CurrentSub++)
                 {
-                    variableName[i] = "UNKNOWN VARIABLE";
+                    variableName[CurrentSub] = "UNKNOWN VARIABLE";
                 }
 
                 switch (opcode)
@@ -1877,9 +1865,9 @@ namespace RSDKvRS
                 {
                     int opcde = opcode;
 
-                    for (int i = 0; i < paramsCount; i++)
+                    for (int CurrentSub = 0; CurrentSub < paramsCount; CurrentSub++)
                     {
-                        variableName[i] = GetVariable(3, opcde);
+                        variableName[CurrentSub] = GetVariable(3, opcde);
                         //opcde = GetScriptData(scriptSub);
                     }
                 }

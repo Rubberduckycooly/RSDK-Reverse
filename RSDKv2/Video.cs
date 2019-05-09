@@ -82,10 +82,6 @@ namespace RSDKv2
             /// the raw image data
             /// </summary>
             public byte[] ImageData;
-            /// <summary>
-            /// the raw (compressed) image data
-            /// </summary>
-            public byte[] CompressedImageData;
 
             public bool ExtendedCodeTable = false;
 

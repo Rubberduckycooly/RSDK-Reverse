@@ -52,9 +52,6 @@ namespace Test
                 //RSDKvRS.Level lvl = new RSDKvRS.Level("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\CPZ\\Act1.map");
                 //lvl.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\CPZ\\Act1copy.map");
 
-                //RSDKvRS.Level lvl = new RSDKvRS.Level("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\DATA\\LEVELS\\EHZ\\Act1.map");
-                //lvl.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\DATA\\LEVELS\\EHZ\\Act1copy.map");
-
                 //RSDKvRS.BGLayout BGmap = new RSDKvRS.BGLayout("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\Levels\\EHZ\\ZoneBG.map");
                 //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\ZoneBG2.map");
 
@@ -104,7 +101,7 @@ namespace Test
 
                 //TIME ATTACK
                 //RSDKv5.Replay replay = new RSDKv5.Replay(new RSDKv5.Reader(filepath));
-                RSDKv5.UserDB UserDBDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
+                //RSDKv5.UserDB UserDBDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
@@ -133,6 +130,9 @@ namespace Test
 
                 //Scripts
                 //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+
+                //TILECONFIG
+                RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));
 
                 /*RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");
 
