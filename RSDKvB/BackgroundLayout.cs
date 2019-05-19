@@ -158,7 +158,7 @@ namespace RSDKvB
                             buf[2] = (byte)(reader.ReadByte() - 1);
                             loop = 0;
 
-                            while (loop < buf[2] && !reader.IsEof)
+                            while (loop < buf[2] && !reader.IsEof && cnt + 1 < LineIndexes.Length)
                             {
                                 LineIndexes[cnt++] = buf[1];
                                 loop++;
@@ -167,7 +167,10 @@ namespace RSDKvB
                     }
                     else
                     {
-                        LineIndexes[cnt++] = buf[0];
+                        if (!reader.IsEof && cnt + 1 < LineIndexes.Length)
+                        {
+                            LineIndexes[cnt++] = buf[0];
+                        }
                     }
                 }
 
