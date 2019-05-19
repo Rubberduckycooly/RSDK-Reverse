@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 /* Taxman sure loves leaving support for fileformats in his code */
 
@@ -370,6 +372,41 @@ namespace RSDKv2
                 }
             }
 
+            public void Export(string path, ImageFormat format)
+            {
+                Bitmap b = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
+
+                BitmapData bmpData = b.LockBits(new Rectangle(0, 0, b.Width, b.Height), ImageLockMode.WriteOnly, b.PixelFormat);
+                IntPtr bPtr = bmpData.Scan0;
+                byte[] px = new byte[bmpData.Stride * b.Height];
+                px[px.Length - 1] = 0xFF;
+
+                ColorPalette cpal = b.Palette;
+
+                for (int i = 0; i < 256; i++)
+                {
+                    cpal.Entries[i] = Color.FromArgb(0xFF, 0, 0xFF);
+                }
+
+                for (int i = 0; i < FramePalette.Count; i++)
+                {
+                    cpal.Entries[i] = FramePalette[i];
+                }
+
+                for (int i = 0; i < Height; i++)
+                {
+                    for (int ii = 0; ii < Width; ii++)
+                    {
+                        px[(i * Width) + ii] = ImageData[(i * Width) + ii];
+                    }
+                }
+
+                Marshal.Copy(px, 0, bPtr, px.Length);
+                b.UnlockBits(bmpData);
+
+                b.Save(path, format);
+            }
+
         }
         public Video(string filepath) : this(new Reader(filepath))
         {
@@ -393,21 +430,8 @@ namespace RSDKv2
             for (int f = 0; f < VideoInfo; f++)
             {
                 LoadVideoFrame(reader);
-                Bitmap b = new Bitmap(Frames[f].Width, Frames[f].Height);
-
-                for (int i = 0; i < Frames[f].Height; i++)
-                {
-                    for (int ii = 0; ii < Frames[f].Width; ii++)
-                    {
-                        Color c = new Color();
-                        c = Frames[f].FramePalette[Frames[f].ImageData[(i * Frames[f].Width) + ii]];
-                        b.SetPixel(ii, i, c);
-                    }
-                }
-                b.Save("Frames/Frame" + f + ".png", System.Drawing.Imaging.ImageFormat.Png);
             }
 
-            Console.WriteLine("Reader Position = " + reader.Pos + " FileSize = " + reader.BaseStream.Length + " Data Left = " + (reader.BaseStream.Length - reader.Pos));
             reader.Close();
         }
 
