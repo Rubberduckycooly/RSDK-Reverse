@@ -393,11 +393,20 @@ namespace RSDKv2
                     cpal.Entries[i] = FramePalette[i];
                 }
 
-                for (int i = 0; i < Height; i++)
+                b.Palette = cpal;
+
+                if (px.Length == ImageData.Length)
                 {
-                    for (int ii = 0; ii < Width; ii++)
+                    px = ImageData;
+                }
+                else
+                {
+                    for (int i = 0; i < Height; i++)
                     {
-                        px[(i * Width) + ii] = ImageData[(i * Width) + ii];
+                        for (int ii = 0; ii < Width; ii++)
+                        {
+                            px[(i * Width) + ii] = ImageData[(i * Width) + ii];
+                        }
                     }
                 }
 
@@ -408,6 +417,12 @@ namespace RSDKv2
             }
 
         }
+
+        public Video()
+        {
+
+        }
+
         public Video(string filepath) : this(new Reader(filepath))
         {
 
