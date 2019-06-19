@@ -132,7 +132,7 @@ namespace Test
                 //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
 
                 //TILECONFIG
-                RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));
+                //RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));
 
                 /*RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");
 
@@ -244,10 +244,10 @@ namespace Test
 
                 //MATH
                 //MANIA HEADER CHECKER
-                /*BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
+                BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
                 int value = reader.ReadInt32();
                 Console.WriteLine(Path.GetFileNameWithoutExtension(filepath) + ": " + value);
-                reader.Close();*/
+                reader.Close();
                 #region Exe Scanning
 
                 /*

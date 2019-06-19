@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using System.IO;
-using zlib;
 
 namespace RSDKvB
 {
@@ -71,30 +70,6 @@ namespace RSDKvB
         public string ReadRSDKUnicodeString()
         {
             return new UnicodeEncoding().GetString(ReadBytes(this.ReadUInt16() * 2));
-        }
-
-        public byte[] ReadCompressed()
-        {
-            uint compresed_size = this.ReadUInt32();
-            uint uncompressed_size = this.ReadUInt32BE();
-            using (MemoryStream outMemoryStream = new MemoryStream())
-            using (ZOutputStream decompress = new ZOutputStream(outMemoryStream))
-            {
-                decompress.Write(this.ReadBytes(compresed_size - 4), 0, (int)compresed_size - 4);
-                decompress.finish();
-                return outMemoryStream.ToArray();
-            }
-        }
-
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
-        }
-
-        public Reader GetCompressedStream()
-        {
-            return new Reader(new MemoryStream(this.ReadCompressed()));
         }
     }
 }

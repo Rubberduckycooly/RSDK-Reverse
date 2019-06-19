@@ -75,7 +75,7 @@ namespace RSDKv5
             {
             }
 
-            internal SceneInfo(Reader reader, bool scenesHaveModeFilter, int index, bool levelIDMode = false)
+            public SceneInfo(Reader reader, bool scenesHaveModeFilter, int index, bool levelIDMode = false)
             {
                 Name = reader.ReadRSDKString();
                 Zone = reader.ReadRSDKString();
@@ -94,7 +94,7 @@ namespace RSDKv5
                 return Path.Combine(DataFolder, "Stages", Zone, "Scene" + SceneID + ".bin");
             }
 
-            internal void Write(Writer writer, bool scenesHaveModeFilter = false)
+            public void Write(Writer writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
                 writer.WriteRSDKString(Zone);
@@ -120,7 +120,7 @@ namespace RSDKv5
                 Name = "New Category";
             }
 
-            internal Category(Reader reader, bool scenesHaveModeFilter)
+            public Category(Reader reader, bool scenesHaveModeFilter)
             {
                 Name = reader.ReadRSDKString();
 
@@ -136,7 +136,7 @@ namespace RSDKv5
 
             }
 
-            internal void Write(Writer writer, bool scenesHaveModeFilter = false)
+            public void Write(Writer writer, bool scenesHaveModeFilter = false)
             {
                 writer.WriteRSDKString(Name);
 

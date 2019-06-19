@@ -13,7 +13,7 @@ namespace RSDKv5
             }
         }
 
-        public static bool IsLittleEndian;
+        public static bool IsLittleEndian = true;
 
         public int[] SaveRAM = new int[FileSize / 4];
 
@@ -399,7 +399,7 @@ namespace RSDKv5
                 this.Write(writer, isPCVer);
         }
 
-        public void Write(System.IO.Stream stream, bool isPCVer = true)
+        public void Write(Stream stream, bool isPCVer = true)
         {
             using (Writer writer = new Writer(stream))
                 this.Write(writer, isPCVer);

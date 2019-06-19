@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.IO;
-using zlib;
 
 namespace RSDKvB
 {
@@ -50,20 +49,6 @@ namespace RSDKvB
         {
             base.Write((ushort)val.Length);
             base.Write(new UnicodeEncoding().GetBytes(val));
-        }
-
-        public void WriteCompressed(byte[] bytes)
-        {
-            using (MemoryStream outMemoryStream = new MemoryStream())
-            using (ZOutputStream compress = new ZOutputStream(outMemoryStream, zlibConst.Z_DEFAULT_COMPRESSION)) {
-                compress.Write(bytes, 0, bytes.Length);
-                compress.finish();
-
-                byte[] data = outMemoryStream.ToArray();
-                this.Write((uint)data.Length + sizeof(uint));
-                this.WriteUInt32BE((uint)bytes.Length);
-                this.Write(data);
-            }
         }
     }
 }
