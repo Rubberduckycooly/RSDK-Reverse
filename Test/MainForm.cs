@@ -187,8 +187,9 @@ namespace Test
 
 
                 //Models
-                //RSDKv5.Model MDL = new RSDKv5.Model(filepath);
-                //string tmp = filepath.Replace(Path.GetExtension(filepath), "");
+                RSDKv5.Model MDL = new RSDKv5.Model(filepath);
+                string tmp = filepath.Replace(Path.GetExtension(filepath), ".png");
+                MDL.Frames[0].AsImage(MDL, 5, 5, 5, 115, 0, 0, false).Save(tmp, System.Drawing.Imaging.ImageFormat.Png);
                 //MDL.Write(new RSDKv5.Writer(tmp + "2.bin"));
                 //MDL.WriteAsSTLBinary(new RSDKv5.Writer(tmp + ".stl"));
                 //MDL.WriteAsOBJ(tmp + ".obj", Path.GetFileName(tmp) + ".mtl");
