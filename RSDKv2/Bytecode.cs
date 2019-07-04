@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace RSDKv2
 {
@@ -53,6 +54,8 @@ namespace RSDKv2
         {
             public int scriptCodePtr;
             public int jumpTablePtr;
+            public int scriptCodeOffset;
+            public int jumpTableOffset;
             public int scriptSub;
             public int deep;
             public int SwitchDeep;
@@ -524,7 +527,7 @@ namespace RSDKv2
 "MAT_WORLD",
 "MAT_VIEW",
 "MAT_TEMP",
-}; //NOT YET ADDED
+}; //ADDED
 
         string[] DirectionAliases = new string[]
 {
@@ -658,12 +661,14 @@ namespace RSDKv2
                 objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
             }
 
-            count = Read16(reader);
+            functionCount = Read16(reader);
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < functionCount; i++)
                 functionScriptList[i].mainScript = Read32(reader);
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < functionCount; i++)
                 functionScriptList[i].mainJumpTable = Read32(reader);
+
+
 
             Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
@@ -1060,64 +1065,64 @@ namespace RSDKv2
 
                 writer.WriteLine("//-------Aliases-------//");
 
-                writer.Write("#alias " + i + ": TYPE_" + typeNames[i] + Environment.NewLine);
+                writer.Write("#alias " + i + ": TYPE_" + typeNames[i].ToUpper().Replace(" ", "_") + Environment.NewLine);
+
+                if (typeNames[i] == "Monitor")
+                {
+                    Console.WriteLine();
+                }
 
                 ObjectScript objectScript = objectScriptList[i];
 
                 writer.Write(Environment.NewLine);
                 writer.Write(Environment.NewLine);
 
-                //if (i == 34 && typeNames[i] == "R1_TitleCard")
-                if (i == 6)
-                {
-                    Console.WriteLine();
-                }
 
                 //try
                 //{
-                if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0)
-                {
+                //if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0 && i != 0)
+                //{
                     Console.Write("Main script, ");
                     writer.WriteLine("//---------------------------Main Sub---------------------------//");
                     writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
                     DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
-                }
+                //}
 
-                if (objectScript.playerScript > 0 && objectScript.playerJumpTable > 0)
-                {
+                //if (objectScript.playerScript > 0 && objectScript.playerJumpTable > 0 && i != 0)
+                //{
                     writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
                     writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
                     Console.Write("Player script, ");
                     DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1, false);
-                }
+                //}
 
-                if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0)
-                {
+                //if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0 && i != 0)
+                //{
                     writer.WriteLine("//----------------------Drawing Sub-------------------//");
                     writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
                     Console.Write("Draw script, ");
                     DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2, false);
-                }
+                //}
 
-                if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0)
-                {
+                //if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0 && i != 0)
+                //{
                     writer.WriteLine("//--------------------Startup Sub---------------------//");
                     writer.WriteLine("//-------Called once when the object is spawned-------//");
                     Console.Write("Startup script, ");
                     DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
-                }
+                //}
 
                 if (i == 1 )//&& typeNames[i] == "PlayerObject")
                 {
-                    for (int ii = 0; ii < functionScriptList.Length; ii++)
+                    for (int ii = 0; ii < functionCount; ii++)
                     {
-                        if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0)
-                        {
+                        //if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0 && i != 0)
+                        //{
                             writer.WriteLine("//--------------------Function Sub---------------------//");
                             writer.WriteLine("//-------it do shit-------//");
                             Console.WriteLine("Function script " + ii + ".");
                             DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
-                        }
+                        //}
                     }
                 }
 
@@ -1166,7 +1171,7 @@ namespace RSDKv2
 
             if (scriptCodePtr == 0 && jumpTablePtr == 0)
             {
-                return;
+                //return;
             }
 
             if (!isFunction)
@@ -1179,34 +1184,25 @@ namespace RSDKv2
             }
 
             state = new StateScriptEngine();
-            state.scriptCodePtr = scriptCodePtr;
-            state.jumpTablePtr = jumpTablePtr;
+            state.scriptCodePtr = state.scriptCodeOffset = scriptCodePtr;
+            state.jumpTablePtr = state.jumpTableOffset = jumpTablePtr;
             state.scriptSub = scriptSub;
             state.deep = 1;
             state.isSwitchEnd = false;
             state.error = false;
 
-            if (isFunction)
-            {
-                DecompileFunction(writer);
-            }
-            else
-            {
-                DecompileSub(writer);
-            }
+            DecompileSub(writer, isFunction);
             writer.Write(Environment.NewLine);
         }
 
-        public void DecompileSub(StreamWriter writer)
+        public void DecompileSub(StreamWriter writer, bool isFunction)
         {
-            int objectLoop = 0;
-            string index1 = "0";
+            //int objectLoop = 1056;
+            //string index1 = "0";
             state.EndFlag = false;
             state.LoopBreakFlag = false;
             state.SwitchBreakFlag = false;
             writer.Write(Environment.NewLine);
-
-            int test = jumpTableData[state.jumpTablePtr];
 
             while (!state.EndFlag)
             {
@@ -1231,35 +1227,52 @@ namespace RSDKv2
                         case 1: // Read value from RSDK
                             switch (scriptData[state.scriptCodePtr++])
                             {
-                                case 0:
-                                    index1 = objectLoop.ToString();
+                                case 0: //Read Const Variable
                                     int tmp2 = scriptData[state.scriptCodePtr];
                                     variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
                                     break;
                                 case 1: // ARRAY
-                                    if (scriptData[state.scriptCodePtr++] == 1)
-                                    { index1 = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]]; }
-                                    else
-                                        index1 = scriptData[state.scriptCodePtr++].ToString();
+                                    if (scriptData[state.scriptCodePtr++] == 1) // Variable
+                                    {
+                                        string value = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
+                                    else //Value
+                                    {
+                                        string value = scriptData[state.scriptCodePtr++].ToString();
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
                                     num2 += 2;
-
-                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1.ToString());
                                     break;
                                 case 2:
                                     if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    {
+                                        string value = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
                                     else
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    {
+                                        string value = scriptData[state.scriptCodePtr++].ToString();
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
                                     num2 += 2;
-                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    //variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    //variableName[i] = _SetArrayValue(variableName[i], objectLoop);
                                     break;
                                 case 3:
                                     if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    {
+                                        string value = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
                                     else
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
+                                    {
+                                        string value = scriptData[state.scriptCodePtr++].ToString();
+                                        variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
+                                    }
                                     num2 += 2;
-                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    //variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
+                                    //variableName[i] = _SetArrayValue(variableName[i], objectLoop);
                                     break;
                             }
                             num2 += 3;
@@ -1320,755 +1333,348 @@ namespace RSDKv2
                     }
                 }
 
-                // Check what opcodes terminates a statement
-                switch (opcode)
-                {
-                    case 0x00: // end sub
-                        break;
-                    case 0x19: // else
-                        for (int i = 0; i < state.deep - 1; i++) writer.Write("\t");
-                        break;
-                    case 0x1A: // end if
-                        state.deep--;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                    case 0x21: // loop 
-                        state.LoopBreakFlag = true;
-                        state.deep--;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                    case 0x23: // break
-                        state.SwitchBreakFlag = true;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        state.deep--;
-                        // do a peek if the next statement is an endswitch
-                        if (scriptData[state.scriptCodePtr] == 0x24)
-                        {
-                            //state.isSwitchEnd = true;
-                        }
-                        break;
-                    case 0x24: // end switch
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        //state.deep--;
-                        state.isSwitchEnd = true;
-                        break;
-                    default:
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                }
-
-
-                if (opcode >= 134)
-                {
-                    writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
-                    Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
-                    state.error = true;
-                    return;
-                }
-
                 string operand = opcodeList[opcode];
 
-
-                for (int i = 0; i < variableName.Length; i++)
+                if (operand == "End" || operand == "EndFunction")
                 {
-                    if (variableName[i] == "" || variableName[i] == null)
-                    {
-                        variableName[i] = "Object.Value0";
-                    }
+                    if (isFunction) writer.Write("endfunction");
+                    else writer.Write("endsub");
+                    state.EndFlag = true;
+                    state.deep = 0;
                 }
 
-                if (variableName[0].Contains("Type"))
+                if (!state.EndFlag)
                 {
-                    //variableName[1] = "TypeNames[" + typeNames[Convert.ToInt32(variableName[1])] + "]";
-                    variableName[1] = "TypeNames[" + Convert.ToInt32(variableName[1]) + "]";
-                }
-
-                // Special Aliases for some functions
-                switch (operand)
-                {
-                    case "DrawSpriteFX":
-                        int o = 0;
-                        Int32.TryParse((variableName[1]), out o);
-                        o--;
-                        if (o < 0) o = 0;
-                        variableName[1] = FXAliases[o];
-                        break;
-                    case "DrawSpriteScreenFX":
-                        int oo = 0;
-                        Int32.TryParse((variableName[1]), out oo);
-                        oo--;
-                        if (oo < 0) oo = 0;
-                        variableName[1] = FXAliases[oo];
-                        break;
-                    case "PlayerObjectCollision":
-                        int ooo = 0;
-                        Int32.TryParse(variableName[0], out ooo);
-                        if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
-                        break;
-                }
-
-                if (opcode < 0x21)
-                {
-                    switch (variableName[0])
+                    // Check what opcodes terminates a statement
+                    switch (opcode)
                     {
-                        case "Engine.PlatformID":
-                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                        case 0x00: // end sub
                             break;
-                        case "Stage.ActiveList":
-                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                        case 0x19: // else
+                            for (int i = 0; i < state.deep - 1; i++) writer.Write("\t");
                             break;
-                        case "Stage.Stage":
-                            variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
-                            break;
-                    }
-
-                    switch (variableName[1])
-                    {
-                        case "Engine.PlatformID":
-                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                            break;
-                        case "Stage.ActiveList":
-                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                            break;
-                        case "Stage.Stage":
-                            variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
-                            break;
-                    }
-
-                    //I'll do it later
-                    /*switch (variableName[2])
-                    {
-                        case "0":
-                            variableName[2] = BoolAliases[0];
-                            break;
-                        case "1":
-                            variableName[2] = BoolAliases[1];
-                            break;
-                    }*/
-                }
-
-                switch (opcode)
-                {
-                    case 0x00:
-                        writer.Write("endsub");
-                        state.EndFlag = true;
-                        state.deep = 0;
-                        break;
-                    case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
-                    case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
-                    case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
-                    case 0x04: writer.Write(variableName[0] + "++"); break;
-                    case 0x05: writer.Write(variableName[0] + "--"); break;
-                    case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
-                    case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
-                    case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
-                    case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
-                    case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
-                    case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
-                    case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
-                    case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
-                    case 0x13:
-                        writer.Write("if " + variableName[1] + "==" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x14:
-                        writer.Write("if " + variableName[1] + ">" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x15:
-                        writer.Write("if " + variableName[1] + ">=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x16:
-                        writer.Write("if " + variableName[1] + "<" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x17:
-                        writer.Write("if " + variableName[1] + "<=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x18:
-                        writer.Write("if " + variableName[1] + "!=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x19:
-                        writer.Write("else");
-                        //state.jumpTablePtr++;
-                        break;
-                    case 0x1A:
-                        writer.Write("endif");
-                        //state.jumpTablePtr--;
-                        break;
-                    case 0x1B:
-                        writer.Write("while " + variableName[1] + "==" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1C:
-                        writer.Write("while " + variableName[1] + ">" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1D:
-                        writer.Write("while " + variableName[1] + ">=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1E:
-                        writer.Write("while " + variableName[1] + "<" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1F:
-                        writer.Write("while " + variableName[1] + "<=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x20:
-                        writer.Write("while " + variableName[1] + "!=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x21:
-                        writer.Write("loop");
-                        //state.jumpTablePtr++;
-                        break;
-                    case 0x22:
-                        writer.Write("switch " + variableName[1] + Environment.NewLine);
-                        state.SwitchCheck = false;
-                        state.SwitchDeep++;
-                        state.jumpTablePtr++;
-                        //???
-                        state.jumpTablePtr++;
-                        int Jmp = jumpTableData[state.jumpTablePtr];
-                        state.jumpTablePtr++;
-                        int swvalma = jumpTableData[state.jumpTablePtr];
-                        int[] SwitchValues = new int[swvalma+1];
-
-                        int ID = 0;
-                        for (int i = Jmp; i < swvalma+1; i++)
-                        {
-                            SwitchValues[ID++] = i-Jmp; 
-                        }
-
-                        for (int i = 0; !state.isSwitchEnd;)
-                        {
-                            if (!state.SwitchCheck)
-                            {
-                                for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
-                                writer.Write("case " + SwitchValues[i]);
-                                state.SwitchCheck = true;
-                                state.deep += 1;
-                                //i++;
-                                i++;
-                            }
-                            DecompileSub(writer);
-                        }
-                        state.isSwitchEnd = false;
-                        break;
-                    case 0x23:
-                        writer.Write("break");
-                        state.jumpTablePtr++;
-                        if (scriptData[state.scriptCodePtr] == 0x24)
-                        {
-                            state.scriptCodePtr++;
-                            state.jumpTablePtr++;
-                            writer.Write(Environment.NewLine);
+                        case 0x1A: // end if
+                            state.deep--;
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            break;
+                        case 0x21: // loop 
+                            state.LoopBreakFlag = true;
+                            state.deep--;
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            break;
+                        case 0x23: // break
+                            state.SwitchBreakFlag = true;
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            state.deep--;
+                            // do a peek if the next statement is an endswitch
+                            if (scriptData[state.scriptCodePtr] == 0x24)
+                            {
+                                //state.isSwitchEnd = true;
+                            }
+                            break;
+                        case 0x24: // end switch
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            //state.deep--;
+                            state.isSwitchEnd = true;
+                            break;
+                        default:
+                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                            break;
+                    }
+
+
+                    if (opcode >= 134)
+                    {
+                        writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
+                        Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
+                        state.error = true;
+                        return;
+                    }
+
+                    for (int i = 0; i < variableName.Length; i++)
+                    {
+                        if (variableName[i] == "" || variableName[i] == null)
+                        {
+                            variableName[i] = "Object.Value0";
+                        }
+                    }
+
+                    if (variableName[0].Contains("Type"))
+                    {
+                        //variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])] + "]";
+                        //variableName[1] = "TypeName[" + Convert.ToInt32(variableName[1]) + "]";
+                    }
+
+                    // Special Aliases for some functions
+                    switch (operand)
+                    {
+                        case "DrawSpriteFX":
+                            int o = 0;
+                            Int32.TryParse((variableName[1]), out o);
+                            //o--;
+                            if (o < 0) o = 0;
+                            variableName[1] = FXAliases[o];
+                            break;
+                        case "DrawSpriteScreenFX":
+                            int oo = 0;
+                            Int32.TryParse((variableName[1]), out oo);
+                            // oo--;
+                            if (oo < 0) oo = 0;
+                            variableName[1] = FXAliases[oo];
+                            break;
+                        case "PlayerObjectCollision":
+                            int ooo = 0;
+                            Int32.TryParse(variableName[0], out ooo);
+                            if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
+                            break;
+                    }
+
+                    if (operand.Contains("Matrix"))
+                    {
+                        int alias = 0;
+                        Int32.TryParse(variableName[0], out alias);
+                        if (alias < MatAliases.Length) variableName[0] = MatAliases[alias];
+                    }
+
+                    if (opcode < 0x21)
+                    {
+                        switch (variableName[0])
+                        {
+                            case "Engine.PlatformID":
+                                variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                                break;
+                            case "Stage.ActiveList":
+                                variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                                break;
+                            case "Stage.Stage":
+                                variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
+                                break;
+                        }
+
+                        switch (variableName[1])
+                        {
+                            case "Engine.PlatformID":
+                                variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                                break;
+                            case "Stage.ActiveList":
+                                variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                                break;
+                            case "Stage.Stage":
+                                variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
+                                break;
+                        }
+
+                        //I'll do it later
+                        /*switch (variableName[2])
+                        {
+                            case "0":
+                                variableName[2] = BoolAliases[0];
+                                break;
+                            case "1":
+                                variableName[2] = BoolAliases[1];
+                                break;
+                        }*/
+                    }
+
+                    switch (opcode)
+                    {
+                        case 0x00:
+                            if (isFunction) writer.Write("endfunction");
+                            else writer.Write("endsub");
+                            state.EndFlag = true;
+                            state.deep = 0;
+                            break;
+                        case 0x01: writer.Write(variableName[0] + "=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x02: writer.Write(variableName[0] + "+=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x03: writer.Write(variableName[0] + "-=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x04: writer.Write(variableName[0] + "++"); break;
+                        case 0x05: writer.Write(variableName[0] + "--"); break;
+                        case 0x06: writer.Write(variableName[0] + "*=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x07: writer.Write(variableName[0] + "/=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x08: writer.Write(variableName[0] + ">>=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x09: writer.Write(variableName[0] + "<<=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0A: writer.Write(variableName[0] + "&=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0B: writer.Write(variableName[0] + "|=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0C: writer.Write(variableName[0] + "^=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0D: writer.Write(variableName[0] + "%=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x13:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x14:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x15:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x16:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x17:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x18:
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x19:
+                            writer.Write("else");
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1A:
+                            writer.Write("endif");
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1B:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1C:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1D:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1E:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x1F:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x20:
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
+                            state.deep += 1;
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x21:
+                            writer.Write("loop");
+                            //state.jumpTablePtr += 4;
+                            break;
+                        case 0x22:
+                            writer.WriteLine("switch " + HexadecimalEncoding.ToHexString(variableName[1]) + Environment.NewLine);
+                            state.SwitchCheck = false;
+                            state.SwitchDeep++;
+
+                            for (int i = 0; !state.isSwitchEnd;)
+                            {
+                                //LABEL_1:
+                                if (!state.SwitchCheck)
+                                {
+                                    for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
+                                    int scrd = scriptData[state.scriptCodePtr];
+                                    int jmpd = jumpTableData[state.jumpTablePtr];
+                                    int dta = scriptData[(4 * Int32.Parse(variableName[0]))];
+                                    int cse = scriptData[jumpTableData[state.jumpTablePtr]];
+
+                                    //Our Case Value
+                                    int CurCase = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0])];
+
+                                    int CurCase2 = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0]) + 1];
+                                    int Epic = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0]) + 2];
+
+                                    int bruh = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0])];
+                                    int bruh2 = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0]) + 1];
+                                    int bruh3 = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0]) + 2];
+
+                                    //writer.Write("case " + i);
+                                    if (jmpd != 13)
+                                    {
+                                        writer.Write("case " + CurCase);
+                                    }
+                                    else
+                                    {
+                                        writer.Write("default");
+                                    }
+                                    state.SwitchCheck = true;
+                                    state.deep += 1;
+                                    i++;
+                                }
+                                DecompileSub(writer, isFunction);
+                            }
+                            state.isSwitchEnd = false;
+                            state.jumpTablePtr = state.jumpTableOffset;
+                            continue;
+                        case 0x23:
+                            writer.Write("break");
+                            state.jumpTablePtr++;
+                            if (scriptData[state.scriptCodePtr] == 0x24)
+                            {
+                                state.scriptCodePtr++;
+                                //state.jumpTablePtr += 4;
+                                writer.Write(Environment.NewLine);
+                                for (int i = 0; i < state.deep; i++) writer.Write("\t");
+                                writer.Write("endswitch");
+                                state.SwitchDeep--;
+                                state.SwitchCheck = false;
+                                state.isSwitchEnd = true;
+                            }
+                            state.SwitchCheck = false;
+                            break;
+                        case 0x24:
                             writer.Write("endswitch");
                             state.SwitchDeep--;
+                            //state.jumpTablePtr += 4;
                             state.SwitchCheck = false;
                             state.isSwitchEnd = true;
-                        }
-                        state.SwitchCheck = false;
-                        break;
-                    case 0x24:
-                        writer.Write("endswitch");
-                        state.SwitchDeep--;
-                        //state.jumpTablePtr++;
-                        state.SwitchCheck = false;
-                        state.isSwitchEnd = true;
-                        return;
-                    default:
-                        writer.Write(operand + "(");
-                        switch (paramsCount)
-                        {
-                            case 1:
-                                writer.Write(variableName[0]);
-                                break;
-                            case 2:
-                                writer.Write(variableName[0] + "," + variableName[1]);
-                                break;
-                            case 3:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
-                                break;
-                            case 4:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
-                                break;
-                            case 5:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
-                                break;
-                            case 6:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
-                                break;
-                            case 7:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
-                                break;
-                            case 8:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
-                                break;
-                            case 9:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
-                                break;
-                        }
-                        writer.Write(")");
-                        break;
+                            return;
+                        default:
+                            writer.Write(operand + "(");
+                            switch (paramsCount)
+                            {
+                                case 1:
+                                    writer.Write(variableName[0]);
+                                    break;
+                                case 2:
+                                    writer.Write(variableName[0] + "," + variableName[1]);
+                                    break;
+                                case 3:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
+                                    break;
+                                case 4:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
+                                    break;
+                                case 5:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
+                                    break;
+                                case 6:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
+                                    break;
+                                case 7:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
+                                    break;
+                                case 8:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
+                                    break;
+                                case 9:
+                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
+                                    break;
+                            }
+                            writer.Write(")");
+                            break;
+                    }
                 }
 
                 //if (!state.isSwitchEnd && !state.EndFlag)
                     writer.Write(Environment.NewLine);
-
-                if (state.SwitchBreakFlag)
-                {
-                    state.SwitchBreakFlag = false;
-                    return;
-                }
-
-                if (state.LoopBreakFlag)
-                {
-                    state.LoopBreakFlag = false;
-                    //return;
-                }
-            }
-        }
-
-        public void DecompileFunction(StreamWriter writer)
-        {
-            int objectLoop = 0;
-            string index1 = "0";
-            state.EndFlag = false;
-            state.LoopBreakFlag = false;
-            state.SwitchBreakFlag = false;
-            writer.Write(Environment.NewLine);
-
-            while (!state.EndFlag)
-            {
-                int num2 = 0;
-                int opcode = scriptData[state.scriptCodePtr++];
-                int paramsCount = scriptOpcodeSizes[opcode];
-
-                //state.isSwitchEnd = false;
-
-                string[] variableName = new string[10];
-
-                for (int i = 0; i < variableName.Length; i++)
-                {
-                    variableName[i] = "UNKNOWN VARIABLE";
-                }
-
-                for (int i = 0; i < paramsCount; i++)
-                {
-                    int paramId = scriptData[state.scriptCodePtr++];
-                    switch (paramId)
-                    {
-                        case 1: // Read value from RSDK
-                            switch (scriptData[state.scriptCodePtr++])
-                            {
-                                case 0:
-                                    index1 = objectLoop.ToString();
-                                    int tmp2 = scriptData[state.scriptCodePtr];
-                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
-                                    break;
-                                case 1: // ARRAY
-                                    if (scriptData[state.scriptCodePtr++] == 1)
-                                    { index1 = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]]; }
-                                    else
-                                        index1 = scriptData[state.scriptCodePtr++].ToString();
-                                    num2 += 2;
-
-                                    variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], index1.ToString());
-                                    break;
-                                case 2:
-                                    if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
-                                    else
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
-                                    num2 += 2;
-                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
-                                    break;
-                                case 3:
-                                    if (scriptData[state.scriptCodePtr++] == 1)
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
-                                    else
-                                        index1 = (objectLoop - scriptData[state.scriptCodePtr++]).ToString();
-                                    num2 += 2;
-                                    variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
-                                    break;
-                            }
-                            num2 += 3;
-                            break;
-                        case 2: // Read constant value from bytecode
-                            scriptEng.operands[i] = scriptData[state.scriptCodePtr++];
-                            variableName[i] = "";
-                            variableName[i] = variableName[i] + scriptEng.operands[i]; //it's an int!!
-                            num2 += 2;
-                            break;
-                        case 3: // Read string
-                            string tmp = "";
-                            num2++;
-                            int strLen = scriptData[state.scriptCodePtr];
-                            for (int j = 0; j < strLen;)
-                            {
-                                state.scriptCodePtr++;
-                                num2++;
-                                if (j < strLen)
-                                {
-                                    int val = scriptData[state.scriptCodePtr] >> 24;
-                                    if (val < 0) val = 0;
-                                    tmp = tmp + Convert.ToChar(val);
-                                }
-                                j++;
-                                if (j < strLen)
-                                {
-                                    int val = (scriptData[state.scriptCodePtr] & 0x00FFFFFF) >> 16;
-                                    if (val < 0) val = 0;
-                                    tmp = tmp + Convert.ToChar(val);
-                                }
-                                j++;
-                                if (j < strLen)
-                                {
-                                    int val = (scriptData[state.scriptCodePtr] & 0x0000FFFF) >> 8;
-                                    if (val < 0) val = 0;
-                                    tmp = tmp + Convert.ToChar(val);
-                                }
-                                j++;
-                                if (j < strLen)
-                                {
-                                    int val = scriptData[state.scriptCodePtr] & 0x000000FF;
-                                    if (val < 0) val = 0;
-                                    tmp = tmp + Convert.ToChar(val);
-                                }
-                                j++;
-                            }
-                            variableName[i] = '"' + tmp + '"';
-                            if ((strLen & 3) == 0)
-                            {
-                                state.scriptCodePtr += 2;
-                                num2 += 2;
-                                break;
-                            }
-                            state.scriptCodePtr++;
-                            num2++;
-                            break;
-                    }
-                }
-
-                // Check what opcodes terminates a statement
-                switch (opcode)
-                {
-                    case 0x00: // end sub
-                        break;
-                    case 0x19: // else
-                        for (int i = 0; i < state.deep - 1; i++) writer.Write("\t");
-                        break;
-                    case 0x1A: // end if
-                        state.deep--;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                    case 0x21: // loop 
-                        state.LoopBreakFlag = true;
-                        state.deep--;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                    case 0x23: // break
-                        state.SwitchBreakFlag = true;
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        state.deep--;
-                        // do a peek if the next statement is an endswitch
-                        if (scriptData[state.scriptCodePtr] == 0x24)
-                        {
-                            //state.isSwitchEnd = true;
-                        }
-                        break;
-                    case 0x24: // end switch
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        //state.deep--;
-                        state.isSwitchEnd = true;
-                        break;
-                    default:
-                        for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                        break;
-                }
-
-
-                if (opcode >= 134)
-                {
-                    writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
-                    Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
-                    state.error = true;
-                    return;
-                }
-
-                string operand = opcodeList[opcode];
-
-
-                for (int i = 0; i < variableName.Length; i++)
-                {
-                    if (variableName[i] == "" || variableName[i] == null)
-                    {
-                        variableName[i] = "Object.Value0";
-                    }
-                }
-
-                // Special Aliases for some functions
-                switch (operand)
-                {
-                    case "DrawSpriteFX":
-                        int o = 0;
-                        Int32.TryParse((variableName[1]), out o);
-                        o--;
-                        if (o < 0) o = 0;
-                        variableName[1] = FXAliases[o];
-                        break;
-                    case "DrawSpriteScreenFX":
-                        int oo = 0;
-                        Int32.TryParse((variableName[1]), out oo);
-                        oo--;
-                        if (oo < 0) oo = 0;
-                        variableName[1] = FXAliases[oo];
-                        break;
-                    case "PlayerObjectCollision":
-                        int ooo = 0;
-                        Int32.TryParse(variableName[0], out ooo);
-                        if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
-                        break;
-                    case "EndFunction":
-                        writer.Write("EndFunction");
-                        state.EndFlag = true;
-                        state.deep = 0;
-                        return;
-                }
-
-                if (opcode < 0x21) //Arithmatic, if or while statements only
-                {
-                    switch (variableName[0])
-                    {
-                        case "Engine.PlatformID":
-                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
-                            break;
-                        case "Stage.ActiveList":
-                            variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
-                            break;
-                        case "Stage.Stage":
-                            variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
-                            break;
-                    }
-
-                    switch (variableName[1])
-                    {
-                        case "Engine.PlatformID":
-                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                            break;
-                        case "Stage.ActiveList":
-                            variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                            break;
-                        case "Stage.Stage":
-                            variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
-                            break;
-                    }
-
-                    //I'll do it later
-                    /*switch (variableName[2])
-                    {
-                        case "0":
-                            variableName[2] = BoolAliases[0];
-                            break;
-                        case "1":
-                            variableName[2] = BoolAliases[1];
-                            break;
-                    }*/
-                }
-
-                switch (opcode)
-                {
-                    case 0x00:
-                        writer.Write("endsub");
-                        state.EndFlag = true;
-                        state.deep = 0;
-                        break;
-                    case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
-                    case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
-                    case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
-                    case 0x04: writer.Write(variableName[0] + "++"); break;
-                    case 0x05: writer.Write(variableName[0] + "--"); break;
-                    case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
-                    case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
-                    case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
-                    case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
-                    case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
-                    case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
-                    case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
-                    case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
-                    case 0x13:
-                        writer.Write("if " + variableName[1] + "==" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x14:
-                        writer.Write("if " + variableName[1] + ">" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x15:
-                        writer.Write("if " + variableName[1] + ">=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x16:
-                        writer.Write("if " + variableName[1] + "<" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x17:
-                        writer.Write("if " + variableName[1] + "<=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x18:
-                        writer.Write("if " + variableName[1] + "!=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x19:
-                        writer.Write("else");
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1A:
-                        writer.Write("endif");
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1B:
-                        writer.Write("while " + variableName[1] + "==" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1C:
-                        writer.Write("while " + variableName[1] + ">" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1D:
-                        writer.Write("while " + variableName[1] + ">=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1E:
-                        writer.Write("while " + variableName[1] + "<" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x1F:
-                        writer.Write("while " + variableName[1] + "<=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x20:
-                        writer.Write("while " + variableName[1] + "!=" + variableName[2]);
-                        state.deep += 1;
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x21:
-                        writer.Write("loop");
-                        state.jumpTablePtr++;
-                        break;
-                    case 0x22:
-                        writer.Write("switch " + variableName[1] + Environment.NewLine);
-                        state.SwitchCheck = false;
-                        state.SwitchDeep++;
-                        state.jumpTablePtr++;
-                        for (int i = 0; !state.isSwitchEnd;)
-                        {
-                            if (!state.SwitchCheck)
-                            {
-                                for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
-                                state.jumpTablePtr++;
-                                int Jmp = jumpTableData[state.jumpTablePtr];
-                                writer.Write("case " + Jmp);
-                                state.SwitchCheck = true;
-                                state.deep += 1;
-                                i++;
-                            }
-                            DecompileFunction(writer);
-                        }
-                        state.isSwitchEnd = false;
-                        break;
-                    case 0x23:
-                        writer.Write("break");
-                        state.jumpTablePtr++;
-                        if (scriptData[state.scriptCodePtr] == 0x24)
-                        {
-                            state.scriptCodePtr++;
-                            state.jumpTablePtr++;
-                            writer.Write(Environment.NewLine);
-                            for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                            writer.Write("endswitch");
-                            state.SwitchDeep--;
-                            state.SwitchCheck = false;
-                            state.isSwitchEnd = true;
-                        }
-                        state.SwitchCheck = false;
-                        break;
-                    case 0x24:
-                        writer.Write("endswitch");
-                        state.SwitchDeep--;
-                        state.jumpTablePtr++;
-                        state.SwitchCheck = false;
-                        state.isSwitchEnd = true;
-                        return;
-                    default:
-                        writer.Write(operand + "(");
-                        switch (paramsCount)
-                        {
-                            case 1:
-                                writer.Write(variableName[0]);
-                                break;
-                            case 2:
-                                writer.Write(variableName[0] + "," + variableName[1]);
-                                break;
-                            case 3:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
-                                break;
-                            case 4:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
-                                break;
-                            case 5:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
-                                break;
-                            case 6:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
-                                break;
-                            case 7:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
-                                break;
-                            case 8:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
-                                break;
-                            case 9:
-                                writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
-                                break;
-                        }
-                        writer.Write(")");
-                        break;
-                }
-
-                //if (!state.isSwitchEnd && !state.EndFlag)
-                writer.Write(Environment.NewLine);
 
                 if (state.SwitchBreakFlag)
                 {
@@ -2178,5 +1784,58 @@ namespace RSDKv2
             }
         }
 
+    }
+
+    public static class stringshit
+    {
+
+        public static bool isNumber(string str)
+        {
+            return int.TryParse(str, out int value);
+        }
+
+    }
+
+    public class HexadecimalEncoding
+    {
+        public static string ToHexString(string str)
+        {
+            //lazy
+            return str;
+            var sb = new StringBuilder();
+
+            try
+            {
+                int value;
+                bool isNumeric = int.TryParse(str, out value);
+
+                if (!isNumeric) return str;
+
+                if (value < 1023 && value > -1023)
+                {
+                    return str;
+                }
+
+                sb.Append("0X");
+                sb.Append(value.ToString("X"));
+
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                return str;
+            }
+        }
+
+        public static string FromHexString(string hexString)
+        {
+            var bytes = new byte[hexString.Length / 2];
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            }
+
+            return Encoding.Unicode.GetString(bytes); // returns: "Hello world" for "48656C6C6F20776F726C64"
+        }
     }
 }
