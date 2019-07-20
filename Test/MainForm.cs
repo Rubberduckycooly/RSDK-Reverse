@@ -185,11 +185,14 @@ namespace Test
                     //}
                 }*/
 
+                //Settings
+                //RSDKv5.Settings settings = new RSDKv5.Settings(new StreamReader(File.OpenRead(dlg.FileName)));
+                //settings.Write(new StreamWriter(File.OpenWrite(dlg.FileName + ".bak")));
 
                 //Models
-                RSDKv5.Model MDL = new RSDKv5.Model(filepath);
-                string tmp = filepath.Replace(Path.GetExtension(filepath), ".png");
-                MDL.Frames[0].AsImage(MDL, 5, 5, 5, 115, 0, 0, false).Save(tmp, System.Drawing.Imaging.ImageFormat.Png);
+                //RSDKv5.Model MDL = new RSDKv5.Model(filepath);
+                //string tmp = filepath.Replace(Path.GetExtension(filepath), ".png");
+                //MDL.Frames[0].AsImage(MDL, 5, 5, 5, 115, 0, 0, false).Save(tmp, System.Drawing.Imaging.ImageFormat.Png);
                 //MDL.Write(new RSDKv5.Writer(tmp + "2.bin"));
                 //MDL.WriteAsSTLBinary(new RSDKv5.Writer(tmp + ".stl"));
                 //MDL.WriteAsOBJ(tmp + ".obj", Path.GetFileName(tmp) + ".mtl");
@@ -245,10 +248,10 @@ namespace Test
 
                 //MATH
                 //MANIA HEADER CHECKER
-                BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
+                /*BinaryReader reader = new BinaryReader(File.OpenRead(filepath));
                 int value = reader.ReadInt32();
                 Console.WriteLine(Path.GetFileNameWithoutExtension(filepath) + ": " + value);
-                reader.Close();
+                reader.Close();*/
                 #region Exe Scanning
 
                 /*

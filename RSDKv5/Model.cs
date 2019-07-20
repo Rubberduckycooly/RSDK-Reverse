@@ -16,8 +16,8 @@ namespace RSDKv5
 
         public class TexturePosition
         {
-            public float X = 0;
-            public float Y = 0;
+            public float u = 0;
+            public float v = 0;
 
             public TexturePosition()
             {
@@ -26,14 +26,14 @@ namespace RSDKv5
 
             public TexturePosition(Reader reader)
             {
-                X = reader.ReadSingle();
-                Y = reader.ReadSingle();
+                u = reader.ReadSingle();
+                v = reader.ReadSingle();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(X);
-                writer.Write(Y);
+                writer.Write(u);
+                writer.Write(v);
             }
         }
 
@@ -188,19 +188,9 @@ namespace RSDKv5
 
             public class Vertex
             {
-                /// <summary>
-                /// an extra point to be used if it's a quad
-                /// </summary>
-                public float w = 0;
-
                 public float x = 0;
                 public float y = 0;
                 public float z = 0;
-
-                /// <summary>
-                /// is it a quad
-                /// </summary>
-                public bool isQuad = false;
 
                 /// <summary>
                 /// normal data
@@ -253,11 +243,6 @@ namespace RSDKv5
                     y = reader.ReadSingle();
                     z = reader.ReadSingle();
 
-                    if (isQuad)
-                    {
-                        w = reader.ReadSingle();
-                    }
-
                     normal = new Normal();
                     if (useNormals)
                     {
@@ -270,11 +255,6 @@ namespace RSDKv5
                     writer.Write(x);
                     writer.Write(y);
                     writer.Write(z);
-
-                    if (isQuad)
-                    {
-                        writer.Write(w);
-                    }
 
                     if (useNormals)
                     {
@@ -702,7 +682,7 @@ namespace RSDKv5
             for (int i = 0; i < FramesCount; ++i)
                 Frames.Add(new Frame(reader, VertexCount, HasNormals));
 
-            //Console.WriteLine("MDL READ: FileSize: {0}, Position: 0x{1:X8}, DataLeft: {2}", reader.BaseStream.Length, reader.BaseStream.Position, reader.BaseStream.Length - reader.BaseStream.Position);
+            Console.WriteLine("MDL READ: FileSize: {0}, Position: 0x{1:X8}, DataLeft: {2}", reader.BaseStream.Length, reader.BaseStream.Position, reader.BaseStream.Length - reader.BaseStream.Position);
         }
 
         public void Write(Writer writer)
