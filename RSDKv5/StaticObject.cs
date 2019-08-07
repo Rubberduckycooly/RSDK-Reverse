@@ -30,28 +30,28 @@ namespace RSDKv5
 
             while (!reader.IsEof)
             {
-                int Unknown1 = reader.ReadByte();
-                uint Unknown2 = reader.ReadUInt32(); //Unknown
+                int DataType = reader.ReadByte();
+                uint Unknown = reader.ReadUInt32(); //Unknown
 
-                if ((Unknown1 & 0x80) != 0)
+                if ((DataType & 0x80) != 0)
                 {
                     uint DataSize = reader.ReadUInt32();
 
-                    int DataType = Unknown1 & 0x7F;
+                    DataType &= 0x7F;
 
                     switch(DataType)
                     {
                         //INT8
-                        case 0:
-                        case 3:
+                        case (int)AttributeTypes.UINT8:
+                        case (int)AttributeTypes.INT8:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 TmpData[DataPos++] = reader.ReadByte();
                             }
                             break;
                             //IN16
-                        case 1:
-                        case 4:
+                        case (int)AttributeTypes.UINT16:
+                        case (int)AttributeTypes.INT16:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 byte valA = reader.ReadByte();
@@ -61,9 +61,9 @@ namespace RSDKv5
                             }
                             break;
                             //INT32
-                        case 2:
-                        case 5:
-                        case 6:
+                        case (int)AttributeTypes.UINT32:
+                        case (int)AttributeTypes.INT32:
+                        case (int)AttributeTypes.VAR:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 byte valA = reader.ReadByte();
@@ -93,60 +93,86 @@ namespace RSDKv5
 
             for (DataPos = 0; DataPos < Data.Length;)
             {
-                byte Unknown1 = 0;
-                writer.Write(Unknown1);
-                writer.Write(Data[DataPos++]);
+                uint offset = DataPos;
+                byte FirstDataType = 0;
+                byte DataTypeBuf = 0;
+                byte DataType = 0;
+                uint DataSize = 0;
 
-                if ((Unknown1 & 0x80) != 0)
+                if (Data[offset] < 0x100)
                 {
-                    uint Unknown3 = 0;
-                    writer.Write(Unknown3);
+                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT8;
+                }
+                if (Data[offset] >= 0x100 && Data[offset] < 0x10000)
+                {
+                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT16;
+                }
+                if (Data[offset] >= 0x10000 && Data[offset] <= 0xFFFFFFFF)
+                {
+                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT32;
+                }
+                offset++;
 
-                    int Variable1 = Unknown1 & 0x7F;
+                while (FirstDataType == DataTypeBuf && offset < Data.Length)
+                {
+                    if (Data[offset] < 0x100)
+                    {
+                        DataTypeBuf = (int)AttributeTypes.UINT8;
+                    }
+                    if (Data[offset] >= 0x100 && Data[offset] < 0x10000)
+                    {
+                        DataTypeBuf = (int)AttributeTypes.UINT16;
+                    }
+                    if (Data[offset] >= 0x10000 && Data[offset] <= 0xFFFFFFFF)
+                    {
+                        DataTypeBuf = (int)AttributeTypes.UINT32;
+                    }
+                    if (FirstDataType == DataTypeBuf)
+                    {
+                        offset++;
+                    }
+                    else
+                    {
+                        DataType = FirstDataType;
+                    }
+                }
 
-                    switch (Variable1)
+                FirstDataType = DataTypeBuf;
+
+                DataSize = offset - DataPos;
+                //DataPos = offset;
+                DataType |= 0x80;
+
+                writer.Write(DataType);
+                writer.Write(DataSize);
+
+                if ((DataType & 0x80) != 0)
+                {
+                    writer.Write(DataSize);
+
+                    switch (DataType & 0x7F)
                     {
                         //INT8
                         case 0:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                writer.Write((byte)Data[DataPos++]);
-                            }
-                            break;
                         case 3:
-                            for (int i = 0; i < Unknown3; i++)
+                            for (int i = 0; i < DataSize; i++)
                             {
                                 writer.Write((byte)Data[DataPos++]);
                             }
                             break;
                         //IN16
                         case 1:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                writer.Write((ushort)Data[DataPos++]);
-                            }
-                            break;
                         case 4:
-                            for (int i = 0; i < Unknown3; i++)
+                            for (int i = 0; i < DataSize; i++)
                             {
                                 writer.Write((ushort)Data[DataPos++]);
                             }
                             break;
                         //INT32
                         case 2:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                writer.Write(Data[DataPos++]);
-                            }
-                            break;
                         case 5:
-                            for (int i = 0; i < Unknown3; i++)
-                            {
-                                writer.Write(Data[DataPos++]);
-                            }
-                            break;
                         case 6:
-                            for (int i = 0; i < Unknown3; i++)
+                            for (int i = 0; i < DataSize; i++)
                             {
                                 writer.Write(Data[DataPos++]);
                             }

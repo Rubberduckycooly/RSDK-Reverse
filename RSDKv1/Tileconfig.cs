@@ -36,30 +36,30 @@ namespace RSDKv1
             public bool isCeiling;
 
             /// <summary>
-            /// The Slope's angle
+            /// Angle value when walking on the floor
             /// </summary>
-            public byte slopeAngle;
+            public byte FloorAngle;
             /// <summary>
-            /// How the player's physics react to the slope
+            /// Angle value when walking on RWall
             /// </summary>
-            public byte physics;
+            public byte RWallAngle;
             /// <summary>
-            /// How much momentum is gained from the slope
+            /// Angle value when walking on LWall
             /// </summary>
-            public byte momentum;
+            public byte LWallAngle;
             /// <summary>
-            /// Unknown
+            /// Angle value when walking on the ceiling
             /// </summary>
-            public byte unknown;
+            public byte CeilingAngle;
 
             public CollisionMask()
             {
                 Collision = new byte[16];
                 HasCollision = new bool[16];
-                slopeAngle = 0;
-                physics = 0;
-                momentum = 0;
-                unknown = 0;
+                FloorAngle = 0x00;
+                RWallAngle = 0xC0;
+                LWallAngle = 0x40;
+                CeilingAngle = 0x80;
                 isCeiling = false;
             }
 
@@ -71,10 +71,10 @@ namespace RSDKv1
                 byte ic = reader.ReadByte();
                 if (ic == 0) isCeiling = false;
                 if (ic == 16) isCeiling = true;
-                slopeAngle = reader.ReadByte();
-                physics = reader.ReadByte();
-                momentum = reader.ReadByte();
-                unknown = reader.ReadByte();
+                FloorAngle = reader.ReadByte();
+                RWallAngle = reader.ReadByte();
+                LWallAngle = reader.ReadByte();
+                CeilingAngle = reader.ReadByte();
 
                 byte[] collision = reader.ReadBytes(8);
 
@@ -106,10 +106,10 @@ namespace RSDKv1
             {
                 if (!isCeiling) writer.Write((byte)0);
                 else if (isCeiling) writer.Write((byte)16);
-                writer.Write(slopeAngle);
-                writer.Write(physics);
-                writer.Write(momentum);
-                writer.Write(unknown);
+                writer.Write(FloorAngle);
+                writer.Write(RWallAngle);
+                writer.Write(LWallAngle);
+                writer.Write(CeilingAngle);
 
                 byte[] collision = new byte[8];
                 int CollisionActive = 0;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace RSDKvB
 {
@@ -371,9 +372,9 @@ namespace RSDKvB
 "WLower",
 "WLowerOrEqual",
 "WNotEqual",
-"UnknownOperand",
 "loop",
-"foreach",
+"foreachGreater",
+"foreachLower",
 "loop(foreach)",
 "switch",
 "break",
@@ -484,10 +485,10 @@ namespace RSDKvB
 2, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 3, 0, 3, 3,
 0, 2, 0, 0, 2, 2, 2, 2, 2, 3, 4, 7, 1, 1, 1, 3, 3, 4,
 7, 7, 3, 6, 7, 5, 4, 4, 3, 6, 3, 3, 5, 1, 4, 4, 1, 4,
-3, 4, 0, 8, 5, 0x0B, 4, 0, 0, 0, 0, 3, 1, 0, 0, 0, 4,
-2, 1, 3, 4, 4, 1, 0, 1, 2, 4, 4, 2, 2, 2, 4, 1, 3, 1,
-0, 6, 4, 4, 4, 3, 3, 1, 2, 3, 3, 4, 4, 2, 2, 0, 0, 2,
-5, 2, 3, 3, 1, 1, 1, 3, 5, 1, 3, 3, 3, 3, 0
+3, 4, 0, 8, 5, 7, 4, 0, 0, 0, 0, 3, 1, 0, 0, 0, 4, 2,
+1, 3, 4, 4, 1, 0, 1, 2, 4, 4, 2, 2, 2, 4, 1, 3, 1, 0,
+6, 4, 4, 4, 3, 3, 1, 2, 3, 3, 4, 4, 2, 2, 0, 0, 2, 5,
+2, 3, 3, 1, 1, 1, 3, 5, 1, 3, 3, 3, 3, 0,
 };
 
         string[] BoolAliases = new string[]
@@ -573,7 +574,7 @@ namespace RSDKvB
         int m_stageVarsIndex;
         int functionCount = 0;
 
-        bool ExFunc;
+        public bool UseHex = false;
 
         #endregion
 
@@ -872,6 +873,7 @@ namespace RSDKvB
 
         public void Decompile(string DestPath = "")
         {
+            HexadecimalEncoding.UseHex = UseHex;
             for (int i = m_stageVarsIndex; i < sourceNames.Length; i++)
             {
                 string path = "";
@@ -912,7 +914,7 @@ namespace RSDKvB
                 //for (int j = 0; j < typeNames.Length; j++)
                 //writer.Write("#define " + typeNames[j] + " " + j + Environment.NewLine);
 
-                writer.Write("#alias " + i + ": TYPE_" + typeNames[i].ToUpper().Replace(" ","_") + Environment.NewLine);
+                writer.Write("#alias " + i + ": TYPE_" + typeNames[i].ToUpper().Replace(" ", "_") + Environment.NewLine);
 
                 ObjectScript objectScript = objectScriptList[i];
 
@@ -921,43 +923,43 @@ namespace RSDKvB
 
                 //try
                 //{
-                    //if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0 && i != 0)
-                    //{
-                    Console.Write("Main script, ");
-                    writer.WriteLine("//---------------------------Main Sub---------------------------//");
-                    writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
-                    DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
-                    //}
+                //if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0 && i != 0)
+                //{
+                Console.Write("Main script, ");
+                writer.WriteLine("//---------------------------Main Sub---------------------------//");
+                writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
+                DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
+                //}
 
-                    //if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0 && i != 0)
-                    //{
-                    writer.WriteLine("//----------------------Drawing Sub-------------------//");
-                    writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
-                    Console.Write("Draw script, ");
-                    DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 1, false);
-                    //}
+                //if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0 && i != 0)
+                //{
+                writer.WriteLine("//----------------------Drawing Sub-------------------//");
+                writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
+                Console.Write("Draw script, ");
+                DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 1, false);
+                //}
 
-                    //if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0 && i != 0)
-                    //{
-                    writer.WriteLine("//--------------------Startup Sub---------------------//");
-                    writer.WriteLine("//-------Called once when the object is spawned-------//");
-                    Console.Write("Startup script, ");
-                    DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 2, false);
-                    //}
+                //if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0 && i != 0)
+                //{
+                writer.WriteLine("//--------------------Startup Sub---------------------//");
+                writer.WriteLine("//-------Called once when the object is spawned-------//");
+                Console.Write("Startup script, ");
+                DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 2, false);
+                //}
 
-                    if (i == 1)//&& typeNames[i] == "PlayerObject")
+                if (i == 1)//&& typeNames[i] == "PlayerObject")
+                {
+                    for (int ii = 0; ii < functionCount; ii++)
                     {
-                        for (int ii = 0; ii < functionCount; ii++)
-                        {
-                            //if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0 && i != 0)
-                            //{
-                            writer.WriteLine("//--------------------Function Sub---------------------//");
-                            writer.WriteLine("//-------it do shit-------//");
-                            Console.WriteLine("Function script " + ii + ".");
-                            DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
-                            //}
-                        }
+                        //if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0 && i != 0)
+                        //{
+                        writer.WriteLine("//--------------------Function Sub---------------------//");
+                        writer.WriteLine("//-------it do shit-------//");
+                        Console.WriteLine("Function script " + ii + ".");
+                        DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
+                        //}
                     }
+                }
 
                 //}
                 //catch (Exception ex)
@@ -1048,13 +1050,13 @@ namespace RSDKvB
             }
             catch (Exception ex)
             {
-                Console.Write(isFunction ? "ERROR IN SUB " + strFuncName : "ERROR IN FUNCTION " + scriptSub);
+                Console.Write(isFunction ? "ERROR IN FUNCTION " + scriptSub : "ERROR IN SUB " + strFuncName);
                 Console.WriteLine("! Error: " + ex.Message);
             }
             writer.Write(Environment.NewLine);
         }
 
-        public void DecompileSub(StreamWriter writer,bool isfunction)
+        public void DecompileSub(StreamWriter writer, bool isfunction)
         {
             int objectLoop = 0;
             string index1 = "0";
@@ -1322,46 +1324,46 @@ namespace RSDKvB
                             state.EndFlag = true;
                             state.deep = 0;
                             break;
-                        case 0x01: writer.Write(variableName[0] + "=" + variableName[1]); break;
-                        case 0x02: writer.Write(variableName[0] + "+=" + variableName[1]); break;
-                        case 0x03: writer.Write(variableName[0] + "-=" + variableName[1]); break;
-                        case 0x04: writer.Write(variableName[0] + "++"); break;
-                        case 0x05: writer.Write(variableName[0] + "--"); break;
-                        case 0x06: writer.Write(variableName[0] + "*=" + variableName[1]); break;
-                        case 0x07: writer.Write(variableName[0] + "/=" + variableName[1]); break;
-                        case 0x08: writer.Write(variableName[0] + ">>=" + variableName[1]); break;
-                        case 0x09: writer.Write(variableName[0] + "<<=" + variableName[1]); break;
-                        case 0x0A: writer.Write(variableName[0] + "&=" + variableName[1]); break;
-                        case 0x0B: writer.Write(variableName[0] + "|=" + variableName[1]); break;
-                        case 0x0C: writer.Write(variableName[0] + "^=" + variableName[1]); break;
-                        case 0x0D: writer.Write(variableName[0] + "%=" + variableName[1]); break;
+                        case 0x01: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x02: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "+=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x03: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "-=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x04: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "++"); break;
+                        case 0x05: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "--"); break;
+                        case 0x06: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "*=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x07: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "/=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x08: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + ">>=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x09: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "<<=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0A: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "&=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0B: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "|=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0C: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "^=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0D: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "%=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
                         case 0x13:
-                            writer.Write("if " + variableName[1] + "==" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x14:
-                            writer.Write("if " + variableName[1] + ">" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x15:
-                            writer.Write("if " + variableName[1] + ">=" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x16:
-                            writer.Write("if " + variableName[1] + "<" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x17:
-                            writer.Write("if " + variableName[1] + "<=" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x18:
-                            writer.Write("if " + variableName[1] + "!=" + variableName[2]);
+                            writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
@@ -1372,32 +1374,32 @@ namespace RSDKvB
                             writer.Write("endif");
                             break;
                         case 0x1B:
-                            writer.Write("while " + variableName[1] + "==" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x1C:
-                            writer.Write("while " + variableName[1] + ">" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x1D:
-                            writer.Write("while " + variableName[1] + ">=" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x1E:
-                            writer.Write("while " + variableName[1] + "<" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x1F:
-                            writer.Write("while " + variableName[1] + "<=" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
                         case 0x20:
-                            writer.Write("while " + variableName[1] + "!=" + variableName[2]);
+                            writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
                             //DecompileSub(writer);
                             break;
@@ -1405,18 +1407,18 @@ namespace RSDKvB
                             writer.Write("loop");
                             break;
                         case 0x22:
-                            writer.Write("for " + variableName[2] + ">" + variableName[1]);
+                            writer.Write("for " + HexadecimalEncoding.ToHexString(variableName[2]) + ">" + HexadecimalEncoding.ToHexString(variableName[1]));
                             state.deep += 1;
                             break;
                         case 0x23:
-                            writer.Write("for " + variableName[2] + "<" + variableName[1]);
+                            writer.Write("for " + HexadecimalEncoding.ToHexString(variableName[2]) + "<" + HexadecimalEncoding.ToHexString(variableName[1]));
                             state.deep += 1;
                             break;
                         case 0x24:
                             writer.Write("loop (foreach)");
                             break;
                         case 0x25:
-                            writer.Write("switch " + variableName[1] + Environment.NewLine);
+                            writer.Write("switch " + HexadecimalEncoding.ToHexString(variableName[1]) + Environment.NewLine);
                             state.SwitchCheck = false;
                             state.SwitchDeep++;
 
@@ -1431,7 +1433,7 @@ namespace RSDKvB
                                     state.deep += 1;
                                     i++;
                                 }
-                                DecompileSub(writer,isfunction);
+                                DecompileSub(writer, isfunction);
                                 /*if (state.SwitchDeep >= 1 && state.isSwitchEnd)
                                 {
                                     state.isSwitchEnd = false;
@@ -1466,31 +1468,31 @@ namespace RSDKvB
                             switch (paramsCount)
                             {
                                 case 1:
-                                    writer.Write(variableName[0]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]));
                                     break;
                                 case 2:
-                                    writer.Write(variableName[0] + "," + variableName[1]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]));
                                     break;
                                 case 3:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]));
                                     break;
                                 case 4:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]));
                                     break;
                                 case 5:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]));
                                     break;
                                 case 6:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]));
                                     break;
                                 case 7:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]));
                                     break;
                                 case 8:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]));
                                     break;
                                 case 9:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]) + "," + HexadecimalEncoding.ToHexString(variableName[8]));
                                     break;
                             }
                             writer.Write(")");
@@ -1521,4 +1523,62 @@ namespace RSDKvB
         }
 
     }
+
+    public static class stringshit
+    {
+
+        public static bool isNumber(string str)
+        {
+            return int.TryParse(str, out int value);
+        }
+
+    }
+
+    public class HexadecimalEncoding
+    {
+        public static bool UseHex = false;
+        public static string ToHexString(string str)
+        {
+            //lazy
+            if (!UseHex)
+            {
+                return str;
+            }
+            var sb = new StringBuilder();
+
+            try
+            {
+                int value;
+                bool isNumeric = int.TryParse(str, out value);
+
+                if (!isNumeric) return str;
+
+                if (value < 1023 && value > -1023)
+                {
+                    return str;
+                }
+
+                sb.Append("0x");
+                sb.Append(value.ToString("X"));
+
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                return str;
+            }
+        }
+
+        public static string FromHexString(string hexString)
+        {
+            var bytes = new byte[hexString.Length / 2];
+            for (var i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            }
+
+            return Encoding.Unicode.GetString(bytes); // returns: "Hello world" for "48656C6C6F20776F726C64"
+        }
+    }
+
 }

@@ -71,7 +71,7 @@ namespace RSDKv2
 
             public StateScriptEngine IncDeep()
             {
-                this.deep+= 1;
+                this.deep += 1;
                 return this;
             }
         };
@@ -100,53 +100,53 @@ namespace RSDKv2
 
         string[] VARIABLE_NAME = new string[]
 {
-	"TempValue0",						// 0x00
+    "TempValue0",						// 0x00
 	"TempValue1",
-	"TempValue2",
-	"TempValue3",
-	"TempValue4",
-	"TempValue5",
-	"TempValue6",
-	"TempValue7",
-	"CheckResult",						// 0x08
+    "TempValue2",
+    "TempValue3",
+    "TempValue4",
+    "TempValue5",
+    "TempValue6",
+    "TempValue7",
+    "CheckResult",						// 0x08
 	"ArrayPos0",						// 0x09
 	"ArrayPos1",
-	"Global",							// 0x0B
+    "Global",							// 0x0B
 	"Object.EntityNo",
-	"Object.Type",
-	"Object.PropertyValue",				// 0x0E
+    "Object.Type",
+    "Object.PropertyValue",				// 0x0E
 	"Object.XPos",
-	"Object.YPos",						// 0x10
+    "Object.YPos",						// 0x10
 	"Object.iXPos",
-	"Object.iYPos",
-	"Object.State",
-	"Object.Rotation",
-	"Object.Scale",
-	"Object.Priority",
-	"Object.DrawOrder",
-	"Object.Direction",
-	"Object.InkEffect",
-	"Object.Alpha",
-	"Object.Frame",
-	"Object.Animation",
-	"Object.PrevAnimation",
-	"Object.AnimationSpeed",
-	"Object.AnimationTimer",
-	"Object.Value0",					// 0x20
+    "Object.iYPos",
+    "Object.State",
+    "Object.Rotation",
+    "Object.Scale",
+    "Object.Priority",
+    "Object.DrawOrder",
+    "Object.Direction",
+    "Object.InkEffect",
+    "Object.Alpha",
+    "Object.Frame",
+    "Object.Animation",
+    "Object.PrevAnimation",
+    "Object.AnimationSpeed",
+    "Object.AnimationTimer",
+    "Object.Value0",					// 0x20
 	"Object.Value1",
-	"Object.Value2",					// 0x22
+    "Object.Value2",					// 0x22
 	"Object.Value3",
-	"Object.Value4",
-	"Object.Value5",
-	"Object.Value6",
-	"Object.Value7",
-	"Object.OutOfBounds",
-	"Player.State",
-	"Player.ControlMode",
-	"Player.ControlLock",
-	"Player.CollisionMode",
-	"Player.CollisionPlane",
-	"Player.XPos",						// 0x2E
+    "Object.Value4",
+    "Object.Value5",
+    "Object.Value6",
+    "Object.Value7",
+    "Object.OutOfBounds",
+    "Player.State",
+    "Player.ControlMode",
+    "Player.ControlLock",
+    "Player.CollisionMode",
+    "Player.CollisionPlane",
+    "Player.XPos",						// 0x2E
 	"Player.YPos",						// 0x2F
 	"Player.iXPos",						// 0x30
 	"Player.iYPos",						// 0x31
@@ -157,163 +157,163 @@ namespace RSDKv2
 	"Player.YVelocity",					// 0x36
 	"Player.Gravity",					// 0x37
 	"Player.Angle",
-	"Player.Skidding",
-	"Player.Pushing",
-	"Player.TrackScroll",
-	"Player.Up",						// 0x3C
+    "Player.Skidding",
+    "Player.Pushing",
+    "Player.TrackScroll",
+    "Player.Up",						// 0x3C
 	"Player.Down",
-	"Player.Left",
-	"Player.Right",
-	"Player.JumpPress",					// 0x40
+    "Player.Left",
+    "Player.Right",
+    "Player.JumpPress",					// 0x40
 	"Player.JumpHold",
-	"Player.FollowPlayer1",
-	"Player.LookPos",
-	"Player.Water",
-	"Player.TopSpeed",
-	"Player.Acceleration",				// 0x46
+    "Player.FollowPlayer1",
+    "Player.LookPos",
+    "Player.Water",
+    "Player.TopSpeed",
+    "Player.Acceleration",				// 0x46
 	"Player.Deceleration",
-	"Player.AirAcceleration",
-	"Player.AirDeceleration",
-	"Player.GravityStrength",
-	"Player.JumpStrength",
-	"Player.JumpCap",
-	"Player.RollingAcceleration",
-	"Player.RollingDeceleration",
-	"Player.EntityNo",
-	"Player.CollisionLeft",				// 0x50
+    "Player.AirAcceleration",
+    "Player.AirDeceleration",
+    "Player.GravityStrength",
+    "Player.JumpStrength",
+    "Player.JumpCap",
+    "Player.RollingAcceleration",
+    "Player.RollingDeceleration",
+    "Player.EntityNo",
+    "Player.CollisionLeft",				// 0x50
 	"Player.CollisionTop",
-	"Player.CollisionRight",
-	"Player.CollisionBottom",
-	"Player.Flailing",
-	"Player.Timer",
-	"Player.TileCollisions",
-	"Player.ObjectInteraction",
-	"Player.Visible",
-	"Player.Rotation",
-	"Player.Scale",
-	"Player.Priority",
-	"Player.DrawOrder",					// 0x5C
+    "Player.CollisionRight",
+    "Player.CollisionBottom",
+    "Player.Flailing",
+    "Player.Timer",
+    "Player.TileCollisions",
+    "Player.ObjectInteraction",
+    "Player.Visible",
+    "Player.Rotation",
+    "Player.Scale",
+    "Player.Priority",
+    "Player.DrawOrder",					// 0x5C
 	"Player.Direction",
-	"Player.InkEffect",
-	"Player.Alpha",
-	"Player.Frame",						// 0x60
+    "Player.InkEffect",
+    "Player.Alpha",
+    "Player.Frame",						// 0x60
 	"Player.Animation",
-	"Player.PrevAnimation",
-	"Player.AnimationSpeed",
-	"Player.AnimationTimer",
-	"Player.Value0",
-	"Player.Value1",
-	"Player.Value2",
-	"Player.Value3",
-	"Player.Value4",
-	"Player.Value5",
-	"Player.Value6",
-	"Player.Value7",
-	"Player.Value8",
-	"Player.Value9",
-	"Player.Value10",
-	"Player.Value11",
-	"Player.Value12",
-	"Player.Value13",
-	"Player.Value14",
-	"Player.Value15",
-	"Player.OutOfBounds",
-	"Stage.State",
-	"Stage.ActiveList",
-	"Stage.ListPos",					// 0x78
+    "Player.PrevAnimation",
+    "Player.AnimationSpeed",
+    "Player.AnimationTimer",
+    "Player.Value0",
+    "Player.Value1",
+    "Player.Value2",
+    "Player.Value3",
+    "Player.Value4",
+    "Player.Value5",
+    "Player.Value6",
+    "Player.Value7",
+    "Player.Value8",
+    "Player.Value9",
+    "Player.Value10",
+    "Player.Value11",
+    "Player.Value12",
+    "Player.Value13",
+    "Player.Value14",
+    "Player.Value15",
+    "Player.OutOfBounds",
+    "Stage.State",
+    "Stage.ActiveList",
+    "Stage.ListPos",					// 0x78
 	"Stage.TimeEnabled",
-	"Stage.MilliSeconds",				// 0x7A
+    "Stage.MilliSeconds",				// 0x7A
 	"Stage.Seconds",
-	"Stage.Minutes",					// 0x7C
+    "Stage.Minutes",					// 0x7C
 	"Stage.ActNo",
-	"Stage.PauseEnabled",				// 0x7E
+    "Stage.PauseEnabled",				// 0x7E
 	"Stage.ListSize",
-	"Stage.NewXBoundary1",				// 0x80
+    "Stage.NewXBoundary1",				// 0x80
 	"Stage.NewXBoundary2",
-	"Stage.NewYBoundary1",				// 0x82
+    "Stage.NewYBoundary1",				// 0x82
 	"Stage.NewYBoundary2",
-	"Stage.XBoundary1",					// 0x84
+    "Stage.XBoundary1",					// 0x84
 	"Stage.XBoundary2",
-	"Stage.YBoundary1",					// 0x86
+    "Stage.YBoundary1",					// 0x86
 	"Stage.YBoundary2",
-	"Stage.DeformationData0",			// 0x88
+    "Stage.DeformationData0",			// 0x88
 	"Stage.DeformationData1",
-	"Stage.DeformationData2",
-	"Stage.DeformationData3",
-	"Stage.WaterLevel",					// 0x8C
+    "Stage.DeformationData2",
+    "Stage.DeformationData3",
+    "Stage.WaterLevel",					// 0x8C
 	"Stage.ActiveLayer",
-	"Stage.MidPoint",					// 0x8E
+    "Stage.MidPoint",					// 0x8E
 	"Stage.PlayerListPos",				// 0x8F
 	"Stage.ActivePlayer",				// 0x90
 	"Screen.CameraEnabled",
-	"Screen.CameraTarget",
-	"Screen.CameraStyle",				// 0x93
+    "Screen.CameraTarget",
+    "Screen.CameraStyle",				// 0x93
 	"Screen.DrawListSize",
-	"Screen.CenterX",
-	"Screen.CenterY",					// 0x96
+    "Screen.CenterX",
+    "Screen.CenterY",					// 0x96
 	"Screen.XSize",
-	"Screen.YSize",						// 0x98
+    "Screen.YSize",						// 0x98
 	"Screen.XOffset",
-	"Screen.YOffset",
-	"Screen.ShakeX",					// 0x9B
+    "Screen.YOffset",
+    "Screen.ShakeX",					// 0x9B
 	"Screen.ShakeY",					// 0x9C
 	"Screen.AdjustCameraY",				// 0x9D
 	"TouchScreen.Down",
-	"TouchScreen.XPos",
-	"TouchScreen.YPos",					// 0xA0
+    "TouchScreen.XPos",
+    "TouchScreen.YPos",					// 0xA0
 	"Music.Volume",						// 0xA1
 	"Music.CurrentTrack",				// 0xA2
 	"KeyDown.Up",
-	"KeyDown.Down",
-	"KeyDown.Left",
-	"KeyDown.Right",
-	"KeyDown.ButtonA",
-	"KeyDown.ButtonB",					// 0xA8
+    "KeyDown.Down",
+    "KeyDown.Left",
+    "KeyDown.Right",
+    "KeyDown.ButtonA",
+    "KeyDown.ButtonB",					// 0xA8
 	"KeyDown.ButtonC",
-	"KeyDown.Start",
-	"KeyPress.Up",
-	"KeyPress.Down",
-	"KeyPress.Left",
-	"KeyPress.Right",
-	"KeyPress.ButtonA",
-	"KeyPress.ButtonB",					// 0xB0
+    "KeyDown.Start",
+    "KeyPress.Up",
+    "KeyPress.Down",
+    "KeyPress.Left",
+    "KeyPress.Right",
+    "KeyPress.ButtonA",
+    "KeyPress.ButtonB",					// 0xB0
 	"KeyPress.ButtonC",
-	"KeyPress.Start",
-	"Menu1.Selection",
-	"Menu2.Selection",
-	"TileLayer.XSize",
-	"TileLayer.YSize",
-	"TileLayer.Type",
-	"TileLayer.Angle",					// 0xB8
+    "KeyPress.Start",
+    "Menu1.Selection",
+    "Menu2.Selection",
+    "TileLayer.XSize",
+    "TileLayer.YSize",
+    "TileLayer.Type",
+    "TileLayer.Angle",					// 0xB8
 	"TileLayer.XPos",
-	"TileLayer.YPos",
-	"TileLayer.ZPos",
-	"TileLayer.ParallaxFactor",
-	"TileLayer.ScrollSpeed",
-	"TileLayer.ScrollPos",
-	"TileLayer.DeformationOffset",
-	"TileLayer.DeformationOffsetW",		// 0xC0
+    "TileLayer.YPos",
+    "TileLayer.ZPos",
+    "TileLayer.ParallaxFactor",
+    "TileLayer.ScrollSpeed",
+    "TileLayer.ScrollPos",
+    "TileLayer.DeformationOffset",
+    "TileLayer.DeformationOffsetW",		// 0xC0
 	"HParallax.ParallaxFactor",
-	"HParallax.ScrollSpeed",
-	"HParallax.ScrollPos",
-	"VParallax.ParallaxFactor",
-	"VParallax.ScrollSpeed",
-	"VParallax.ScrollPos",
-	"3DScene.NoVertices",
-	"3DScene.NoFaces",					// 0xC8
+    "HParallax.ScrollSpeed",
+    "HParallax.ScrollPos",
+    "VParallax.ParallaxFactor",
+    "VParallax.ScrollSpeed",
+    "VParallax.ScrollPos",
+    "3DScene.NoVertices",
+    "3DScene.NoFaces",					// 0xC8
 	"VertexBuffer.x",
-	"VertexBuffer.y",
-	"VertexBuffer.z",
-	"VertexBuffer.u",
-	"VertexBuffer.v",
-	"FaceBuffer.a",
-	"FaceBuffer.b",
-	"FaceBuffer.c",						// 0xD0
+    "VertexBuffer.y",
+    "VertexBuffer.z",
+    "VertexBuffer.u",
+    "VertexBuffer.v",
+    "FaceBuffer.a",
+    "FaceBuffer.b",
+    "FaceBuffer.c",						// 0xD0
 	"FaceBuffer.d",
-	"FaceBuffer.Flag",
-	"FaceBuffer.Color",
-	"3DScene.ProjectionX",
-	"3DScene.ProjectionY",				// 0xD5
+    "FaceBuffer.Flag",
+    "FaceBuffer.Color",
+    "3DScene.ProjectionX",
+    "3DScene.ProjectionY",				// 0xD5
 	"Engine.State",						// 0xD6
 	"Stage.DebugMode",					// 0xD7
 	"Engine.Message",					// 0xD8
@@ -562,6 +562,7 @@ namespace RSDKv2
 
         int m_stageVarsIndex;
 
+        public bool UseHex = false;
         #endregion
 
         #region Raw Bytecode Data
@@ -1027,6 +1028,7 @@ namespace RSDKv2
 
         public void Decompile(string DestPath = "")
         {
+            HexadecimalEncoding.UseHex = UseHex;
             for (int i = m_stageVarsIndex; i < sourceNames.Length; i++)
             {
                 string path = "";
@@ -1057,7 +1059,7 @@ namespace RSDKv2
 
                 Console.WriteLine("Decompiling: " + typeNames[i]);
 
-                writer.WriteLine("//------------Sonic CD "+ typeNames[i] + " Script-------------//");
+                writer.WriteLine("//------------Sonic CD " + typeNames[i] + " Script-------------//");
                 writer.WriteLine("//--------Scripted by Christian Whitehead 'The Taxman'--------//");
                 writer.WriteLine("//-------Unpacked By Rubberduckycooly's Script Unpacker-------//");
 
@@ -1082,46 +1084,46 @@ namespace RSDKv2
                 //{
                 //if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0 && i != 0)
                 //{
-                    Console.Write("Main script, ");
-                    writer.WriteLine("//---------------------------Main Sub---------------------------//");
-                    writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
-                    DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
+                Console.Write("Main script, ");
+                writer.WriteLine("//---------------------------Main Sub---------------------------//");
+                writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
+                DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
                 //}
 
                 //if (objectScript.playerScript > 0 && objectScript.playerJumpTable > 0 && i != 0)
                 //{
-                    writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
-                    writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
-                    Console.Write("Player script, ");
-                    DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1, false);
+                writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
+                writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
+                Console.Write("Player script, ");
+                DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1, false);
                 //}
 
                 //if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0 && i != 0)
                 //{
-                    writer.WriteLine("//----------------------Drawing Sub-------------------//");
-                    writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
-                    Console.Write("Draw script, ");
-                    DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2, false);
+                writer.WriteLine("//----------------------Drawing Sub-------------------//");
+                writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
+                Console.Write("Draw script, ");
+                DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2, false);
                 //}
 
                 //if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0 && i != 0)
                 //{
-                    writer.WriteLine("//--------------------Startup Sub---------------------//");
-                    writer.WriteLine("//-------Called once when the object is spawned-------//");
-                    Console.Write("Startup script, ");
-                    DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
+                writer.WriteLine("//--------------------Startup Sub---------------------//");
+                writer.WriteLine("//-------Called once when the object is spawned-------//");
+                Console.Write("Startup script, ");
+                DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
                 //}
 
-                if (i == 1 )//&& typeNames[i] == "PlayerObject")
+                if (i == 1)//&& typeNames[i] == "PlayerObject")
                 {
                     for (int ii = 0; ii < functionCount; ii++)
                     {
                         //if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0 && i != 0)
                         //{
-                            writer.WriteLine("//--------------------Function Sub---------------------//");
-                            writer.WriteLine("//-------it do shit-------//");
-                            Console.WriteLine("Function script " + ii + ".");
-                            DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
+                        writer.WriteLine("//--------------------Function Sub---------------------//");
+                        writer.WriteLine("//-------it do shit-------//");
+                        Console.WriteLine("Function script " + ii + ".");
+                        DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
                         //}
                     }
                 }
@@ -1484,19 +1486,19 @@ namespace RSDKv2
                             state.EndFlag = true;
                             state.deep = 0;
                             break;
-                        case 0x01: writer.Write(variableName[0] + "=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x02: writer.Write(variableName[0] + "+=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x03: writer.Write(variableName[0] + "-=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x04: writer.Write(variableName[0] + "++"); break;
-                        case 0x05: writer.Write(variableName[0] + "--"); break;
-                        case 0x06: writer.Write(variableName[0] + "*=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x07: writer.Write(variableName[0] + "/=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x08: writer.Write(variableName[0] + ">>=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x09: writer.Write(variableName[0] + "<<=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x0A: writer.Write(variableName[0] + "&=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x0B: writer.Write(variableName[0] + "|=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x0C: writer.Write(variableName[0] + "^=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
-                        case 0x0D: writer.Write(variableName[0] + "%=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x01: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x02: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "+=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x03: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "-=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x04: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "++"); break;
+                        case 0x05: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "--"); break;
+                        case 0x06: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "*=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x07: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "/=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x08: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + ">>=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x09: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "<<=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0A: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "&=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0B: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "|=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0C: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "^=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
+                        case 0x0D: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "%=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
                         case 0x13:
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
@@ -1641,31 +1643,31 @@ namespace RSDKv2
                             switch (paramsCount)
                             {
                                 case 1:
-                                    writer.Write(variableName[0]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]));
                                     break;
                                 case 2:
-                                    writer.Write(variableName[0] + "," + variableName[1]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]));
                                     break;
                                 case 3:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]));
                                     break;
                                 case 4:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]));
                                     break;
                                 case 5:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]));
                                     break;
                                 case 6:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]));
                                     break;
                                 case 7:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]));
                                     break;
                                 case 8:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]));
                                     break;
                                 case 9:
-                                    writer.Write(variableName[0] + "," + variableName[1] + "," + variableName[2] + "," + variableName[3] + "," + variableName[4] + "," + variableName[5] + "," + variableName[6] + "," + variableName[7] + "," + variableName[8]);
+                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]) + "," + HexadecimalEncoding.ToHexString(variableName[8]));
                                     break;
                             }
                             writer.Write(")");
@@ -1674,7 +1676,7 @@ namespace RSDKv2
                 }
 
                 //if (!state.isSwitchEnd && !state.EndFlag)
-                    writer.Write(Environment.NewLine);
+                writer.Write(Environment.NewLine);
 
                 if (state.SwitchBreakFlag)
                 {
@@ -1726,7 +1728,7 @@ namespace RSDKv2
             int opcount2 = 0;
             writer.Write(opcount2);
 
-            for (;opcount2 > 0;)
+            for (; opcount2 > 0;)
             {
                 //int data = Read8(reader);
                 int data = 0;
@@ -1783,9 +1785,7 @@ namespace RSDKv2
                 writer.Write(functionScriptList[i].mainJumpTable);
             }
         }
-
     }
-
     public static class stringshit
     {
 
@@ -1798,10 +1798,14 @@ namespace RSDKv2
 
     public class HexadecimalEncoding
     {
+        public static bool UseHex = false;
         public static string ToHexString(string str)
         {
             //lazy
-            return str;
+            if (!UseHex)
+            {
+                return str;
+            }
             var sb = new StringBuilder();
 
             try
@@ -1816,7 +1820,7 @@ namespace RSDKv2
                     return str;
                 }
 
-                sb.Append("0X");
+                sb.Append("0x");
                 sb.Append(value.ToString("X"));
 
                 return sb.ToString();

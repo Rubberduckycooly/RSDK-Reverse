@@ -101,7 +101,7 @@ namespace Test
 
                 //TIME ATTACK
                 //RSDKv5.Replay replay = new RSDKv5.Replay(new RSDKv5.Reader(filepath));
-                //RSDKv5.UserDB UserDBDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
+                //RSDKv5.UserDB UserDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
@@ -129,7 +129,8 @@ namespace Test
                 //save.EncoreBuddyChar = 1;
 
                 //Scripts
-                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                Obj.Write(new RSDKv5.Writer("Object.bin"));
 
                 //TILECONFIG
                 //RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));

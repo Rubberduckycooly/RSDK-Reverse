@@ -61,7 +61,7 @@ namespace RSDKv5
             /// <summary>
             /// what "mode" of the stage is (normal, encore, etc)
             /// </summary>
-            public byte ModeFilter  = 0;
+            public byte ModeFilter = 0;
             /// <summary>
             /// For GameConfig Position; Used for Auto Booting
             /// </summary>
@@ -155,7 +155,7 @@ namespace RSDKv5
             /// <summary>
             /// the data in the memory entry
             /// </summary>
-            public uint[] Data;
+            public List<uint> Data = new List<uint>();
 
             public ConfigurableMemoryEntry()
             {
@@ -166,17 +166,17 @@ namespace RSDKv5
             {
                 Index = reader.ReadUInt32();
                 uint Count = reader.ReadUInt32();
-                Data = new uint[Count];
+                Data = new List<uint>();
                 for (int i = 0; i < Count; ++i)
                 {
-                    Data[i] = reader.ReadUInt32();
+                    Data.Add(reader.ReadUInt32());
                 }
             }
 
             internal void Write(Writer writer)
             {
                 writer.Write(Index);
-                writer.Write((uint)Data.Length);
+                writer.Write((uint)Data.Count);
                 foreach (uint val in Data)
                     writer.Write(val);
             }
@@ -306,11 +306,11 @@ namespace RSDKv5
             writer.Write((byte)Categories.Count);
             foreach (Category cat in Categories)
                 cat.Write(writer, _scenesHaveModeFilter);
-    
+
             writer.Write((byte)ConfigMemory.Count);
             foreach (ConfigurableMemoryEntry c in ConfigMemory)
                 c.Write(writer);
-                
+
         }
     }
 }

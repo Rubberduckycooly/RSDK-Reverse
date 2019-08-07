@@ -11,9 +11,16 @@ namespace RSDKv5
 
         public class Variable
         {
-            public string Name;
-            public string Type;
-            public string Value;
+            public string Name = "";
+            public string Type = "";
+            public string Value = "";
+
+            public Variable(string name = "", string type = "", string value = "")
+            {
+                Name = name;
+                Type = type;
+                Value = value;
+            }
 
             public Variable(Reader reader)
             {
@@ -32,8 +39,12 @@ namespace RSDKv5
 
         public class Alias
         {
-            public string Name;
-            public string Value;
+            public string Name = "";
+            public string Value = "";
+
+            public Alias()
+            {
+            }
 
             public Alias(Reader reader)
             {
@@ -83,6 +94,7 @@ namespace RSDKv5
                 Aliases.Add(new Alias(reader));
                 Console.WriteLine(Aliases[i].Name + ", " + Aliases[i].Value);
             }
+            reader.Close();
         }
 
         public void Write(string filename)
@@ -112,6 +124,7 @@ namespace RSDKv5
             {
                 Aliases[i].Write(writer);
             }
+            writer.Close();
         }
 
     }

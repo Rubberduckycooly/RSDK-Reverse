@@ -48,25 +48,25 @@ namespace RSDKv5
             // Collision Mask config
 
             /// <summary>
-            /// The Slope's angle
+            /// Angle value when walking on the floor
             /// </summary>
-            public byte slopeAngle;
+            public byte FloorAngle;
             /// <summary>
-            /// How the player's physics react to the slope
+            /// Angle value when walking on RWall
             /// </summary>
-            public byte physics;
+            public byte RWallAngle;
             /// <summary>
-            /// How much momentum is gained from the slope
+            /// Angle value when walking on LWall
             /// </summary>
-            public byte momentum;
+            public byte LWallAngle;
             /// <summary>
-            /// Unknown
+            /// Angle value when walking on the ceiling
             /// </summary>
-            public byte unknown;
+            public byte CeilingAngle;
             /// <summary>
-            /// for special occasions, like conveyor belts
+            /// for Behaviour occasions, like conveyor belts
             /// </summary>
-            public byte special;
+            public byte Behaviour;
             /// <summary>
             /// If is ceiling, the collision is from below
             /// </summary>
@@ -77,11 +77,11 @@ namespace RSDKv5
                 Collision = new byte[16];
                 HasCollision = new bool[16];
                 IsCeiling = false;
-                slopeAngle = 0;
-                physics = 0;
-                momentum = 0;
-                unknown = 0;
-                special = 0;
+                FloorAngle = 0x00;
+                RWallAngle = 0xC0;
+                LWallAngle = 0x40;
+                CeilingAngle = 0x80;
+                Behaviour = 0;
             }
 
             public CollisionMask(Reader reader)
@@ -89,11 +89,11 @@ namespace RSDKv5
                 Collision = reader.ReadBytes(16);
                 HasCollision = reader.ReadBytes(16).Select(x => x != 0).ToArray();
                 IsCeiling = reader.ReadBoolean();
-                slopeAngle = reader.ReadByte();
-                physics = reader.ReadByte();
-                momentum = reader.ReadByte();
-                unknown = reader.ReadByte();
-                special = reader.ReadByte();
+                FloorAngle = reader.ReadByte();
+                RWallAngle = reader.ReadByte();
+                LWallAngle = reader.ReadByte();
+                CeilingAngle = reader.ReadByte();
+                Behaviour = reader.ReadByte();
             }
 
             public CollisionMask(Stream stream) : this(new Reader(stream))
@@ -112,11 +112,11 @@ namespace RSDKv5
                 for (int i = 0; i < HasCollision.Length; i++)
                 { writer.Write(HasCollision[i]); }
                 writer.Write(IsCeiling);
-                writer.Write(slopeAngle);
-                writer.Write(physics);
-                writer.Write(momentum);
-                writer.Write(unknown);
-                writer.Write(special);
+                writer.Write(FloorAngle);
+                writer.Write(RWallAngle);
+                writer.Write(LWallAngle);
+                writer.Write(CeilingAngle);
+                writer.Write(Behaviour);
             }
 
             public Bitmap DrawCMask(System.Drawing.Color bg, System.Drawing.Color fg, Bitmap tile = null)
