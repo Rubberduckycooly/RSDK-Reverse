@@ -371,7 +371,7 @@ namespace RSDKvRS
                     else if (CurrentSub == 2)
                     {
                         Endpoint_Draw = Value1;
-                        scriptData_Main = new int[0xFFFu];
+                        scriptData_Draw = new int[0xFFFu];
                     }
                     else if (CurrentSub == 3)
                     {
@@ -382,7 +382,7 @@ namespace RSDKvRS
                 else
                 {
                     Endpoint_Startup = Value1;
-                    scriptData_Main = new int[0xFFFu];
+                    scriptData_Startup = new int[0xFFFu];
                 }
 
                 while (k == 0)
@@ -916,13 +916,13 @@ namespace RSDKvRS
             switch (CurrentSub)
             {
                 case 0:
-                    scriptData_Startup[jumpTableDataPos++] = Data;
+                    scriptData_Startup[scriptDataPos++] = Data;
                     break;
                 case 1:
-                    scriptData_Main[jumpTableDataPos++] = Data;
+                    scriptData_Main[scriptDataPos++] = Data;
                     break;
                 case 2:
-                    scriptData_Draw[jumpTableDataPos++] = Data;
+                    scriptData_Draw[scriptDataPos++] = Data;
                     break;
                 case 3:
                     scriptData_RSDK[scriptDataPos++] = Data;
@@ -943,7 +943,7 @@ namespace RSDKvRS
                     jumpTableData_Draw[jumpTableDataPos++] = Data;
                     break;
                 case 3:
-                    jumpTableData_RSDK[scriptDataPos++] = Data;
+                    jumpTableData_RSDK[jumpTableDataPos++] = Data;
                     break;
             }
         }

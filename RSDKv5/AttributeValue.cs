@@ -32,7 +32,7 @@ namespace RSDKv5
         /// <summary>
         /// the var value of the attribute
         /// </summary>
-        uint value_var;
+        int value_enum;
         /// <summary>
         /// the bool value of the attribute
         /// </summary>
@@ -42,9 +42,13 @@ namespace RSDKv5
         /// </summary>
         string value_string = string.Empty; // default to empty string, null causes many problems
         /// <summary>
-        /// the position value of the attribute
+        /// the vector2 value of the attribute
         /// </summary>
-        Position value_position;
+        Position value_vector2;
+        /// <summary>
+        /// the vector3 value of the attribute
+        /// </summary>
+        Position value_vector3;
         /// <summary>
         /// the colour value of the attribute
         /// </summary>
@@ -80,8 +84,8 @@ namespace RSDKv5
                     case AttributeTypes.INT32:
                         value_int32 = 0;
                         break;
-                    case AttributeTypes.VAR:
-                        value_var = 0;
+                    case AttributeTypes.ENUM:
+                        value_enum = 0;
                         break;
                     case AttributeTypes.BOOL:
                         value_bool = false;
@@ -89,8 +93,9 @@ namespace RSDKv5
                     case AttributeTypes.COLOR:
                         value_color = Color.EMPTY;
                         break;
-                    case AttributeTypes.POSITION:
-                        value_position = no_position;
+                    case AttributeTypes.VECTOR2:
+                    case AttributeTypes.VECTOR3:
+                        value_vector2 = no_position;
                         break;
                     case AttributeTypes.STRING:
                         value_string = string.Empty;
@@ -131,10 +136,10 @@ namespace RSDKv5
             get { CheckType(AttributeTypes.INT32); return value_int32; }
             set { CheckType(AttributeTypes.INT32); value_int32 = value; }
         }
-        public uint ValueVar
+        public int ValueEnum
         {
-            get { CheckType(AttributeTypes.VAR); return value_var; }
-            set { CheckType(AttributeTypes.VAR); value_var = value; }
+            get { CheckType(AttributeTypes.ENUM); return value_enum; }
+            set { CheckType(AttributeTypes.ENUM); value_enum = value; }
         }
         public bool ValueBool
         {
@@ -146,10 +151,15 @@ namespace RSDKv5
             get { CheckType(AttributeTypes.STRING); return value_string; }
             set { CheckType(AttributeTypes.STRING); value_string = value; }
         }
-        public Position ValuePosition
+        public Position ValueVector2
         {
-            get { CheckType(AttributeTypes.POSITION); return value_position; }
-            set { CheckType(AttributeTypes.POSITION); value_position = value; }
+            get { CheckType(AttributeTypes.VECTOR2); return value_vector2; }
+            set { CheckType(AttributeTypes.VECTOR2); value_vector2 = value; }
+        }
+        public Position ValueVector3
+        {
+            get { CheckType(AttributeTypes.VECTOR3); return value_vector3; }
+            set { CheckType(AttributeTypes.VECTOR3); value_vector3 = value; }
         }
         public Color ValueColor
         {
@@ -177,10 +187,10 @@ namespace RSDKv5
             n.value_int8 = value_int8;
             n.value_int16 = value_int16;
             n.value_int32 = value_int32;
-            n.value_var = value_var;
+            n.value_enum = value_enum;
             n.value_bool = value_bool;
             n.value_string = value_string;
-            n.value_position = value_position;
+            n.value_vector2 = value_vector2;
             n.value_color = value_color;
 
             return n;
@@ -214,8 +224,8 @@ namespace RSDKv5
                 case AttributeTypes.INT32:
                     value_int32 = reader.ReadInt32();
                     break;
-                case AttributeTypes.VAR:
-                    value_var = reader.ReadUInt32();
+                case AttributeTypes.ENUM:
+                    value_enum = reader.ReadInt32();
                     break;
                 case AttributeTypes.BOOL:
                     value_bool = reader.ReadUInt32() != 0;
@@ -223,8 +233,11 @@ namespace RSDKv5
                 case AttributeTypes.STRING:
                     value_string = reader.ReadRSDKUnicodeString();
                     break;
-                case AttributeTypes.POSITION:
-                    value_position = new Position(reader);
+                case AttributeTypes.VECTOR2:
+                    value_vector2 = new Position(reader);
+                    break;
+                case AttributeTypes.VECTOR3:
+                    value_vector2 = new Position(reader);
                     break;
                 case AttributeTypes.COLOR:
                     value_color = new Color(reader);
@@ -254,8 +267,8 @@ namespace RSDKv5
                 case AttributeTypes.INT32:
                     writer.Write(value_int32);
                     break;
-                case AttributeTypes.VAR:
-                    writer.Write(value_var);
+                case AttributeTypes.ENUM:
+                    writer.Write(value_enum);
                     break;
                 case AttributeTypes.BOOL:
                     writer.Write((uint)(value_bool ? 1 : 0));
@@ -263,8 +276,11 @@ namespace RSDKv5
                 case AttributeTypes.STRING:
                     writer.WriteRSDKUnicodeString(value_string);
                     break;
-                case AttributeTypes.POSITION:
-                    value_position.Write(writer);
+                case AttributeTypes.VECTOR2:
+                    value_vector2.Write(writer);
+                    break;
+                case AttributeTypes.VECTOR3:
+                    value_vector2.Write(writer,true);
                     break;
                 case AttributeTypes.COLOR:
                     value_color.Write(writer);
@@ -288,14 +304,16 @@ namespace RSDKv5
                     return value_int16.ToString();
                 case AttributeTypes.INT32:
                     return value_int32.ToString();
-                case AttributeTypes.VAR:
-                    return value_var.ToString();
+                case AttributeTypes.ENUM:
+                    return value_enum.ToString();
                 case AttributeTypes.BOOL:
                     return value_bool.ToString();
                 case AttributeTypes.STRING:
                     return value_string.ToString();
-                case AttributeTypes.POSITION:
-                    return value_position.ToString();
+                case AttributeTypes.VECTOR2:
+                    return value_vector2.ToString();
+                case AttributeTypes.VECTOR3:
+                    return value_vector3.ToString();
                 case AttributeTypes.COLOR:
                     return value_color.ToString();
                 default:

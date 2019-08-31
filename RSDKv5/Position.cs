@@ -32,34 +32,51 @@ namespace RSDKv5
         /// Ypos values
         /// </summary>
         public Value Y;
+        /// <summary>
+        /// Zpos values
+        /// </summary>
+        public Value Z;
 
-        public Position(short x = 0, short y = 0)
+        public Position(short x = 0, short y = 0, short z = 0)
         {
             X = new Value(x);
             Y = new Value(y);
+            Z = new Value(y);
         }
 
-        internal Position(Reader reader) : this()
+        internal Position(Reader reader, bool vec3 = false) : this()
         {
-            Read(reader);
+            Read(reader, vec3);
         }
 
-        internal void Read(Reader reader)
+        internal void Read(Reader reader, bool vec3 = false)
         {
             X.Low = reader.ReadUInt16();
             X.High = reader.ReadInt16();
 
             Y.Low = reader.ReadUInt16();
             Y.High = reader.ReadInt16();
+
+            if (vec3)
+            {
+                Z.Low = reader.ReadUInt16();
+                Z.High = reader.ReadInt16();
+            }
         }
 
-        internal void Write(Writer writer)
+        internal void Write(Writer writer, bool vec3 = false)
         {
             writer.Write(X.Low);
             writer.Write(X.High);
 
             writer.Write(Y.Low);
             writer.Write(Y.High);
+
+            if (vec3)
+            {
+                writer.Write(Z.Low);
+                writer.Write(Z.High);
+            }
         }
 
         public override string ToString()

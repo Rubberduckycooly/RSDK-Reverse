@@ -129,8 +129,36 @@ namespace Test
                 //save.EncoreBuddyChar = 1;
 
                 //Scripts
-                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
-                Obj.Write(new RSDKv5.Writer("Object.bin"));
+                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                //Obj.Write(new RSDKv5.Writer("Object.bin"));
+
+                RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+                RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
+
+                /*string destName = Path.GetFileNameWithoutExtension(filepath);
+                string destName2 = Path.GetFileName(filepath);
+
+                string dirpath = filepath.Replace(destName2, "");
+                DirectoryInfo dir = new DirectoryInfo(dirpath);
+                DirectoryInfo dir2 = new DirectoryInfo(dirpath + "//Scripts");
+                dir2.Create();
+
+                foreach (FileInfo f in dir.GetFiles())
+                {
+                    destName = Path.GetFileNameWithoutExtension(f.FullName);
+                    string destpath = dirpath + "//Scripts//" + destName + ".txt";
+                    reader = new RSDKvRS.Reader(f.FullName);
+                    //try
+                    //{
+                        //rsf = new RSDKvRS.Script(reader);
+                        //rsf.Decompile(destpath);
+                    ///}
+                    //catch (Exception ex)
+                    //{
+                    //    Console.WriteLine(ex.Message);
+                    //    reader.Close();
+                    //}
+                }*/
 
                 //TILECONFIG
                 //RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));
@@ -157,34 +185,6 @@ namespace Test
                     writer.Write(blue);
                 }
                 writer.Close();*/
-
-                //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
-                //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
-
-                /*string destName = Path.GetFileNameWithoutExtension(filepath);
-                string destName2 = Path.GetFileName(filepath);
-
-                string dirpath = filepath.Replace(destName2, "");
-                DirectoryInfo dir = new DirectoryInfo(dirpath);
-                DirectoryInfo dir2 = new DirectoryInfo(dirpath + "//Scripts");
-                dir2.Create();
-
-                foreach (FileInfo f in dir.GetFiles())
-                {
-                    destName = Path.GetFileNameWithoutExtension(f.FullName);
-                    string destpath = dirpath + "//Scripts//" + destName + ".txt";
-                    reader = new RSDKvRS.Reader(f.FullName);
-                    //try
-                    //{
-                        //rsf = new RSDKvRS.Script(reader);
-                        //rsf.Decompile(destpath);
-                    ///}
-                    //catch (Exception ex)
-                    //{
-                    //    Console.WriteLine(ex.Message);
-                    //    reader.Close();
-                    //}
-                }*/
 
                 //Settings
                 //RSDKv5.Settings settings = new RSDKv5.Settings(new StreamReader(File.OpenRead(dlg.FileName)));

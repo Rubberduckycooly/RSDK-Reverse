@@ -175,8 +175,8 @@ namespace RSDKv5
                                         newAttVal.ValueUInt32 = oldAttVal.ValueUInt32;
                                         break;
 
-                                    case AttributeTypes.VAR:
-                                        newAttVal.ValueVar = oldAttVal.ValueVar;
+                                    case AttributeTypes.ENUM:
+                                        newAttVal.ValueEnum = oldAttVal.ValueEnum;
                                         break;
 
                                     case AttributeTypes.BOOL:
@@ -187,8 +187,12 @@ namespace RSDKv5
                                         newAttVal.ValueColor = oldAttVal.ValueColor;
                                         break;
 
-                                    case AttributeTypes.POSITION:
-                                        newAttVal.ValuePosition = oldAttVal.ValuePosition;
+                                    case AttributeTypes.VECTOR2:
+                                        newAttVal.ValueVector2 = oldAttVal.ValueVector2;
+                                        break;
+
+                                    case AttributeTypes.VECTOR3:
+                                        newAttVal.ValueVector3 = oldAttVal.ValueVector3;
                                         break;
 
                                     case AttributeTypes.STRING:

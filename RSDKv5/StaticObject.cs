@@ -14,7 +14,7 @@ namespace RSDKv5
         public uint[] Data = new uint[0x1];
 
         private uint DataPos = 0;
-
+        private bool Debug = true;
         public StaticObject()
         {
 
@@ -24,9 +24,14 @@ namespace RSDKv5
         {
             uint[] TmpData = new uint[reader.BaseStream.Length];
             DataPos = 0;
-
+            string filename = System.IO.Path.GetFileName(reader.GetFilename());
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC)) //"OBJ" Header
                 throw new Exception("Invalid config file header magic");
+
+            if (Debug)
+            {
+                Console.WriteLine("Viewing Info for " + filename);
+            }
 
             while (!reader.IsEof)
             {
@@ -47,6 +52,10 @@ namespace RSDKv5
                             for (int i = 0; i < DataSize; i++)
                             {
                                 TmpData[DataPos++] = reader.ReadByte();
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Value: "+ TmpData[DataPos-1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
+                                }
                             }
                             break;
                             //IN16
@@ -58,12 +67,16 @@ namespace RSDKv5
                                 byte valB = reader.ReadByte();
                                 int Value = valA + (valB << 8);
                                 TmpData[DataPos++] = (uint)Value;
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 2) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 2).ToString("X"));
+                                }
                             }
                             break;
                             //INT32
                         case (int)AttributeTypes.UINT32:
                         case (int)AttributeTypes.INT32:
-                        case (int)AttributeTypes.VAR:
+                        case (int)AttributeTypes.ENUM:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 byte valA = reader.ReadByte();
@@ -72,6 +85,10 @@ namespace RSDKv5
                                 byte valD = reader.ReadByte();
                                 int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
                                 TmpData[DataPos++] = (uint)Value;
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
+                                }
                             }
                             break;
                     }
@@ -84,6 +101,11 @@ namespace RSDKv5
             for (int i = 0; i < DataPos; i++)
             {
                 Data[i] = TmpData[i];
+            }
+
+            if (Debug)
+            {
+                Console.WriteLine(filename + " Has " + Data.Length + " Values");
             }
         }
 

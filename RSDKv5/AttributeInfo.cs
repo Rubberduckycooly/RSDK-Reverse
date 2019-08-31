@@ -11,10 +11,10 @@ namespace RSDKv5
         INT8 = 3,
         INT16 = 4,
         INT32 = 5,
-        VAR = 6,
+        ENUM = 6,
         BOOL = 7,
         STRING = 8,
-        POSITION = 9,
+        VECTOR2 = 9,
         VECTOR3 = 10, //A wild guess, but nonetheless likely
         COLOR = 11,
     }

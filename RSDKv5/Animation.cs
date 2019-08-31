@@ -23,7 +23,13 @@ namespace RSDKv5
         }
 
         //Why Taxman, why
-        public int TotalFrameCount = 0;
+        public int TotalFrameCount
+        {
+            get
+            {
+                return Animations.Take(Animations.Count).Sum(x => x.Frames.Count);
+            }
+        }
 
         public List<string> SpriteSheets = new List<string>();
         public List<string> CollisionBoxes = new List<string>();
@@ -271,7 +277,7 @@ namespace RSDKv5
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid config file header magic");
 
-            TotalFrameCount = reader.ReadInt32();
+            int TotalFrameCount = reader.ReadInt32();
 
             int spriteSheetCount = reader.ReadByte();
             for (int i = 0; i < spriteSheetCount; ++i)
