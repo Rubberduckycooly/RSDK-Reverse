@@ -358,6 +358,16 @@ namespace RSDKv2
                 SaveRAM[i] = reader.ReadInt32();
             }
 
+            for (int i = 48; i < 173; i++)
+            {
+                int mins = SaveRAM[i] / 6000;
+                int secs = SaveRAM[i] / 100 % 60;
+                int msecs = SaveRAM[i] % 100;
+
+                i++;
+                Console.WriteLine(mins + "'" + secs + "\"" + msecs);
+            }
+
             reader.Close();
         }
 

@@ -16,9 +16,9 @@ namespace RSDKvB
             public class SceneInfo
             {
                 /// <summary>
-                /// not entirely sure
+                /// Scene Mode
                 /// </summary>
-                public byte Unknown;
+                public byte SceneMode;
                 /// <summary>
                 /// the folder of the scene
                 /// </summary>
@@ -37,7 +37,7 @@ namespace RSDKvB
                     SceneFolder = "Folder";
                     ActID = "1";
                     Name = "Stage";
-                    Unknown = 0;
+                    SceneMode = 0;
                 }
 
                 public SceneInfo(Reader reader)
@@ -45,8 +45,8 @@ namespace RSDKvB
                     SceneFolder = reader.ReadRSDKString();
                     ActID = reader.ReadRSDKString();
                     Name = reader.ReadRSDKString();
-                    Unknown = reader.ReadByte();
-                    //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,Unknown = " + Unknown);
+                    SceneMode = reader.ReadByte();
+                    //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,SceneMode = " + SceneMode);
                 }
 
                 public void Write(Writer writer)
@@ -54,7 +54,7 @@ namespace RSDKvB
                     writer.WriteRSDKString(SceneFolder);
                     writer.WriteRSDKString(ActID);
                     writer.WriteRSDKString(Name);
-                    writer.Write(Unknown);
+                    writer.Write(SceneMode);
                 }
             }
 
@@ -130,14 +130,15 @@ namespace RSDKvB
             public GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
-                //Console.WriteLine(Name);
-                Value = reader.ReadInt32();
+                byte[] bytes = new byte[4];
+                bytes = reader.ReadBytes(4);
+                Value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + (bytes[0] << 0);
             }
 
             public void Write(Writer writer)
             {
                 writer.WriteRSDKString(Name);
-                writer.Write(Value);
+                writer.Write((Value));
             }
         }
 

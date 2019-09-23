@@ -16,9 +16,9 @@ namespace RSDKv2
             public class SceneInfo
             {
                 /// <summary>
-                /// not entirely sure
+                /// Scene Mode
                 /// </summary>
-                public byte Unknown;
+                public byte SceneMode;
                 /// <summary>
                 /// the folder of the scene
                 /// </summary>
@@ -37,7 +37,7 @@ namespace RSDKv2
                     SceneFolder = "Folder";
                     ActID = "1";
                     Name = "Stage";
-                    Unknown = 0;
+                    SceneMode = 0;
                 }
 
                 public SceneInfo(Reader reader)
@@ -45,8 +45,8 @@ namespace RSDKv2
                     SceneFolder = reader.ReadRSDKString();
                     ActID = reader.ReadRSDKString();
                     Name = reader.ReadRSDKString();
-                    Unknown = reader.ReadByte();
-                    //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,Unknown = " + Unknown);
+                    SceneMode = reader.ReadByte();
+                    //Console.WriteLine("Name = " + Name + " ,Act ID = " + ActID + " ,Scene Folder = " + SceneFolder, " ,SceneMode = " + SceneMode);
                 }
 
                 public void Write(Writer writer)
@@ -54,7 +54,7 @@ namespace RSDKv2
                     writer.WriteRSDKString(SceneFolder);
                     writer.WriteRSDKString(ActID);
                     writer.WriteRSDKString(Name);
-                    writer.Write(Unknown);
+                    writer.Write(SceneMode);
                 }
             }
 
@@ -129,14 +129,18 @@ namespace RSDKv2
             public GlobalVariable(Reader reader)
             {
                 Name = reader.ReadString();
-                //Console.WriteLine(Name);
-                Value = reader.ReadInt32();
+                byte[] bytes = new byte[4];
+                bytes = reader.ReadBytes(4);
+                Value = (bytes[0] << 24) + (bytes[1] << 16) + (bytes[2] << 8) + (bytes[3] << 0);
             }
 
             public void Write(Writer writer)
             {
                 writer.WriteRSDKString(Name);
-                writer.Write(Value);
+                writer.Write((byte)(Value >> 24));
+                writer.Write((byte)(Value >> 16));
+                writer.Write((byte)(Value >> 8));
+                writer.Write((byte)(Value & 0xff));
             }
         }
 
@@ -303,6 +307,14 @@ namespace RSDKv2
             writer.Write((byte)SoundFX.Count);
             foreach (string wav in SoundFX)
                 writer.Write(wav);
+        }
+
+        uint SwapBytes(uint x)
+        {
+            // swap adjacent 16-bit blocks
+            x = (x >> 16) | (x << 16);
+            // swap adjacent 8-bit blocks
+            return ((x & 0xFF00FF00) >> 8) | ((x & 0x00FF00FF) << 8);
         }
 
         /*The Value For DevMenu is at: Line CA0, Column 0B*/
