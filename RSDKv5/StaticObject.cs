@@ -11,7 +11,7 @@ namespace RSDKv5
         /// </summary>
         public static readonly byte[] MAGIC = new byte[] { (byte)'O', (byte)'B', (byte)'J', (byte)'\0' };
 
-        public uint[] Data = new uint[0x1];
+        public int[] Data = new int[0x1];
 
         private uint DataPos = 0;
         private bool Debug = true;
@@ -22,7 +22,7 @@ namespace RSDKv5
 
         public StaticObject(Reader reader)
         {
-            uint[] TmpData = new uint[reader.BaseStream.Length];
+            int[] TmpData = new int[reader.BaseStream.Length];
             DataPos = 0;
             string filename = System.IO.Path.GetFileName(reader.GetFilename());
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC)) //"OBJ" Header
@@ -48,35 +48,69 @@ namespace RSDKv5
                     {
                         //INT8
                         case (int)AttributeTypes.UINT8:
-                        case (int)AttributeTypes.INT8:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 TmpData[DataPos++] = reader.ReadByte();
                                 if (Debug)
                                 {
-                                    Console.WriteLine("Value Info: Value: "+ TmpData[DataPos-1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
+                                    Console.WriteLine("Value Info: Type:" + AttributeTypes.UINT8 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
+                                }
+                            }
+                            break;
+                        case (int)AttributeTypes.INT8:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                TmpData[DataPos++] = reader.ReadSByte();
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Value: Type:" + AttributeTypes.INT8 + ", " + TmpData[DataPos-1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
                                 }
                             }
                             break;
                             //IN16
                         case (int)AttributeTypes.UINT16:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                ushort Value = (ushort)(valA + (valB << 8));
+                                TmpData[DataPos++] = Value;
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Type:" + AttributeTypes.UINT16 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 2) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 2).ToString("X"));
+                                }
+                            }
+                            break;
                         case (int)AttributeTypes.INT16:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
-                                int Value = valA + (valB << 8);
-                                TmpData[DataPos++] = (uint)Value;
+                                short Value = (short)(valA + (valB << 8));
+                                TmpData[DataPos++] = Value;
                                 if (Debug)
                                 {
-                                    Console.WriteLine("Value Info: Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 2) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 2).ToString("X"));
+                                    Console.WriteLine("Value Info: Type:" + AttributeTypes.INT16 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 2) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 2).ToString("X"));
                                 }
                             }
                             break;
                             //INT32
                         case (int)AttributeTypes.UINT32:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                byte valC = reader.ReadByte();
+                                byte valD = reader.ReadByte();
+                                uint Value = (uint)(valA + (valB << 8) + (valC << 16) + (valD << 24));
+                                TmpData[DataPos++] = (int)Value;
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Type:" + AttributeTypes.UINT32 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
+                                }
+                            }
+                            break;
                         case (int)AttributeTypes.INT32:
-                        case (int)AttributeTypes.ENUM:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 byte valA = reader.ReadByte();
@@ -84,10 +118,25 @@ namespace RSDKv5
                                 byte valC = reader.ReadByte();
                                 byte valD = reader.ReadByte();
                                 int Value = valA + (valB << 8) + (valC << 16) + (valD << 24);
-                                TmpData[DataPos++] = (uint)Value;
+                                TmpData[DataPos++] = Value;
                                 if (Debug)
                                 {
-                                    Console.WriteLine("Value Info: Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
+                                    Console.WriteLine("Value Info: Type:" + AttributeTypes.INT32 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
+                                }
+                            }
+                            break;
+                        case (int)AttributeTypes.ENUM:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                byte valA = reader.ReadByte();
+                                byte valB = reader.ReadByte();
+                                byte valC = reader.ReadByte();
+                                byte valD = reader.ReadByte();
+                                uint Value = (uint)(valA + (valB << 8) + (valC << 16) + (valD << 24));
+                                TmpData[DataPos++] = (int)Value;
+                                if (Debug)
+                                {
+                                    Console.WriteLine("Value Info: Value: Type:" + AttributeTypes.ENUM + ", " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
                                 }
                             }
                             break;
@@ -96,7 +145,7 @@ namespace RSDKv5
             }
             reader.Close();
 
-            Data = new uint[DataPos];
+            Data = new int[DataPos];
 
             for (int i = 0; i < DataPos; i++)
             {
@@ -113,7 +162,7 @@ namespace RSDKv5
         {
             writer.Write(MAGIC);
 
-            for (DataPos = 0; DataPos < Data.Length;)
+            for (uint DataPos = 0; DataPos < Data.Length;)
             {
                 uint offset = DataPos;
                 byte FirstDataType = 0;
@@ -121,42 +170,91 @@ namespace RSDKv5
                 byte DataType = 0;
                 uint DataSize = 0;
 
-                if (Data[offset] < 0x100)
+                if (Data[offset] >= 0)
                 {
-                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT8;
+                    if (Data[offset] <= byte.MaxValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT8;
+                    }
+                    if (Data[offset] > byte.MaxValue && Data[offset] <= ushort.MaxValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT16;
+                    }
+                    if (Data[offset] > ushort.MaxValue && Data[offset] <= uint.MaxValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT32;
+                    }
                 }
-                if (Data[offset] >= 0x100 && Data[offset] < 0x10000)
+                else
                 {
-                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT16;
-                }
-                if (Data[offset] >= 0x10000 && Data[offset] <= 0xFFFFFFFF)
-                {
-                    FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT32;
+                    if (Data[offset] > sbyte.MinValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.INT8;
+                    }
+                    if (Data[offset] <= sbyte.MinValue && Data[offset] >= short.MinValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.INT16;
+                    }
+                    if (Data[offset] <= short.MinValue && Data[offset] >= int.MinValue)
+                    {
+                        FirstDataType = DataTypeBuf = (int)AttributeTypes.INT32;
+                    }
                 }
                 offset++;
 
                 while (FirstDataType == DataTypeBuf && offset < Data.Length)
                 {
-                    if (Data[offset] < 0x100)
+                    if (Data[offset] >= 0)
                     {
-                        DataTypeBuf = (int)AttributeTypes.UINT8;
-                    }
-                    if (Data[offset] >= 0x100 && Data[offset] < 0x10000)
-                    {
-                        DataTypeBuf = (int)AttributeTypes.UINT16;
-                    }
-                    if (Data[offset] >= 0x10000 && Data[offset] <= 0xFFFFFFFF)
-                    {
-                        DataTypeBuf = (int)AttributeTypes.UINT32;
-                    }
-                    if (FirstDataType == DataTypeBuf)
-                    {
-                        offset++;
+                        if (Data[offset] <= byte.MaxValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.UINT8;
+                        }
+                        if (Data[offset] > byte.MaxValue && Data[offset] <= ushort.MaxValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.UINT16;
+                        }
+                        if (Data[offset] > ushort.MaxValue && Data[offset] <= uint.MaxValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.UINT32;
+                        }
+                        if (FirstDataType == DataTypeBuf)
+                        {
+                            offset++;
+                        }
+                        else
+                        {
+                            DataType = FirstDataType;
+                        }
                     }
                     else
                     {
-                        DataType = FirstDataType;
+                        if (Data[offset] > sbyte.MinValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.INT8;
+                        }
+                        if (Data[offset] <= sbyte.MinValue && Data[offset] >= short.MinValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.INT16;
+                        }
+                        if (Data[offset] <= short.MinValue && Data[offset] >= int.MinValue)
+                        {
+                            DataTypeBuf = (int)AttributeTypes.INT32;
+                        }
+                        if (FirstDataType == DataTypeBuf)
+                        {
+                            offset++;
+                        }
+                        else
+                        {
+                            DataType = FirstDataType;
+                        }
                     }
+                }
+
+                if (offset == Data.Length)
+                {
+                    DataType = FirstDataType;
                 }
 
                 FirstDataType = DataTypeBuf;
@@ -175,28 +273,48 @@ namespace RSDKv5
                     switch (DataType & 0x7F)
                     {
                         //INT8
-                        case 0:
-                        case 3:
+                        case (int)AttributeTypes.UINT8:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 writer.Write((byte)Data[DataPos++]);
                             }
                             break;
+                        case (int)AttributeTypes.INT8:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                writer.Write((sbyte)Data[DataPos++]);
+                            }
+                            break;
                         //IN16
-                        case 1:
-                        case 4:
+                        case (int)AttributeTypes.UINT16:
                             for (int i = 0; i < DataSize; i++)
                             {
                                 writer.Write((ushort)Data[DataPos++]);
                             }
                             break;
-                        //INT32
-                        case 2:
-                        case 5:
-                        case 6:
+                        case (int)AttributeTypes.INT16:
                             for (int i = 0; i < DataSize; i++)
                             {
-                                writer.Write(Data[DataPos++]);
+                                writer.Write((short)Data[DataPos++]);
+                            }
+                            break;
+                        //INT32
+                        case (int)AttributeTypes.UINT32:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                writer.Write((uint)Data[DataPos++]);
+                            }
+                            break;
+                        case (int)AttributeTypes.INT32:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                writer.Write((int)Data[DataPos++]);
+                            }
+                            break;
+                        case (int)AttributeTypes.ENUM:
+                            for (int i = 0; i < DataSize; i++)
+                            {
+                                writer.Write((uint)Data[DataPos++]);
                             }
                             break;
                     }

@@ -83,7 +83,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="CommonConfig.cs" />
     <Compile Include="DataFile.cs" />
-    <Compile Include="GameConfig.cs" />
+    <Compile Include="Gameconfig.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="NameIdentifier.cs" />
     <Compile Include="Objects.cs" />
@@ -106,7 +106,7 @@
     <Compile Include="StageConfig.cs" />
     <Compile Include="Stamps.cs" />
     <Compile Include="StaticObject.cs" />
-    <Compile Include="TileConfig.cs" />
+    <Compile Include="Tileconfig.cs" />
     <Compile Include="WAVConfiguration.cs" />
     <Compile Include="Writer.cs" />
     <Compile Include="zLib\Adler32.cs" />

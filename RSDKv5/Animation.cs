@@ -55,19 +55,19 @@ namespace RSDKv5
                     /// <summary>
                     /// the Xpos of the hitbox
                     /// </summary>
-                    public short X;
+                    public short Left;
                     /// <summary>
                     /// the Width of the hitbox
                     /// </summary>
-                    public short Width;
+                    public short Top;
                     /// <summary>
                     /// the Ypos of the hitbox
                     /// </summary>
-                    public short Y;
+                    public short Right;
                     /// <summary>
                     /// the height of the hitbox
                     /// </summary>
-                    public short Height;
+                    public short Bottom;
                 }
 
                 /// <summary>
@@ -136,10 +136,10 @@ namespace RSDKv5
                     for (int i = 0; i < anim.CollisionBoxes.Count; ++i)
                     {
                         var hitBox = new HitBox();
-                        hitBox.X = reader.ReadInt16();
-                        hitBox.Width = reader.ReadInt16();
-                        hitBox.Y = reader.ReadInt16();
-                        hitBox.Height = reader.ReadInt16();
+                        hitBox.Left = reader.ReadInt16();
+                        hitBox.Top = reader.ReadInt16();
+                        hitBox.Right = reader.ReadInt16();
+                        hitBox.Bottom = reader.ReadInt16();
                         HitBoxes.Add(hitBox);
                     }
                 }
@@ -157,10 +157,10 @@ namespace RSDKv5
                     writer.Write(PivotY);
                     for (int c = 0; c < HitBoxes.Count; ++c)
                     {
-                        writer.Write(HitBoxes[c].X);
-                        writer.Write(HitBoxes[c].Width);
-                        writer.Write(HitBoxes[c].Y);
-                        writer.Write(HitBoxes[c].Height);
+                        writer.Write(HitBoxes[c].Left);
+                        writer.Write(HitBoxes[c].Top);
+                        writer.Write(HitBoxes[c].Right);
+                        writer.Write(HitBoxes[c].Bottom);
                     }
                 }
 
@@ -217,13 +217,7 @@ namespace RSDKv5
 
             public AnimationEntry(Reader reader, Animation anim = null)
             {
-                AnimName = reader.ReadRSDKString();
-                string tmp = "";
-                for (int ii = 0; ii < AnimName.Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
-                {
-                    tmp += AnimName[ii];
-                }
-                AnimName = tmp;
+                AnimName = reader.ReadRSDKString().Replace("" + '\0', "");
                 short frameCount = reader.ReadInt16();
                 SpeedMultiplyer = reader.ReadInt16();
                 LoopIndex = reader.ReadByte();
@@ -282,19 +276,13 @@ namespace RSDKv5
             int spriteSheetCount = reader.ReadByte();
             for (int i = 0; i < spriteSheetCount; ++i)
             {
-                SpriteSheets.Add(reader.ReadRSDKString());
-                string tmp = "";
-                for (int ii = 0; ii < SpriteSheets[i].Length-1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
-                {
-                    tmp += SpriteSheets[i][ii];
-                }
-                SpriteSheets[i] = tmp;
+                SpriteSheets.Add(reader.ReadRSDKString().Replace("" + '\0', ""));
             }
 
             int collisionBoxCount = reader.ReadByte();
             for (int i = 0; i < collisionBoxCount; ++i)
             {
-                CollisionBoxes.Add(reader.ReadRSDKString());
+                CollisionBoxes.Add(reader.ReadRSDKString().Replace("" + '\0', ""));
                 string tmp = "";
                 for (int ii = 0; ii < CollisionBoxes[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
                 {

@@ -23,7 +23,7 @@ namespace RSDKv1
             /// <summary>
             /// Collision position for each pixel
             /// </summary>
-            public byte[] Collision = new byte[16]; //two Collision Values per byte
+            public byte[] Collision = new byte[16]; //two Collision Values per read byte
 
             /// <summary>
             /// the collision flags for each "column"
@@ -34,7 +34,10 @@ namespace RSDKv1
             /// is the Mask A ceiling mask?
             /// </summary>
             public bool isCeiling;
-
+            /// <summary>
+            /// is the Mask A ceiling mask?
+            /// </summary>
+            public byte Behaviour;
             /// <summary>
             /// Angle value when walking on the floor
             /// </summary>
@@ -68,9 +71,9 @@ namespace RSDKv1
             internal CollisionMask(Reader reader)
             {
 
-                byte ic = reader.ReadByte();
-                if (ic == 0) isCeiling = false;
-                if (ic == 16) isCeiling = true;
+                byte flags = reader.ReadByte();
+                isCeiling = (flags >> 4) != 0;
+                Behaviour = (byte)(flags & 0xF);
                 FloorAngle = reader.ReadByte();
                 RWallAngle = reader.ReadByte();
                 LWallAngle = reader.ReadByte();
@@ -104,8 +107,7 @@ namespace RSDKv1
 
             public void Write(Writer writer)
             {
-                if (!isCeiling) writer.Write((byte)0);
-                else if (isCeiling) writer.Write((byte)16);
+                writer.Write(AddNibbles(isCeiling ? (byte)1 : (byte)0, Behaviour));
                 writer.Write(FloorAngle);
                 writer.Write(RWallAngle);
                 writer.Write(LWallAngle);
@@ -136,7 +138,7 @@ namespace RSDKv1
                 writer.Write(collision); //Write Collision Data
 
                 writer.Write((byte)(CollisionActive >> 8)); //Write Collision Solidity byte 1
-                writer.Write((byte)(CollisionActive & 0xff)); //Write Collision Solidity byte 1
+                writer.Write((byte)(CollisionActive & 0xff)); //Write Collision Solidity byte 2
             }
 
             public byte AddNibbles(byte a, byte b)
@@ -232,7 +234,7 @@ namespace RSDKv1
 
         }
 
-        private Tileconfig(Reader reader)
+        public Tileconfig(Reader reader)
         {
             for (int i = 0; i < TILES_COUNT; ++i)
             {

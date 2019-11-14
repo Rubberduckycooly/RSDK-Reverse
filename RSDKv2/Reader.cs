@@ -45,14 +45,32 @@ namespace RSDKv2
             BaseStream.Seek(position, org);
         }
         
-        public long Pos
+        public long Position
         {
-            get { return BaseStream.Position; }
+            get 
+            {
+                return BaseStream.Position; 
+            }
+            set
+            {
+                BaseStream.Position = value;
+            }
         }
-        
+
+        public long Remaining
+        {
+            get 
+            { 
+                return BaseStream.Length - Position; 
+            }
+        }
+
         public long Size
         {
-            get { return BaseStream.Length; }
+            get 
+            { 
+                return BaseStream.Length; 
+            }
         }
         
         public uint ReadUInt32BE()

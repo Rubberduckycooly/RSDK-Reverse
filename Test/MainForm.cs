@@ -14,6 +14,7 @@ namespace Test
         private void button1_Click(object sender, EventArgs e)
         {
             OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = "All Files|*";
 
             if (dlg.ShowDialog(this) == DialogResult.OK)
             {
@@ -73,7 +74,7 @@ namespace Test
                 //RSDKv5.Scene lvl = new RSDKv5.Scene("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Stages\\GHZCutscene\\Scene1.bin");
                 //lvl.Write("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Stages\\GHZ\\Scene1b2.bin");
 
-                //RSDKvB.Tiles128x128 t128 = new RSDKvB.Tiles128x128("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Stages\\Zone01\\128x128Tiles.bin");
+                //RSDKvB.Tiles128x128 t128 = new RSDKvB.Tiles128x128(filepath);
 
                 //RSDKvRS.gfx img = new RSDKvRS.gfx("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Levels\\EGZ\\Zone.gfx");
 
@@ -104,6 +105,7 @@ namespace Test
                 //RSDKv5.UserDB UserDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
+                //RSDKv2.Animation anim = new RSDKv2.Animation(new RSDKv2.Reader(dlg.FileName));
                 /*RSDKv5.Animation anim = new RSDKv5.Animation(new RSDKv5.Reader(dlg.FileName));
 
                 for (int i = 0; i < anim.Animations.Count; i++)
@@ -114,8 +116,6 @@ namespace Test
                     }
                 }
                 anim.Write(new RSDKv5.Writer(dlg.FileName + "2"));*/
-                //Containers
-                //RSDKv2.ArcContainer arc = new RSDKv2.ArcContainer(new RSDKv2.Reader(dlg.FileName));
 
                 //Videos
                 //RSDKv1.Video rsv = new RSDKv1.Video(filepath);
@@ -128,12 +128,21 @@ namespace Test
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));
                 //save.EncoreBuddyChar = 1;
 
+                //CONTAINERS
+                //RSDKv2.ArcContainer arc = new RSDKv2.ArcContainer(new RSDKv2.Reader(dlg.FileName));
+                //arc.Unpack("Data/");
+
+                //STRINGS
+                //RSDKv2.StringSet strings = new RSDKv2.StringSet(new RSDKv2.Reader(dlg.FileName));
+
                 //Scripts
                 //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                //Obj.Write(new RSDKv5.Writer(filepath));
                 //Obj.Write(new RSDKv5.Writer("Object.bin"));
+                //RSDKvB.Bytecode bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(filepath), 0);
 
-                RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
-                RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
+                //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+                //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
 
                 /*string destName = Path.GetFileNameWithoutExtension(filepath);
                 string destName2 = Path.GetFileName(filepath);
@@ -161,6 +170,7 @@ namespace Test
                 }*/
 
                 //TILECONFIG
+                //RSDKv2.Tileconfig tileconfig = new RSDKv2.Tileconfig(new RSDKv2.Reader(filepath));
                 //RSDKv5.TileConfig tileConfig = new RSDKv5.TileConfig(new RSDKv5.Reader(filepath));
 
                 /*RSDKv5.Writer writer = new RSDKv5.Writer("Palette.act");

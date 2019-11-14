@@ -2,7 +2,7 @@
 
 namespace RSDKvB
 {
-    public class StageConfig
+    public class Stageconfig
     {
         /// <summary>
         /// the stageconfig palette (index 96-128)
@@ -29,22 +29,22 @@ namespace RSDKvB
         /// </summary>
         public bool LoadGlobalScripts = false;
 
-        public StageConfig()
+        public Stageconfig()
         {
 
         }
 
-        public StageConfig(string filename) : this(new Reader(filename))
+        public Stageconfig(string filename) : this(new Reader(filename))
         {
 
         }
 
-        public StageConfig(System.IO.Stream stream) : this(new Reader(stream))
+        public Stageconfig(System.IO.Stream stream) : this(new Reader(stream))
         {
 
         }
 
-        public StageConfig(Reader reader)
+        public Stageconfig(Reader reader)
         {
             LoadGlobalScripts = reader.ReadBoolean();
 

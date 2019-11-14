@@ -119,12 +119,12 @@ namespace RSDKvB
 "Object.YPos",
 "Object.iXPos",
 "Object.iYPos",
-    "Player.XVelocity",//"Object.State",
-    "Player.YVelocity",//"Object.Scale",
-    "Player.Speed", //"Object.Priority",
+    "Object.XVelocity",//"Object.State",
+    "Object.YVelocity",//"Object.Scale",
+    "Object.Speed", //"Object.Priority",
     "Object.State",//"Object.DrawOrder",
     "Object.Rotation",//"Object.Direction",
-    "Object.InkEffect(OG)",
+    "Object.Scale",//"Object.InkEffect(OG)",
     "Object.Priority",//"Object.Alpha",
     "Object.DrawOrder",//"Object.Frame",
     "Object.Direction",//"Object.Animation",
@@ -135,7 +135,7 @@ namespace RSDKvB
 	"Object.PrevAnimation",//"Object.Value1(OG)",
     "Object.AnimationSpeed",//"Object.Value2",					
 	"Object.AnimationTimer",//"Object.Value3(OG)",
-    "Player.Angle",//"Object.Value4",
+    "Object.Angle",//"Object.Value4",
     "Object.Value5(OG)",
     "Object.Value6(OG)",
     "Player.CollisionMode",//"Object.Value7",
@@ -466,8 +466,8 @@ namespace RSDKvB
 "LoadTextFile",
 "DrawText",
 "GetVersionNumber",
-"GetScriptDataAt",
-"ScriptDataMemset",
+"GetScriptData",
+"SetScriptData",
 "GetStageName",
 "Absolute",
 "EngineCallback",
@@ -581,10 +581,8 @@ namespace RSDKvB
         #region Raw Bytecode Data
         int scriptDataPos;
         int jumpTableDataPos;
-        int[] scriptData = new int[0x40000];
-        int[] jumpTableData = new int[0x4000];
-        int[] jumpTableStack = new int[0x400];
-        int[] functionStack = new int[0x400];
+        public int[] scriptData = new int[0x40000];
+        public int[] jumpTableData = new int[0x4000];
 
         int[] ScriptDataBytes = new int[0x4000];
 

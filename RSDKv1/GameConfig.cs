@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RSDKv1
 {
-    public class GameConfig
+    public class Gameconfig
     {
         public class Category
         {
@@ -217,7 +217,7 @@ namespace RSDKv1
         /// </summary>
         public List<Category> Categories = new List<Category>();
 
-        public GameConfig()
+        public Gameconfig()
         {
             Categories.Add(new Category()); //Menus
             Categories.Add(new Category()); //Stages              
@@ -225,16 +225,16 @@ namespace RSDKv1
             Categories.Add(new Category()); //Bonus Stages
         }
 
-        public GameConfig(string filename) : this(new Reader(filename))
+        public Gameconfig(string filename) : this(new Reader(filename))
         {
         }
 
-        public GameConfig(System.IO.Stream stream) : this(new Reader(stream))
+        public Gameconfig(System.IO.Stream stream) : this(new Reader(stream))
         {
 
         }
 
-        public GameConfig(Reader reader)
+        public Gameconfig(Reader reader)
         {
             GameWindowText = reader.ReadRSDKString();
             DataFileName = reader.ReadRSDKString();

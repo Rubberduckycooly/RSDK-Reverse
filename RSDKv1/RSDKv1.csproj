@@ -43,7 +43,7 @@
     <Compile Include="Script.cs" />
     <Compile Include="Tileconfig.cs" />
     <Compile Include="DataFile.cs" />
-    <Compile Include="GameConfig.cs" />
+    <Compile Include="Gameconfig.cs" />
     <Compile Include="GraphicsImage.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Object.cs" />
@@ -52,7 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
     <Compile Include="Video.cs" />
-    <Compile Include="StageConfig.cs" />
+    <Compile Include="Stageconfig.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>

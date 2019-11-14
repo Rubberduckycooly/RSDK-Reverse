@@ -161,7 +161,6 @@ namespace RSDKv2
 
             width = 0; height = 0;
 
-
             // Map width in 128 pixel units
             // In RSDKv2, it's one byte long
             width = buffer[0];
@@ -178,7 +177,7 @@ namespace RSDKv2
                 for (int x = 0; x < width; x++)
                 {
                     // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv2 and RSDKv3
+                    // Big-Endian in RSDKv1 and RSDKv2
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
                 }
@@ -202,7 +201,7 @@ namespace RSDKv2
             ObjCount = reader.ReadByte() << 8;
             ObjCount |= reader.ReadByte();
 
-            Object.cur_id = 0;
+            Object.cur_id = 32;
 
             for (int n = 0; n < ObjCount; n++)
             {

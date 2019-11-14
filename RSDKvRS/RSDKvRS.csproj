@@ -54,8 +54,8 @@
     <Compile Include="Reader.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="SaveFiles.cs" />
-    <Compile Include="ZoneConfig.cs" />
-    <Compile Include="TileConfig.cs" />
+    <Compile Include="Zoneconfig.cs" />
+    <Compile Include="Tileconfig.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>

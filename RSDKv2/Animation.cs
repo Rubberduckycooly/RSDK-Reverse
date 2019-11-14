@@ -203,7 +203,15 @@ namespace RSDKv2
         [Serializable]
         public class sprHitbox
         {
-            public SByte Left, Right, Top, Bottom;
+            public struct HitboxInfo
+            {
+                public sbyte Left;
+                public sbyte Top;
+                public sbyte Right;
+                public sbyte Bottom;
+            }
+
+            public HitboxInfo[] Hitboxes = new HitboxInfo[8];
 
             public sprHitbox()
             {
@@ -212,18 +220,26 @@ namespace RSDKv2
 
             public sprHitbox(Reader reader)
             {
-                Left = reader.ReadSByte();
-                Top = reader.ReadSByte();
-                Right = reader.ReadSByte();
-                Bottom = reader.ReadSByte();
+                for (int i = 0; i < 8; i++)
+                {
+                    Hitboxes[i].Left = reader.ReadSByte();
+                    Hitboxes[i].Top = reader.ReadSByte();
+                    Hitboxes[i].Right = reader.ReadSByte();
+                    Hitboxes[i].Bottom = reader.ReadSByte();
+                    Console.WriteLine(Hitboxes[i].Left + "," + Hitboxes[i].Top + "," + Hitboxes[i].Right + "," + Hitboxes[i].Bottom);
+                }
+                Console.WriteLine();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(Left);
-                writer.Write(Top);
-                writer.Write(Right);
-                writer.Write(Bottom);
+                for (int i = 0; i < 8; i++)
+                {
+                    writer.Write(Hitboxes[i].Left);
+                    writer.Write(Hitboxes[i].Top);
+                    writer.Write(Hitboxes[i].Right);
+                    writer.Write(Hitboxes[i].Bottom);
+                }
             }
         }
 

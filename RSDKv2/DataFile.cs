@@ -337,7 +337,7 @@ namespace RSDKv2
             {
                 if ((d + 1) < Directories.Count())
                 {
-                    while (reader.Pos - headerSize < Directories[d + 1].Address && !reader.IsEof)
+                    while (reader.Position - headerSize < Directories[d + 1].Address && !reader.IsEof)
                     {
                         FileInfo f = new FileInfo(reader);
                         f.FullFileName = Directories[d].Directory + f.FileName;

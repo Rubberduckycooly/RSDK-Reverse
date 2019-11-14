@@ -511,7 +511,7 @@ namespace RSDKv2
 {
 "MENU_1",
 "MENU_2",
-}; //NOT YET ADDED
+}; // ADDED
 
         string[] CollisionAliases = new string[]
 {
@@ -568,10 +568,8 @@ namespace RSDKv2
         #region Raw Bytecode Data
         int scriptDataPos;
         int jumpTableDataPos;
-        int[] scriptData = new int[0x40000];
-        int[] jumpTableData = new int[0x40000];
-        int[] jumpTableStack = new int[0x4000];
-        int[] functionStack = new int[0x4000];
+        public int[] scriptData = new int[0x40000];
+        public int[] jumpTableData = new int[0x40000];
 
         ScriptEngine scriptEng = new ScriptEngine();
         StateScriptEngine state = new StateScriptEngine();

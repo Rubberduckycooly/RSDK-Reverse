@@ -83,16 +83,17 @@
     <Compile Include="Object.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="SaveFiles.cs" />
+    <Compile Include="StaticObject.cs" />
     <Compile Include="StringList.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Tileconfig.cs" />
-    <Compile Include="GameConfig.cs" />
+    <Compile Include="Gameconfig.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="PaletteColour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="StageConfig.cs" />
+    <Compile Include="Stageconfig.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>
   <ItemGroup>

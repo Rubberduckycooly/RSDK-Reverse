@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace RSDKv5
 {
-    public class TileConfig
+    public class Tileconfig
     {
         /// <summary>
         /// the signature of the file
@@ -188,7 +188,7 @@ namespace RSDKv5
             }
         }
 
-        public TileConfig()
+        public Tileconfig()
         {
             for (int i = 0; i < TILES_COUNT; ++i)
                 CollisionPath1[i] = new CollisionMask();
@@ -196,17 +196,17 @@ namespace RSDKv5
                 CollisionPath2[i] = new CollisionMask();
         }
 
-        public TileConfig(string filename) : this(new Reader(filename))
+        public Tileconfig(string filename) : this(new Reader(filename))
         {
 
         }
 
-        public TileConfig(Stream stream) : this(new Reader(stream))
+        public Tileconfig(Stream stream) : this(new Reader(stream))
         {
 
         }
 
-        public TileConfig(Reader reader)
+        public Tileconfig(Reader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid tiles config file header magic");
@@ -221,17 +221,17 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public TileConfig(string filename, bool unc) : this(new Reader(filename), unc)
+        public Tileconfig(string filename, bool unc) : this(new Reader(filename), unc)
         {
 
         }
 
-        public TileConfig(Stream stream, bool unc) : this(new Reader(stream), unc)
+        public Tileconfig(Stream stream, bool unc) : this(new Reader(stream), unc)
         {
 
         }
 
-        private TileConfig(Reader reader, bool unc)
+        private Tileconfig(Reader reader, bool unc)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
                 throw new Exception("Invalid tiles config file header magic");

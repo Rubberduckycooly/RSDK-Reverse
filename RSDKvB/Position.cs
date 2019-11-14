@@ -39,12 +39,12 @@ namespace RSDKvB
             Y = new Value(y);
         }
 
-        internal Position(Reader reader) : this()
+        public Position(Reader reader) : this()
         {
             Read(reader);
         }
 
-        internal void Read(Reader reader)
+        public void Read(Reader reader)
         {
             X.Low = reader.ReadUInt16();
             X.High = reader.ReadInt16();
@@ -53,7 +53,7 @@ namespace RSDKvB
             Y.High = reader.ReadInt16();
         }
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(X.Low);
             writer.Write(X.High);

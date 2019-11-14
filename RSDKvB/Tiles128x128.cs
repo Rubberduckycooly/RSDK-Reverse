@@ -155,7 +155,7 @@ namespace RSDKvB
         }
 
 
-        internal void Write(Writer writer)
+        public void Write(Writer writer)
         {
             int[] mappingEntry = new int[3];
 

@@ -31,11 +31,11 @@ namespace RSDKvRS
         /// <summary>
         /// player's Spawn Xpos
         /// </summary>
-        public ushort PlayerXpos;
+        public short PlayerXpos;
         /// <summary>
         /// player's Spawn Ypos
         /// </summary>
-        public ushort PlayerYPos;
+        public short PlayerYPos;
 
         /// <summary>
         /// the list of objects in the stage
@@ -160,9 +160,9 @@ namespace RSDKvRS
 
             Music = ITMreader.ReadByte();
             Background = ITMreader.ReadByte();
-            PlayerXpos = (ushort)(ITMreader.ReadByte() << 8);
+            PlayerXpos = (short)(ITMreader.ReadByte() << 8);
             PlayerXpos |= ITMreader.ReadByte();
-            PlayerYPos = (ushort)(ITMreader.ReadByte() << 8);
+            PlayerYPos = (short)(ITMreader.ReadByte() << 8);
             PlayerYPos |= ITMreader.ReadByte();
 
             // Read objects from the item file

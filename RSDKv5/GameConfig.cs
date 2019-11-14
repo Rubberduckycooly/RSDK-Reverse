@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace RSDKv5
 {
-    public class GameConfig : CommonConfig
+    public class Gameconfig : CommonConfig
     {
         /// <summary>
         /// the name of the game (also window name)
@@ -192,24 +192,24 @@ namespace RSDKv5
         /// </summary>
         public List<ConfigurableMemoryEntry> ConfigMemory = new List<ConfigurableMemoryEntry>();
 
-        public GameConfig()
+        public Gameconfig()
         {
         }
 
-        public GameConfig(string filename)
+        public Gameconfig(string filename)
         {
             FilePath = filename;
             using (var reader = new Reader(filename))
                 Read(reader);
         }
 
-        public GameConfig(Stream stream)
+        public Gameconfig(Stream stream)
         {
             using (var reader = new Reader(stream))
                 Read(reader);
         }
 
-        public GameConfig(Reader reader, bool closeReader = false)
+        public Gameconfig(Reader reader, bool closeReader = false)
         {
             ReadConfig(reader, closeReader);
         }
