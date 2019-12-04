@@ -129,8 +129,8 @@ namespace RSDKv2
                 height = reader.ReadByte();
                 DrawLayer = reader.ReadByte();
                 Behaviour = reader.ReadByte();
-                ConstantSpeed = reader.ReadByte();
                 RelativeSpeed = reader.ReadByte();
+                ConstantSpeed = reader.ReadByte();
 
                 byte[] buf = new byte[3];
                 bool finished = false;

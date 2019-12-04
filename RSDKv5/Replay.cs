@@ -7,7 +7,6 @@ namespace RSDKv5
 {
     public class Replay
     {
-        public List<Position> positions = new List<Position>();
         public Replay()
         {
 
@@ -18,12 +17,18 @@ namespace RSDKv5
             Reader creader = reader.GetCompressedStreamRaw();
             //creader.BaseStream.Position = 0x84;
 
-            while (creader.BaseStream.Position + 8 < creader.BaseStream.Length)
+            byte[] data = new byte[creader.BaseStream.Length];
+
+            for (int i = 0; i < creader.BaseStream.Length; i++)
             {
-                positions.Add(new Position(creader));
+                data[i] = creader.ReadByte();
             }
 
             creader.Close();
+
+            Writer writer = new Writer("Replay.bin");
+            writer.Write(data);
+            writer.Close();
         }
 
         public void Write(Writer writer)

@@ -14,6 +14,11 @@ namespace RSDKv2
         {
         }
 
+        public string GetFilename()
+        {
+            var fileStream = BaseStream as FileStream;
+            return fileStream.Name;
+        }
         public byte[] ReadBytes(long count)
         {
             if (count < 0 || count > Int32.MaxValue)
@@ -78,12 +83,6 @@ namespace RSDKv2
             byte[] bytes = ReadBytes(4);
             Array.Reverse(bytes);
             return BitConverter.ToUInt32(bytes, 0);
-        }
-
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
         }
 
         public string ReadRSDKString()

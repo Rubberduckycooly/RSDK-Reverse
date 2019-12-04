@@ -14,6 +14,12 @@ namespace RSDKvRS
         {
         }
 
+        public string GetFilename()
+        {
+            var fileStream = BaseStream as FileStream;
+            return fileStream.Name;
+        }
+
         public byte[] ReadBytes(long count)
         {
             if (count < 0 || count > Int32.MaxValue)
@@ -53,12 +59,6 @@ namespace RSDKvRS
         public long Size
         {
             get { return BaseStream.Length; }
-        }
-        
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
         }
 
         public uint ReadUInt32BE()

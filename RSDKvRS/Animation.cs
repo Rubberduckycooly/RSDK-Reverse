@@ -102,21 +102,21 @@ namespace RSDKvRS
                 public struct HitBox
                 {
                     /// <summary>
-                    /// the Xpos of the hitbox
+                    /// left offset
                     /// </summary>
-                    public sbyte X;
+                    public sbyte Left;
                     /// <summary>
-                    /// the Width of the hitbox
+                    /// top offset
                     /// </summary>
-                    public sbyte Width;
+                    public sbyte Top;
                     /// <summary>
-                    /// the Ypos of the hitbox
+                    /// right offset
                     /// </summary>
-                    public sbyte Y;
+                    public sbyte Right;
                     /// <summary>
-                    /// the height of the hitbox
+                    /// bottom offset
                     /// </summary>
-                    public sbyte Height;
+                    public sbyte Bottom;
                 }
 
                 /// <summary>
@@ -169,10 +169,10 @@ namespace RSDKvRS
                     Height = reader.ReadByte();
                     SpriteSheet = reader.ReadByte();
 
-                    CollisionBox.X = reader.ReadSByte();
-                    CollisionBox.Width = reader.ReadSByte();
-                    CollisionBox.Y = reader.ReadSByte();
-                    CollisionBox.Height = reader.ReadSByte();
+                    CollisionBox.Left = reader.ReadSByte();
+                    CollisionBox.Top = reader.ReadSByte();
+                    CollisionBox.Right = reader.ReadSByte();
+                    CollisionBox.Bottom = reader.ReadSByte();
 
                     byte[] PivotVals = new byte[2];
 
@@ -191,10 +191,10 @@ namespace RSDKvRS
                     writer.Write(Height);
                     writer.Write(SpriteSheet);
 
-                    writer.Write(CollisionBox.X);
-                    writer.Write(CollisionBox.Width);
-                    writer.Write(CollisionBox.Y);
-                    writer.Write(CollisionBox.Height);
+                    writer.Write(CollisionBox.Left);
+                    writer.Write(CollisionBox.Top);
+                    writer.Write(CollisionBox.Right);
+                    writer.Write(CollisionBox.Bottom);
                     
                     byte px = (byte)PivotX;
                     byte py = (byte)PivotY;

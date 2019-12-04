@@ -9,7 +9,8 @@ namespace RSDKvB
     public class StaticObject
     {
 
-        public List<int[]> Data = new List<int[]>();
+        //public List<int[]> Data = new List<int[]>();
+        public List<int> Data = new List<int>();
 
         public StaticObject()
         {
@@ -29,14 +30,16 @@ namespace RSDKvB
         {
             while(!reader.IsEof)
             {
-                int size = reader.ReadInt32();
+                /*int size = reader.ReadInt32();
                 int[] DataSet = new int[size];
                 for (int i = 0; i < size; i++)
                 {
                     DataSet[i] = reader.ReadInt32();
                 }
-                Data.Add(DataSet);
+                Data.Add(DataSet);*/
+                Data.Add(reader.ReadInt32());
             }
+
             reader.Close();
         }
 
@@ -57,11 +60,11 @@ namespace RSDKvB
         {
             for (int i = 0; i < Data.Count; i++)
             {
-                writer.Write(Data[i].Length);
+                /*writer.Write(Data[i].Length);
                 for (int p = 0; p < Data[i].Length; p++)
                 {
                     writer.Write(Data[i][p]);
-                }
+                }*/
             }
             writer.Close();
         }

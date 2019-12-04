@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace RSDKv2
 {
@@ -25,11 +26,11 @@ namespace RSDKv2
             public int playerJumpTable;
             public int drawJumpTable;
             public int startupJumpTable;
-            public int frameListOffset;
-            public AnimationFileList animationFile;
+            //public int frameListOffset;
+            //public AnimationFileList animationFile;
         };
 
-        public class AnimationSystem
+        /*public class AnimationSystem
         {
             public static AnimationFileList GetDefaultAnimationRef()
             {
@@ -48,9 +49,28 @@ namespace RSDKv2
             public int numAnimations;
             public int aniListOffset;
             public int cbListOffset;
-        };
+        };*/
 
-        public struct StateScriptEngine
+        public class SwitchJumpPtr
+        {
+            public List<int> Cases = new List<int>();
+            public int Jump;
+        }
+
+        public struct SwitchState
+        {
+            public int Active;
+            public int JumpTableOffset;
+            public int LowCase;
+            public int HighCase;
+            public int Case;
+            public int DefaultJmp;
+            public int EndJmp;
+            public int ScriptCodePtr;
+            public List<SwitchJumpPtr> JumpPtr;
+        }
+
+        public class StateScriptEngine
         {
             public int scriptCodePtr;
             public int jumpTablePtr;
@@ -59,15 +79,21 @@ namespace RSDKv2
             public int scriptSub;
             public int deep;
             public int SwitchDeep;
-            public bool isSwitchEnd;
             public bool error;
             public bool SwitchCheck;
             public bool DefaultFlag;
             public bool EndFlag;
             public bool LoopBreakFlag;
-            public bool SwitchBreakFlag;
-            public int[] SwitchValues;
-            public int SwitchCase;
+            public SwitchState[] switchState = new SwitchState[0x100];
+
+            public StateScriptEngine()
+            {
+                for (int i = 0; i < 0x100; i++)
+                {
+                    switchState[i] = new SwitchState();
+                    switchState[i].JumpPtr = new List<SwitchJumpPtr>();
+                }
+            }
 
             public StateScriptEngine IncDeep()
             {
@@ -125,7 +151,7 @@ namespace RSDKv2
     "Object.Priority",
     "Object.DrawOrder",
     "Object.Direction",
-    "Object.InkEffect",
+    "Object.InkEffect", //None,Blend,Alpha,Add,Sub
     "Object.Alpha",
     "Object.Frame",
     "Object.Animation",
@@ -467,27 +493,28 @@ namespace RSDKv2
 "SetLeaderboard",
 "LoadOnlineMenu",
 "EngineCallback",
-"QueueHapticEffect"
+"HapticEffect"
 };
 
         readonly byte[] scriptOpcodeSizes = new byte[]
 {
-    0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2,
-    2, 2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3,
-    3, 0, 2, 0, 0, 2, 2, 2, 2, 2, 5, 5, 3, 4, 7, 1,
-    1, 1, 3, 3, 4, 7, 7, 3, 6, 6, 5, 3, 4, 3, 7, 2,
-    1, 4, 4, 1, 4, 3, 4, 0, 8, 5, 5, 4, 2, 0, 0, 0,
-    0, 0, 3, 1, 0, 2, 1, 3, 4, 4, 1, 0, 2, 1, 1, 0,
-    1, 2, 4, 4, 2, 2, 2, 4, 3, 1, 0, 6, 4, 4, 4, 3,
-    3, 0, 0, 1, 2, 3, 3, 4, 2, 4, 2, 0, 0, 1, 3, 7,
-    5, 2, 2, 2, 1, 1, 4
+0, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2,
+2, 2, 3, 3, 3, 3, 3, 3, 0, 0, 3, 3, 3, 3, 3, 3, 0,
+2, 0, 0, 2, 2, 2, 2, 2, 5, 5, 3, 4, 7, 1, 1, 1, 3,
+3, 4, 7, 7, 3, 6, 7, 5, 3, 4, 3, 7, 2, 1, 4, 4, 1,
+4, 3, 4, 0, 8, 5, 5, 4, 2, 0, 0, 0, 0, 0, 3, 1, 0,
+2, 1, 3, 4, 4, 1, 0, 2, 1, 1, 0, 1, 2, 4, 4, 2, 2,
+2, 4, 3, 1, 0, 6, 4, 4, 4, 3, 3, 0, 0, 1, 2, 3, 3,
+4, 2, 4, 2, 0, 0, 1, 3, 7, 5, 2, 2, 2, 1, 1, 4, 0,
 };
+
+        #region Default Aliases
 
         string[] BoolAliases = new string[]
         {
             "false",
             "true",
-        }; //ADDED
+        };
 
         string[] FXAliases = new string[]
 {
@@ -497,7 +524,7 @@ namespace RSDKv2
 "FX_INK",
 "FX_TINT",
 "FX_FLIP",
-}; //ADDED
+};
 
         string[] StagesAliases = new string[]
 {
@@ -505,42 +532,40 @@ namespace RSDKv2
 "REGULAR_STAGE",
 "BONUS_STAGE",
 "SPECIAL_STAGE",
-}; //ADDED
+};
 
         string[] MenuAliases = new string[]
 {
 "MENU_1",
 "MENU_2",
-}; // ADDED
+};
 
         string[] CollisionAliases = new string[]
 {
 "C_TOUCH",
 "C_BOX",
-"C_BOX", //???
-//"C_BOX2",
 "C_PLATFORM",
-}; //ADDED
+};
 
         string[] MatAliases = new string[]
 {
 "MAT_WORLD",
 "MAT_VIEW",
 "MAT_TEMP",
-}; //ADDED
+};
 
         string[] DirectionAliases = new string[]
 {
-"FACING_LEFT",
 "FACING_RIGHT",
-}; //NOT YET ADDED
+"FACING_LEFT",
+};
 
         string[] StageStateAliases = new string[]
 {
 "STAGE_PAUSED",
 "STAGE_RUNNING",
 "RESET_GAME",
-}; //ADDED
+};
 
         string[] PlatformAliases = new string[]
         {
@@ -551,7 +576,50 @@ namespace RSDKv2
         "RETRO_IOS",
         "RETRO_ANDROID",
         "RETRO_WP7",
-        }; //ADDED
+        };
+        #endregion
+
+        #region custom aliases
+
+        string[] InkAliases = new string[]
+{
+"INK_NONE",
+"INK_BLEND",
+"INK_ALPHA",
+"INK_ADD",
+"INK_SUB",
+};
+
+        string[] CModeAliases = new string[]
+{
+"CMODE_FLOOR",
+"CMODE_LWALL",
+"CMODE_CEILING",
+"CMODE_RWALL",
+};
+
+        string[] CPathAliases = new string[]
+{
+"PATH_A",
+"PATH_B",
+};
+
+        string[] GravityAliases = new string[]
+{
+"GRAVITY_AIR",
+"GRAVITY_GROUND",
+};
+
+
+        string[] FaceFlagAliases = new string[]
+{
+"FACE_TEXTURED_3D",
+"FACE_TEXTURED_2D",
+"FACE_COLOURED_3D",
+"FACE_COLOURED_2D",
+};
+
+        #endregion
 
         #region Misc
         public string[] functionNames = new string[0x200];
@@ -561,53 +629,63 @@ namespace RSDKv2
         public int[] globalVariables = new int[0x100];
 
         int m_stageVarsIndex;
-
         public bool UseHex = false;
         #endregion
 
         #region Raw Bytecode Data
         int scriptDataPos;
         int jumpTableDataPos;
-        public int[] scriptData = new int[0x40000];
-        public int[] jumpTableData = new int[0x40000];
+        int[] scriptData = new int[0x40000];
+        public int scriptDataLength = 0;
+        int[] jumpTableData = new int[0x40000];
 
         ScriptEngine scriptEng = new ScriptEngine();
         StateScriptEngine state = new StateScriptEngine();
         ObjectScript[] objectScriptList = new ObjectScript[0x100];
         FunctionScript[] functionScriptList = new FunctionScript[0x100];
-        int functionCount = 0;
+        public int functionCount = 0;
+        public int GlobalfunctionCount = 0;
         #endregion
+
+        string filename = "";
 
         int Read32(Reader reader)
         {
             return reader.ReadInt32();
-            //return reader.ReadByte() + (reader.ReadByte() << 8) + (reader.ReadByte() << 16) + (reader.ReadByte() << 24);
         }
-        short Read16(Reader reader)
+        ushort Read16(Reader reader)
         {
-            return reader.ReadInt16();
-            //return (short)(reader.ReadByte() + (reader.ReadByte() << 8));
+            return reader.ReadUInt16();
         }
         byte Read8(Reader reader)
         {
             return reader.ReadByte();
         }
 
+        public ushort SwapBytes(ushort x)
+        {
+            return (ushort)((ushort)((x & 0xff) << 8) | ((x >> 8) & 0xff));
+        }
+
+        public uint SwapBytes(uint x)
+        {
+            // swap adjacent 16-bit blocks
+            x = (x >> 16) | (x << 16);
+            // swap adjacent 8-bit blocks
+            return ((x & 0xFF00FF00) >> 8) | ((x & 0x00FF00FF) << 8);
+        }
+
         public Bytecode(Reader reader, int ScriptCount = 0, bool MobileVer = false)
         {
             ClearScriptData();
             scriptEng.operands = new int[10];
-
-            if (MobileVer)
-            {
-                LoadMobileBytecode(reader, ScriptCount);
-                return;
-            }
+            string filepath = reader.GetFilename();
+            filename = Path.GetFileNameWithoutExtension(filepath);
 
             for (int opcount = Read32(reader); opcount > 0;)
             {
                 byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
+                int blocksCount = (data & 0x7F);
 
                 if ((data & 0x80) == 0)
                 {
@@ -623,10 +701,12 @@ namespace RSDKv2
                 }
             }
 
+            scriptDataLength = scriptDataPos;
+
             for (int opcount = Read32(reader); opcount > 0;)
             {
                 byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
+                int blocksCount = (data & 0x7F);
                 if ((data & 0x80) == 0)
                 {
                     for (int i = 0; i < blocksCount; i++)
@@ -669,111 +749,7 @@ namespace RSDKv2
 
 
 
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
-
-        }
-
-        public void LoadMobileBytecode(Reader reader, int ScriptCount = 0)
-        {
-            scriptEng.operands = new int[10];
-
-            for (int opcount1 = Read32(reader); opcount1 > 0;)
-            {
-                byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
-
-                if ((data & 0x80) == 0)
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = Read8(reader); }
-                    opcount1 -= blocksCount;
-                }
-                else
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = Read32(reader); }
-                    opcount1 -= blocksCount;
-                }
-            }
-
-            int opcount = Read32(reader);
-            int count;
-
-            if (opcount <= 0)
-            {
-                count = Read16(reader); //File count
-
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
-                }
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
-                }
-
-                count = Read16(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainScript = Read32(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainJumpTable = Read32(reader);
-
-            }
-
-
-            for (; opcount > 0;)
-            {
-                byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
-                if ((data & 0x80) == 0)
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = Read8(reader);
-                    opcount -= blocksCount;
-                }
-                else
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = Read32(reader);
-                    opcount -= blocksCount;
-                }
-            }
-
-            if (opcount > 0)
-            {
-                count = Read16(reader); //File count
-
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
-                }
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
-                }
-
-                count = Read16(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainScript = Read32(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainJumpTable = Read32(reader);
-            }
-
-            m_stageVarsIndex = ScriptCount;
-
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+            //Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
         }
 
@@ -782,16 +758,11 @@ namespace RSDKv2
             //ClearScriptData();
             scriptEng.operands = new int[10];
 
-            if (MobileVer)
-            {
-                LoadStageBytecodeDataMobile(reader, ScriptCount);
-                return;
-            }
-
+            filename = Path.GetFileNameWithoutExtension(reader.GetFilename());
             for (int opcount = Read32(reader); opcount > 0;)
             {
                 byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
+                int blocksCount = (data & 0x7F);
 
                 if ((data & 0x80) == 0)
                 {
@@ -810,7 +781,7 @@ namespace RSDKv2
             for (int opcount = Read32(reader); opcount > 0;)
             {
                 byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
+                int blocksCount = (data & 0x7F);
                 if ((data & 0x80) == 0)
                 {
                     for (int i = 0; i < blocksCount; i++)
@@ -851,121 +822,14 @@ namespace RSDKv2
             for (int i = 0; i < functionCount; i++)
                 functionScriptList[i].mainJumpTable = Read32(reader);
 
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
-
-        }
-
-        public void LoadStageBytecodeDataMobile(Reader reader, int ScriptCount = 0)
-        {
-            scriptEng.operands = new int[10];
-
-            for (int opcount1 = Read32(reader); opcount1 > 0;)
-            {
-                byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
-
-                if ((data & 0x80) == 0)
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = Read8(reader); }
-                    opcount1 -= blocksCount;
-                }
-                else
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                    { scriptData[scriptDataPos++] = Read32(reader); }
-                    opcount1 -= blocksCount;
-                }
-            }
-
-            int opcount = Read32(reader);
-            int count;
-
-            if (opcount <= 0)
-            {
-                count = Read16(reader); //File count
-
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
-                }
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
-                }
-
-                count = Read16(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainScript = Read32(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainJumpTable = Read32(reader);
-
-            }
-
-
-            for (; opcount > 0;)
-            {
-                byte data = Read8(reader);
-                int blocksCount = data & 0x7F;
-                if ((data & 0x80) == 0)
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = Read8(reader);
-                    opcount -= blocksCount;
-                }
-                else
-                {
-                    for (int i = 0; i < blocksCount; i++)
-                        jumpTableData[jumpTableDataPos++] = Read32(reader);
-                    opcount -= blocksCount;
-                }
-            }
-
-            if (opcount > 0)
-            {
-                count = Read16(reader); //File count
-
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawScript = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupScript = Read32(reader);
-                }
-                for (int i = 0; i < count; i++)
-                {
-                    objectScriptList[ScriptCount + i].mainJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].playerJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].drawJumpTable = Read32(reader);
-                    objectScriptList[ScriptCount + i].startupJumpTable = Read32(reader);
-                }
-
-                count = Read16(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainScript = Read32(reader);
-                for (int i = 0; i < count; i++)
-                    functionScriptList[i].mainJumpTable = Read32(reader);
-            }
-
-            m_stageVarsIndex = ScriptCount;
-
-            Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
+            //Console.WriteLine(reader.BaseStream.Position + " " + reader.BaseStream.Length);
 
         }
 
         public void ClearScriptData()
         {
-            for (int i = 0; i < 0x40000; i++)
-                scriptData[i] = 0;
-
-            for (int i = 0; i < 0x4000; i++)
-                jumpTableData[i] = 0;
+            scriptData = new int[0x40000];
+            jumpTableData = new int[0x4000];
 
             scriptDataPos = 0;
             jumpTableDataPos = 0;
@@ -980,10 +844,10 @@ namespace RSDKv2
                 objectScriptList[i].drawJumpTable = 0x3FFF;
                 objectScriptList[i].startupScript = 0x3FFFF;
                 objectScriptList[i].startupJumpTable = 0x3FFF;
-                objectScriptList[i].frameListOffset = 0;
+                //objectScriptList[i].frameListOffset = 0;
                 objectScriptList[i].numFrames = 0;
                 objectScriptList[i].surfaceNum = 0;
-                objectScriptList[i].animationFile = AnimationSystem.GetDefaultAnimationRef();
+                //objectScriptList[i].animationFile = AnimationSystem.GetDefaultAnimationRef();
                 functionScriptList[i].mainScript = 0x3FFFF;
                 functionScriptList[i].mainJumpTable = 0x3FFF;
             }
@@ -1024,6 +888,9 @@ namespace RSDKv2
             }
         }
 
+        bool Print = false;
+        string CurName = "";
+
         public void Decompile(string DestPath = "")
         {
             HexadecimalEncoding.UseHex = UseHex;
@@ -1037,8 +904,11 @@ namespace RSDKv2
                         DirectoryInfo d = new DirectoryInfo(DestPath + "/Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), ""));
                         d.Create();
                     }
+                    if (Print)
+                    {
+                        Console.WriteLine(DestPath + "/Scripts/" + sourceNames[i]);
+                    }
                     Console.WriteLine(DestPath + "/Scripts/" + sourceNames[i]);
-
                     path = DestPath + "/Scripts/" + sourceNames[i];
                 }
                 else
@@ -1048,6 +918,10 @@ namespace RSDKv2
                         DirectoryInfo d = new DirectoryInfo("Scripts/" + sourceNames[i].Replace(Path.GetFileName(sourceNames[i]), ""));
                         d.Create();
                     }
+                    if (Print)
+                    {
+                        Console.WriteLine("Scripts/" + sourceNames[i]);
+                    }
                     Console.WriteLine("Scripts/" + sourceNames[i]);
                     path = "Scripts/" + sourceNames[i];
                 }
@@ -1055,7 +929,10 @@ namespace RSDKv2
 
                 StreamWriter writer = new StreamWriter(path);
 
-                Console.WriteLine("Decompiling: " + typeNames[i]);
+                if (Print)
+                {
+                    Console.WriteLine("Decompiling: " + typeNames[i]);
+                }
 
                 writer.WriteLine("//------------Sonic CD " + typeNames[i] + " Script-------------//");
                 writer.WriteLine("//--------Scripted by Christian Whitehead 'The Taxman'--------//");
@@ -1065,84 +942,107 @@ namespace RSDKv2
 
                 writer.WriteLine("//-------Aliases-------//");
 
-                writer.Write("#alias " + i + ": TYPE_" + typeNames[i].ToUpper().Replace(" ", "_") + Environment.NewLine);
+                writer.Write("#alias " + i + ": TYPE_" + typeNames[i].ToUpper().Replace(" ", "") + Environment.NewLine);
 
-                if (typeNames[i] == "Monitor")
-                {
-                    Console.WriteLine();
-                }
+                string Name = CurName = typeNames[i];
 
                 ObjectScript objectScript = objectScriptList[i];
 
                 writer.Write(Environment.NewLine);
                 writer.Write(Environment.NewLine);
 
-
-                //try
-                //{
-                //if (objectScript.mainScript > 0 && objectScript.mainJumpTable > 0 && i != 0)
-                //{
-                Console.Write("Main script, ");
+                if (Print)
+                {
+                    Console.Write("Main Sub, ");
+                }
                 writer.WriteLine("//---------------------------Main Sub---------------------------//");
                 writer.WriteLine("//-------Called once a frame, use this for most functions-------//");
                 DecompileScript(writer, objectScript.mainScript, objectScript.mainJumpTable, 0, false);
-                //}
 
-                //if (objectScript.playerScript > 0 && objectScript.playerJumpTable > 0 && i != 0)
-                //{
+
+                if (Print)
+                {
+                    Console.Write("PlayerInteraction Sub, ");
+                }
                 writer.WriteLine("//-------------------------Player Interaction Sub---------------------------//");
                 writer.WriteLine("//-------This sub is called when the object interacts with the player-------//");
-                Console.Write("Player script, ");
                 DecompileScript(writer, objectScript.playerScript, objectScript.playerJumpTable, 1, false);
-                //}
 
-                //if (objectScript.drawScript > 0 && objectScript.drawJumpTable > 0 && i != 0)
-                //{
+                if (Print)
+                {
+                    Console.Write("Draw Sub, ");
+                }
                 writer.WriteLine("//----------------------Drawing Sub-------------------//");
                 writer.WriteLine("//-------Called once a frame after the Main Sub-------//");
-                Console.Write("Draw script, ");
                 DecompileScript(writer, objectScript.drawScript, objectScript.drawJumpTable, 2, false);
-                //}
 
-                //if (objectScript.startupScript > 0 && objectScript.startupJumpTable > 0 && i != 0)
-                //{
+                if (Print)
+                {
+                    Console.Write("Startup Sub, ");
+                }
                 writer.WriteLine("//--------------------Startup Sub---------------------//");
                 writer.WriteLine("//-------Called once when the object is spawned-------//");
-                Console.Write("Startup script, ");
                 DecompileScript(writer, objectScript.startupScript, objectScript.startupJumpTable, 3, false);
-                //}
 
-                if (i == 1)//&& typeNames[i] == "PlayerObject")
+
+                writer.Write(Environment.NewLine);
+
+                if ((m_stageVarsIndex - i) == 0)
                 {
-                    for (int ii = 0; ii < functionCount; ii++)
+                    string funcpath = path.Replace(Path.GetFileName(path), "functions" + filename);
+                    int id = 1;
+                    if (File.Exists(funcpath + ".txt"))
                     {
-                        //if (functionScriptList[ii].mainScript > 0 && functionScriptList[ii].mainJumpTable > 0 && i != 0)
-                        //{
+                        while (true)
+                        {
+                            if (!File.Exists(funcpath + id + ".txt"))
+                            {
+                                funcpath = funcpath + id;
+                                break;
+                            }
+                            else
+                            {
+                                id++;
+                            }
+                        }
+                    }
+
+                    if (functionCount - GlobalfunctionCount > 0)
+                    {
+                        //writer = new StreamWriter(funcpath + ".txt");
+                    }
+                    for (int ii = GlobalfunctionCount; ii < functionCount; ii++)
+                    {
+
+                        if (Print)
+                        {
+                            Console.WriteLine("Function script " + ii + ".");
+                        }
                         writer.WriteLine("//--------------------Function Sub---------------------//");
                         writer.WriteLine("//-------it do shit-------//");
-                        Console.WriteLine("Function script " + ii + ".");
                         DecompileScript(writer, functionScriptList[ii].mainScript, functionScriptList[ii].mainJumpTable, ii, true);
-                        //}
+
+                    }
+                    if (functionCount - GlobalfunctionCount > 0)
+                    {
+                        //writer.Write(Environment.NewLine);
+                        //writer.Close();
                     }
                 }
 
+                if (Print)
+                {
+                    Console.WriteLine("RSDK Sub.");
+                }
                 writer.WriteLine("//--------------------RSDK Sub---------------------//");
                 writer.WriteLine("//-----------Used for editor functionality---------//");
-                Console.WriteLine("RSDK script.");
                 writer.WriteLine("sub RSDK");
                 writer.WriteLine();
-                writer.WriteLine("//I put a 'dummy' sprite here so it shows up in retroED/RSDK! :)");
-                writer.WriteLine("LoadSpriteSheet(" + "\"Global/Display.gif\"" + ")");
-                writer.WriteLine("SetEditorIcon(Icon0,SingleIcon,0,0,32,32,1,143)");
+                writer.WriteLine("\tLoadSpriteSheet(" + "\"Global/Display.gif\"" + ")"); // Maybe use sourceNames[i] instead
+                writer.WriteLine("\tSetEditorIcon(Icon0,SingleIcon,-16,-16,32,32,1,143)");
                 writer.WriteLine();
                 writer.WriteLine("endsub");
-                //}
-                //catch (Exception ex)
-                //{
-                //    Console.WriteLine(ex.Message);
-                //}
 
-                writer.Write(Environment.NewLine);
                 writer.Close();
             }
         }
@@ -1169,11 +1069,6 @@ namespace RSDKv2
                     break;
             }
 
-            if (scriptCodePtr == 0 && jumpTablePtr == 0)
-            {
-                //return;
-            }
-
             if (!isFunction)
             {
                 writer.Write("sub" + strFuncName + Environment.NewLine);
@@ -1188,7 +1083,6 @@ namespace RSDKv2
             state.jumpTablePtr = state.jumpTableOffset = jumpTablePtr;
             state.scriptSub = scriptSub;
             state.deep = 1;
-            state.isSwitchEnd = false;
             state.error = false;
 
             DecompileSub(writer, isFunction);
@@ -1197,22 +1091,16 @@ namespace RSDKv2
 
         public void DecompileSub(StreamWriter writer, bool isFunction)
         {
-            //int objectLoop = 1056;
-            //string index1 = "0";
             state.EndFlag = false;
             state.LoopBreakFlag = false;
-            state.SwitchBreakFlag = false;
             writer.Write(Environment.NewLine);
 
             while (!state.EndFlag)
             {
-                int num2 = 0;
                 int opcode = scriptData[state.scriptCodePtr++];
                 int paramsCount = scriptOpcodeSizes[opcode];
 
-                //state.isSwitchEnd = false;
-
-                string[] variableName = new string[10];
+                string[] variableName = new string[0x10];
 
                 for (int i = 0; i < variableName.Length; i++)
                 {
@@ -1224,11 +1112,12 @@ namespace RSDKv2
                     int paramId = scriptData[state.scriptCodePtr++];
                     switch (paramId)
                     {
+                        case 0: //Unused
+                            break;
                         case 1: // Read value from RSDK
                             switch (scriptData[state.scriptCodePtr++])
                             {
                                 case 0: //Read Const Variable
-                                    int tmp2 = scriptData[state.scriptCodePtr];
                                     variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
                                     break;
                                 case 1: // ARRAY
@@ -1242,55 +1131,44 @@ namespace RSDKv2
                                         string value = scriptData[state.scriptCodePtr++].ToString();
                                         variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
                                     }
-                                    num2 += 2;
                                     break;
                                 case 2:
+                                    //ObjectLoop +
                                     if (scriptData[state.scriptCodePtr++] == 1)
                                     {
-                                        string value = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        string value = "+" + scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
                                         variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
                                     }
                                     else
                                     {
-                                        string value = scriptData[state.scriptCodePtr++].ToString();
+                                        string value = "+" + scriptData[state.scriptCodePtr++].ToString();
                                         variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
                                     }
-                                    num2 += 2;
-                                    //variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
-                                    //variableName[i] = _SetArrayValue(variableName[i], objectLoop);
                                     break;
                                 case 3:
+                                    //ObjectLoop -
                                     if (scriptData[state.scriptCodePtr++] == 1)
                                     {
-                                        string value = scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
+                                        string value = "-" + scriptEng.arrayPosition[scriptData[state.scriptCodePtr++]];
                                         variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
                                     }
                                     else
                                     {
-                                        string value = scriptData[state.scriptCodePtr++].ToString();
+                                        string value = "-" + scriptData[state.scriptCodePtr++].ToString();
                                         variableName[i] = _SetArrayValue(VARIABLE_NAME[scriptData[state.scriptCodePtr++]], value);
                                     }
-                                    num2 += 2;
-                                    //variableName[i] = VARIABLE_NAME[scriptData[state.scriptCodePtr++]];
-                                    //variableName[i] = _SetArrayValue(variableName[i], objectLoop);
                                     break;
                             }
-                            num2 += 3;
                             break;
                         case 2: // Read constant value from bytecode
-                            scriptEng.operands[i] = scriptData[state.scriptCodePtr++];
-                            variableName[i] = "";
-                            variableName[i] = variableName[i] + scriptEng.operands[i]; //it's an int!!
-                            num2 += 2;
+                            variableName[i] = scriptData[state.scriptCodePtr++].ToString();
                             break;
                         case 3: // Read string
                             string tmp = "";
-                            num2++;
                             int strLen = scriptData[state.scriptCodePtr];
                             for (int j = 0; j < strLen;)
                             {
                                 state.scriptCodePtr++;
-                                num2++;
                                 if (j < strLen)
                                 {
                                     int val = scriptData[state.scriptCodePtr] >> 24;
@@ -1324,11 +1202,9 @@ namespace RSDKv2
                             if ((strLen & 3) == 0)
                             {
                                 state.scriptCodePtr += 2;
-                                num2 += 2;
                                 break;
                             }
                             state.scriptCodePtr++;
-                            num2++;
                             break;
                     }
                 }
@@ -1363,19 +1239,11 @@ namespace RSDKv2
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
                             break;
                         case 0x23: // break
-                            state.SwitchBreakFlag = true;
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
                             state.deep--;
-                            // do a peek if the next statement is an endswitch
-                            if (scriptData[state.scriptCodePtr] == 0x24)
-                            {
-                                //state.isSwitchEnd = true;
-                            }
                             break;
                         case 0x24: // end switch
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                            //state.deep--;
-                            state.isSwitchEnd = true;
                             break;
                         default:
                             for (int i = 0; i < state.deep; i++) writer.Write("\t");
@@ -1383,7 +1251,7 @@ namespace RSDKv2
                     }
 
 
-                    if (opcode >= 134)
+                    if (opcode >= opcodeList.Length)
                     {
                         writer.Write("ERROR AT: " + state.scriptCodePtr + " : " + opcode);
                         Console.WriteLine("OPCODE ABOVE THE MAX OPCODES");
@@ -1399,33 +1267,67 @@ namespace RSDKv2
                         }
                     }
 
-                    if (variableName[0].Contains("Type"))
+                    #region Script Aliases
+
+                    if (variableName[0].Contains("Object") && variableName[0].Contains(".Type"))
                     {
-                        //variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])] + "]";
-                        //variableName[1] = "TypeName[" + Convert.ToInt32(variableName[1]) + "]";
+                        try
+                        {
+                            variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                        }
+                        catch { }
+                    }
+
+                    if (variableName[0].Contains("_Type"))
+                    {
+                        try
+                        {
+                            variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                        }
+                        catch { }
+                    }
+
+                    if (variableName[1].Contains("Object") && variableName[1].Contains(".Type"))
+                    {
+                        try
+                        {
+                            variableName[2] = "TypeName[" + typeNames[Convert.ToInt32(variableName[2])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                        }
+                        catch { }
                     }
 
                     // Special Aliases for some functions
+                    int AliasID = 0;
                     switch (operand)
                     {
                         case "DrawSpriteFX":
-                            int o = 0;
-                            Int32.TryParse((variableName[1]), out o);
-                            //o--;
-                            if (o < 0) o = 0;
-                            variableName[1] = FXAliases[o];
+                            Int32.TryParse((variableName[1]), out AliasID);
+                            if (AliasID < 0) AliasID = 0;
+                            variableName[1] = FXAliases[AliasID];
                             break;
                         case "DrawSpriteScreenFX":
-                            int oo = 0;
-                            Int32.TryParse((variableName[1]), out oo);
-                            // oo--;
-                            if (oo < 0) oo = 0;
-                            variableName[1] = FXAliases[oo];
+                            Int32.TryParse((variableName[1]), out AliasID);
+                            if (AliasID < 0) AliasID = 0;
+                            variableName[1] = FXAliases[AliasID];
                             break;
                         case "PlayerObjectCollision":
-                            int ooo = 0;
-                            Int32.TryParse(variableName[0], out ooo);
-                            if (ooo < CollisionAliases.Length) variableName[0] = CollisionAliases[ooo];
+                            Int32.TryParse(variableName[0], out AliasID);
+                            if (AliasID < CollisionAliases.Length) variableName[0] = CollisionAliases[AliasID];
+                            break;
+                        case "CreateTempObject":
+                            variableName[0] = "TypeName[" + typeNames[Convert.ToInt32(variableName[0])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                            break;
+                        case "ObjectTileCollision":
+                            if (UseHex)
+                            {
+                                variableName[0] = CModeAliases[Int32.Parse(variableName[0])];
+                            }
+                            break;
+                        case "ObjectTileGrip":
+                            if (UseHex)
+                            {
+                                variableName[0] = CModeAliases[Int32.Parse(variableName[0])];
+                            }
                             break;
                     }
 
@@ -1438,43 +1340,147 @@ namespace RSDKv2
 
                     if (opcode < 0x21)
                     {
-                        switch (variableName[0])
+                        try
                         {
-                            case "Engine.PlatformID":
-                                variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
-                                break;
-                            case "Stage.ActiveList":
-                                variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
-                                break;
-                            case "Stage.Stage":
-                                variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
-                                break;
-                        }
+                            switch (variableName[0])
+                            {
+                                case "Engine.PlatformID":
+                                    variableName[1] = PlatformAliases[Int32.Parse(variableName[1])];
+                                    break;
+                                case "Stage.ActiveList":
+                                    variableName[1] = StagesAliases[Int32.Parse(variableName[1])];
+                                    break;
+                                case "Stage.State":
+                                    variableName[1] = StageStateAliases[Int32.Parse(variableName[1])];
+                                    break;
+                                case "Menu1.Selection":
+                                case "Menu2.Selection":
+                                    variableName[1] = MenuAliases[Int32.Parse(variableName[1])];
+                                    break;
+                            }
 
-                        switch (variableName[1])
-                        {
-                            case "Engine.PlatformID":
-                                variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                                break;
-                            case "Stage.ActiveList":
-                                variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
-                                break;
-                            case "Stage.Stage":
-                                variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
-                                break;
-                        }
+                            if (variableName[0].Contains(".Direction"))
+                            {
+                                variableName[1] = DirectionAliases[Int32.Parse(variableName[1])];
+                            }
 
-                        //I'll do it later
-                        /*switch (variableName[2])
-                        {
-                            case "0":
-                                variableName[2] = BoolAliases[0];
-                                break;
-                            case "1":
-                                variableName[2] = BoolAliases[1];
-                                break;
-                        }*/
+                            if (variableName[0].Contains(".InkEffect"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = InkAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[0].Contains(".Flag"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = FaceFlagAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[0].Contains(".Gravity"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = GravityAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[0].Contains(".CollisionMode"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = CModeAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[0].Contains(".CollisionPlane"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = CPathAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            switch (variableName[1])
+                            {
+                                case "Engine.PlatformID":
+                                    variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                                    break;
+                                case "Stage.ActiveList":
+                                    variableName[2] = StagesAliases[Int32.Parse(variableName[2])];
+                                    break;
+                                case "Stage.State":
+                                    variableName[2] = StageStateAliases[Int32.Parse(variableName[2])];
+                                    break;
+                                case "Menu1.Selection":
+                                case "Menu2.Selection":
+                                    variableName[2] = MenuAliases[Int32.Parse(variableName[2])];
+                                    break;
+                            }
+
+                            if (variableName[1].Contains(".Direction"))
+                            {
+                                variableName[2] = DirectionAliases[Int32.Parse(variableName[2])];
+                            }
+
+                            if (variableName[1].Contains(".InkEffect"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = InkAliases[Int32.Parse(variableName[2])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".Gravity"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = GravityAliases[Int32.Parse(variableName[2])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".Flag"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = FaceFlagAliases[Int32.Parse(variableName[2])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".CollisionMode"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = CModeAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".CollisionPlane"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = CPathAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            //I'll do it later
+                            /*switch (variableName[2])
+                            {
+                                case "0":
+                                    variableName[2] = BoolAliases[0];
+                                    break;
+                                case "1":
+                                    variableName[2] = BoolAliases[1];
+                                    break;
+                            }*/
+                        }
+                        catch { }
                     }
+
+                    #endregion
 
                     switch (opcode)
                     {
@@ -1498,195 +1504,221 @@ namespace RSDKv2
                         case 0x0C: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "^=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
                         case 0x0D: writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "%=" + HexadecimalEncoding.ToHexString(variableName[1])); break;
                         case 0x13:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x14:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x15:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x16:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x17:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x18:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("if " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x19:
                             writer.Write("else");
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1A:
                             writer.Write("endif");
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1B:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "==" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1C:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1D:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + ">=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1E:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x1F:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "<=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x20:
+                            //JumpTableOffset = Int32.Parse(variableName[0]);
                             writer.Write("while " + HexadecimalEncoding.ToHexString(variableName[1]) + "!=" + HexadecimalEncoding.ToHexString(variableName[2]));
                             state.deep += 1;
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x21:
                             writer.Write("loop");
-                            //state.jumpTablePtr += 4;
                             break;
                         case 0x22:
-                            writer.WriteLine("switch " + HexadecimalEncoding.ToHexString(variableName[1]) + Environment.NewLine);
-                            state.SwitchCheck = false;
+                            writer.WriteLine("switch " + HexadecimalEncoding.ToHexString(variableName[1]));
                             state.SwitchDeep++;
 
-                            for (int i = 0; !state.isSwitchEnd;)
+                            //Store Read Switch Data
+                            state.switchState[state.SwitchDeep].Active = 1;
+                            state.switchState[state.SwitchDeep].JumpTableOffset = Int32.Parse(variableName[0]);
+                            state.switchState[state.SwitchDeep].LowCase = jumpTableData[state.jumpTableOffset + state.switchState[state.SwitchDeep].JumpTableOffset]; //Lowest Case No
+                            state.switchState[state.SwitchDeep].HighCase = jumpTableData[state.jumpTableOffset + state.switchState[state.SwitchDeep].JumpTableOffset + 1]; //Highest Case No
+                            state.switchState[state.SwitchDeep].DefaultJmp = jumpTableData[state.jumpTableOffset + state.switchState[state.SwitchDeep].JumpTableOffset + 2]; //Default Ptr
+                            state.switchState[state.SwitchDeep].EndJmp = jumpTableData[state.jumpTableOffset + state.switchState[state.SwitchDeep].JumpTableOffset + 3]; //EndSwitch Ptr
+                            state.switchState[state.SwitchDeep].Case = 0; //EndSwitch Ptr
+                            state.switchState[state.SwitchDeep].ScriptCodePtr = state.scriptCodePtr;
+
+                            state.switchState[state.SwitchDeep].JumpPtr = new List<SwitchJumpPtr>();
+                            int CaseID = 0;
+
+                            //Load Data for Switches
+                            for (state.switchState[state.SwitchDeep].Case = state.switchState[state.SwitchDeep].LowCase; state.switchState[state.SwitchDeep].Case <= state.switchState[state.SwitchDeep].HighCase + 1; state.switchState[state.SwitchDeep].Case++)
                             {
-                                //LABEL_1:
-                                if (!state.SwitchCheck)
+                                if (state.switchState[state.SwitchDeep].Case == state.switchState[state.SwitchDeep].HighCase + 1)
+                                {
+                                    if (state.switchState[state.SwitchDeep].EndJmp - state.switchState[state.SwitchDeep].DefaultJmp > 1)
+                                    {
+                                        int JumpPtr = state.scriptCodeOffset + state.switchState[state.SwitchDeep].DefaultJmp;
+
+                                        int Match = -1;
+
+                                        for (int i = 0; i < state.switchState[state.SwitchDeep].JumpPtr.Count; i++)
+                                        {
+                                            if (JumpPtr == state.switchState[state.SwitchDeep].JumpPtr[i].Jump)
+                                            {
+                                                Match = i;
+                                                break;
+                                            }
+                                        }
+
+                                        if (Match > -1) //fall through
+                                        {
+                                            state.switchState[state.SwitchDeep].JumpPtr[Match].Cases.Add(state.switchState[state.SwitchDeep].Case);
+                                        }
+                                        else //new case
+                                        {
+                                            state.switchState[state.SwitchDeep].JumpPtr.Add(new SwitchJumpPtr());
+                                            state.switchState[state.SwitchDeep].JumpPtr[CaseID].Cases.Add(state.switchState[state.SwitchDeep].Case);
+
+                                            state.switchState[state.SwitchDeep].JumpPtr[CaseID].Jump = JumpPtr;
+                                            CaseID++;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    int JumpTblPtr = state.jumpTableOffset + state.switchState[state.SwitchDeep].JumpTableOffset + (state.switchState[state.SwitchDeep].Case - state.switchState[state.SwitchDeep].LowCase) + 4;
+                                    int JumpPtr = state.scriptCodeOffset + jumpTableData[JumpTblPtr];
+
+                                    int Match = -1;
+
+                                    for (int i = 0; i < state.switchState[state.SwitchDeep].JumpPtr.Count; i++)
+                                    {
+                                        if (JumpPtr == state.switchState[state.SwitchDeep].JumpPtr[i].Jump)
+                                        {
+                                            Match = i;
+                                            break;
+                                        }
+                                    }
+
+                                    if (Match > -1) //fall through
+                                    {
+                                        state.switchState[state.SwitchDeep].JumpPtr[Match].Cases.Add(state.switchState[state.SwitchDeep].Case);
+                                    }
+                                    else //new case
+                                    {
+                                        state.switchState[state.SwitchDeep].JumpPtr.Add(new SwitchJumpPtr());
+                                        state.switchState[state.SwitchDeep].JumpPtr[CaseID].Cases.Add(state.switchState[state.SwitchDeep].Case);
+
+                                        state.switchState[state.SwitchDeep].JumpPtr[CaseID].Jump = JumpPtr;
+                                        CaseID++;
+                                    }
+                                }
+                            }
+
+                            //Sort Switches by JumpPtr
+                            state.switchState[state.SwitchDeep].JumpPtr.Sort((x, y) => x.Jump.CompareTo(y.Jump));
+
+                            //Use loaded data in a sorted way to jump where needed
+                            for (state.switchState[state.SwitchDeep].Case = 0; state.switchState[state.SwitchDeep].Case < state.switchState[state.SwitchDeep].JumpPtr.Count; state.switchState[state.SwitchDeep].Case++)
+                            {
+
+                                if (state.scriptCodeOffset + state.switchState[state.SwitchDeep].DefaultJmp == state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Jump)
                                 {
                                     for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
-                                    int scrd = scriptData[state.scriptCodePtr];
-                                    int jmpd = jumpTableData[state.jumpTablePtr];
-                                    int dta = scriptData[(4 * Int32.Parse(variableName[0]))];
-                                    int cse = scriptData[jumpTableData[state.jumpTablePtr]];
-
-                                    //Our Case Value
-                                    int CurCase = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0])];
-
-                                    int CurCase2 = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0]) + 1];
-                                    int Epic = jumpTableData[state.jumpTablePtr + Int32.Parse(variableName[0]) + 2];
-
-                                    int bruh = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0])];
-                                    int bruh2 = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0]) + 1];
-                                    int bruh3 = scriptData[state.scriptCodePtr + 4 * Int32.Parse(variableName[0]) + 2];
-
-                                    //writer.Write("case " + i);
-                                    if (jmpd != 13)
-                                    {
-                                        writer.Write("case " + CurCase);
-                                    }
-                                    else
-                                    {
-                                        writer.Write("default");
-                                    }
-                                    state.SwitchCheck = true;
-                                    state.deep += 1;
-                                    i++;
+                                    writer.Write("default");
                                 }
+                                else
+                                {
+                                    for (int i = 0; i < state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Cases.Count; i++)
+                                    {
+                                        for (int j = 0; j < state.deep; j++) { writer.Write("\t"); }
+                                        if (i + 1 < state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Cases.Count)
+                                        {
+                                            writer.WriteLine("case " + state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Cases[i]);
+                                        }
+                                        else
+                                        {
+                                            writer.Write("case " + state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Cases[i]);
+                                        }
+                                    }
+                                }
+
+                                state.scriptCodePtr = state.switchState[state.SwitchDeep].JumpPtr[state.switchState[state.SwitchDeep].Case].Jump;
+
+                                state.deep += 1;
+
                                 DecompileSub(writer, isFunction);
+
                             }
-                            state.isSwitchEnd = false;
-                            state.jumpTablePtr = state.jumpTableOffset;
+
                             continue;
                         case 0x23:
                             writer.Write("break");
-                            state.jumpTablePtr++;
-                            if (scriptData[state.scriptCodePtr] == 0x24)
+                            if (state.switchState[state.SwitchDeep].Active != 0)
                             {
-                                state.scriptCodePtr++;
-                                //state.jumpTablePtr += 4;
-                                writer.Write(Environment.NewLine);
-                                for (int i = 0; i < state.deep; i++) writer.Write("\t");
-                                writer.Write("endswitch");
-                                state.SwitchDeep--;
-                                state.SwitchCheck = false;
-                                state.isSwitchEnd = true;
+                                writer.WriteLine();
+                                return;
                             }
-                            state.SwitchCheck = false;
                             break;
                         case 0x24:
                             writer.Write("endswitch");
+                            state.switchState[state.SwitchDeep].Active = 0;
                             state.SwitchDeep--;
-                            //state.jumpTablePtr += 4;
-                            state.SwitchCheck = false;
-                            state.isSwitchEnd = true;
-                            return;
+                            break;
                         default:
                             writer.Write(operand + "(");
-                            switch (paramsCount)
+                            for (int i = 0; i < paramsCount; i++)
                             {
-                                case 1:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]));
-                                    break;
-                                case 2:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]));
-                                    break;
-                                case 3:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]));
-                                    break;
-                                case 4:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]));
-                                    break;
-                                case 5:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]));
-                                    break;
-                                case 6:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]));
-                                    break;
-                                case 7:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]));
-                                    break;
-                                case 8:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]));
-                                    break;
-                                case 9:
-                                    writer.Write(HexadecimalEncoding.ToHexString(variableName[0]) + "," + HexadecimalEncoding.ToHexString(variableName[1]) + "," + HexadecimalEncoding.ToHexString(variableName[2]) + "," + HexadecimalEncoding.ToHexString(variableName[3]) + "," + HexadecimalEncoding.ToHexString(variableName[4]) + "," + HexadecimalEncoding.ToHexString(variableName[5]) + "," + HexadecimalEncoding.ToHexString(variableName[6]) + "," + HexadecimalEncoding.ToHexString(variableName[7]) + "," + HexadecimalEncoding.ToHexString(variableName[8]));
-                                    break;
+                                writer.Write(HexadecimalEncoding.ToHexString(variableName[i]));
+                                if (i + 1 < paramsCount)
+                                {
+                                    writer.Write(",");
+                                }
                             }
                             writer.Write(")");
                             break;
                     }
                 }
-
-                //if (!state.isSwitchEnd && !state.EndFlag)
-                writer.Write(Environment.NewLine);
-
-                if (state.SwitchBreakFlag)
-                {
-                    state.SwitchBreakFlag = false;
-                    return;
-                }
-
-                if (state.LoopBreakFlag)
-                {
-                    state.LoopBreakFlag = false;
-                    //return;
-                }
+                writer.WriteLine();
             }
         }
 
@@ -1784,15 +1816,6 @@ namespace RSDKv2
             }
         }
     }
-    public static class stringshit
-    {
-
-        public static bool isNumber(string str)
-        {
-            return int.TryParse(str, out int value);
-        }
-
-    }
 
     public class HexadecimalEncoding
     {
@@ -1806,14 +1829,24 @@ namespace RSDKv2
             }
             var sb = new StringBuilder();
 
+            bool negative = str.Contains("-");
+
+            if (negative)
+            {
+                str = str.Replace("-", "");
+            }
+
             try
             {
                 int value;
                 bool isNumeric = int.TryParse(str, out value);
 
-                if (!isNumeric) return str;
+                if (!isNumeric)
+                {
+                    return str;
+                }
 
-                if (value < 1023 && value > -1023)
+                if (value < 0x3FF && value > -0x3FF)
                 {
                     return str;
                 }
@@ -1821,7 +1854,14 @@ namespace RSDKv2
                 sb.Append("0x");
                 sb.Append(value.ToString("X"));
 
-                return sb.ToString();
+                str = sb.ToString();
+
+                if (negative)
+                {
+                    str = "-" + str;
+                }
+
+                return str;
             }
             catch (Exception ex)
             {
@@ -1837,7 +1877,7 @@ namespace RSDKv2
                 bytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
             }
 
-            return Encoding.Unicode.GetString(bytes); // returns: "Hello world" for "48656C6C6F20776F726C64"
+            return Encoding.Unicode.GetString(bytes);
         }
     }
 }
