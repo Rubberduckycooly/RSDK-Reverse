@@ -732,6 +732,11 @@ namespace RSDKv5
             return (ushort)(((red & 0b11111000) << 7) | ((green & 0b11111000) << 2) | ((blue & 0b11111000) >> 3));
         }
 
+        public void ImportOBJ(string filename, string mtlfilename = "")
+        {
+            //Read OBJ format
+        }
+
         public void WriteAsOBJ(string filename, string mtlfilename)
         {
             for (int frame = 0; frame < Frames.Count; ++frame)

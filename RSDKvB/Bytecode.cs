@@ -692,6 +692,8 @@ namespace RSDKvB
                 }
             }
 
+            scriptDataLength = scriptDataPos;
+
             for (int opcount = Read32(reader); opcount > 0;)
             {
                 int data = Read8(reader);

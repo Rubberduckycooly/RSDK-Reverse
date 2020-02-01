@@ -28,11 +28,11 @@ namespace RSDKvRS
             /// <summary>
             /// how fast the Layer moves while the player is moving
             /// </summary>
-            public byte RelativeSpeed;
+            public short RelativeSpeed;
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public byte ConstantSpeed;
+            public short ConstantSpeed;
 
             /// <summary>
             /// a list of Line positions
@@ -42,7 +42,8 @@ namespace RSDKvRS
             public BGLayer()
             {
                 width = height = 1;
-                Deform = RelativeSpeed = ConstantSpeed = 0;
+                Deform = 0;
+                RelativeSpeed = ConstantSpeed = 0;
                 LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -55,7 +56,8 @@ namespace RSDKvRS
             {
                 width = w;
                 height = h;
-                Deform = RelativeSpeed = ConstantSpeed = 0;
+                Deform = 0;
+                RelativeSpeed = ConstantSpeed = 0;
                 LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -124,8 +126,8 @@ namespace RSDKvRS
 
             public void Write(Writer writer)
             {
-                writer.Write((byte)width);
-                writer.Write((byte)height);
+                writer.Write(width);
+                writer.Write(height);
                 writer.Write(Deform);
                 writer.Write(RelativeSpeed);
                 writer.Write(ConstantSpeed);
@@ -261,7 +263,6 @@ namespace RSDKvRS
         public BGLayout(Reader reader)
         {
             byte layerCount = reader.ReadByte();
-
             byte HLineCount = reader.ReadByte();
 
             //First up is certainly the Horizontal Parallax vallues
@@ -271,7 +272,6 @@ namespace RSDKvRS
             }
 
             byte VLineCount = reader.ReadByte();
-
             //Then the Vertical Parallax vallues
             for (int lc = 0; lc < VLineCount; lc++)
             {

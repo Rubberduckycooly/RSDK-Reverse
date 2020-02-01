@@ -152,7 +152,7 @@ namespace RSDKv2
             }
         }
         /// <summary>
-        /// what stages have good futures
+        /// target score
         /// </summary>
         public int GoodFutures
         {
