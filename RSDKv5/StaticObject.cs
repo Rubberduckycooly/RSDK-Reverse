@@ -24,13 +24,15 @@ namespace RSDKv5
 
         private uint DataPos = 0;
         private bool Debug = true;
-        public StaticObject()
+        public StaticObject(bool PrintDebugInfo = false)
         {
 
         }
 
-        public StaticObject(Reader reader)
+        public StaticObject(Reader reader, bool PrintDebugInfo = false)
         {
+            Debug = PrintDebugInfo;
+
             int[] TmpData = new int[reader.BaseStream.Length];
             DataPos = 0;
             string filename = System.IO.Path.GetFileName(reader.GetFilename());
@@ -47,7 +49,7 @@ namespace RSDKv5
             while (!reader.IsEof)
             {
                 int DataType = reader.ReadByte();
-                int Unknown = reader.ReadInt32(); //Unknown
+                int ArraySize = reader.ReadInt32();
 
                 if ((DataType & 0x80) != 0)
                 {
@@ -83,7 +85,7 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Type:" + AttributeTypes.UINT8 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
                                 }
                             }
-                            MemPos += Unknown;
+                            MemPos += ArraySize;
                             break;
                         case (int)AttributeTypes.INT8:
 
@@ -104,7 +106,7 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Value: Type:" + AttributeTypes.INT8 + ", " + TmpData[DataPos-1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 1) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 1).ToString("X"));
                                 }
                             }
-                            MemPos += Unknown;
+                            MemPos += ArraySize;
                             break;
                             //IN16
                         case (int)AttributeTypes.UINT16:
@@ -134,7 +136,7 @@ namespace RSDKv5
                                 }
                             }
 
-                            MemPos += 2 * Unknown;
+                            MemPos += 2 * ArraySize;
                             break;
                         case (int)AttributeTypes.INT16:
                             TmpDataOffset = (int)((MemPos & 0xFFFFFFFE) + 2);
@@ -162,7 +164,7 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Type:" + AttributeTypes.INT16 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 2) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 2).ToString("X"));
                                 }
                             }
-                            MemPos += 2 * Unknown;
+                            MemPos += 2 * ArraySize;
                             break;
                             //INT32
                         case (int)AttributeTypes.UINT32:
@@ -193,7 +195,7 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Type:" + AttributeTypes.UINT32 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
                                 }
                             }
-                            MemPos += 4 * Unknown;
+                            MemPos += 4 * ArraySize;
                             break;
                         case (int)AttributeTypes.INT32:
                             TmpDataOffset = (int)((MemPos & 0xFFFFFFFC) + 4);
@@ -223,7 +225,7 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Type:" + AttributeTypes.INT32 + ", Value: " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
                                 }
                             }
-                            MemPos += 4 * Unknown;
+                            MemPos += 4 * ArraySize;
                             break;
                         case (int)AttributeTypes.ENUM:
                             TmpDataOffset = (int)((MemPos & 0xFFFFFFFC) + 4);
@@ -253,56 +255,56 @@ namespace RSDKv5
                                     Console.WriteLine("Value Info: Value: Type:" + AttributeTypes.ENUM + ", " + TmpData[DataPos - 1] + ", Value (Hex) 0x" + TmpData[DataPos - 1].ToString("X") + ", Offset: " + (reader.BaseStream.Position - 4) + ", Offset (Hex): 0x" + (reader.BaseStream.Position - 4).ToString("X"));
                                 }
                             }
-                            MemPos += 4 * Unknown;
+                            MemPos += 4 * ArraySize;
                             break;
                     }
                 }
                 else
                 {
+                    int Buffer = 0;
                     switch (DataType)
                     {
                         //INT8
                         case (int)AttributeTypes.UINT8:
                         case (int)AttributeTypes.INT8:
-                            MemPos += Unknown;
+                            MemPos += ArraySize;
                             break;
                         //IN16
                         case (int)AttributeTypes.UINT16:
                         case (int)AttributeTypes.INT16:
-                            bool v45 = (MemPos & 0xFFFFFFFE) < MemPos;
-                            int v46 = (int)((MemPos & 0xFFFFFFFE) + 2);
-                            if (!v45)
-                                v46 = MemPos;
-                            MemPos = v46 + 2 * Unknown;
+                            Buffer = (int)((MemPos & 0xFFFFFFFE) + 2);
+                            if ((MemPos & 0xFFFFFFFE) >= MemPos)
+                                Buffer = MemPos;
+                            MemPos = Buffer + 2 * ArraySize;
                             break;
                         //INT32
                         case (int)AttributeTypes.UINT32:
                         case (int)AttributeTypes.INT32:
                         case (int)AttributeTypes.ENUM:
                         case (int)AttributeTypes.BOOL:
-                            int v48 = (int)((MemPos & 0xFFFFFFFC) + 4);
+                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
                             if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                v48 = MemPos;
-                            MemPos = v48 + 4 * Unknown;
+                                Buffer = MemPos;
+                            MemPos = Buffer + 4 * ArraySize;
                             break;
                         case (int)AttributeTypes.STRING:
                         case (int)AttributeTypes.VECTOR2:
-                            v48 = (int)((MemPos & 0xFFFFFFFC) + 4);
+                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
                             if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                v48 = MemPos;
-                            MemPos = v48 + 8 * Unknown;
+                                Buffer = MemPos;
+                            MemPos = Buffer + 8 * ArraySize;
                             break;
                         case (int)AttributeTypes.VECTOR3:
-                            v48 = (int)((MemPos & 0xFFFFFFFC) + 4);
+                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
                             if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                v48 = MemPos;
-                            MemPos = v48 + 24 * Unknown;
+                                Buffer = MemPos;
+                            MemPos = Buffer + 24 * ArraySize;
                             break;
                         case (int)AttributeTypes.COLOR:
-                            v48 = (int)((MemPos & 0xFFFFFFFE) + 2);
+                            Buffer = (int)((MemPos & 0xFFFFFFFE) + 2);
                             if ((MemPos & 0xFFFFFFFE) >= MemPos)
-                                v48 = MemPos;
-                            MemPos = v48 + 8 * Unknown;
+                                Buffer = MemPos;
+                            MemPos = Buffer + 8 * ArraySize;
                             break;
                         default:
                             break;
@@ -327,6 +329,7 @@ namespace RSDKv5
         public void Write(Writer writer)
         {
             writer.Write(MAGIC);
+            int MemPos = 0;
 
             for (uint DataPos = 0; DataPos < Data.Length;)
             {
@@ -346,7 +349,7 @@ namespace RSDKv5
                     {
                         FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT16;
                     }
-                    if (Data[offset] > ushort.MaxValue && Data[offset] <= uint.MaxValue)
+                    if (Data[offset] > ushort.MaxValue)
                     {
                         FirstDataType = DataTypeBuf = (int)AttributeTypes.UINT32;
                     }
@@ -380,7 +383,7 @@ namespace RSDKv5
                         {
                             DataTypeBuf = (int)AttributeTypes.UINT16;
                         }
-                        if (Data[offset] > ushort.MaxValue && Data[offset] <= uint.MaxValue)
+                        if (Data[offset] > ushort.MaxValue)
                         {
                             DataTypeBuf = (int)AttributeTypes.UINT32;
                         }
@@ -430,7 +433,7 @@ namespace RSDKv5
                 DataType |= 0x80;
 
                 writer.Write(DataType);
-                writer.Write(DataSize);
+                writer.Write(MemPos);
 
                 if ((DataType & 0x80) != 0)
                 {

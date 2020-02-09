@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RSDKv2")]
-[assembly: AssemblyDescription("A library for interacting with the RSDKv2's file formats")]
+[assembly: AssemblyDescription("A library for interacting with RSDKv2's file formats")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("RSDKv2")]
-[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

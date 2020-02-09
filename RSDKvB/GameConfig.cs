@@ -290,7 +290,7 @@ namespace RSDKvB
             for (int i = 0; i < objects_count; ++i)
             {
                 ScriptPaths.Add(reader.ReadRSDKString());
-                Console.WriteLine(ScriptPaths[i]);
+                //Console.WriteLine(ScriptPaths[i]);
             }
         }
 

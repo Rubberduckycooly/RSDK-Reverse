@@ -19,7 +19,7 @@ namespace RSDKv5
         /// <summary>
         /// what version the game is on
         /// </summary>
-        public String Version = "1.05.0";
+        public String Version = "1.06.0";
         public String FilePath;
 
         /// <summary>
@@ -124,10 +124,10 @@ namespace RSDKv5
             {
                 Name = reader.ReadRSDKString();
 
-                byte scenes_count = reader.ReadByte();
+                byte SceneCount = reader.ReadByte();
 
                 int index = 0;
-                for (int i = 0; i < scenes_count; ++i)
+                for (int i = 0; i < SceneCount; ++i)
                 {
                     Scenes.Add(new SceneInfo(reader, scenesHaveModeFilter, index, true));
                     CurrentLevelID++;
@@ -188,12 +188,16 @@ namespace RSDKv5
         public List<Category> Categories = new List<Category>();
 
         /// <summary>
-        /// a list of all the config memory data
+        /// a list of all the config memory data, for use with RSDKConfig's names
         /// </summary>
         public List<ConfigurableMemoryEntry> ConfigMemory = new List<ConfigurableMemoryEntry>();
 
         public Gameconfig()
         {
+            for (int i = 0; i < Palettes.Length; i++)
+            {
+                Palettes[i] = new Palette();
+            }
         }
 
         public Gameconfig(string filename)
@@ -236,10 +240,10 @@ namespace RSDKv5
             ReadCommonConfig(reader);
 
             ushort TotalScenes = reader.ReadUInt16();
-            byte categories_count = reader.ReadByte();
+            byte CategoryCount = reader.ReadByte();
 
             CurrentLevelID = 0;
-            for (int i = 0; i < categories_count; ++i)
+            for (int i = 0; i < CategoryCount; ++i)
             {
                 Categories.Add(new Category(reader, _scenesHaveModeFilter));
             }

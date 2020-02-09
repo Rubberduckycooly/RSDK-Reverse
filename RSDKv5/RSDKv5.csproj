@@ -20,7 +20,7 @@
     <OutputPath>..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>2</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -103,7 +103,7 @@
     <Compile Include="SceneLayer.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="ScrollInfo.cs" />
-    <Compile Include="StageConfig.cs" />
+    <Compile Include="Stageconfig.cs" />
     <Compile Include="Stamps.cs" />
     <Compile Include="StaticObject.cs" />
     <Compile Include="Tileconfig.cs" />

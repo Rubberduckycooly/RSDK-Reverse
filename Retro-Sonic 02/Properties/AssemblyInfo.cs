@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Retro-Sonic v2")]
-[assembly: AssemblyDescription("A library for interacting with Retro-Sonic (2002)'s Filetypes")]
+[assembly: AssemblyDescription("A library for interacting with Retro-Sonic Engine (2002 Build)'s file formats")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("Retro-Sonic v2")]
-[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2019")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2020")]
 [assembly: AssemblyTrademark("Rubberduckycooly")]
 [assembly: AssemblyCulture("")]
 

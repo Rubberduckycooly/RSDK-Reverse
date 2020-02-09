@@ -2,7 +2,7 @@
 
 namespace RSDKv5
 {
-    public class StageConfig : CommonConfig
+    public class Stageconfig : CommonConfig
     {
         /// <summary>
         /// the path to this file
@@ -14,12 +14,12 @@ namespace RSDKv5
         /// </summary>
         public bool LoadGlobalObjects;
 
-        public StageConfig(string filename) : this(new Reader(filename))
+        public Stageconfig(string filename) : this(new Reader(filename))
         {
             FilePath = filename;
         }
 
-        public StageConfig()
+        public Stageconfig()
         {
             for (int i = 0; i < Palettes.Length; i++)
             {
@@ -27,12 +27,12 @@ namespace RSDKv5
             }
         }
 
-        public StageConfig(Stream stream) : this(new Reader(stream))
+        public Stageconfig(Stream stream) : this(new Reader(stream))
         {
 
         }
 
-        public StageConfig(Reader reader)
+        public Stageconfig(Reader reader)
         {
             base.ReadMagic(reader);
 

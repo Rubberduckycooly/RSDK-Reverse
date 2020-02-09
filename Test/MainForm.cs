@@ -59,7 +59,7 @@ namespace Test
                 //RSDKv2.BGLayout BGmap = new RSDKv2.BGLayout("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic CD\\mods\\Testing things\\Data\\Stages\\R31A\\Backgrounds.bin");
                 //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic CD Source\\Data\\Stages\\R11A\\Backgrounds2.bin");
 
-                //RSDKvB.BGLayout BGmap = new RSDKvB.BGLayout("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 2 Source\\Data\\Stages\\Zone01\\Backgrounds.bin");
+                RSDKvB.BGLayout BGmap = new RSDKvB.BGLayout(new RSDKvB.Reader(filepath));
                 //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 2 Source\\Data\\Stages\\Zone01\\Backgrounds2.bin");
 
                 //RSDKvRS.til chunks = new RSDKvRS.til("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\Zone.til");
@@ -140,7 +140,7 @@ namespace Test
                 //RSDKv2.StringSet strings = new RSDKv2.StringSet(new RSDKv2.Reader(dlg.FileName));
 
                 //Scripts & Objects
-                RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
+                //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
                 //Obj.Write(new RSDKv5.Writer(filepath));
                 //Obj.Write(new RSDKv5.Writer("Object.bin"));
 
