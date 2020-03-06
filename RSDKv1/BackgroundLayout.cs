@@ -31,11 +31,11 @@ namespace RSDKv1
             /// <summary>
             /// how fast the Layer moves while the player is moving
             /// </summary>
-            public byte RelativeSpeed;
+            public short RelativeSpeed;
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public byte ConstantSpeed;
+            public short ConstantSpeed;
 
             /// <summary>
             /// a list of Line positions
@@ -45,7 +45,8 @@ namespace RSDKv1
             public BGLayer()
             {
                 width = height = 1;
-                Deform = RelativeSpeed = ConstantSpeed = 0;
+                Deform = 0;
+                RelativeSpeed = ConstantSpeed = 0;
                 LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -58,7 +59,8 @@ namespace RSDKv1
             {
                 width = w;
                 height = h;
-                Deform = RelativeSpeed = ConstantSpeed = 0;
+                Deform = 0;
+                RelativeSpeed = ConstantSpeed = 0;
                 LineIndexes = new byte[height * 128];
                 MapLayout = new ushort[height][];
                 for (int m = 0; m < height; m++)
@@ -261,7 +263,6 @@ namespace RSDKv1
         public BGLayout(Reader reader)
         {
             byte layerCount = reader.ReadByte();
-
             byte HLineCount = reader.ReadByte();
 
             for (int i = 0; i < HLineCount; i++)
@@ -271,7 +272,6 @@ namespace RSDKv1
             }
 
             byte VLineCount = reader.ReadByte();
-
             for (int i = 0; i < VLineCount; i++)
             {
                 ScrollInfo p = new ScrollInfo(reader);

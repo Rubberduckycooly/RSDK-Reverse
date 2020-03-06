@@ -21,7 +21,7 @@
         /// </summary>
         public PaletteColor[][] Colors = new PaletteColor[MAX_PALETTE_COLUMNS][];
 
-        public Palette(int pc = 0)
+        public Palette(int pc = 16)
         {
             int palColumns = pc;
 

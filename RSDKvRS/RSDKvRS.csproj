@@ -19,7 +19,7 @@
     <OutputPath>..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>2</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -45,7 +45,6 @@
     <Compile Include="GraphicsImage.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="CharacterList.cs" />
-    <Compile Include="Script - OLD.cs" />
     <Compile Include="ZoneList.cs" />
     <Compile Include="Object.cs" />
     <Compile Include="Palette.cs" />

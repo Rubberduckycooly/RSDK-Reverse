@@ -161,11 +161,11 @@ namespace RSDKvB
     "Object.JumpPress",
     "Object.JumpHold",
     "Object.TrackScroll",
-    "Object.Value113",
-    "Object.Value114",
-    "Object.Value115",
-    "Object.Value116",
-    "Object.Value117",
+    "Object.Flailing0",
+    "Object.Flailing1",
+    "Object.Flailing2",
+    "Object.Flailing3",
+    "Object.Flailing4",
     "Object.CollisionLeft",
     "Object.CollisionTop",
     "Object.CollisionRight",
@@ -188,13 +188,13 @@ namespace RSDKvB
     "Object.Value13",
     "Object.Value14",
     "Object.Value50",
-    "Player.FollowPlayer1",
+    "Object.Value54",
     "Object.Value58",
-    "Player.DrawOrder",
+    "Object.Value5C",
     "Object.Value60",
-    "Player.TopSpeed",
-    "Player.Acceleration",
-    "Player.Deceleration",
+    "Object.Value64",
+    "Object.Value68",
+    "Object.Value6C",
     "Object.Value70",
     "Object.Value74",
     "Object.Value78",
@@ -203,7 +203,7 @@ namespace RSDKvB
     "Object.Value84",
     "Object.Value88",
     "Object.Value8C",
-    "Object.RollingDeceleration",
+    "Object.Value90",
     "Object.Value94",
     "Object.Value98",
     "Object.Value9C",
@@ -404,7 +404,7 @@ namespace RSDKvB
 "DrawActName",
 "DrawMenu",
 "SpriteFrame",
-"SetDebugIcon",
+"SetSpriteFrame",
 "LoadPalette",
 "RotatePalette",
 "SetScreenFade",
@@ -480,10 +480,10 @@ namespace RSDKvB
 "EngineCallback",
 "CallEngineFunction", //SetAchievement
 "CallEngineFunction", // SetLeaderboards
-"SetObjectBorder",
-"GetObjectAttribute",
-"SetObjectAttribute",
-"CopyObjectAttribute",
+"SetObjectBorders", //Operand0 = Offset
+"GetObjectValue",
+"SetObjectValue",
+"CopyObject",
 };
 
         readonly byte[] scriptOpcodeSizes = new byte[]
@@ -597,8 +597,8 @@ namespace RSDKvB
 
         string[] GravityAliases = new string[]
 {
-"GRAVITY_AIR",
 "GRAVITY_GROUND",
+"GRAVITY_AIR",
 };
 
 
@@ -612,6 +612,18 @@ namespace RSDKvB
 "FACE_TEXTURED_C",
 "FACE_TEXTURED_D",
 "FACE_SPRITE_3D",
+};
+
+        string[] PriorityAliases = new string[]
+{
+"PRIORITY_ACTIVE_BOUNDS",
+"PRIORITY_ACTIVE",
+"PRIORITY_ACTIVE_PAUSED",
+"PRIORITY_XBOUNDS",
+"PRIORITY_XBOUNDS_DESTROY",
+"PRIORITY_INACTIVE",
+"PRIORITY_BOUNDS_SMALL",
+"PRIORITY_XBOUNDS_SMALL",
 };
 
         #endregion
@@ -863,7 +875,6 @@ namespace RSDKvB
         }
 
         bool Print = false;
-        string CurName = "";
 
         public void Decompile(string DestPath = "")
         {
@@ -1080,13 +1091,13 @@ namespace RSDKvB
             }
             else
             {
-                writer.Write("function " + (GlobalfunctionCount + scriptSub) + Environment.NewLine);
+                writer.Write("function " + scriptSub + Environment.NewLine);
             }
 
             state = new StateScriptEngine();
             state.scriptCodePtr = state.scriptCodeOffset = scriptCodePtr;
             state.jumpTablePtr = state.jumpTableOffset = jumpTablePtr;
-            state.scriptSub = (GlobalfunctionCount + scriptSub);
+            state.scriptSub = scriptSub;
             state.deep = 1;
             state.error = false;
 
@@ -1329,6 +1340,13 @@ namespace RSDKvB
                             }
                             catch { }
                             break;
+                        case "ResetObjectEntity":
+                            try
+                            {
+                                variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                            }
+                            catch { }
+                            break;
                         case "ObjectTileCollision":
                             if (UseHex)
                             {
@@ -1387,6 +1405,14 @@ namespace RSDKvB
                                 }
                             }
 
+                            if (variableName[0].Contains(".Priority"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = PriorityAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
                             if (variableName[0].Contains(".Gravity"))
                             {
                                 if (UseHex)
@@ -1434,6 +1460,14 @@ namespace RSDKvB
                                 if (UseHex)
                                 {
                                     variableName[2] = FaceFlagAliases[Int32.Parse(variableName[2])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".Priority"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = PriorityAliases[Int32.Parse(variableName[2])];
                                 }
                             }
 
@@ -1784,6 +1818,10 @@ namespace RSDKvB
 
                 if (value < 0xFF && value > -0xFF)
                 {
+                    if (negative)
+                    {
+                        str = "-" + str;
+                    }
                     return str;
                 }
 

@@ -59,7 +59,7 @@ namespace Test
                 //RSDKv2.BGLayout BGmap = new RSDKv2.BGLayout("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic CD\\mods\\Testing things\\Data\\Stages\\R31A\\Backgrounds.bin");
                 //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic CD Source\\Data\\Stages\\R11A\\Backgrounds2.bin");
 
-                //RSDKvB.BGLayout BGmap = new RSDKvB.BGLayout("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 2 Source\\Data\\Stages\\Zone01\\Backgrounds.bin");
+                //RSDKvB.BGLayout BGmap = new RSDKvB.BGLayout(new RSDKvB.Reader(filepath));
                 //BGmap.Write("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 2 Source\\Data\\Stages\\Zone01\\Backgrounds2.bin");
 
                 //RSDKvRS.til chunks = new RSDKvRS.til("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Retro Sonic Source\\Data\\Levels\\EHZ\\Zone.til");
@@ -71,8 +71,8 @@ namespace Test
 
                 //RSDKvB.Level lvl = new RSDKvB.Level("C:\\Users\\owner\\Documents\\Sonic Hacking Stuff\\Retro Engine Tools\\Sonic 1 Source\\Data\\Stages\\Zone01\\Act1.bin");
 
-                //RSDKv5.Scene lvl = new RSDKv5.Scene("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Stages\\GHZCutscene\\Scene1.bin");
-                //lvl.Write("C:\\Program Files (x86)\\Steam\\steamapps\\common\\Sonic Mania\\Data\\Stages\\GHZ\\Scene1b2.bin");
+                //RSDKv5.Scene lvl = new RSDKv5.Scene(new RSDKv5.Reader(filepath));
+                //lvl.Write(filepath);
 
                 //RSDKvB.Tiles128x128 t128 = new RSDKvB.Tiles128x128(filepath);
 
@@ -95,13 +95,15 @@ namespace Test
 
                 //RetroStages.Write("C:\\Users\\owner\\Documents\\Fan Games\\Retro Sonic\\Data\\TitleScr\\Zones2.mdf");
 
+                //PALETTES
+
                 //CONFIGS
                 //RSDKv5.GameConfig gameConfig = new RSDKv5.GameConfig(dlg.FileName);
 
                 //RSDKv5.RSDKConfig RSDKConfig = new RSDKv5.RSDKConfig(dlg.FileName);
 
                 //TIME ATTACK
-                //RSDKv5.Replay replay = new RSDKv5.Replay(new RSDKv5.Reader(filepath));
+                RSDKv5.Replay replay = new RSDKv5.Replay(new RSDKv5.Reader(filepath));
                 //RSDKv5.UserDB UserDB = new RSDKv5.UserDB(new RSDKv5.Reader(filepath));
 
                 //ANIMATIONS
@@ -124,6 +126,8 @@ namespace Test
                 //SCENES
                 //RSDKv5.Scene scene = new RSDKv5.Scene(new RSDKv5.Reader(filepath));
 
+                //RSDKv2.BGLayout BG = new RSDKv2.BGLayout(new RSDKv2.Reader(filepath));
+
                 //SAVES
                 //RSDKv5.SaveFiles save = new RSDKv5.SaveFiles(new RSDKv5.Reader(filepath));
                 //save.EncoreBuddyChar = 1;
@@ -135,16 +139,110 @@ namespace Test
                 //STRINGS
                 //RSDKv2.StringSet strings = new RSDKv2.StringSet(new RSDKv2.Reader(dlg.FileName));
 
-                //Scripts
+                //Scripts & Objects
                 //RSDKv5.StaticObject Obj = new RSDKv5.StaticObject(new RSDKv5.Reader(filepath));
                 //Obj.Write(new RSDKv5.Writer(filepath));
                 //Obj.Write(new RSDKv5.Writer("Object.bin"));
-                //RSDKvB.Bytecode bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(filepath), 0);
 
-                //RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
-                //RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
+                /*RSDKvB.Bytecode bytecode2 = new RSDKvB.Bytecode(new RSDKvB.Reader("C:/Users/owner/Desktop/S1Data/Bytecode/GlobalCode.bin"), 0);
+                RSDKvB.Bytecode bytecode = new RSDKvB.Bytecode(new RSDKvB.Reader(filepath), 0);
 
-                /*string destName = Path.GetFileNameWithoutExtension(filepath);
+                int[] FUCK = new int[0x3FFFF];
+
+                for (int i = 0; i < bytecode2.scriptDataLength; i++)
+                {
+                    FUCK[i] = bytecode2.scriptData[i];
+                }
+
+                for (int i = bytecode2.scriptDataLength; i < bytecode.scriptDataLength + bytecode2.scriptDataLength; i++)
+                {
+                    //Console.WriteLine(bytecode.scriptData[i - bytecode2.scriptDataLength]);
+                    FUCK[i] = bytecode.scriptData[i - bytecode2.scriptDataLength];
+                }
+
+                //int Offset = 0xCC48; //GHZ1S
+                //int Offset = 0xCE0D; //GHZ2S
+                //int Offset = 0xCE48; //GHZ3S
+                //int Offset = 0xCCAF; //GHZ1T
+                //int Offset = 0xCE0D; //GHZ2T
+                //int Offset = 0xCE48; //GHZ3T
+                //int Offset = 0xCD76; //GHZ1K
+                //int Offset = 0xCE0D; //GHZ2K
+                //int Offset = 0xCE48; //GHZ3K
+
+                int Offset = 0x0000; //MZ1S
+
+                byte[] TmpData = new byte[0x10000];
+                int Size = 0;
+                int DataOffset = 0;
+                int ValueOffset = Offset + 1;
+                int Count = FUCK[Offset];
+
+                for (int i = Offset + 1; i < Offset + Count; i++)
+                {
+                    Console.WriteLine(FUCK[i]);
+                }
+
+                for (int i = Offset + 1; i < Offset + Count; i++) 
+                {
+                    byte Keys = (byte)FUCK[ValueOffset++];
+                    TmpData[DataOffset++] = Keys;
+                    Size++;
+                    int Repeat = (byte)FUCK[ValueOffset++];
+
+                    for (int r = 0; r < Repeat; r++)
+                    {
+                        TmpData[DataOffset++] = Keys;
+                        Size++;
+                    }
+
+                    //Console.WriteLine(FUCK[i]);
+                }
+
+                byte[] Data = new byte[Size];
+                for (int i = 0; i < Size; i++)
+                {
+                    Data[i] = TmpData[i];
+                    //Console.WriteLine("Up: " + (Data[i] >> 0 & 1));
+                    //Console.WriteLine("Down: " + (Data[i] >> 1 & 1));
+                    //Console.WriteLine("Left: " + (Data[i] >> 2 & 1));
+                    //Console.WriteLine("Right: " + (Data[i] >> 3 & 1));
+                    //Console.WriteLine("JumpPress: " + (Data[i] >> 4 & 1));
+                    //Console.WriteLine("JumpHold: " + (Data[i] >> 5 & 1));
+                }
+
+                RSDKvB.Writer writer = new RSDKvB.Writer("KeyMZ1S.bin");
+                writer.Write(Data);
+                writer.Close();*/
+
+                //ObjectData viewer
+                /*RSDKvB.Bytecode bytecode2 = new RSDKvB.Bytecode(new RSDKvB.Reader("C:/Users/owner/Desktop/S2Data/Bytecode/GlobalCode.bin"), 0);
+
+                int[] FUCK = new int[0x3FFFF];
+
+                for (int i = 0; i < bytecode2.scriptDataLength; i++)
+                {
+                    FUCK[i] = bytecode2.scriptData[i];
+                }
+
+                int Offset = 0xD1A1; 
+
+                byte[] TmpData = new byte[0x10000];
+                int ValueOffset = Offset + 1;
+                int Count = FUCK[Offset];
+
+                for (int i = ValueOffset; i <= Offset + Count; i++)
+                {
+                    Console.WriteLine(FUCK[i]);
+                }
+
+                Console.WriteLine();*/
+
+                //RSDKvB.StaticObject staticObject = new RSDKvB.StaticObject(new RSDKvB.Reader(filepath));
+                /*RSDKvRS.Reader reader = new RSDKvRS.Reader(filepath);
+                RSDKvRS.Script rsf = new RSDKvRS.Script(reader);
+
+                string destName = Path.GetFileNameWithoutExtension(filepath);
                 string destName2 = Path.GetFileName(filepath);
 
                 string dirpath = filepath.Replace(destName2, "");
@@ -152,21 +250,23 @@ namespace Test
                 DirectoryInfo dir2 = new DirectoryInfo(dirpath + "//Scripts");
                 dir2.Create();
 
+                //rsf.Decompile(filepath.Replace(".rsf", ".txt"));
+
                 foreach (FileInfo f in dir.GetFiles())
                 {
                     destName = Path.GetFileNameWithoutExtension(f.FullName);
                     string destpath = dirpath + "//Scripts//" + destName + ".txt";
                     reader = new RSDKvRS.Reader(f.FullName);
-                    //try
-                    //{
-                        //rsf = new RSDKvRS.Script(reader);
-                        //rsf.Decompile(destpath);
-                    ///}
-                    //catch (Exception ex)
-                    //{
-                    //    Console.WriteLine(ex.Message);
-                    //    reader.Close();
-                    //}
+                    try
+                    {
+                        rsf = new RSDKvRS.Script(reader);
+                        rsf.Decompile(destpath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        reader.Close();
+                    }
                 }*/
 
                 //TILECONFIG

@@ -14,8 +14,6 @@ This repository contains libaries for all versions of the RSDK (and a few tools 
 
 - Test: Just A program I used to test various functions, nothin' to see here!
 
-- RSDKrU: A libary for our some of the features in our many sister editors (Maniac Editor, Tile Maniac, RSDK Animation Editor, etc.)
-
 # Special Thanks:
 
 Beta Angel: For working on this with me, adding some really cool stuff and fixing my stuff

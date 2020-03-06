@@ -50,7 +50,7 @@ namespace RSDKv5
                 {
                     return this.MemberwiseClone();
                 }
-                public struct HitBox
+                public class HitBox
                 {
                     /// <summary>
                     /// the Xpos of the hitbox
@@ -155,6 +155,7 @@ namespace RSDKv5
                     writer.Write(Height);
                     writer.Write(PivotX);
                     writer.Write(PivotY);
+
                     for (int c = 0; c < HitBoxes.Count; ++c)
                     {
                         writer.Write(HitBoxes[c].Left);
@@ -283,12 +284,13 @@ namespace RSDKv5
             for (int i = 0; i < collisionBoxCount; ++i)
             {
                 CollisionBoxes.Add(reader.ReadRSDKString().Replace("" + '\0', ""));
+                /*
                 string tmp = "";
                 for (int ii = 0; ii < CollisionBoxes[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
                 {
                     tmp += CollisionBoxes[i][ii];
                 }
-                CollisionBoxes[i] = tmp;
+                CollisionBoxes[i] = tmp;*/
             }
 
             var animationCount = reader.ReadInt16();
@@ -307,6 +309,7 @@ namespace RSDKv5
             {
                 writer.WriteRSDKString(SpriteSheets[i] + '\0');
             }
+
 
             writer.Write((byte)CollisionBoxes.Count);
             for (int i = 0; i < CollisionBoxes.Count; ++i)

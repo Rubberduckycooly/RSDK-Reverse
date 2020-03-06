@@ -606,8 +606,8 @@ namespace RSDKv2
 
         string[] GravityAliases = new string[]
 {
-"GRAVITY_AIR",
 "GRAVITY_GROUND",
+"GRAVITY_AIR",
 };
 
 
@@ -617,6 +617,18 @@ namespace RSDKv2
 "FACE_TEXTURED_2D",
 "FACE_COLOURED_3D",
 "FACE_COLOURED_2D",
+};
+
+        string[] PriorityAliases = new string[]
+{
+"PRIORITY_ACTIVE_BOUNDS",
+"PRIORITY_ACTIVE",
+"PRIORITY_ACTIVE_PAUSED",
+"PRIORITY_XBOUNDS",
+"PRIORITY_XBOUNDS_DESTROY",
+"PRIORITY_INACTIVE",
+"PRIORITY_BOUNDS_SMALL",
+"PRIORITY_XBOUNDS_SMALL",
 };
 
         #endregion
@@ -1317,6 +1329,13 @@ namespace RSDKv2
                         case "CreateTempObject":
                             variableName[0] = "TypeName[" + typeNames[Convert.ToInt32(variableName[0])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
                             break;
+                        case "ResetObjectEntity":
+                            try
+                            {
+                                variableName[1] = "TypeName[" + typeNames[Convert.ToInt32(variableName[1])].Replace(" ", "").Replace("TouchControls", "DebugMode") + "]";
+                            }
+                            catch { }
+                            break;
                         case "ObjectTileCollision":
                             if (UseHex)
                             {
@@ -1377,6 +1396,14 @@ namespace RSDKv2
                                 if (UseHex)
                                 {
                                     variableName[1] = FaceFlagAliases[Int32.Parse(variableName[1])];
+                                }
+                            }
+
+                            if (variableName[0].Contains(".Priority"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[1] = PriorityAliases[Int32.Parse(variableName[1])];
                                 }
                             }
 
@@ -1447,6 +1474,14 @@ namespace RSDKv2
                                 if (UseHex)
                                 {
                                     variableName[2] = FaceFlagAliases[Int32.Parse(variableName[2])];
+                                }
+                            }
+
+                            if (variableName[1].Contains(".Priority"))
+                            {
+                                if (UseHex)
+                                {
+                                    variableName[2] = PriorityAliases[Int32.Parse(variableName[2])];
                                 }
                             }
 
@@ -1848,6 +1883,10 @@ namespace RSDKv2
 
                 if (value < 0x3FF && value > -0x3FF)
                 {
+                    if (negative)
+                    {
+                        str = "-" + str;
+                    }
                     return str;
                 }
 

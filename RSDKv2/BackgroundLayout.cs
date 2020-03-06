@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RSDKv2
 {
@@ -10,15 +11,11 @@ namespace RSDKv2
             /// <summary>
             /// how fast the line moves while the player is moving
             /// </summary>
-            public byte RelativeSpeed;
+            public short RelativeSpeed;
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
-            public byte ConstantSpeed;
-            /// <summary>
-            /// the draw order of the layer
-            /// </summary>
-            public byte DrawLayer;
+            public short ConstantSpeed;
             /// <summary>
             /// a special byte that tells the game what "behaviour" property the layer has
             /// </summary>
@@ -28,31 +25,30 @@ namespace RSDKv2
             {
                 RelativeSpeed = 0;
                 ConstantSpeed = 0;
-                DrawLayer = 0;
                 Behaviour = 0;
             }
 
-            public ScrollInfo(byte r, byte c, byte d, byte b)
+            public ScrollInfo(byte r, byte c, byte b)
             {
                 RelativeSpeed = r;
                 ConstantSpeed = c;
-                DrawLayer = d;
                 Behaviour = b;
             }
 
             public ScrollInfo(Reader reader)
             {
-                RelativeSpeed = reader.ReadByte();
+                // 2 bytes, big-endian, unsigned
+                RelativeSpeed = (short)(reader.ReadByte() << 8);
+                RelativeSpeed |= (short)reader.ReadByte();
                 ConstantSpeed = reader.ReadByte();
-                DrawLayer = reader.ReadByte();
                 Behaviour = reader.ReadByte();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(RelativeSpeed);
+                writer.Write((byte)(RelativeSpeed >> 8));
+                writer.Write((byte)(RelativeSpeed & 0xFF));
                 writer.Write(ConstantSpeed);
-                writer.Write(DrawLayer);
                 writer.Write(Behaviour);
             }
 
@@ -74,21 +70,17 @@ namespace RSDKv2
             /// </summary>
             public byte height = 0;
             /// <summary>
-            /// the draw order of the layer
-            /// </summary>
-            public byte DrawLayer;
-            /// <summary>
             /// a special byte that tells the game what "behaviour" property the layer has
             /// </summary>
             public byte Behaviour;
             /// <summary>
             /// how fast the Layer moves while the player is moving
             /// </summary>
-            public byte RelativeSpeed;
+            public short RelativeSpeed;
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public byte ConstantSpeed;
+            public short ConstantSpeed;
             /// <summary>
             /// a list of Line positions
             /// </summary>
@@ -97,7 +89,8 @@ namespace RSDKv2
             public BGLayer()
             {
                 width = height = 1;
-                DrawLayer = Behaviour = RelativeSpeed = ConstantSpeed = 0;
+                Behaviour = 0;
+                RelativeSpeed = ConstantSpeed = 0;
 
                 LineIndexes = new byte[height * 128];
 
@@ -112,7 +105,8 @@ namespace RSDKv2
             {
                 width = w;
                 height = h;
-                Behaviour = DrawLayer = RelativeSpeed = ConstantSpeed = 0;
+                Behaviour = 0;
+                RelativeSpeed = ConstantSpeed = 0;
 
                 LineIndexes = new byte[height * 128];
 
@@ -127,9 +121,9 @@ namespace RSDKv2
             {
                 width = reader.ReadByte();
                 height = reader.ReadByte();
-                DrawLayer = reader.ReadByte();
                 Behaviour = reader.ReadByte();
-                RelativeSpeed = reader.ReadByte();
+                RelativeSpeed = (short)(reader.ReadByte() << 8);
+                RelativeSpeed |= (short)reader.ReadByte();
                 ConstantSpeed = reader.ReadByte();
 
                 byte[] buf = new byte[3];
@@ -142,10 +136,10 @@ namespace RSDKv2
                 while (!finished)
                 {
                     buf[0] = reader.ReadByte();
-                    if (buf[0] == 255)
+                    if (buf[0] == 0xFF)
                     {
                         buf[1] = reader.ReadByte();
-                        if (buf[1] == 255)
+                        if (buf[1] == 0xFF)
                         {
                             finished = true;
                             break;
@@ -189,10 +183,10 @@ namespace RSDKv2
             {
                 writer.Write(width);
                 writer.Write(height);
-                writer.Write(DrawLayer);
                 writer.Write(Behaviour);
+                writer.Write((byte)(RelativeSpeed >> 8));
+                writer.Write((byte)(RelativeSpeed & 0xFF));
                 writer.Write(ConstantSpeed);
-                writer.Write(RelativeSpeed);
 
                 // Output data
                 int l = 0;
@@ -219,27 +213,27 @@ namespace RSDKv2
                     for (int w = 0; w < width; w++)
                     {
                         writer.Write((byte)(MapLayout[h][w] >> 8));
-                        writer.Write((byte)(MapLayout[h][w] & 0xff));
+                        writer.Write((byte)(MapLayout[h][w] & 0xFF));
                     }
                 }
 
             }
 
-            private static void rle_write(Writer file, int pixel, int count)
+            private static void rle_write(Writer file, int value, int count)
             {
                 if (count <= 2)
                 {
                     for (int y = 0; y < count; y++)
-                        file.Write((byte)pixel);
+                    {
+                        file.Write((byte)value);
+                    }
                 }
                 else
                 {
                     while (count > 0)
                     {
                         file.Write((byte)0xFF);
-
-                        file.Write((byte)pixel);
-
+                        file.Write((byte)value);
                         file.Write((byte)((count > 253) ? 254 : (count + 1)));
                         count -= 253;
                     }
@@ -281,7 +275,6 @@ namespace RSDKv2
             byte LayerCount = reader.ReadByte();
 
             byte HLineCount = reader.ReadByte();
-            byte VLineCount = reader.ReadByte();
 
             for (int i = 0; i < HLineCount; i++)
             {
@@ -289,6 +282,7 @@ namespace RSDKv2
                 HLines.Add(p);
             }
 
+            byte VLineCount = reader.ReadByte();
             for (int i = 0; i < VLineCount; i++)
             {
                 ScrollInfo p = new ScrollInfo(reader);

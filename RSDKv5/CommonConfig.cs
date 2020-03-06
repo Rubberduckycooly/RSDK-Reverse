@@ -29,6 +29,14 @@ namespace RSDKv5
         /// </summary>
         public List<WAVConfiguration> WAVs = new List<WAVConfiguration>();
 
+        public CommonConfig()
+        {
+            for (int i = 0; i < PALETTES_COUNT; i++)
+            {
+                Palettes[i] = new Palette();
+            }
+        }
+
         internal void ReadMagic(Reader reader)
         {
             if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
