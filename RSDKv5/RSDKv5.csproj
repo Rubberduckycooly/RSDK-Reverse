@@ -94,6 +94,7 @@
     <Compile Include="Reader.cs" />
     <Compile Include="Replay.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="Tile.cs" />
     <Compile Include="UserDB.cs" />
     <Compile Include="RSDKConfig.cs" />
     <Compile Include="SaveFile.cs" />
