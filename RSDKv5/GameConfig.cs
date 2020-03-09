@@ -151,11 +151,11 @@ namespace RSDKv5
             /// <summary>
             /// the index of the memory entry
             /// </summary>
-            public uint Index;
+            public int Index;
             /// <summary>
             /// the data in the memory entry
             /// </summary>
-            public List<uint> Data = new List<uint>();
+            public List<int> Data = new List<int>();
 
             public ConfigurableMemoryEntry()
             {
@@ -164,20 +164,20 @@ namespace RSDKv5
 
             internal ConfigurableMemoryEntry(Reader reader)
             {
-                Index = reader.ReadUInt32();
-                uint Count = reader.ReadUInt32();
-                Data = new List<uint>();
+                Index = reader.ReadInt32();
+                int Count = reader.ReadInt32();
+                Data = new List<int>();
                 for (int i = 0; i < Count; ++i)
                 {
-                    Data.Add(reader.ReadUInt32());
+                    Data.Add(reader.ReadInt32());
                 }
             }
 
             internal void Write(Writer writer)
             {
                 writer.Write(Index);
-                writer.Write((uint)Data.Count);
-                foreach (uint val in Data)
+                writer.Write((int)Data.Count);
+                foreach (int val in Data)
                     writer.Write(val);
             }
         }
