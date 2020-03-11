@@ -17,11 +17,12 @@
 [Rr]eleases/
 x64/
 x86/
-build/
+[Bb]uild/
 bld/
 bin/
 [Bb]in/
 [Oo]bj/
+[Tt]est/
 
 # Visual Studio 2015 cache/options directory
 .vs/
