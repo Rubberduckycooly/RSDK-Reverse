@@ -79,6 +79,30 @@ namespace RSDKv5
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Position)
+            {
+                Position compareValue = (Position)obj;
+                bool isEqual = true;
+
+                if (isEqual && compareValue.X.High == this.X.High) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.X.Low == this.X.Low) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.Y.High == this.Y.High) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.Y.Low == this.Y.Low) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                return isEqual;
+            }
+            else return false;
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder("X: ");

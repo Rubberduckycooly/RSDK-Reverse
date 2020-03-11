@@ -5,6 +5,7 @@ namespace RSDKv5
     [Serializable]
     public class AttributeValue
     {
+        #region Definitions
         /// <summary>
         /// the uint8 value of the attribute
         /// </summary>
@@ -57,7 +58,9 @@ namespace RSDKv5
         public AttributeTypes Type;
 
         Position no_position = new Position(0, 0);
+        #endregion
 
+        #region Accessors
         private void CheckType(AttributeTypes type)
         {
             if (type != Type)
@@ -166,17 +169,17 @@ namespace RSDKv5
             get { CheckType(AttributeTypes.COLOR); return value_color; }
             set { CheckType(AttributeTypes.COLOR); value_color = value; }
         }
+        #endregion
 
+        #region Init
         public AttributeValue()
         {
             Type = 0;
         }
-
         public AttributeValue(AttributeTypes type)
         {
             Type = type;
         }
-
         public AttributeValue Clone()
         {
             AttributeValue n = new AttributeValue(Type);
@@ -195,13 +198,14 @@ namespace RSDKv5
 
             return n;
         }
-
         internal AttributeValue(Reader reader, AttributeTypes type)
         {
             Type = type;
             Read(reader);
         }
+        #endregion
 
+        #region Read/Write
         internal void Read(Reader reader)
         {
             switch (Type)
@@ -244,7 +248,6 @@ namespace RSDKv5
                     break;
             }
         }
-
         internal void Write(Writer writer)
         {
             switch (Type)
@@ -287,7 +290,9 @@ namespace RSDKv5
                     break;
             }
         }
+        #endregion
 
+        #region Overrides
         public override string ToString()
         {
             switch (Type)
@@ -320,5 +325,48 @@ namespace RSDKv5
                     return "Unhandled Type for ToString()";
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is AttributeValue)
+            {
+                AttributeValue compareValue = (obj as AttributeValue);
+                switch (compareValue.Type)
+                {
+                    case AttributeTypes.UINT8:
+                        return compareValue.ValueUInt8 == this.ValueUInt8;
+                    case AttributeTypes.UINT16:
+                        return compareValue.ValueUInt16 == this.ValueUInt16;
+                    case AttributeTypes.UINT32:
+                        return compareValue.ValueUInt32 == this.ValueUInt32;
+                    case AttributeTypes.INT8:
+                        return compareValue.ValueInt8 == this.ValueInt8;
+                    case AttributeTypes.INT16:
+                        return compareValue.ValueInt16 == this.ValueInt16;
+                    case AttributeTypes.INT32:
+                        return compareValue.ValueInt32 == this.ValueInt32;
+                    case AttributeTypes.ENUM:
+                        return compareValue.ValueEnum == this.ValueEnum;
+                    case AttributeTypes.BOOL:
+                        return compareValue.ValueBool == this.ValueBool;
+                    case AttributeTypes.STRING:
+                        return compareValue.ValueString == this.ValueString;
+                    case AttributeTypes.VECTOR2:
+                        return compareValue.ValueVector2.Equals(this.ValueVector2);
+                    case AttributeTypes.VECTOR3:
+                        return compareValue.ValueVector3.Equals(this.ValueVector3);
+                    case AttributeTypes.COLOR:
+                        return compareValue.ValueColor.Equals(this.ValueColor);
+                    default:
+                        return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+        #endregion
     }
 }

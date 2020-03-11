@@ -47,6 +47,30 @@ namespace RSDKv5
             A = reader.ReadByte();
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Color)
+            {
+                Color compareValue = (Color)obj;
+                bool isEqual = true;
+
+                if (isEqual && compareValue.R == this.R) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.G == this.G) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.B == this.B) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                if (isEqual && compareValue.A == this.A) isEqual = true;
+                else if (!isEqual) isEqual = false;
+
+                return isEqual;
+            }
+            else return false;
+        }
+
         internal SystemColor ToSystemColors()
         {
             SystemColor returnColor = SystemColor.FromArgb(this.R, this.G, this.B);
