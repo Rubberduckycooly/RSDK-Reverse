@@ -83,7 +83,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="CommonConfig.cs" />
     <Compile Include="DataFile.cs" />
-    <Compile Include="Gameconfig.cs" />
+    <Compile Include="GameConfig.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="NameIdentifier.cs" />
     <Compile Include="Objects.cs" />
@@ -104,7 +104,7 @@
     <Compile Include="SceneLayer.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="ScrollInfo.cs" />
-    <Compile Include="Stageconfig.cs" />
+    <Compile Include="StageConfig.cs" />
     <Compile Include="Stamps.cs" />
     <Compile Include="StaticObject.cs" />
     <Compile Include="Tileconfig.cs" />

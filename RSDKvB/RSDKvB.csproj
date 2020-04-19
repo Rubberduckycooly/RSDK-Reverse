@@ -67,7 +67,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
     <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
       <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
