@@ -83,6 +83,7 @@
     <Compile Include="Color.cs" />
     <Compile Include="CommonConfig.cs" />
     <Compile Include="DataFile.cs" />
+    <Compile Include="DictionaryWithDefault.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="NameIdentifier.cs" />
