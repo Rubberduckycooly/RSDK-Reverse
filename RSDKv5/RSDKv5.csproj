@@ -126,8 +126,5 @@
     <Compile Include="zLib\ZStream.cs" />
     <Compile Include="zLib\ZStreamException.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

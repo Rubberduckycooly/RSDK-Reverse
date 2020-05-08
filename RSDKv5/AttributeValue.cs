@@ -65,8 +65,6 @@ namespace RSDKv5
         {
             if (type != Type)
             {
-                //throw new Exception("Unexpected value type.");
-
                 switch (type)
                 {
                     case AttributeTypes.UINT8:

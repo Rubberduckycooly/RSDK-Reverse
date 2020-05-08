@@ -29,7 +29,7 @@ namespace RSDKv5
         public List<SceneObject> Objects = new List<SceneObject>();
 
 
-        public static AttributeValue FallbackValue = new AttributeValue(AttributeTypes.ENUM);
+
 
 
         public Scene()

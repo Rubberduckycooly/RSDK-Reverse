@@ -35,7 +35,9 @@ namespace RSDKv5
         /// <summary>
         /// the attribute values list sorted by the attribute names
         /// </summary>
-        public DictionaryWithDefault<string, AttributeValue> attributesMap = new DictionaryWithDefault<string, AttributeValue>(RSDKv5.Scene.FallbackValue);
+
+        private static AttributeValue FallbackValue = new AttributeValue(AttributeTypes.ENUM);
+        public DictionaryWithDefault<string, AttributeValue> attributesMap { get; set; } = new DictionaryWithDefault<string, AttributeValue>(FallbackValue);
 
 
         public SceneEntity(SceneObject obj, ushort slotID)
