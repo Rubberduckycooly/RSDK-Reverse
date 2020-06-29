@@ -5,7 +5,7 @@ namespace RSDKvB
     public class Object
     {
 
-        public enum Attributes
+        public enum AttributesIDs
         {
             ATTRIBUTE_STATE,
             ATTRIBUTE_DIRECTION,
@@ -84,11 +84,11 @@ namespace RSDKvB
         {
             get
             {
-                return position.X.High;
+                return Position.X.High;
             }
             set
             {
-                position.X.High = (short)value;
+                Position.X.High = value;
             }
         }
         /// <summary>
@@ -98,17 +98,17 @@ namespace RSDKvB
         {
             get
             {
-                return position.Y.High;
+                return Position.Y.High;
             }
             set
             {
-                position.Y.High = (short)value;
+                Position.Y.High = value;
             }
         }
         /// <summary>
         /// determines what "attributes" to load
         /// </summary>
-        public ushort AttributeType;
+        public bool[] activeAttributes = new bool[15];
         /// <summary>
         /// the "attributes"
         /// </summary>
@@ -116,7 +116,7 @@ namespace RSDKvB
         /// <summary>
         /// the raw position values
         /// </summary>
-        public Position position = new Position();
+        private Position Position = new Position();
         /// <summary>
         /// How Many Objects have been loaded
         /// </summary>
@@ -163,7 +163,11 @@ namespace RSDKvB
             byte t1 = reader.ReadByte();
             byte t2 = reader.ReadByte();
 
-            AttributeType = (ushort)((t2 << 8) + t1);
+            ushort flags = (ushort)((t2 << 8) + t1);
+            for (int i = 0; i < 15; i++)
+            {
+                activeAttributes[i] = (flags & (1 << i)) != 0;
+            }
 
             // Object type, 1 byte, unsigned
             type = reader.ReadByte(); //Type
@@ -172,72 +176,35 @@ namespace RSDKvB
             subtype = reader.ReadByte(); //SubType/PropertyValue
 
             //a position, made of 8 bytes, 4 for X, 4 for Y
-            position = new Position(reader);
+            Position = new Position(reader);
+
+            bool[] attribType = new bool[] {
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+            };
 
             for (int i = 0; i < attributes.Length; i++)
             {
-                attributes[i] = int.MaxValue;
-            }
-
-            if ((AttributeType & 0x1) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_STATE] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x2) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_DIRECTION] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x4) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_SCALE] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x8) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_ROTATION] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x10) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_DRAWORDER] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x20) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_PRIORITY] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x40) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_ALPHA] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x80) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_ANIMATION] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x100) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_ANIMATIONSPEED] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x200) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_FRAME] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x400) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_INKEFFECT] = reader.ReadByte();
-            }
-            if ((AttributeType & 0x800) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_VALUE1] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x1000) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_VALUE2] = reader.ReadInt32();
-            }
-            if ((AttributeType & 0x2000) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_VALUE3] = reader.ReadInt32();
-            }
-            else if ((AttributeType & 0x4000) != 0)
-            {
-                attributes[(int)Attributes.ATTRIBUTE_VALUE4] = reader.ReadInt32();
+                if (activeAttributes[i])
+                {
+                    if (attribType[i])
+                        attributes[i] = reader.ReadByte();
+                    else
+                        attributes[i] = reader.ReadInt32();
+                }
             }
         }
 
@@ -265,73 +232,48 @@ namespace RSDKvB
                 return;
             }
 
-            writer.Write(AttributeType);
-
+            int flags = 0;
+            for (int i = 0; i < 15; i++)
+            {
+                if (activeAttributes[i])
+                    flags |= 1 << i;
+                else
+                    flags &= ~(1 << i);
+            }
+            writer.Write((ushort)flags);
 
             writer.Write(type);
             writer.Write(subtype);
 
-            position.Write(writer);
+            Position.Write(writer);
 
-            if ((AttributeType & 0x1) != 0)
+            bool[] attribType = new bool[] {
+                true,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true,
+                false,
+                false,
+                true,
+                true,
+                true,
+                true,
+            };
+
+            for (int i = 0; i < attributes.Length; i++)
             {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_STATE]);
-            }
-            if ((AttributeType & 0x2) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_DIRECTION]);
-            }
-            if ((AttributeType & 0x4) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_SCALE]);
-            }
-            if ((AttributeType & 0x8) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_ROTATION]);
-            }
-            if ((AttributeType & 0x10) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_DRAWORDER]);
-            }
-            if ((AttributeType & 0x20) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_PRIORITY]);
-            }
-            if ((AttributeType & 0x40) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_ALPHA]);
-            }
-            if ((AttributeType & 0x80) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_ANIMATION]);
-            }
-            if ((AttributeType & 0x100) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_ANIMATIONSPEED]);
-            }
-            if ((AttributeType & 0x200) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_FRAME]);
-            }
-            if ((AttributeType & 0x400) != 0)
-            {
-                writer.Write((byte)attributes[(int)Attributes.ATTRIBUTE_INKEFFECT]);
-            }
-            if ((AttributeType & 0x800) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_VALUE1]);
-            }
-            if ((AttributeType & 0x1000) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_VALUE2]);
-            }
-            if ((AttributeType & 0x2000) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_VALUE3]);
-            }
-            else if ((AttributeType & 0x4000) != 0)
-            {
-                writer.Write(attributes[(int)Attributes.ATTRIBUTE_VALUE4]);
+                if (activeAttributes[i])
+                {
+                    if (attribType[i])
+                        writer.Write((byte)attributes[i]);
+                    else
+                        writer.Write((int)attributes[i]);
+                }
             }
         }
 

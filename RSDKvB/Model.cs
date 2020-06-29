@@ -67,7 +67,7 @@ namespace RSDKvB
             }
         }
 
-        public class Matrix
+        private class Matrix
         {
             public float[] Values = new float[9];
 
@@ -208,15 +208,15 @@ namespace RSDKvB
             /// <summary>
             /// Face X
             /// </summary>
-            public short X = 0;
+            public ushort a = 0;
             /// <summary>
             /// Face Y
             /// </summary>
-            public short Y = 0;
+            public ushort b = 0;
             /// <summary>
             /// Face Z
             /// </summary>
-            public short Z = 0;
+            public ushort c = 0;
 
             public Face()
             {
@@ -225,16 +225,16 @@ namespace RSDKvB
 
             public Face(Reader reader)
             {
-                X = reader.ReadInt16();
-                Y = reader.ReadInt16();
-                Z = reader.ReadInt16();
+                a = reader.ReadUInt16();
+                b = reader.ReadUInt16();
+                c = reader.ReadUInt16();
             }
 
             public void Write(Writer writer)
             {
-                writer.Write(X);
-                writer.Write(Y);
-                writer.Write(Z);
+                writer.Write(a);
+                writer.Write(b);
+                writer.Write(c);
             }
         }
 
@@ -287,7 +287,7 @@ namespace RSDKvB
         /// <summary>
         /// how many faces there are
         /// </summary>
-        public short FaceCount;
+        public ushort FaceCount;
         /// <summary>
         /// how many texture positions there are
         /// </summary>
@@ -341,7 +341,7 @@ namespace RSDKvB
                 TexturePositions.Add(new TexturePosition(reader));
             }
 
-            FaceCount = reader.ReadInt16();
+            FaceCount = reader.ReadUInt16();
             for (int i = 0; i < FaceCount; ++i)
             {
                 //Faces.Add(reader.ReadInt16());
@@ -404,7 +404,7 @@ namespace RSDKvB
             }
         }
 
-        public ushort ToRGB555(byte red, byte green, byte blue)
+        private ushort ToRGB555(byte red, byte green, byte blue)
         {
             return (ushort)(((red & 0b11111000) << 7) | ((green & 0b11111000) << 2) | ((blue & 0b11111000) >> 3));
         }
@@ -431,7 +431,7 @@ namespace RSDKvB
             for (int v = 0; v < FaceCount; v++)
             {
                 builder.AppendLine($"usemtl ManiaModel.Colour.{Faces[v]:###}");
-                builder.AppendLine(string.Format("f {0} {1} {2}", Faces[v].X + 1, Faces[v].Y + 1, Faces[v].Z + 1));
+                builder.AppendLine(string.Format("f {0} {1} {2}", Faces[v].a + 1, Faces[v].b + 1, Faces[v].c + 1));
             }
 
             File.WriteAllText(streamName, builder.ToString());
@@ -460,9 +460,9 @@ namespace RSDKvB
             var vertices = new Vertex[FaceVerticiesCount];
             for (int v = 0; v < FaceCount; v++)
             {
-                vertices[0] = Vertices[Faces[v].X];
-                vertices[1] = Vertices[Faces[v].Y];
-                vertices[2] = Vertices[Faces[v].Z];
+                vertices[0] = Vertices[Faces[v].a];
+                vertices[1] = Vertices[Faces[v].b];
+                vertices[2] = Vertices[Faces[v].c];
 
                 // Normal
                 writer.Write(vertices[0].normal.x);
@@ -498,9 +498,9 @@ namespace RSDKvB
                 var vertices = new Vertex[FaceVerticiesCount];
                 for (int v = 0; v < FaceCount; v++)
                 {
-                    vertices[0] = Vertices[Faces[v].X];
-                    vertices[1] = Vertices[Faces[v].Y];
-                    vertices[2] = Vertices[Faces[v].Z];
+                    vertices[0] = Vertices[Faces[v].a];
+                    vertices[1] = Vertices[Faces[v].b];
+                    vertices[2] = Vertices[Faces[v].c];
 
                     writer.WriteLine(" facet normal 0.000000 0.000000 1.000000");
                     writer.WriteLine("  outer loop");
@@ -565,9 +565,9 @@ namespace RSDKvB
                 Vector3f yv = new Vector3f();
                 Vector3f zv = new Vector3f();
 
-                xv = new Vector3f(Vertices[face.X].x, Vertices[face.X].y, Vertices[face.X].z);
-                yv = new Vector3f(Vertices[face.Y].x, Vertices[face.Y].y, Vertices[face.Y].z);
-                zv = new Vector3f(Vertices[face.Z].x, Vertices[face.Z].y, Vertices[face.Z].z);
+                xv = new Vector3f(Vertices[face.a].x, Vertices[face.a].y, Vertices[face.a].z);
+                yv = new Vector3f(Vertices[face.b].x, Vertices[face.b].y, Vertices[face.b].z);
+                zv = new Vector3f(Vertices[face.c].x, Vertices[face.c].y, Vertices[face.c].z);
 
                 Vector3f v1 = transform.Transform(xv).Multiply(scaleX, scaleY, scaleZ);
                 Vector3f v2 = transform.Transform(yv).Multiply(scaleX, scaleY, scaleZ);
@@ -581,9 +581,9 @@ namespace RSDKvB
                 v3.x += x;
                 v3.y += y;
 
-                Vector3f n1 = transform.Transform(Vertices[face.X].normal.Normalize());
-                Vector3f n2 = transform.Transform(Vertices[face.Y].normal.Normalize());
-                Vector3f n3 = transform.Transform(Vertices[face.Z].normal.Normalize());
+                Vector3f n1 = transform.Transform(Vertices[face.a].normal.Normalize());
+                Vector3f n2 = transform.Transform(Vertices[face.b].normal.Normalize());
+                Vector3f n3 = transform.Transform(Vertices[face.c].normal.Normalize());
 
                 Vector3f varying_intensity = new Vector3f();
                 Vector3f lightdir = new Vector3f(0.0f, -1.0f, 0.0f);

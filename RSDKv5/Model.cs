@@ -136,7 +136,7 @@ namespace RSDKv5
                 }
             }
 
-            public class Matrix
+            private class Matrix
             {
                 public float[] Values = new float[9];
 
@@ -291,16 +291,6 @@ namespace RSDKv5
                 {
                     Vertices[i].Write(writer, useNormals);
                 }
-            }
-
-            public void AddVertex()
-            {
-                Vertices.Add(new Vertex());
-            }
-
-            public void DeleteVertex(int index)
-            {
-                Vertices.RemoveAt(index);
             }
 
             public Bitmap AsImage(Model Parent, float scaleX = 1, float scaleY = 1, float scaleZ = 1, int rx = 0, int ry = 0, int rz = 0, bool wireframe = false, uint defaultcolour = 0xFFFFFFFF)
@@ -586,11 +576,10 @@ namespace RSDKv5
         /// <summary>
         /// a list of all the face
         /// </summary>
-        public List<short> Faces = new List<short>();
+        public List<ushort> Faces = new List<ushort>();
 
         public Model()
         {
-            AddFrame();
             for (int a = 0; a < 256; a++)
             {
                 MySin[a] = -Math.Sin(a * Math.PI / 128);
@@ -608,12 +597,12 @@ namespace RSDKv5
 
         }
 
-        public static bool GetBit(int b, int pos)
+        private static bool GetBit(int b, int pos)
         {
             return (b & (1 << pos)) != 0;
         }
 
-        public static int SetBit(int pos, bool Set, int Value)
+        private static int SetBit(int pos, bool Set, int Value)
         {
             if (Set)
             {
@@ -638,9 +627,6 @@ namespace RSDKv5
             }
 
             byte flags = reader.ReadByte();
-            //HasNormals = (flags & 0x00000001) != 0;
-            //HasUnknown = (flags & 0x00000010) != 0;
-            //HasColours = (flags & 0x00000100) != 0;
 
             HasNormals = GetBit(flags, 0);
             HasTextures = GetBit(flags, 1);
@@ -660,7 +646,7 @@ namespace RSDKv5
 
             ushort VertexCount = 0;
             ushort FramesCount = 0;
-            short FaceCount = 0;
+            ushort FaceCount = 0;
 
             VertexCount = reader.ReadUInt16();
             FramesCount = reader.ReadUInt16();
@@ -675,9 +661,9 @@ namespace RSDKv5
                 for (int i = 0; i < VertexCount; ++i)
                     Colours.Add(new Colour(reader));
 
-            FaceCount = reader.ReadInt16();
+            FaceCount = reader.ReadUInt16();
             for (int i = 0; i < FaceCount; ++i)
-                Faces.Add(reader.ReadInt16());
+                Faces.Add(reader.ReadUInt16());
 
             for (int i = 0; i < FramesCount; ++i)
                 Frames.Add(new Frame(reader, VertexCount, HasNormals));
@@ -689,22 +675,10 @@ namespace RSDKv5
         {
             writer.Write(MAGIC);
             byte flags = 0;
-            //flags |= (byte)(HasColours ? 0x00000001 : 0);
-            //flags |= (byte)(HasUnknown ? 0x00000010 : 0);
-            //flags |= (byte)(HasNormals ? 0x00000100 : 0);
             flags = (byte)SetBit(0, HasNormals, flags);
             flags = (byte)SetBit(1, HasTextures, flags);
             flags = (byte)SetBit(2, HasColours, flags);
             writer.Write(flags);
-
-            //Console.WriteLine("MDL WRITE: FLAGS:" + Pad(flags));
-
-            string Pad(byte b)
-            {
-                return Convert.ToString(b, 2).PadLeft(8, '0');
-            }
-
-            //Console.WriteLine("MDL WRITE: Flags: {0}, HasColours: {1}, HasUnknown: {2}, HasNormals: {3}", flags, HasColours, HasTextures, HasNormals);
 
             writer.Write(FaceVerticiesCount);
             writer.Write((ushort)Frames[0].Vertices.Count);
@@ -727,14 +701,9 @@ namespace RSDKv5
             writer.Close();
         }
 
-        public ushort ToRGB555(byte red, byte green, byte blue)
+        private ushort ToRGB555(byte red, byte green, byte blue)
         {
             return (ushort)(((red & 0b11111000) << 7) | ((green & 0b11111000) << 2) | ((blue & 0b11111000) >> 3));
-        }
-
-        public void ImportOBJ(string filename, string mtlfilename = "")
-        {
-            //Read OBJ format
         }
 
         public void WriteAsOBJ(string filename, string mtlfilename)
@@ -792,7 +761,6 @@ namespace RSDKv5
             writer.Close();
 
         }
-
 
         public void WriteAsSTLBinary(Writer writer)
         {
@@ -915,19 +883,6 @@ namespace RSDKv5
             {
                 return string.Format("   vertex {0} {1:} {2:}", vertex.x, vertex.z, vertex.y);
             }
-        }
-
-        public void AddFrame()
-        {
-            Frame F = new Frame();
-            F.AddVertex();
-            Frames.Add(F);
-        }
-
-        public void DeleteFrame(int index)
-        {
-            int VertexCnt = Frames[index].Vertices.Count - 1;
-            Frames.RemoveAt(index);
         }
     }
 }
