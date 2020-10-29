@@ -127,11 +127,15 @@ namespace RSDKv2
                     {
                         strm.Read(mappingEntry, 0, mappingEntry.Length);
                         mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 6 << 6));
+
                         currentBlock.Mapping[y][x].VisualPlane = (byte)(mappingEntry[0] >> 4);
                         mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 4 << 4));
+
                         currentBlock.Mapping[y][x].Direction = (byte)(mappingEntry[0] >> 2);
                         mappingEntry[0] = (byte)(mappingEntry[0] - (mappingEntry[0] >> 2 << 2));
+
                         currentBlock.Mapping[y][x].Tile16x16 = (ushort)((mappingEntry[0] << 8) + mappingEntry[1]);
+
                         currentBlock.Mapping[y][x].CollisionFlag0 = (byte)(mappingEntry[2] >> 4);
                         currentBlock.Mapping[y][x].CollisionFlag1 = (byte)(mappingEntry[2] - (mappingEntry[2] >> 4 << 4));
                     }
