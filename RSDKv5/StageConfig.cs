@@ -39,6 +39,15 @@ namespace RSDKv5
             LoadGlobalObjects = reader.ReadBoolean();
 
             base.ReadCommonConfig(reader);
+
+            foreach (string Name in ObjectsNames)
+            {
+                string Hash = RSDKv5.Objects.GetMd5HashString(Name);
+                if (!RSDKv5.Objects.ObjectNames.ContainsKey(Hash))
+                {
+                    RSDKv5.Objects.AddObjectName(Name);
+                }
+            }
         }
 
         public void Write(string filename)
