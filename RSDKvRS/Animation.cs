@@ -198,8 +198,8 @@ namespace RSDKvRS
                     
                     byte px = (byte)PivotX;
                     byte py = (byte)PivotY;
-                    writer.Write(-px);
-                    writer.Write(-py);
+                    writer.Write((byte)-px);
+                    writer.Write((byte)-py);
                 }
 
             }

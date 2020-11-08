@@ -28,10 +28,6 @@ namespace RSDKv5
         /// </summary>
         public List<SceneObject> Objects = new List<SceneObject>();
 
-
-
-
-
         public Scene()
         {
             EditorMetadata = new SceneEditorMetadata();

@@ -15,7 +15,7 @@
         /// </summary>
         public Color BackgroundColor2;
         /// <summary>
-        /// A set of 7 bytes that always have the same value of "01010400010400"
+        /// A set of 7 bytes that (seemingly) always have the same value of "01010400010400"
         /// </summary>
         public byte[] UnknownBytes; // Const: 01010400010400
         /// <summary>

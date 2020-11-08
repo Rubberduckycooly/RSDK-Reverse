@@ -31,11 +31,11 @@ namespace RSDKv1
             /// <summary>
             /// how fast the Layer moves while the player is moving
             /// </summary>
-            public short RelativeSpeed;
+            public byte RelativeSpeed;
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public short ConstantSpeed;
+            public byte ConstantSpeed;
 
             /// <summary>
             /// a list of Line positions

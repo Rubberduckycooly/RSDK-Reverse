@@ -98,7 +98,7 @@ namespace RSDKvB
 
                 for (int i = 0; i < FileList.Count; i++)
                 {
-                    // Mania Hashes all Strings at Lower Case
+                    // RSDKvB Hashes all Strings at Lower Case
                     string fp = FileList[i].ToLower();
 
                     bool match = true;

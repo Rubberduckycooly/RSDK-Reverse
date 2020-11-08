@@ -204,19 +204,7 @@ namespace RSDKv2
             public void Write(Writer writer, bool SingleFile = false)
             {
                 FileName = FileName.Replace('\\', '/');
-
-                int ss = FileName.Length;
-                writer.Write((byte)ss);
-
-                string str = FileName;
-
                 fileSize = (uint)Filedata.Length;
-
-                for (int i = 0; i < ss; i++)
-                {
-                    int s = str[i];
-                    writer.Write((byte)(s ^ (0xFF)));
-                }
 
                 if (SingleFile)
                 {
@@ -277,10 +265,11 @@ namespace RSDKv2
                         }
                     }
 
-                    Filedata = outfbuf;
+                    for (int i = 0; i < FileName.Length; i++)
+                        writer.Write((byte)(FileName[i] ^ (0xFF)));
 
                     writer.Write((uint)fileSize);
-                    writer.Write(Filedata);
+                    writer.Write(outfbuf);
                 }
             }
 
