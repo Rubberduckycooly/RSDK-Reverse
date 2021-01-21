@@ -46,8 +46,8 @@ namespace RSDKvB
 
             public void Write(Writer writer)
             {
-                writer.Write((byte)(RelativeSpeed >> 8));
                 writer.Write((byte)(RelativeSpeed & 0xFF));
+                writer.Write((byte)(RelativeSpeed >> 8));
                 writer.Write(ConstantSpeed);
                 writer.Write(Behaviour);
             }
@@ -63,12 +63,14 @@ namespace RSDKvB
 
             /// <summary>
             /// Layer Width
+            /// the file-spec reserves 16-bits but only 8-bits are actually read
             /// </summary>
-            public ushort width = 0;
+            public byte width = 0;
             /// <summary>
             /// Layer Height
+            /// the file-spec reserves 16-bits but only 8-bits are actually read
             /// </summary>
-            public ushort height = 0;
+            public byte height = 0;
             /// <summary>
             /// a special byte that tells the game what "behaviour" property the layer has
             /// </summary>
@@ -100,7 +102,7 @@ namespace RSDKvB
                 }
             }
 
-            public BGLayer(ushort w, ushort h)
+            public BGLayer(byte w, byte h)
             {
                 width = w;
                 height = h;
@@ -118,16 +120,14 @@ namespace RSDKvB
             {
                 byte[] buffer = new byte[2];
 
-                reader.Read(buffer, 0, 2); //Read width
-                width = (ushort)(buffer[0] + (buffer[1] << 8));
-
-                reader.Read(buffer, 0, 2); //Read height
-                height = (ushort)(buffer[0] + (buffer[1] << 8));
-
-                reader.Read(buffer, 0, 2); //Read height
+                width = reader.ReadByte();
+                reader.ReadByte();
+                height = reader.ReadByte();
+                reader.ReadByte();
+                Behaviour = reader.ReadByte();
+                reader.Read(buffer, 0, 2); //Read parallax factor
                 RelativeSpeed = (short)(buffer[0] + (buffer[1] << 8));
                 ConstantSpeed = reader.ReadByte();
-                Behaviour = reader.ReadByte();
 
                 byte[] buf = new byte[3];
                 bool finished = false;
@@ -187,16 +187,14 @@ namespace RSDKvB
 
             public void Write(Writer writer)
             {
-                writer.Write((byte)(width & 0xFF));
-                writer.Write((byte)(width >> 8));
-
-                writer.Write((byte)(height & 0xFF));
-                writer.Write((byte)(height >> 8));
-
+                writer.Write(width);
+                writer.Write((byte)0);
+                writer.Write(height);
+                writer.Write((byte)0);
+                writer.Write(Behaviour);
                 writer.Write((byte)(RelativeSpeed & 0xFF));
                 writer.Write((byte)(RelativeSpeed >> 8));
                 writer.Write(ConstantSpeed);
-                writer.Write(Behaviour);
 
                 // Output data
                 int l = 0;
