@@ -14,7 +14,7 @@ namespace RSDKvB
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
-            public short ConstantSpeed;
+            public byte ConstantSpeed;
             /// <summary>
             /// a special byte that tells the game what "behaviour" property the layer has
             /// </summary>
@@ -82,7 +82,7 @@ namespace RSDKvB
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public short ConstantSpeed;
+            public byte ConstantSpeed;
 
             /// <summary>
             /// indexes to HLine values
