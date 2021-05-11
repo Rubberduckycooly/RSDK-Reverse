@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RSDKv2
+namespace RSDKv3
 {
     [Serializable]
     public class Animation : ICloneable

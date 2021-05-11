@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B41A3858-7E66-4755-9F50-94EA021155B6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RSDKv2</RootNamespace>
+    <AssemblyName>RSDKv2</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\build\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>2</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\build\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Animation.cs" />
+    <Compile Include="ArcContainer.cs" />
+    <Compile Include="BackgroundLayout.cs" />
+    <Compile Include="Bytecode.cs" />
+    <Compile Include="Script.cs" />
+    <Compile Include="Setup.cs" />
+    <Compile Include="StringSet.cs" />
+    <Compile Include="TextFile.cs" />
+    <Compile Include="TextFont.cs" />
+    <Compile Include="Tileconfig.cs" />
+    <Compile Include="DataFile.cs" />
+    <Compile Include="Gameconfig.cs" />
+    <Compile Include="GraphicsImage.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="Object.cs" />
+    <Compile Include="Palette.cs" />
+    <Compile Include="PaletteColour.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reader.cs" />
+    <Compile Include="SaveFiles.cs" />
+    <Compile Include="Stageconfig.cs" />
+    <Compile Include="Tiles128x128.cs" />
+    <Compile Include="Video.cs" />
+    <Compile Include="Writer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

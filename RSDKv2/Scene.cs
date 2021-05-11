@@ -6,7 +6,7 @@ using System.Linq;
 This Loader uses code from the programs: "Retro Engine Map Viewer" and TaxEd by -- and Nextvolume respectivley 
 */
 
-namespace RSDKv2
+namespace RSDKv3
 {
     public class Scene
     {
@@ -162,7 +162,7 @@ namespace RSDKv2
             width = 0; height = 0;
 
             // Map width in 128 pixel units
-            // In RSDKv2, it's one byte long
+            // In RSDKv3, it's one byte long
             width = buffer[0];
             height = buffer[1];
 
@@ -177,14 +177,14 @@ namespace RSDKv2
                 for (int x = 0; x < width; x++)
                 {
                     // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv1 and RSDKv2
+                    // Big-Endian in RSDKv1 and RSDKv3
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
                 }
             }
 
 
-            // Read number of object types, Only RSDKv1 and RSDKv2 support this feature		
+            // Read number of object types, Only RSDKv1 and RSDKv3 support this feature		
             int ObjTypeCount = reader.ReadByte();
 
             for (int n = 0; n < ObjTypeCount; n++)

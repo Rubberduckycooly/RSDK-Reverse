@@ -168,14 +168,14 @@ namespace RSDKv1
                 for (int x = 0; x < width; x++)
                 {
                     // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv1 and RSDKv2
+                    // Big-Endian in RSDKv1 and RSDKv3
                     reader.Read(buffer, 0, 2); //Read size
                     MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
                 }
             }
 
 
-            // Read number of object types, Only RSDKv1 and RSDKv2 support this feature		
+            // Read number of object types, Only RSDKv1 and RSDKv3 support this feature		
             int ObjTypeCount = reader.ReadByte();
 
             for (int n = 0; n < ObjTypeCount; n++)

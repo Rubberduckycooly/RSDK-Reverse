@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 /* Taxman sure loves leaving support for fileformats in his code */
 
-namespace RSDKv2
+namespace RSDKv3
 {
     public class Video
     {

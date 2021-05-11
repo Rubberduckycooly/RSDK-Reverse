@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
-namespace RSDKv2
+namespace RSDKv3
 {
     public class Bytecode
     {
