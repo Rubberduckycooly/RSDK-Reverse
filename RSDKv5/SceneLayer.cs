@@ -8,7 +8,7 @@ namespace RSDKv5
     public class SceneLayer
     {
         /// <summary>
-        /// ok taxman retar
+        /// unsure what this is for, maybe some weird padding
         /// </summary>
         byte IgnoredByte;
         private string _name;
