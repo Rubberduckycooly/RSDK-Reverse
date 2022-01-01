@@ -14,7 +14,7 @@ namespace RSDKv4
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
-            public short ConstantSpeed;
+            public byte ConstantSpeed;
             /// <summary>
             /// a special byte that tells the game what "behaviour" property the layer has
             /// </summary>
@@ -27,7 +27,7 @@ namespace RSDKv4
                 Behaviour = 0;
             }
 
-            public ScrollInfo(byte r, byte c, byte d, byte b)
+            public ScrollInfo(short r, byte c, byte d, byte b)
             {
                 RelativeSpeed = r;
                 ConstantSpeed = c;
@@ -80,7 +80,7 @@ namespace RSDKv4
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public short ConstantSpeed;
+            public byte ConstantSpeed;
 
             /// <summary>
             /// indexes to HLine values
