@@ -1,21 +1,14 @@
 # RSDK-Reverse
 A collection of libraries for the RSDK (Retro Engine Software Development Kit)
 
-This repository contains libaries for all versions of the RSDK (and a few tools for editing certain file formats):
-- RSDKv1: A library for the Retro-Sonic Development Kit (Retro-Sonic). 
+This repository contains libraries various versions of the RSDK.
 
-- RSDKv2: A library for RSDKv2 (Sonic Nexus (2008 build)).
+- RSDKv1: A library for the file formats of the Retro-Sonic Development Kit (used in the Retro-Sonic 2007 build & Retro-Sonic 2006 Dreamcast demo). 
 
-- RSDKv3: A library for RSDKv3 (Sonic CD (2011)).
+- RSDKv2: A library for the file formats of the Sonic Nexus 2008 build.
 
-- RSDKv4: A library for RSDKv4 (Sonic 1 and Sonic 2 Mobile Remakes).
+- RSDKv3: A library for the file formats of RSDKv3 (used in the Sonic CD 2011 remaster).
 
-- RSDKv5: A library for RSDKv5 (Sonic Mania).
+- RSDKv4: A library for the file formats of RSDKv4 (used in the Sonic 1 & 2 2013 remasters).
 
-# Special Thanks:
-
-koolkdev/EyeKey: For developing the first set of RSDKv5 libraries
-(https://github.com/koolkdev)
-
-NextVolume/tails92: For making TaxED, Which I used as a guide to certain filetypes.
-(http://unhaut.x10host.com/)
+- RSDKv5: A library for the file formats of RSDKv5 (used in Sonic Mania).
