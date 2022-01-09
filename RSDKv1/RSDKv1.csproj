@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E089DB56-F8D4-434E-A9A8-C7EFCC3278D8}</ProjectGuid>
+    <ProjectGuid>{AAE1BACD-FE6B-4CC6-AD2D-073315F45EAF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RSDKv1</RootNamespace>
@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>2</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,31 +34,24 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Drawing" />
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
-    <Compile Include="BackgroundLayout.cs" />
-    <Compile Include="Script.cs" />
-    <Compile Include="Tileconfig.cs" />
+    <Compile Include="Backgrounds.cs" />
+    <Compile Include="Bitmap.cs" />
     <Compile Include="DataFile.cs" />
-    <Compile Include="Gameconfig.cs" />
-    <Compile Include="GraphicsImage.cs" />
+    <Compile Include="Gfx.cs" />
     <Compile Include="Scene.cs" />
-    <Compile Include="Object.cs" />
+    <Compile Include="CharacterList.cs" />
+    <Compile Include="StageList.cs" />
     <Compile Include="Palette.cs" />
-    <Compile Include="PaletteColour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="Video.cs" />
-    <Compile Include="Stageconfig.cs" />
+    <Compile Include="Script.cs" />
+    <Compile Include="StageConfig.cs" />
+    <Compile Include="TileConfig.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="Writer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

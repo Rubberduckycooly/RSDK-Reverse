@@ -1,291 +1,299 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace RSDKv1
 {
     public class Scene
     {
+        public class Entity
+        {
+            /// <summary>
+            /// The type of object the entity is
+            /// </summary>
+            public byte type = 0;
+            /// <summary>
+            /// The entity's property value (aka subtype in classic sonic games)
+            /// </summary>
+            public byte propertyValue = 0;
+            /// <summary>
+            /// the x position (whole numbers)
+            /// </summary>
+            public short xpos = 0;
+            /// <summary>
+            /// the y position (whole numbers)
+            /// </summary>
+            public short ypos = 0;
+
+            public Entity() { }
+
+            public Entity(byte type, byte propertyValue, short xpos, short ypos) : this()
+            {
+                this.type = type;
+                this.propertyValue = propertyValue;
+                this.xpos = xpos;
+                this.ypos = ypos;
+            }
+
+            public Entity(Reader reader) : this()
+            {
+                read(reader);
+            }
+
+            public void read(Reader reader)
+            {
+                // Entity type, 1 byte, unsigned
+                type = reader.ReadByte();
+                // Property value, 1 byte, unsigned
+                propertyValue = reader.ReadByte();
+
+                // X Position, 2 bytes, big-endian, signed			
+                xpos = (short)(reader.ReadSByte() << 8);
+                xpos |= reader.ReadByte();
+
+                // Y Position, 2 bytes, big-endian, signed
+                ypos = (short)(reader.ReadSByte() << 8);
+                ypos |= reader.ReadByte();
+            }
+
+            public void write(Writer writer)
+            {
+                writer.Write(type);
+                writer.Write(propertyValue);
+
+                writer.Write((byte)(xpos >> 8));
+                writer.Write((byte)(xpos & 0xFF));
+
+                writer.Write((byte)(ypos >> 8));
+                writer.Write((byte)(ypos & 0xFF));
+            }
+        }
+
+        public enum TrackIDs
+        {
+            StageTrack1,
+            StageTrack2,
+            StageTrack3,
+            StageTrack4,
+            StageTrack5,
+            SpeedShoes,
+            Invincibility,
+            ActClear,
+            GameOver,
+            Title,
+        }
+
+        public enum BackgroundIDs
+        {
+            None,
+            Background1,
+            Background2,
+            Background3,
+            Background4,
+            Background5,
+            Background6,
+            Background7,
+            Background8,
+        }
+
         /// <summary>
         /// the Stage Name (what the titlecard displays)
         /// </summary>
-        public string Title = "Stage";
+        public string title = "Stage";
 
         /// <summary>
-        /// the array of Chunk IDs for the stage
+        /// the chunk layout for the FG layer
         /// </summary>
-        public ushort[][] MapLayout;
+        public byte[][] layout;
 
         /// <summary>
-        /// the Max amount of objects that can be in a single stage
+        /// the starting Music ID for the stage
         /// </summary>
-        public int MaxObjectCount
-        {
-            get
-            {
-                return 1056;
-            }
-        }
-
-        /* Values for the "Display Bytes" */
+        public TrackIDs initialMusicID = TrackIDs.StageTrack1;
         /// <summary>
-        /// Active Layer 0, does ???
+        /// the initial background ID
         /// </summary>
-        public byte ActiveLayer0 = 1; //Usually BG Layer
-        /// <summary>
-        /// Active Layer 0, does ???
-        /// </summary>
-        public byte ActiveLayer1 = 2; //Unknown
-        /// <summary>
-        /// Active Layer 0, does ???
-        /// </summary>
-        public byte ActiveLayer2 = 0; //Usually Foreground (Map) Layer
-        /// <summary>
-        /// Active Layer 0, does ???
-        /// </summary>
-        public byte ActiveLayer3 = 0; //Usually Foreground (Map) Layer
-        /// <summary>
-        /// The Midpoint Layer does ???
-        /// </summary>
-        public byte Midpoint = 3;
+        public BackgroundIDs initialBackgroundID = BackgroundIDs.Background1;
 
         /// <summary>
-        /// the starting X Boundary, it's always 0 though
+        /// player's Spawn Xpos
         /// </summary>
-        public int xBoundary1
-        {
-            get
-            {
-                return 0;
-            }
-        }
+        public short playerSpawnX;
         /// <summary>
-        /// the starting Y Boundary, it's always 0 though
+        /// player's Spawn Ypos
         /// </summary>
-        public int yBoundary1
-        {
-            get
-            {
-                return 0;
-            }
-        }
-        /// <summary>
-        /// the ending X Boundary, it's the value (in pixels) for the stage width
-        /// </summary>
-        public int xBoundary2
-        {
-            get
-            {
-                return width << 7;
-            }
-        }
-        /// <summary>
-        /// the ending Y Boundary, it's the value (in pixels) for the stage height
-        /// </summary>
-        public int yBoundary2
-        {
-            get
-            {
-                return height << 7;
-            }
-        }
-        /// <summary>
-        /// The water level for the stage, by default it will be below the stage, so it's kinda useless lol
-        /// </summary>
-        public int WaterLevel
-        {
-            get
-            {
-                return yBoundary2 + 128;
-            }
-        }
+        public short playerSpawnY;
 
         /// <summary>
-        /// the list of objects in the stage
+        /// the list of entities in the stage
         /// </summary>
-        public List<Object> objects = new List<Object>();
-        /// <summary>
-        /// a list of names for each Object Type
-        /// </summary>
-        public List<string> objectTypeNames = new List<string>();
+        public List<Entity> entities = new List<Entity>();
 
         /// <summary>
         /// stage width (in chunks)
         /// </summary>
-        public ushort width;
+        public byte width;
         /// <summary>
         /// stage height (in chunks)
         /// </summary>
-        public ushort height;
+        public byte height;
+
+        /// <summary>
+        /// the Max amount of entities that can be in a single stage
+        /// </summary>
+        public const int ENTITY_LIST_SIZE = 1000;
 
         public Scene()
         {
-            MapLayout = new ushort[1][];
-            MapLayout[0] = new ushort[1];
+            layout = new byte[1][];
+            layout[0] = new byte[1];
         }
 
-        public Scene(string filename) : this(new Reader(filename))
-        {
+        public Scene(string filename) : this(new Reader(filename)) { }
 
-        }
-
-        public Scene(System.IO.Stream stream) : this(new Reader(stream))
-        {
-
-        }
+        public Scene(System.IO.Stream stream) : this(new Reader(stream)) { }
 
         public Scene(Reader reader)
         {
-            Title = reader.ReadRSDKString();
-            //Console.WriteLine("Stage Name: " + Title);
+            read(reader);
+        }
 
-            byte[] buffer = new byte[5];
+        public void read(Reader reader)
+        {
+            var fileStream = reader.BaseStream as FileStream;
+            string filename = fileStream.Name;
 
-            ActiveLayer0 = reader.ReadByte();
-            ActiveLayer1 = reader.ReadByte();
-            ActiveLayer2 = reader.ReadByte();
-            ActiveLayer3 = reader.ReadByte();
-            Midpoint = reader.ReadByte();
+            Reader ITMreader = new Reader(Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".itm");
 
-            reader.Read(buffer, 0, 2); //Read Width
-
-            width = 0; height = 0;
-
-
-            // Map width in 128 pixel units
-            // In RSDKv1, it's one byte long
-            width = buffer[0];
-            height = buffer[1];
-
-            MapLayout = new ushort[height][];
+            // Tile Layout Loading
+            width = reader.ReadByte();
+            height = reader.ReadByte();
+            layout = new byte[height][];
             for (int i = 0; i < height; i++)
-            {
-                MapLayout[i] = new ushort[width];
-            }
+                layout[i] = new byte[width];
 
+            // Read map data from the map file
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
-                {
-                    // 128x128 Block number is 16-bit
-                    // Big-Endian in RSDKv1 and RSDKv3
-                    reader.Read(buffer, 0, 2); //Read size
-                    MapLayout[y][x] = (ushort)(buffer[1] + (buffer[0] << 8));
-                }
-            }
-
-
-            // Read number of object types, Only RSDKv1 and RSDKv3 support this feature		
-            int ObjTypeCount = reader.ReadByte();
-
-            for (int n = 0; n < ObjTypeCount; n++)
-            {
-                string name = reader.ReadRSDKString();
-
-                objectTypeNames.Add(name);
-                //Console.WriteLine(name);
-            }
-
-            // Read object data
-            int ObjCount = 0;
-
-            // 2 bytes, big-endian, unsigned
-            ObjCount = reader.ReadByte() << 8;
-            ObjCount |= reader.ReadByte();
-
-            Object.cur_id = 0;
-
-            for (int n = 0; n < ObjCount; n++)
-            {
-                // Add object
-                objects.Add(new Object(reader));
+                    layout[y][x] = reader.ReadByte();
             }
             reader.Close();
+
+            // Object Layout Loading
+            title = ITMreader.readRSDKString();
+
+            initialMusicID = (TrackIDs)ITMreader.ReadByte();
+            initialBackgroundID = (BackgroundIDs)ITMreader.ReadByte();
+            playerSpawnX = (short)(ITMreader.ReadByte() << 8);
+            playerSpawnX |= ITMreader.ReadByte();
+            playerSpawnY = (short)(ITMreader.ReadByte() << 8);
+            playerSpawnY |= ITMreader.ReadByte();
+
+            // Read entities from the item file
+            int entityCount = ITMreader.ReadByte() << 8;
+            entityCount |= ITMreader.ReadByte();
+
+            entities.Clear();
+            for (int i = 0; i < entityCount; i++)
+                entities.Add(new Entity(ITMreader));
+
+            ITMreader.Close();
         }
 
-        public void Write(string filename)
+        public void write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                this.Write(writer);
+                write(writer);
         }
 
-        public void Write(System.IO.Stream stream)
+        public void write(Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                this.Write(writer);
+                write(writer);
         }
 
-        internal void Write(Writer writer)
+        public void write(Writer writer)
         {
+            var fileStream = writer.BaseStream as FileStream;
+            string filename = fileStream.Name;
 
-            //Checks To Make Sure the Data Is Valid For Saving
-
-            if (this.width > 255)
-                throw new Exception("Cannot save as Type v1. Width in tiles > 255");
-
-            if (this.height > 255)
-                throw new Exception("Cannot save as Type v1. Height in tiles > 255");
-
-            int num_of_objects = objects.Count;
-
-            if (num_of_objects >= MaxObjectCount)
-            {
-                Console.WriteLine("Object Count > Max Objects!");
-                return;
-            }
-
-            // Write zone name		
-            writer.WriteRSDKString(Title);
-
-            // Write the five "display" bytes
-            writer.Write(ActiveLayer0);
-            writer.Write(ActiveLayer1);
-            writer.Write(ActiveLayer2);
-            writer.Write(ActiveLayer3);
-            writer.Write(Midpoint);
+            // Write Tile Layout
 
             // Write width and height
-            writer.Write((byte)this.width);
-            writer.Write((byte)this.height);
+            writer.Write(width);
+            writer.Write(height);
 
-            // Write tile map
+            // Write tile layout
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    writer.Write(layout[y][x]);
 
-            for (int h = 0; h < this.height; h++)
-            {
-                for (int w = 0; w < this.width; w++)
-                {
-                    writer.Write((byte)(MapLayout[h][w] >> 8));
-                    writer.Write((byte)(MapLayout[h][w] & 0xff));
-                }
-            }
-
-            // Write number of object type names
-            int num_of_objtype_names = this.objectTypeNames.Count;
-
-            writer.Write((byte)(num_of_objtype_names));
-
-            // Write object type names
-            // Ignore first object type "Type zero", it is not stored.
-            for (int n = 0; n < num_of_objtype_names; n++)
-            {
-                writer.WriteRSDKString(objectTypeNames[n]);
-            }
-
-            // Write number of objects
-            writer.Write((byte)(num_of_objects >> 8));
-            writer.Write((byte)(num_of_objects & 0xFF));
-
-            objects = objects.OrderBy(o => o.id).ToList();
-
-            // Write object data
-            for (int n = 0; n < num_of_objects; n++)
-            {
-                Object obj = objects[n];
-
-                obj.Write(writer);
-            }
+            // Close map file
             writer.Close();
+
+            // Write Object layout
+            Writer ITMwriter = new Writer(Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".itm");
+
+            // Save zone name
+            ITMwriter.writeRSDKString(title);
+
+            // Write the Stage Init Data
+            ITMwriter.Write((byte)initialMusicID);
+            ITMwriter.Write((byte)initialBackgroundID);
+            ITMwriter.Write((byte)(playerSpawnX >> 8));
+            ITMwriter.Write((byte)(playerSpawnX & 0xFF));
+            ITMwriter.Write((byte)(playerSpawnY >> 8));
+            ITMwriter.Write((byte)(playerSpawnY & 0xFF));
+
+            // Write number of entities
+            ITMwriter.Write((byte)(entities.Count >> 8));
+            ITMwriter.Write((byte)(entities.Count & 0xFF));
+
+            // Write entities
+            foreach (Entity entity in entities)
+                entity.write(ITMwriter);
+
+            ITMwriter.Close();
         }
 
+        /// <summary>
+        /// Resizes a layer.
+        /// </summary>
+        /// <param name="width">The new Width</param>
+        /// <param name="height">The new Height</param>
+        public void resize(byte width, byte height)
+        {
+            // first take a backup of the current dimensions
+            // then update the internal dimensions
+            byte oldWidth = this.width;
+            byte oldHeight = this.height;
+            this.width = width;
+            this.height = height;
+
+            // resize the tile map
+            System.Array.Resize(ref layout, this.height);
+
+            // fill the extended tile arrays with "empty" values
+
+            // if we're actaully getting shorter, do nothing!
+            for (byte i = oldHeight; i < this.height; i++)
+            {
+                // first create arrays child arrays to the old width
+                // a little inefficient, but at least they'll all be equal sized
+                layout[i] = new byte[oldWidth];
+                for (int j = 0; j < oldWidth; ++j)
+                    layout[i][j] = 0; // fill the new ones with blanks
+            }
+
+            for (byte y = 0; y < this.height; y++)
+            {
+                // now resize all child arrays to the new width
+                System.Array.Resize(ref layout[y], this.width);
+                for (ushort x = oldWidth; x < this.width; x++)
+                    layout[y][x] = 0; // and fill with blanks if wider
+            }
+        }
     }
 }

@@ -1,267 +1,156 @@
-﻿using System.Drawing;
-
-namespace RSDKv1
+﻿namespace RSDKv1
 {
-    public class Tileconfig
+    public class TileConfig
     {
         /// <summary>
-        /// 1024, one for each tile
+        /// 1024 tiles, always
         /// </summary>
-        const int TILES_COUNT = 1024;
+        private const int TILES_COUNT = 0x400;
 
         /// <summary>
-        /// A list of all the mask values on plane A
+        /// A list of all the mask values
         /// </summary>
-        public CollisionMask[] CollisionPath1 = new CollisionMask[TILES_COUNT];
-        /// <summary>
-        /// A list of all the mask values on plane B
-        /// </summary>
-        public CollisionMask[] CollisionPath2 = new CollisionMask[TILES_COUNT];
+        public CollisionMask[][] collisionMasks = new CollisionMask[2][];
+
+        public enum CollisionSides
+        {
+            Floor,
+            RWall,
+            LWall,
+            Roof,
+            Max,
+        }
 
         public class CollisionMask
         {
-            /// <summary>
-            /// Collision position for each pixel
-            /// </summary>
-            public byte[] Collision = new byte[16]; //two Collision Values per read byte
+            public class HeightMask
+            {
+                public enum Solidities
+                {
+                    NotSolid,
+                    Solid,
+                    Solid2 // Idk what the hell this is, in every case I saw it behaves the same as solid
+                }
 
-            /// <summary>
-            /// the collision flags for each "column"
-            /// </summary>
-            public bool[] HasCollision = new bool[16];
+                // Same As v2-v5
+                public byte height = 0;
 
-            /// <summary>
-            /// is the Mask A ceiling mask?
-            /// </summary>
-            public bool isCeiling;
-            /// <summary>
-            /// is the Mask A ceiling mask?
-            /// </summary>
-            public byte Behaviour;
-            /// <summary>
-            /// Angle value when walking on the floor
-            /// </summary>
-            public byte FloorAngle;
-            /// <summary>
-            /// Angle value when walking on RWall
-            /// </summary>
-            public byte RWallAngle;
-            /// <summary>
-            /// Angle value when walking on LWall
-            /// </summary>
-            public byte LWallAngle;
-            /// <summary>
-            /// Angle value when walking on the ceiling
-            /// </summary>
-            public byte CeilingAngle;
+                public Solidities solid = Solidities.NotSolid;
+
+                public HeightMask() { }
+            }
+
+            public enum CollisionModes
+            {
+                Floor,      // Set Player Collision Mode to Floor
+                LWall,      // Set Player Collision Mode to LWall
+                Roof,       // Set Player Collision Mode to Roof
+                RWall,      // Set Player Collision Mode to RWall
+                UseAngle,   // Use the calculated angle to determine when to change collision modes
+            }
+
+            public CollisionModes collisionMode = CollisionModes.UseAngle;
+
+            public HeightMask[][] heightMasks = new HeightMask[4][];
 
             public CollisionMask()
             {
-                Collision = new byte[16];
-                HasCollision = new bool[16];
-                FloorAngle = 0x00;
-                RWallAngle = 0xC0;
-                LWallAngle = 0x40;
-                CeilingAngle = 0x80;
-                isCeiling = false;
-            }
+                heightMasks[0] = new HeightMask[16];
+                heightMasks[1] = new HeightMask[16];
+                heightMasks[2] = new HeightMask[16];
+                heightMasks[3] = new HeightMask[16];
 
-            public CollisionMask(System.IO.Stream stream) : this(new Reader(stream)) { }
-
-            internal CollisionMask(Reader reader)
-            {
-
-                byte flags = reader.ReadByte();
-                isCeiling = (flags >> 4) != 0;
-                Behaviour = (byte)(flags & 0xF);
-                FloorAngle = reader.ReadByte();
-                RWallAngle = reader.ReadByte();
-                LWallAngle = reader.ReadByte();
-                CeilingAngle = reader.ReadByte();
-
-                byte[] collision = reader.ReadBytes(8);
-
-                int ActiveCollision = reader.ReadByte() << 8;
-                ActiveCollision |= reader.ReadByte();
-
-                int i = 0;
-                int i2 = 1;
-
-                for (int c = 0; c < 8; c++)
+                for (int c = 0; c < 16; ++c)
                 {
-                    Collision[i] = (byte)((collision[c] & 0xF0) >> 4);
-                    Collision[i2] = (byte)(collision[c] & 0x0F);
-                    i += 2;
-                    i2 += 2;
+                    heightMasks[0][c] = new HeightMask();
+                    heightMasks[1][c] = new HeightMask();
+                    heightMasks[2][c] = new HeightMask();
+                    heightMasks[3][c] = new HeightMask();
                 }
-
-                int b = 0;
-
-                for (int ii = 0; ii < 16; ii++)
-                {
-                    HasCollision[ii] = IsBitSet(ActiveCollision, b);
-                    b++;
-                }
-
-            }
-
-            public void Write(Writer writer)
-            {
-                writer.Write(AddNibbles(isCeiling ? (byte)1 : (byte)0, Behaviour));
-                writer.Write(FloorAngle);
-                writer.Write(RWallAngle);
-                writer.Write(LWallAngle);
-                writer.Write(CeilingAngle);
-
-                byte[] collision = new byte[8];
-                int CollisionActive = 0;
-
-                int c = 0;
-
-                for (int i = 0; i < 8; i++)
-                {
-                    collision[i] = AddNibbles(Collision[c++], Collision[c++]);
-                }
-
-                for (int i = 0; i < 16; i++)
-                {
-                    if (HasCollision[i])
-                    {
-                        CollisionActive |= 1 << i;
-                    }
-                    if (!HasCollision[i])
-                    {
-                        CollisionActive |= 0 << i;
-                    }
-                }
-
-                writer.Write(collision); //Write Collision Data
-
-                writer.Write((byte)(CollisionActive >> 8)); //Write Collision Solidity byte 1
-                writer.Write((byte)(CollisionActive & 0xff)); //Write Collision Solidity byte 2
-            }
-
-            public byte AddNibbles(byte a, byte b)
-            {
-                return (byte)((a & 0xF) << 4 | (b & 0xF));
-            }
-
-            public bool IsBitSet(int b, int pos)
-            {
-                return (b & (1 << pos)) != 0;
-            }
-
-            public Bitmap DrawCMask(System.Drawing.Color bg, System.Drawing.Color fg, Bitmap tile = null)
-            {
-                Bitmap b;
-                bool HasTile = false;
-                if (tile == null)
-                { b = new Bitmap(16, 16); }
-                else
-                {
-                    b = tile.Clone(new Rectangle(0, 0, tile.Width, tile.Height), System.Drawing.Imaging.PixelFormat.DontCare);
-                    HasTile = true;
-
-                }
-
-                if (!HasTile)
-                {
-                    for (int h = 0; h < 16; h++) //Set the BG colour
-                    {
-                        for (int w = 0; w < 16; w++)
-                        {
-                            b.SetPixel(w, h, bg);
-                        }
-                    }
-                }
-
-                if (!isCeiling)
-                {
-                    for (int w = 0; w < 16; w++) //Set the Active/Main (FG) colour
-                    {
-                        for (int h = 0; h < 16; h++)
-                        {
-                            if (Collision[w] <= h && HasCollision[w])
-                            {
-                                b.SetPixel(w, h, fg);
-                            }
-                        }
-                    }
-                }
-
-                if (isCeiling)
-                {
-                    for (int y = 0; y < 16; y++) //Set the Active/Main (FG) colour
-                    {
-                        for (int x = 0; x < 16; x++) //Set the Active/Main (FG) colour
-                        {
-                            b.SetPixel(x, y, bg);
-                        }
-                    }
-
-                    for (int w = 15; w > -1; w--) //Set the Active/Main (FG) colour
-                    {
-                        for (int h = 15; h > -1; h--)
-                        {
-                            if (Collision[w] >= h && HasCollision[w])
-                            {
-                                b.SetPixel(w, h, fg);
-                            }
-                        }
-                    }
-                }
-                return b;
-            }
-
-        }
-
-        public Tileconfig()
-        {
-            for (int i = 0; i < TILES_COUNT; ++i)
-            {
-                CollisionPath1[i] = new CollisionMask();
-                CollisionPath2[i] = new CollisionMask();
             }
         }
 
-        public Tileconfig(string filename) : this(new Reader(filename))
+        public TileConfig()
         {
-
-        }
-
-        public Tileconfig(System.IO.Stream stream) : this(new Reader(stream))
-        {
-
-        }
-
-        public Tileconfig(Reader reader)
-        {
-            for (int i = 0; i < TILES_COUNT; ++i)
+            for (int p = 0; p < 2; ++p)
             {
-                CollisionPath1[i] = new CollisionMask(reader);
-                CollisionPath2[i] = new CollisionMask(reader);
+                collisionMasks[p] = new CollisionMask[TILES_COUNT];
+                for (int i = 0; i < TILES_COUNT; ++i)
+                    collisionMasks[p][i] = new CollisionMask();
             }
+        }
+
+        public TileConfig(string filename, bool dcVer = false) : this(new Reader(filename), dcVer) { }
+
+        public TileConfig(System.IO.Stream stream, bool dcVer = false) : this(new Reader(stream), dcVer) { }
+
+        public TileConfig(Reader reader, bool dcVer = false) : this()
+        {
+            read(reader, dcVer);
+        }
+
+        public void read(Reader reader, bool dcVer = false)
+        {
+            for (int c = 0; c < TILES_COUNT; ++c)
+            {
+                if (!dcVer)
+                {
+                    byte buffer = reader.ReadByte();
+                    collisionMasks[0][c].collisionMode = (CollisionMask.CollisionModes)((buffer & 0xF0) >> 4);
+                    collisionMasks[1][c].collisionMode = (CollisionMask.CollisionModes)(buffer & 0x0F);
+                }
+
+                for (int p = 0; p < 2; ++p)
+                {
+                    for (int f = 0; f < (int)CollisionSides.Max; ++f)
+                    {
+                        for (int i = 0; i < 16; ++i)
+                        {
+                            byte buffer = reader.ReadByte();
+                            collisionMasks[p][c].heightMasks[f][i].height = (byte)((buffer & 0xF0) >> 4);
+                            collisionMasks[p][c].heightMasks[f][i].solid = (CollisionMask.HeightMask.Solidities)(buffer & 0x0F);
+                        }
+                    }
+                }
+            }
+
             reader.Close();
         }
 
-        public void Write(string filename)
+        public void write(string filename, bool DCver = false)
         {
-            Write(new Writer(filename));
+            using (Writer writer = new Writer(filename))
+                write(writer, DCver);
         }
 
-        public void Write(System.IO.Stream s)
+        public void write(System.IO.Stream stream, bool DCver = false)
         {
-            Write(new Writer(s));
+            using (Writer writer = new Writer(stream))
+                write(writer, DCver);
         }
 
-        public void Write(Writer writer)
+        public void write(Writer writer, bool dcVer = false)
         {
-            for (int i = 0; i < TILES_COUNT; ++i)
+            for (int c = 0; c < TILES_COUNT; ++c)
             {
-                CollisionPath1[i].Write(writer);
-                CollisionPath2[i].Write(writer);
+                if (!dcVer)
+                    writer.Write(addNibbles((byte)collisionMasks[0][c].collisionMode, (byte)collisionMasks[1][c].collisionMode));
+
+                for (int p = 0; p < 2; ++p)
+                {
+                    for (int f = 0; f < (int)CollisionSides.Max; ++f)
+                    {
+                        for (int i = 0; i < 16; ++i)
+                            writer.Write(addNibbles(collisionMasks[p][c].heightMasks[f][i].height, (byte)collisionMasks[p][c].heightMasks[f][i].solid));
+                    }
+                }
             }
             writer.Close();
+        }
+
+        private byte addNibbles(byte a, byte b)
+        {
+            return (byte)((a & 0xF) << 4 | (b & 0xF));
         }
 
     }

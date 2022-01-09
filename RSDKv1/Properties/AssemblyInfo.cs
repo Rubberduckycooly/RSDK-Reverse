@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("RSDKv1")]
-[assembly: AssemblyDescription("A library for interacting with RSDKv1's file formats")]
+[assembly: AssemblyDescription("A library for interacting with Retro-Sonic Engine (2007 Build)'s file formats")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("RSDKv1")]
-[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2020")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e089db56-f8d4-434e-a9a8-c7efcc3278d8")]
+[assembly: Guid("aae1bacd-fe6b-4cc6-ad2d-073315f45eaf")]
 
 // Version information for an assembly consists of the following four values:
 //

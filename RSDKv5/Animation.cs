@@ -12,30 +12,6 @@ namespace RSDKv5
             return this.MemberwiseClone();
         }
 
-        public static readonly byte[] MAGIC = new byte[] { (byte)'S', (byte)'P', (byte)'R', (byte)'\0' };
-
-        public string PathMod
-        {
-            get
-            {
-                return "..//";
-            }
-        }
-
-        //Why Taxman, why
-        public int TotalFrameCount
-        {
-            get
-            {
-                return Animations.Take(Animations.Count).Sum(x => x.Frames.Count);
-            }
-        }
-
-        public List<string> SpriteSheets = new List<string>();
-        public List<string> CollisionBoxes = new List<string>();
-
-        public List<AnimationEntry> Animations = new List<AnimationEntry>();
-
         [Serializable]
         public class AnimationEntry : ICloneable
         {
@@ -50,329 +26,270 @@ namespace RSDKv5
                 {
                     return this.MemberwiseClone();
                 }
-                public class HitBox
+                public class Hitbox
                 {
-                    /// <summary>
-                    /// the Xpos of the hitbox
-                    /// </summary>
-                    public short Left;
-                    /// <summary>
-                    /// the Width of the hitbox
-                    /// </summary>
-                    public short Top;
-                    /// <summary>
-                    /// the Ypos of the hitbox
-                    /// </summary>
-                    public short Right;
-                    /// <summary>
-                    /// the height of the hitbox
-                    /// </summary>
-                    public short Bottom;
+                    public short left;
+                    public short top;
+                    public short right;
+                    public short bottom;
                 }
 
-                /// <summary>
-                /// the hitbox data for the frame
-                /// </summary>
-                public List<HitBox> HitBoxes = new List<HitBox>();
                 /// <summary>
                 /// the spritesheet ID
                 /// </summary>
-                public byte SpriteSheet = 0;
+                public byte sheet = 0;
                 /// <summary>
-                /// the collisionBox ID
+                /// the hitbox data for the frame
                 /// </summary>
-                public byte CollisionBox = 0;
+                public List<Hitbox> hitboxes = new List<Hitbox>();
                 /// <summary>
                 /// how many frames to wait before the next frame is shown
                 /// </summary>
-                public short Delay = 0;
+                public ushort duration = 0;
                 /// <summary>
-                /// special value, used for things like the title card letters (and strangely, mighty's victory anim)
+                /// represents a unicode character
                 /// </summary>
-                public short ID = 0;
+                public ushort unicodeChar = '\0';
                 /// <summary>
-                /// the Xpos on the sheet
+                /// the XPos on the sheet
                 /// </summary>
-                public short X = 0;
+                public ushort sprX = 0;
                 /// <summary>
-                /// the Ypos on the sheet
+                /// the YPos on the sheet
                 /// </summary>
-                public short Y = 0;
+                public ushort sprY = 0;
                 /// <summary>
                 /// the width of the frame
                 /// </summary>
-                public short Width = 0;
+                public ushort width = 0;
                 /// <summary>
                 /// the height of the frame
                 /// </summary>
-                public short Height = 0;
+                public ushort height = 0;
                 /// <summary>
                 /// the X Offset for the frame
                 /// </summary>
-                public short PivotX = 0;
+                public short pivotX = 0;
                 /// <summary>
                 /// the Y Offset for the frame
                 /// </summary>
-                public short PivotY = 0;
+                public short pivotY = 0;
 
-                public Frame()
-                {
-
-                }
+                public Frame() { }
 
                 public Frame(Reader reader, Animation anim = null)
                 {
-                    SpriteSheet = reader.ReadByte();
-                    CollisionBox = 0;
-                    Delay = reader.ReadInt16();
-                    ID = reader.ReadInt16();
-                    X = reader.ReadInt16();
-                    Y = reader.ReadInt16();
-                    Width = reader.ReadInt16();
-                    Height = reader.ReadInt16();
-                    PivotX = reader.ReadInt16();
-                    PivotY = reader.ReadInt16();
+                    read(reader, anim);
+                }
 
-                    for (int i = 0; i < anim.CollisionBoxes.Count; ++i)
+                public void read(Reader reader, Animation anim = null)
+                {
+                    sheet = reader.ReadByte();
+                    duration = reader.ReadUInt16();
+                    unicodeChar = reader.ReadUInt16();
+                    sprX = reader.ReadUInt16();
+                    sprY = reader.ReadUInt16();
+                    width = reader.ReadUInt16();
+                    height = reader.ReadUInt16();
+                    pivotX = reader.ReadInt16();
+                    pivotY = reader.ReadInt16();
+
+                    for (int i = 0; anim != null && i < anim.hitboxTypes.Count; ++i)
                     {
-                        var hitBox = new HitBox();
-                        hitBox.Left = reader.ReadInt16();
-                        hitBox.Top = reader.ReadInt16();
-                        hitBox.Right = reader.ReadInt16();
-                        hitBox.Bottom = reader.ReadInt16();
-                        HitBoxes.Add(hitBox);
+                        var hitBox = new Hitbox();
+                        hitBox.left = reader.ReadInt16();
+                        hitBox.top = reader.ReadInt16();
+                        hitBox.right = reader.ReadInt16();
+                        hitBox.bottom = reader.ReadInt16();
+                        hitboxes.Add(hitBox);
                     }
                 }
 
-                public void Write(Writer writer)
+                public void write(Writer writer)
                 {
-                    writer.Write(SpriteSheet);
-                    writer.Write(Delay);
-                    writer.Write(ID);
-                    writer.Write(X);
-                    writer.Write(Y);
-                    writer.Write(Width);
-                    writer.Write(Height);
-                    writer.Write(PivotX);
-                    writer.Write(PivotY);
+                    writer.Write(sheet);
+                    writer.Write(duration);
+                    writer.Write(unicodeChar);
+                    writer.Write(sprX);
+                    writer.Write(sprY);
+                    writer.Write(width);
+                    writer.Write(height);
+                    writer.Write(pivotX);
+                    writer.Write(pivotY);
 
-                    for (int c = 0; c < HitBoxes.Count; ++c)
+                    for (int c = 0; c < hitboxes.Count; ++c)
                     {
-                        writer.Write(HitBoxes[c].Left);
-                        writer.Write(HitBoxes[c].Top);
-                        writer.Write(HitBoxes[c].Right);
-                        writer.Write(HitBoxes[c].Bottom);
+                        writer.Write(hitboxes[c].left);
+                        writer.Write(hitboxes[c].top);
+                        writer.Write(hitboxes[c].right);
+                        writer.Write(hitboxes[c].bottom);
                     }
                 }
+            }
 
-                /// <summary>
-                /// Retrieves the PivotX value for the frame relative to its horrizontal flipping.
-                /// </summary>
-                /// <param name="fliph">Horizontal flip</param>
-                public int RelCenterX(bool fliph)
-                {
-                    return (fliph ? -(Width + PivotX) : PivotX);
-                }
-
-                /// <summary>
-                /// Retrieves the PivotY value for the frame relative to its vertical flipping.
-                /// </summary>
-                /// <param name="flipv">Vertical flip</param>
-                public int RelCenterY(bool flipv)
-                {
-                    return (flipv ? -(Height + PivotY) : PivotY);
-                }
-
-
+            public enum RotationStyles
+            {
+                None,
+                Full,
+                Snap_45Deg,
+                StaticRotation,
+                Snap_180,
+                Snap_90,
             }
 
             /// <summary>
             /// the name of the animtion
             /// </summary>
-            public string AnimName
-            {
-                get;
-                set;
-            }
+            public string name = "New Animation";
             /// <summary>
             /// the list of frames in this animation
             /// </summary>
-            public List<Frame> Frames = new List<Frame>();
+            public List<Frame> frames = new List<Frame>();
             /// <summary>
             /// the frame to loop back from
             /// </summary>
-            public byte LoopIndex;
+            public byte loopIndex = 0;
             /// <summary>
-            /// the amount to multiply each frame's "Delay" value
+            /// the speed of the animation
             /// </summary>
-            public short SpeedMultiplyer;
+            public short speed = 0;
             /// <summary>
             /// the rotation style of the animation
             /// </summary>
-            public byte RotationFlags;
+            public RotationStyles rotationStyle;
 
-            public AnimationEntry()
-            {
-
-            }
+            public AnimationEntry() { }
 
             public AnimationEntry(Reader reader, Animation anim = null)
             {
-                AnimName = reader.ReadRSDKString().Replace("" + '\0', "");
+                read(reader, anim);
+            }
+
+            public void read(Reader reader, Animation anim = null)
+            {
+                name = reader.readRSDKString();
                 short frameCount = reader.ReadInt16();
-                SpeedMultiplyer = reader.ReadInt16();
-                LoopIndex = reader.ReadByte();
-                RotationFlags = reader.ReadByte();
-                for (int i = 0; i < frameCount; ++i)
-                {
-                    Frames.Add(new Frame(reader,anim));
-                }
+                speed = reader.ReadInt16();
+                loopIndex = reader.ReadByte();
+                rotationStyle = (RotationStyles)reader.ReadByte();
+
+                frames.Clear();
+                for (int f = 0; f < frameCount; ++f)
+                    frames.Add(new Frame(reader, anim));
             }
 
-            public void Write(Writer writer)
+            public void write(Writer writer)
             {
-                writer.WriteRSDKString(AnimName + '\0');
-                writer.Write((short)Frames.Count);
-                writer.Write(SpeedMultiplyer);
-                writer.Write(LoopIndex);
-                writer.Write(RotationFlags);
-                for (int i = 0; i < Frames.Count; ++i)
-                {
-                    Frames[i].Write(writer);
-                }
-            }
+                writer.writeRSDKString(name);
+                writer.Write((short)frames.Count);
+                writer.Write(speed);
+                writer.Write(loopIndex);
+                writer.Write((byte)rotationStyle);
 
-            public void NewFrame()
-            {
-                Frames.Add(new Frame());
+                foreach (Frame frame in frames)
+                    frame.write(writer);
             }
-
-            public void CloneFrame(int frame)
-            {
-                Frames.Add((Frame)Frames[frame].Clone());
-            }
-
-            public void DeleteFrame(int frame)
-            {
-                if (Frames.Count > 0)
-                {
-                    Frames.RemoveAt(frame);
-                }
-            }
-
         }
 
-        public Animation()
+        /// <summary>
+        /// the signature of the file format
+        /// </summary>
+        private static readonly byte[] signature = new byte[] { (byte)'S', (byte)'P', (byte)'R', 0 };
+
+        private uint totalFrameCount
         {
-
+            get
+            {
+                return (uint)animations.Take(animations.Count).Sum(x => x.frames.Count);
+            }
         }
+
+        /// <summary>
+        /// a list of all the spritesheets to be loaded, each sheet path is relative to "Data/Sprites/"
+        /// </summary>
+        public List<string> spriteSheets = new List<string>();
+        /// <summary>
+        /// the list of Animations in the file
+        /// </summary>
+        public List<AnimationEntry> animations = new List<AnimationEntry>();
+        /// <summary>
+        /// the list of names for each hitbox to be used per-frame
+        /// </summary>
+        public List<string> hitboxTypes = new List<string>();
+
+        public Animation() { }
+
+        public Animation(string filename) : this(new Reader(filename)) { }
+
+        public Animation(System.IO.Stream stream) : this(new Reader(stream)) { }
 
         public Animation(Reader reader)
         {
-            if (!reader.ReadBytes(4).SequenceEqual(MAGIC))
-                throw new Exception("Invalid config file header magic");
+            // Header
+            if (!reader.readBytes(4).SequenceEqual(signature))
+            {
+                reader.Close();
+                throw new Exception("Invalid Animation v5 signature");
+            }
 
-            int TotalFrameCount = reader.ReadInt32();
+            // used by RSDKv5 to allocate space for all the frames, automatically handled here
+            uint totalFrameCount = reader.ReadUInt32();
 
+            // SpriteSheets
             int spriteSheetCount = reader.ReadByte();
-            for (int i = 0; i < spriteSheetCount; ++i)
-            {
-                SpriteSheets.Add(reader.ReadRSDKString().Replace("" + '\0', ""));
-            }
+            spriteSheets.Clear();
+            for (int s = 0; s < spriteSheetCount; ++s)
+                spriteSheets.Add(reader.readRSDKString());
 
-            int collisionBoxCount = reader.ReadByte();
-            for (int i = 0; i < collisionBoxCount; ++i)
-            {
-                CollisionBoxes.Add(reader.ReadRSDKString().Replace("" + '\0', ""));
-                /*
-                string tmp = "";
-                for (int ii = 0; ii < CollisionBoxes[i].Length - 1; ii++) //Fixes a crash when using the string to load (by trimming the null char off)
-                {
-                    tmp += CollisionBoxes[i][ii];
-                }
-                CollisionBoxes[i] = tmp;*/
-            }
+            // Hitboxes
+            int hitboxTypeCount = reader.ReadByte();
+            hitboxTypes.Clear();
+            for (int h = 0; h < hitboxTypeCount; ++h)
+                hitboxTypes.Add(reader.readRSDKString());
 
-            var animationCount = reader.ReadInt16();
-            for (int i = 0; i < animationCount; ++i)
-                Animations.Add(new AnimationEntry(reader, this));
+            // Animations
+            int animationCount = reader.ReadInt16();
+            animations.Clear();
+            for (int a = 0; a < animationCount; ++a)
+                animations.Add(new AnimationEntry(reader, this));
+
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void write(string filename)
         {
-            writer.Write(MAGIC);
-            writer.Write(TotalFrameCount);
+            using (Writer writer = new Writer(filename))
+                write(writer);
+        }
 
-            writer.Write((byte)SpriteSheets.Count);
-            for (int i = 0; i < SpriteSheets.Count; ++i)
-            {
-                writer.WriteRSDKString(SpriteSheets[i] + '\0');
-            }
+        public void write(System.IO.Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                write(writer);
+        }
 
+        public void write(Writer writer)
+        {
+            // Header
+            writer.Write(signature);
+            writer.Write(totalFrameCount);
 
-            writer.Write((byte)CollisionBoxes.Count);
-            for (int i = 0; i < CollisionBoxes.Count; ++i)
-            {
-                writer.WriteRSDKString(CollisionBoxes[i] + '\0');
-            }
+            // SpriteSheets
+            writer.Write((byte)spriteSheets.Count);
+            foreach (string sheet in spriteSheets)
+                writer.writeRSDKString(sheet);
 
-            writer.Write((ushort)Animations.Count);
-            for (int i = 0; i < Animations.Count; ++i)
-            {
-                Animations[i].Write(writer);
-            }
+            // Hitboxes
+            writer.Write((byte)hitboxTypes.Count);
+            foreach (string type in hitboxTypes)
+                writer.writeRSDKString(type);
+
+            // Animations
+            writer.Write((ushort)animations.Count);
+            foreach (AnimationEntry anim in animations)
+                anim.write(writer);
+
             writer.Close();
         }
-
-        public void NewAnimation()
-        {
-            AnimationEntry a = new AnimationEntry();
-            Animations.Add(a);
-        }
-
-        public void CloneAnimation(int anim)
-        {
-            AnimationEntry a = new AnimationEntry();
-
-            a.AnimName = Animations[anim].AnimName;
-            byte FrameAmount = (byte)Animations[anim].Frames.Count;
-            a.LoopIndex = Animations[anim].LoopIndex;
-            a.SpeedMultiplyer = Animations[anim].SpeedMultiplyer;
-            a.RotationFlags = Animations[anim].RotationFlags;
-
-            a.Frames.Clear();
-
-            for (int i = 0; i < FrameAmount; i++)
-            {
-                a.Frames.Add((AnimationEntry.Frame)Animations[anim].Frames[i].Clone());
-            }
-
-            Animations.Add(a);
-        }
-
-        public void DeleteAnimation(int frame)
-        {
-            Animations.RemoveAt(frame);
-        }
-
-        public int GetAnimByName(string name)
-        {
-            for (int i = 0; i < Animations.Count; i++)
-            {
-                if (Animations[i].AnimName == name)
-                {
-                    return i;
-                }
-            }
-            Console.WriteLine("An anim with that name didn't exist! Name = " + name);
-            return -1;
-        }
-
-        public void DeleteEndAnimation()
-        {
-            Animations.RemoveAt(Animations.Count - 1);
-        }
-
     }
 }

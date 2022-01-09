@@ -4,29 +4,28 @@ using SystemColor = System.Drawing.Color;
 namespace RSDKv5
 {
     [Serializable]
-    public struct Color
+    public class Color
     {
-
         /// <summary>
         /// Colour Red Value
         /// </summary>
-        public byte R;
+        public byte R = 0x00;
         /// <summary>
         /// Colour Green Value
         /// </summary>
-        public byte G;
+        public byte G = 0x00;
         /// <summary>
         /// Colour Blue Value
         /// </summary>
-        public byte B;
+        public byte B = 0x00;
         /// <summary>
         /// Colour Alpha Value
         /// </summary>
-        public byte A;
+        public byte A = 0xFF;
 
         public static Color EMPTY = new Color(0, 0, 0, 0);
 
-        public Color(byte R=0, byte G=0, byte B=0, byte A=255)
+        public Color(byte R = 0x00, byte G = 0x00, byte B = 0x00, byte A = 0xFF)
         {
             this.R = R;
             this.G = G;
@@ -34,17 +33,26 @@ namespace RSDKv5
             this.A = A;
         }
 
-        internal Color(Reader reader) : this()
+        public Color(Reader reader, bool paletteClr = false) : this()
         {
-            Read(reader);
+            read(reader, paletteClr);
         }
 
-        internal void Read(Reader reader)
+        public void read(Reader reader, bool paletteClr = false)
         {
-            B = reader.ReadByte();
-            G = reader.ReadByte();
-            R = reader.ReadByte();
-            A = reader.ReadByte();
+            if (paletteClr)
+            {
+                R = reader.ReadByte();
+                G = reader.ReadByte();
+                B = reader.ReadByte();
+            }
+            else
+            {
+                B = reader.ReadByte();
+                G = reader.ReadByte();
+                R = reader.ReadByte();
+                A = reader.ReadByte();
+            }
         }
 
         public override bool Equals(object obj)
@@ -71,13 +79,13 @@ namespace RSDKv5
             else return false;
         }
 
-        internal SystemColor ToSystemColors()
+        public SystemColor toSystemColors()
         {
-            SystemColor returnColor = SystemColor.FromArgb(this.R, this.G, this.B);
+            SystemColor returnColor = SystemColor.FromArgb(R, G, B);
             return returnColor;
         }
 
-        internal Color FromSystemColor(SystemColor color)
+        public Color fromSystemColor(SystemColor color)
         {
             Color returnColor = new Color();
             returnColor.R = color.R;
@@ -87,12 +95,21 @@ namespace RSDKv5
             return returnColor;
         }
 
-        internal void Write(Writer writer)
+        public void write(Writer writer, bool paletteClr = false)
         {
-            writer.Write(B);
-            writer.Write(G);
-            writer.Write(R);
-            writer.Write(A);
+            if (paletteClr)
+            {
+                writer.Write(R);
+                writer.Write(G);
+                writer.Write(B);
+            }
+            else
+            {
+                writer.Write(B);
+                writer.Write(G);
+                writer.Write(R);
+                writer.Write(A);
+            }
         }
     }
 }

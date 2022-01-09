@@ -9,10 +9,11 @@ namespace RSDKv5
 {
     public class DataFile
     {
-
         public class FileInfo
         {
-
+            /// <summary>
+            /// A list of extension types (used if the filename is unknown)
+            /// </summary>
             public enum ExtensionTypes
             {
                 UNKNOWN,
@@ -28,56 +29,74 @@ namespace RSDKv5
                 TIL,
             }
 
-            public string FileName;
-            public string MD5FileName;
-            byte[] md5Hash = new byte[16];
+            /// <summary>
+            /// filename of the file
+            /// </summary>
+            public NameIdentifier fileName = new NameIdentifier("File.bin");
 
-            public uint DataOffset;
-            public uint FileSize;
-            public bool Encrypted;
+            /// <summary>
+            /// whether the file is encrypted or not
+            /// </summary>
+            public bool encrypted = false;
 
-            public byte[] Filedata;
+            /// <summary>
+            /// an array of the bytes in the file, decrypted
+            /// </summary>
+            public byte[] fileData;
 
-            public ExtensionTypes Extension = ExtensionTypes.UNKNOWN;
+            /// <summary>
+            /// the extension of the file
+            /// </summary>
+            public ExtensionTypes extension = ExtensionTypes.UNKNOWN;
 
-            static byte[] encryptionStringA = new byte[16];
-            static byte[] encryptionStringB = new byte[16];
+            /// <summary>
+            /// a string of bytes used for decryption/encryption
+            /// </summary>
+            private static byte[] encryptionStringA = new byte[16];
+            /// <summary>
+            /// another string of bytes used for decryption/encryption
+            /// </summary>
+            private static byte[] encryptionStringB = new byte[16];
 
-            static int eStringNo;
-            static int eStringPosA;
-            static int eStringPosB;
-            static int eNybbleSwap;
+            private static int eStringNo;
+            private static int eStringPosA;
+            private static int eStringPosB;
+            private static int eNybbleSwap;
 
-            public FileInfo()
+            public uint offset = 0;
+
+            public FileInfo() { }
+
+            public FileInfo(Reader reader, List<string> fileNames = null, int fileID = 0)
             {
-
+                read(reader, fileNames, fileID);
             }
 
-            public FileInfo(Reader reader, List<string> FileList, int cnt)
+            public void read(Reader reader, List<string> fileNames = null, int fileID = 0)
             {
                 for (int y = 0; y < 16; y += 4)
                 {
-                    md5Hash[y + 3] = reader.ReadByte();
-                    md5Hash[y + 2] = reader.ReadByte();
-                    md5Hash[y + 1] = reader.ReadByte();
-                    md5Hash[y] = reader.ReadByte();
+                    fileName.hash[y + 3] = reader.ReadByte();
+                    fileName.hash[y + 2] = reader.ReadByte();
+                    fileName.hash[y + 1] = reader.ReadByte();
+                    fileName.hash[y + 0] = reader.ReadByte();
                 }
-                MD5FileName = ConvertByteArrayToString(md5Hash);
+                fileName.usingHash = true;
 
                 var md5 = MD5.Create();
 
-                FileName = (cnt + 1) + ".bin"; //Make a base name
+                fileName.name = (fileID + 1) + ".bin"; //Make a base name
 
-                for (int i = 0; i < FileList.Count; i++)
+                for (int i = 0; fileNames != null && i < fileNames.Count; i++)
                 {
                     // Mania Hashes all Strings at Lower Case
-                    string fp = FileList[i].ToLower();
+                    string fp = fileNames[i].ToLower();
 
                     bool match = true;
 
                     for (int z = 0; z < 16; z++)
                     {
-                        if (CalculateMD5Hash(fp)[z] != md5Hash[z])
+                        if (calculateMD5Hash(fp)[z] != fileName.hash[z])
                         {
                             match = false;
                             break;
@@ -86,189 +105,132 @@ namespace RSDKv5
 
                     if (match)
                     {
-                        FileName = FileList[i];
+                        fileName = new NameIdentifier(fileNames[i]);
                         break;
                     }
 
                 }
 
-                DataOffset = reader.ReadUInt32();
+                uint fileOffset = reader.ReadUInt32();
                 uint tmp = reader.ReadUInt32();
 
-                Encrypted = (tmp & 0x80000000) != 0;
-                FileSize = (tmp & 0x7FFFFFFF);
+                encrypted = (tmp & 0x80000000) != 0;
+                uint fileSize = (tmp & 0x7FFFFFFF);
 
                 long tmp2 = reader.BaseStream.Position;
-                reader.BaseStream.Position = DataOffset;
-
-                Filedata = reader.ReadBytes(FileSize);
+                reader.BaseStream.Position = fileOffset;
 
                 // Decrypt File if Encrypted
-                if (Encrypted)
-                    Filedata = Decrypt(Filedata);
+                if (encrypted && !fileName.usingHash)
+                    fileData = decrypt(reader.readBytes(fileSize), false);
+                else
+                    fileData = reader.readBytes(fileSize);
 
                 reader.BaseStream.Position = tmp2;
 
-                Extension = GetExtensionFromData();
+                extension = getExtensionFromData();
 
-                if (FileName == (cnt + 1) + ".bin")
+                if (fileName.usingHash)
                 {
-                    switch (Extension)
+                    switch (extension)
                     {
                         case ExtensionTypes.CFG:
-                            if (Encrypted)
-                                FileName = "Config[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "Config[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "Config" + (cnt + 1) + ".bin";
+                                fileName.name = "Config" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.GIF:
-                            if (Encrypted)
-                                FileName = "Sprite[Encrypted]" + (cnt + 1) + ".gif";
+                            if (encrypted)
+                                fileName.name = "SpriteSheet[Encrypted]" + (fileID + 1) + ".gif";
                             else
-                                FileName = "Sprite" + (cnt + 1) + ".gif";
+                                fileName.name = "SpriteSheet" + (fileID + 1) + ".gif";
                             break;
                         case ExtensionTypes.MDL:
-                            if (Encrypted)
-                                FileName = "Model[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "Model[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "Model" + (cnt + 1) + ".bin";
+                                fileName.name = "Model" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.OBJ:
-                            if (Encrypted)
-                                FileName = "StaticObject[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "StaticObject[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "StaticObject" + (cnt + 1) + ".bin";
+                                fileName.name = "StaticObject" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.OGG:
-                            if (Encrypted)
-                                FileName = "Music[Encrypted]" + (cnt + 1) + ".ogg";
+                            if (encrypted)
+                                fileName.name = "Music[Encrypted]" + (fileID + 1) + ".ogg";
                             else
-                                FileName = "Music" + (cnt + 1) + ".ogg";
+                                fileName.name = "Music" + (fileID + 1) + ".ogg";
                             break;
                         case ExtensionTypes.PNG:
-                            if (Encrypted)
-                                FileName = "Image[Encrypted]" + (cnt + 1) + ".png";
+                            if (encrypted)
+                                fileName.name = "Image[Encrypted]" + (fileID + 1) + ".png";
                             else
-                                FileName = "Image" + (cnt + 1) + ".png";
+                                fileName.name = "Image" + (fileID + 1) + ".png";
                             break;
                         case ExtensionTypes.SCN:
-                            if (Encrypted)
-                                FileName = "Scene[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "Scene[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "Scene" + (cnt + 1) + ".bin";
+                                fileName.name = "Scene" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.SPR:
-                            if (Encrypted)
-                                FileName = "SpriteMappings[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "Animation[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "SpriteMappings" + (cnt + 1) + ".bin";
+                                fileName.name = "Animation" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.TIL:
-                            if (Encrypted)
-                                FileName = "Tileconfig[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "TileConfig[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "Tileconfig" + (cnt + 1) + ".bin";
+                                fileName.name = "TileConfig" + (fileID + 1) + ".bin";
                             break;
                         case ExtensionTypes.WAV:
-                            if (Encrypted)
-                                FileName = "SoundEffect[Encrypted]" + (cnt + 1) + ".wav";
+                            if (encrypted)
+                                fileName.name = "SoundFX[Encrypted]" + (fileID + 1) + ".wav";
                             else
-                                FileName = "SoundEffect" + (cnt + 1) + ".wav";
+                                fileName.name = "SoundFX" + (fileID + 1) + ".wav";
                             break;
                         case ExtensionTypes.UNKNOWN:
-                            if (Encrypted)
-                                FileName = "UnknownFileType[Encrypted]" + (cnt + 1) + ".bin";
+                            if (encrypted)
+                                fileName.name = "UnknownFileType[Encrypted]" + (fileID + 1) + ".bin";
                             else
-                                FileName = "UnknownFileType" + (cnt + 1) + ".bin";
+                                fileName.name = "UnknownFileType" + (fileID + 1) + ".bin";
                             break;
                     }
                 }
                 md5.Dispose();
             }
 
-            public void WriteFileHeader(Writer writer)
+            public void writeFileHeader(Writer writer, uint offset = 0)
             {
-                FileName = FileName.Replace('\\', '/');
-
-                byte[] md5 = CalculateMD5Hash(FileName.ToLower());
+                NameIdentifier name = fileName;
+                if (!fileName.usingHash)
+                    name = new NameIdentifier(fileName.name.Replace('\\', '/').ToLower());
 
                 for (int y = 0; y < 16; y += 4)
                 {
-                    md5Hash[y + 3] = md5[y];
-                    md5Hash[y + 2] = md5[y + 1];
-                    md5Hash[y + 1] = md5[y + 2];
-                    md5Hash[y] = md5[y + 3];
+                    writer.Write(name.hash[y + 3]);
+                    writer.Write(name.hash[y + 2]);
+                    writer.Write(name.hash[y + 1]);
+                    writer.Write(name.hash[y + 0]);
                 }
-
-                writer.Write(md5Hash);
-                writer.Write(DataOffset);
-                writer.Write(FileSize | (Encrypted ? 0x80000000 : 0));
+                writer.Write(offset);
+                writer.Write((uint)(fileData.Length) | (encrypted ? 0x80000000 : 0));
             }
 
-            public void WriteFileData(Writer writer)
+            public void writeFileData(Writer writer)
             {
-                if (Encrypted)
-                    writer.Write(Decrypt(Filedata));
+                if (encrypted && !fileName.usingHash)
+                    writer.Write(decrypt(fileData, true));
                 else
-                    writer.Write(Filedata);
+                    writer.Write(fileData);
             }
 
-            public void Write(string Datadirectory)
-            {
-                string tmpcheck = "";
-                for (int i = 0; i < 4; i++)
-                {
-                    tmpcheck = tmpcheck + FileName[i];
-                }
-
-                //Do we know the filename of the file?
-                if (tmpcheck != "Data" && tmpcheck != "Byte")
-                {
-                    string directory = Path.Combine(Datadirectory, "Unknown Files");
-                    if (!Directory.Exists(directory))
-                        Directory.CreateDirectory(directory);
-                    File.WriteAllBytes(Path.Combine(directory, FileName), Filedata);
-                }
-                else //We do! now do normal stuff!
-                {
-
-                    string dir = Path.Combine(Datadirectory, FileName.Replace(Path.GetFileName(FileName), ""));
-                    if (!Directory.Exists(dir))
-                        Directory.CreateDirectory(dir);
-                    File.WriteAllBytes(Path.Combine(Datadirectory, FileName), Filedata);
-                }
-            }
-
-            private static string ConvertByteArrayToString(byte[] bytes)
-            {
-                var sb = new StringBuilder();
-                foreach (var b in bytes)
-                    sb.Append(b.ToString("X2"));
-                return sb.ToString();
-            }
-
-            static string GetMd5Hash(MD5 md5Hash, string input)
-            {
-
-                // Convert the input string to a byte array and compute the hash.
-                byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-                // Create a new Stringbuilder to collect the bytes
-                // and create a string.
-                StringBuilder sBuilder = new StringBuilder();
-
-                // Loop through each byte of the hashed data 
-                // and format each one as a hexadecimal string.
-                for (int i = 0; i < data.Length; i++)
-                {
-                    sBuilder.Append(data[i].ToString("x2"));
-                }
-
-                // Return the hexadecimal string.
-                return sBuilder.ToString();
-            }
-
-            public byte[] CalculateMD5Hash(string input)
+            private byte[] calculateMD5Hash(string input)
             {
                 byte[] hash;
                 using (var md5 = MD5.Create())
@@ -276,13 +238,10 @@ namespace RSDKv5
                 return hash;
             }
 
-            void GenerateELoadKeys(string FileName, uint VSize)
+            private void generateELoadKeys(string FileName, uint VSize)
             {
-                byte[] md5Buf = new byte[16];
-
-                string FilenameCaps = FileName.ToUpper();
-
-                md5Buf = CalculateMD5Hash(FilenameCaps);
+                string filenameUpper = FileName.ToUpper();
+                byte[] md5Buf = md5Buf = calculateMD5Hash(filenameUpper);
 
                 for (int y = 0; y < 16; y += 4)
                 {
@@ -294,8 +253,7 @@ namespace RSDKv5
                 }
 
                 string fsize = VSize.ToString();
-
-                md5Buf = CalculateMD5Hash(fsize);
+                md5Buf = calculateMD5Hash(fsize);
 
                 for (int y = 0; y < 16; y += 4)
                 {
@@ -312,30 +270,39 @@ namespace RSDKv5
                 eNybbleSwap = 0;
             }
 
-            byte[] Decrypt(byte[] data)
+            private byte[] decrypt(byte[] data, bool encrypting)
             {
                 // Note: Since only XOr is used, this function does both,
                 //       decryption and encryption.
 
-                GenerateELoadKeys(FileName, FileSize);
+                uint fileSize = (uint)data.Length;
+                generateELoadKeys(fileName.name, fileSize);
 
-                int TempByt;
-
-                byte[] ReturnData = new byte[data.Length];
+                byte[] outputData = new byte[data.Length];
 
                 for (int i = 0; i < data.Length; i++)
                 {
-                    TempByt = eStringNo ^ encryptionStringB[eStringPosB];
-                    TempByt ^= data[i];
-                    if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
+                    int encByte = data[i];
+                    if (encrypting)
                     {
-                        TempByt = ((TempByt << 4) + (TempByt >> 4)) & 0xFF;
-                    }
-                    TempByt ^= encryptionStringA[eStringPosA];
-                    ReturnData[i] = (byte)TempByt;
+                        encByte ^= encryptionStringA[eStringPosA++];
 
-                    eStringPosA++;
-                    eStringPosB++;
+                        if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
+                            encByte = ((encByte << 4) + (encByte >> 4)) & 0xFF;
+
+                        encByte ^= eStringNo ^ encryptionStringB[eStringPosB++];
+                    }
+                    else
+                    {
+                        encByte ^= eStringNo ^ encryptionStringB[eStringPosB++];
+
+                        if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
+                            encByte = ((encByte << 4) + (encByte >> 4)) & 0xFF;
+
+                        encByte ^= encryptionStringA[eStringPosA++];
+                    }
+
+                    outputData[i] = (byte)encByte;
 
                     if (eStringPosA <= 0x0F)
                     {
@@ -371,172 +338,136 @@ namespace RSDKv5
                         }
                     }
                 }
-                return ReturnData;
+                return outputData;
             }
 
-            public ExtensionTypes GetExtensionFromData()
+            private ExtensionTypes getExtensionFromData()
             {
                 byte[] header = new byte[5];
 
                 for (int i = 0; i < header.Length; i++)
-                {
-                    header[i] = Filedata[i];
-                }
+                    header[i] = fileData[i];
 
-                if (header[0] == (byte)'O' && header[1] == (byte)'g' && header[2] == (byte)'g' && header[3] == (byte)'S')
-                {
+                byte[] signature_ogg = new byte[] { (byte)'O', (byte)'g', (byte)'g', (byte)'s' };
+                byte[] signature_gif = new byte[] { (byte)'G', (byte)'I', (byte)'F' };
+                byte[] signature_mdl = new byte[] { (byte)'M', (byte)'D', (byte)'L', 0 };
+                byte[] signature_png = new byte[] { (byte)'P', (byte)'N', (byte)'G' };
+                byte[] signature_wav = new byte[] { (byte)'R', (byte)'I', (byte)'F', (byte)'F' };
+                byte[] signature_scn = new byte[] { (byte)'S', (byte)'C', (byte)'N', 0 };
+                byte[] signature_til = new byte[] { (byte)'T', (byte)'I', (byte)'L', 0 };
+                byte[] signature_spr = new byte[] { (byte)'S', (byte)'P', (byte)'R', 0 };
+                byte[] signature_cfg = new byte[] { (byte)'C', (byte)'C', (byte)'G', 0 };
+                byte[] signature_obj = new byte[] { (byte)'O', (byte)'B', (byte)'J', 0 };
+
+                if (header.Take(4).SequenceEqual(signature_ogg))
                     return ExtensionTypes.OGG;
-                }
 
-                if (header[0] == (byte)'S' && header[1] == (byte)'C' && header[2] == (byte)'N' && header[3] == (byte)'\0')
-                {
-                    return ExtensionTypes.SCN;
-                }
-
-                if (header[0] == (byte)'T' && header[1] == (byte)'I' && header[2] == (byte)'L' && header[3] == (byte)'\0')
-                {
-                    return ExtensionTypes.TIL;
-                }
-
-                if (header[0] == (byte)'S' && header[1] == (byte)'P' && header[2] == (byte)'R' && header[3] == (byte)'\0')
-                {
-                    return ExtensionTypes.SPR;
-                }
-
-                if (header[0] == (byte)'G' && header[1] == (byte)'I' && header[2] == (byte)'F')
-                {
+                if (header.Take(3).SequenceEqual(signature_gif))
                     return ExtensionTypes.GIF;
-                }
 
-                if (header[0] == (byte)'M' && header[1] == (byte)'D' && header[2] == (byte)'L' && header[3] == (byte)'\0')
-                {
+                if (header.Take(4).SequenceEqual(signature_mdl))
                     return ExtensionTypes.MDL;
-                }
 
-                if (header[1] == (byte)'P' && header[2] == (byte)'N' && header[3] == (byte)'G')
-                {
+                if (header.Take(3).SequenceEqual(signature_png))
                     return ExtensionTypes.PNG;
-                }
 
-                if (header[0] == (byte)'C' && header[1] == (byte)'F' && header[2] == (byte)'G' && header[3] == (byte)'\0')
-                {
-                    return ExtensionTypes.CFG;
-                }
-
-                if (header[0] == (byte)'O' && header[1] == (byte)'B' && header[2] == (byte)'J' && header[3] == (byte)'\0')
-                {
-                    return ExtensionTypes.OBJ;
-                }
-
-                if (header[0] == (byte)'R' && header[1] == (byte)'I' && header[2] == (byte)'F' && header[3] == (byte)'F')
-                {
+                if (header.Take(4).SequenceEqual(signature_wav))
                     return ExtensionTypes.WAV;
-                }
+
+                if (header.Take(4).SequenceEqual(signature_scn))
+                    return ExtensionTypes.SCN;
+
+                if (header.Take(4).SequenceEqual(signature_til))
+                    return ExtensionTypes.TIL;
+
+                if (header.Take(4).SequenceEqual(signature_spr))
+                    return ExtensionTypes.SPR;
+
+                if (header.Take(4).SequenceEqual(signature_cfg))
+                    return ExtensionTypes.CFG;
+
+                if (header.Take(4).SequenceEqual(signature_obj))
+                    return ExtensionTypes.OBJ;
 
                 return ExtensionTypes.UNKNOWN;
             }
 
         }
 
-        public static readonly byte[] MAGIC = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
-        public ushort FileCount;
+        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
 
-        public List<FileInfo> Files = new List<FileInfo>();
-        /** Sequentially, a file description block for every file stored inside the data file. */
+        public List<FileInfo> files = new List<FileInfo>();
 
-        public DataFile()
+        public DataFile() { }
+        public DataFile(string filepath, List<string> fileNames = null) : this(new Reader(filepath), fileNames) { }
+        public DataFile(Stream stream, List<string> fileNames = null) : this(new Reader(stream), fileNames) { }
+
+        public DataFile(Reader reader, List<string> fileNames = null)
         {
+            read(reader, fileNames);
         }
 
-        public DataFile(string filepath, List<string> FileList) : this(new Reader(filepath), FileList)
-        { }
-
-        public DataFile(Reader reader, List<string> FileList)
+        public void read(Reader reader, List<string> fileNames = null)
         {
-            if (!reader.ReadBytes(6).SequenceEqual(MAGIC))
+            if (!reader.readBytes(6).SequenceEqual(signature))
             {
-                Console.WriteLine("Invalid Signature! aborting!");
                 reader.Close();
-                return;
+                throw new Exception("Invalid DataFile v5 signature");
             }
 
-            FileCount = reader.ReadUInt16(); //read the header data
+            ushort fileCount = reader.ReadUInt16();
+            for (int i = 0; i < fileCount; i++)
+                files.Add(new FileInfo(reader, fileNames, i));
 
-            Console.WriteLine("File Count = " + FileCount);
-
-            for (int i = 0; i < FileCount; i++)
-            {
-                Files.Add(new FileInfo(reader, FileList, i)); //read each file's header
-            }
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void write(string filename)
         {
-            FileCount = (ushort)Files.Count; //get the file count
+            using (Writer writer = new Writer(filename))
+                write(writer);
+        }
 
-            //firstly we setout the file
-            //write a bunch of blanks
+        public void write(Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                write(writer);
+        }
 
-            writer.Write(MAGIC);
-            writer.Write(FileCount); //write the header
+        public void write(Writer writer)
+        {
+            // firstly we setout the file
+            // write a bunch of blanks
 
-            foreach (FileInfo f in Files) //write each file's header
+            writer.Write(signature);
+            writer.Write((ushort)files.Count);
+
+            foreach (FileInfo f in files)     // write each file's header
+                f.writeFileHeader(writer, 0); // write our file header data
+
+            foreach (FileInfo f in files) // write "Filler Data"
             {
-                f.WriteFileHeader(writer); //write our file header data
+                f.offset = (uint)writer.BaseStream.Position;
+                byte[] b = new byte[f.fileData.Length]; // load up a set of blanks with the same size as the original set
+                writer.Write(b);                        // fill the file up with blank data
             }
 
-            foreach (FileInfo f in Files) //Write "Filler Data"
+            // now we really write our data
+
+            writer.seek(0, SeekOrigin.Begin); // jump back to the start of the file
+
+            writer.Write(signature);
+            writer.Write((ushort)files.Count); // re-write our header
+
+            foreach (FileInfo f in files) // for each file
             {
-                f.DataOffset = (uint)writer.BaseStream.Position; //get our file data offset
-                byte[] b = new byte[f.FileSize]; //load up a set of blanks with the same size as the original set
-                writer.Write(b); //fill the file up with blank data
-            }
-
-            //now we really write our data!
-
-            writer.BaseStream.Position = 0; //jump back to the start of the file
-
-            writer.Write(MAGIC);
-            writer.Write(FileCount); //re-write our header
-
-            foreach (FileInfo f in Files) //for each file
-            {
-                f.WriteFileHeader(writer); //write our header
-                long Tmp = writer.BaseStream.Position; //get our writer pos for later
-                writer.BaseStream.Position = f.DataOffset; //jump to our saved offset
-                f.WriteFileData(writer); //write our file data
-                writer.BaseStream.Position = Tmp; //jump back ready to write the next file!
+                f.writeFileHeader(writer, f.offset);        // write our header
+                long pos = writer.BaseStream.Position;      // get our writer pos for later
+                writer.BaseStream.Position = f.offset;      // jump to our saved offset
+                f.writeFileData(writer);                    // write our file data
+                writer.BaseStream.Position = pos;           // jump back ready to write the next file!
             }
 
         }
-
-        public void WriteFile(int fileID)
-        {
-            Files[fileID].Write("");
-        }
-
-        public void WriteFile(string fileName, string NewFileName)
-        {
-            foreach (FileInfo f in Files)
-            {
-                if (f.FileName == fileName)
-                {
-                    f.Write(NewFileName);
-                }
-            }
-        }
-
-        public void GetFileinfoFromDataFile(string filename)
-        {
-            for (int i = 0; i < Files.Count; i++)
-            {
-                if (string.Equals(Files[i].FileName, filename))
-                {
-
-                }
-            }
-        }
-
     }
 }

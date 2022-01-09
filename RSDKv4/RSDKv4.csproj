@@ -7,8 +7,8 @@
     <ProjectGuid>{1A58BA31-C9E1-4D18-876E-EC73799E7A9F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RSDKvB</RootNamespace>
-    <AssemblyName>RSDKvB</AssemblyName>
+    <RootNamespace>RSDKv4</RootNamespace>
+    <AssemblyName>RSDKv4</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -68,35 +68,24 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
-    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
-      <HintPath>$(SolutionDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
-    <Compile Include="BackgroundLayout.cs" />
-    <Compile Include="BitmapFont.cs" />
+    <Compile Include="Backgrounds.cs" />
+    <Compile Include="Bitmap.cs" />
     <Compile Include="Bytecode.cs" />
     <Compile Include="DataFile.cs" />
+    <Compile Include="Gif.cs" />
     <Compile Include="Model.cs" />
-    <Compile Include="Object.cs" />
-    <Compile Include="Position.cs" />
-    <Compile Include="SaveFiles.cs" />
-    <Compile Include="StaticObject.cs" />
-    <Compile Include="StringList.cs" />
     <Compile Include="Tiles128x128.cs" />
-    <Compile Include="Tileconfig.cs" />
-    <Compile Include="Gameconfig.cs" />
+    <Compile Include="TileConfig.cs" />
+    <Compile Include="GameConfig.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="Palette.cs" />
-    <Compile Include="PaletteColour.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reader.cs" />
-    <Compile Include="Stageconfig.cs" />
+    <Compile Include="StageConfig.cs" />
     <Compile Include="Writer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

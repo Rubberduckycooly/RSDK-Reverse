@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Rubberduckycooly")]
 [assembly: AssemblyProduct("RSDKv3")]
-[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2020")]
+[assembly: AssemblyCopyright("Copyright © Rubberduckycooly 2018-2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

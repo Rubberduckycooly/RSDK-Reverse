@@ -2,129 +2,114 @@
 
 namespace RSDKv4
 {
-    public class Stageconfig
+    public class StageConfig
     {
         /// <summary>
         /// the stageconfig palette (index 96-128)
         /// </summary>
-        public Palette StagePalette = new Palette();
+        public Palette stagePalette = new Palette();
         /// <summary>
-        /// the list of Stage SoundFX paths
+        /// the list of stage-specific objects
         /// </summary>
-        public List<string> SoundFX = new List<string>();
+        public List<GameConfig.ObjectInfo> objects = new List<GameConfig.ObjectInfo>();
         /// <summary>
-        /// a list of names for each SFX file
+        /// the list of stage-specific SoundFX
         /// </summary>
-        public List<string> SfxNames = new List<string>();
-        /// <summary>
-        /// a list of names for each script
-        /// </summary>
-        public List<string> ObjectsNames = new List<string>();
-        /// <summary>
-        /// A list of the script filepaths for the stage-specific objects
-        /// </summary>
-        public List<string> ScriptPaths = new List<string>();
+        public List<GameConfig.SoundInfo> soundFX = new List<GameConfig.SoundInfo>();
         /// <summary>
         /// whether or not to load the global objects in this stage
         /// </summary>
-        public bool LoadGlobalScripts = false;
+        public bool loadGlobalObjects = false;
 
-        public Stageconfig()
+        public StageConfig() { }
+
+        public StageConfig(string filename) : this(new Reader(filename)) { }
+
+        public StageConfig(System.IO.Stream stream) : this(new Reader(stream)) { }
+
+        public StageConfig(Reader reader)
         {
-
+            read(reader);
         }
 
-        public Stageconfig(string filename) : this(new Reader(filename))
+        public void read(Reader reader)
         {
+            // General
+            loadGlobalObjects = reader.ReadBoolean();
 
-        }
+            // Palettes
+            stagePalette.read(reader, 2);
 
-        public Stageconfig(System.IO.Stream stream) : this(new Reader(stream))
-        {
+            // SoundFX
+            soundFX.Clear();
+            byte sfxCount = reader.ReadByte();
+            for (int i = 0; i < sfxCount; ++i)
+            {
+                GameConfig.SoundInfo info = new GameConfig.SoundInfo();
+                info.name = reader.readRSDKString();
 
-        }
+                soundFX.Add(info);
+            }
 
-        public Stageconfig(Reader reader)
-        {
-            LoadGlobalScripts = reader.ReadBoolean();
+            foreach (GameConfig.SoundInfo info in soundFX)
+                info.path = reader.readRSDKString();
 
-            StagePalette.Read(reader, 2);
+            // Objects
+            objects.Clear();
+            byte objectCount = reader.ReadByte();
+            for (int i = 0; i < objectCount; ++i)
+            {
+                GameConfig.ObjectInfo info = new GameConfig.ObjectInfo();
+                info.name = reader.readRSDKString();
 
-            this.ReadWAVConfiguration(reader);
+                objects.Add(info);
+            }
 
-            this.ReadObjectsNames(reader);
+            foreach (GameConfig.ObjectInfo info in objects)
+                info.script = reader.readRSDKString();
 
             reader.Close();
         }
 
-        internal void ReadObjectsNames(Reader reader)
-        {
-            byte objects_count = reader.ReadByte();
-
-            for (int i = 0; i < objects_count; ++i)
-            { ObjectsNames.Add(reader.ReadRSDKString()); }
-
-            for (int i = 0; i < objects_count; ++i)
-            { ScriptPaths.Add(reader.ReadRSDKString());}
-        }
-
-        internal void WriteObjectsNames(Writer writer)
-        {
-            writer.Write((byte)ObjectsNames.Count);
-
-            foreach (string name in ObjectsNames)
-                writer.WriteRSDKString(name);
-
-            foreach (string srcname in ScriptPaths)
-                writer.WriteRSDKString(srcname);
-        }
-
-        internal void ReadWAVConfiguration(Reader reader)
-        {
-            byte SoundFX_count = reader.ReadByte();
-
-            for (int i = 0; i < SoundFX_count; ++i)
-            { SfxNames.Add(reader.ReadRSDKString()); }
-
-            for (int i = 0; i < SoundFX_count; ++i)
-            { SoundFX.Add(reader.ReadString()); }
-        }
-
-        internal void WriteWAVConfiguration(Writer writer)
-        {
-            writer.Write((byte)SoundFX.Count);
-
-            foreach (string wavname in SfxNames)
-                writer.WriteRSDKString(wavname);
-
-            foreach (string wav in SoundFX)
-                writer.Write(wav);
-        }
-
-        public void Write(string filename)
+        public void write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                this.Write(writer);
+                write(writer);
         }
 
-        public void Write(System.IO.Stream stream)
+        public void write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                this.Write(writer);
+                write(writer);
         }
 
-        public void Write(Writer writer)
+        public void write(Writer writer)
         {
-            writer.Write(LoadGlobalScripts);
+            // General
+            writer.Write(loadGlobalObjects);
 
-            StagePalette.Write(writer);
+            // Palettes
+            stagePalette.write(writer);
 
-            WriteWAVConfiguration(writer);
+            // SoundFX
+            writer.Write((byte)soundFX.Count);
 
-            WriteObjectsNames(writer);
+            foreach (GameConfig.SoundInfo info in soundFX)
+                writer.writeRSDKString(info.name);
+
+            foreach (GameConfig.SoundInfo info in soundFX)
+                writer.writeRSDKString(info.path);
+
+            // Objects
+            writer.Write((byte)objects.Count);
+
+            foreach (GameConfig.ObjectInfo info in objects)
+                writer.writeRSDKString(info.name);
+
+            foreach (GameConfig.ObjectInfo info in objects)
+                writer.writeRSDKString(info.script);
 
             writer.Close();
-
         }
 
     }

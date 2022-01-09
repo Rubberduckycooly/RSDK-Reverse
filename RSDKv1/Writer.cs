@@ -5,50 +5,19 @@ namespace RSDKv1
 {
     public class Writer : BinaryWriter
     {
-        public Writer(Stream stream) : base(stream)
-        {
-        }
+        public Writer(Stream stream) : base(stream) { }
 
-        public Writer(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-        {
-        }
+        public Writer(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)) { }
 
-        public bool IsEof
-        {
-            get { return BaseStream.Position >= BaseStream.Length; }
-        }
-
-        public void Seek(long position, SeekOrigin org)
+        public void seek(long position, SeekOrigin org)
         {
             BaseStream.Seek(position, org);
         }
 
-        public long Pos
-        {
-            get { return BaseStream.Position; }
-        }
-
-        public long Size
-        {
-            get { return BaseStream.Length; }
-        }
-
-        public void WriteUInt32BE(uint val)
-        {
-            val = ((val >> 24) & 0xff) | ((val << 8) & 0xff0000) | ((val >> 8) & 0xff00) | ((val << 24) & 0xff000000);
-            base.Write(val);
-        }
-
-        public void WriteRSDKString(string val)
+        public void writeRSDKString(string val)
         {
             base.Write((byte)val.Length);
-            if (val.Length > 0) base.Write(new UTF8Encoding().GetBytes(val));
-        }
-
-        public void WriteRSDKUnicodeString(string val)
-        {
-            base.Write((ushort)val.Length);
-            base.Write(new UnicodeEncoding().GetBytes(val));
+            base.Write(new UTF8Encoding().GetBytes(val));
         }
     }
 }

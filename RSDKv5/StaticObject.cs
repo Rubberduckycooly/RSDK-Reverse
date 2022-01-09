@@ -9,228 +9,227 @@ namespace RSDKv5
 
         public class ArrayInfo
         {
-            public byte Type = 0x80;
-            public int Size = 0;
-            public int DataSize = 0;
-            public int[] Data;
+            public byte type = 0x00;
+            public int size = 0;
+            public int valueCount = 0;
+            public int[] values;
         }
 
         /// <summary>
-        /// the file's signtature
+        /// the signature of the file format
         /// </summary>
-        public static readonly byte[] MAGIC = new byte[] { (byte)'O', (byte)'B', (byte)'J', (byte)'\0' };
+        private static readonly byte[] signature = new byte[] { (byte)'O', (byte)'B', (byte)'J', 0 };
 
-        public List<ArrayInfo> Arrays = new List<ArrayInfo>();
-        public StaticObject(bool PrintDebugInfo = false)
+
+        /// <summary>
+        /// the list of arrays in the file
+        /// </summary>
+        public List<ArrayInfo> arrays = new List<ArrayInfo>();
+
+        public StaticObject() { }
+
+        public StaticObject(string filename) : this(new Reader(filename)) { }
+
+        public StaticObject(System.IO.Stream stream) : this(new Reader(stream)) { }
+
+        public StaticObject(Reader reader)
         {
-
+            read(reader);
         }
 
-        public StaticObject(Reader reader, bool PrintDebugInfo = false)
+        public void read(Reader reader)
         {
-            bool Debug = PrintDebugInfo;
-
-            int[] TmpData = new int[reader.BaseStream.Length];
-            string filename = System.IO.Path.GetFileName(reader.GetFilename());
-            if (!reader.ReadBytes(4).SequenceEqual(MAGIC)) //"OBJ" Header
-                throw new Exception("Invalid config file header magic");
-
-            if (Debug)
-                Console.WriteLine("Viewing Info for " + filename);
-
-
-            int MemPos = 0; // I think?
-
-            while (!reader.IsEof)
+            if (!reader.readBytes(4).SequenceEqual(signature))
             {
-                int DataType = reader.ReadByte();
-                int ArraySize = reader.ReadInt32();
+                reader.Close();
+                throw new Exception("Invalid Static Object v5 signature");
+            }
 
-                if ((DataType & 0x80) != 0)
+            int memPos = 0;
+            while (!reader.isEof)
+            {
+                int type = reader.ReadByte();
+                int arraySize = reader.ReadInt32();
+
+                if ((type & 0x80) != 0)
                 {
-                    uint DataSize = reader.ReadUInt32();
+                    uint count = reader.ReadUInt32();
 
-                    DataType &= 0x7F;
+                    type &= 0x7F;
 
                     ArrayInfo array = new ArrayInfo();
-                    array.Type = (byte)DataType;
-                    array.Size = (int)ArraySize;
-                    array.DataSize = (int)DataSize;
-                    array.Data = new int[(int)DataSize];
-                    if (Debug)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Array Info:");
-                        Console.WriteLine("Struct Offset: " + MemPos + "(0x" + MemPos.ToString("X") + ")");
-                        Console.WriteLine("Array Size: " + ArraySize);
-                        Console.WriteLine("Array DataSize: " + DataSize);
-                    }
+                    array.type = (byte)type;
+                    array.size = arraySize;
+                    array.valueCount = (int)count;
+                    array.values = new int[(int)count];
 
-                    switch (DataType)
+                    switch (type)
                     {
-                        //INT8
-                        case (int)AttributeTypes.UINT8:
-                            if (Debug)
-                                Console.WriteLine("Array Type: UINT8");
-                            for (int i = 0; i < DataSize; ++i)
-                            {
-                                array.Data[i] = reader.ReadByte();
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 1), Debug);
-                            }
-                            MemPos += ArraySize;
+                        default:
+                            Console.WriteLine($"ERROR: Encountered unexpected array type ({type})!");
                             break;
-                        case (int)AttributeTypes.INT8:
-                            if (Debug)
-                                Console.WriteLine("Array Type: INT8");
-                            for (int i = 0; i < DataSize; ++i)
-                            {
-                                array.Data[i] = reader.ReadSByte();
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 1), Debug);
-                            }
-                            MemPos += ArraySize;
+                        //INT8
+                        case (int)VariableTypes.UINT8:
+                            for (int i = 0; i < count; ++i)
+                                array.values[i] = reader.ReadByte();
+                            memPos += arraySize;
+                            break;
+                        case (int)VariableTypes.INT8:
+                            for (int i = 0; i < count; ++i)
+                                array.values[i] = reader.ReadSByte();
+                            memPos += arraySize;
                             break;
                         //IN16
-                        case (int)AttributeTypes.UINT16:
-                            if (Debug)
-                                Console.WriteLine("Array Type: UINT16");
-                            int TmpDataOffset = (int)((MemPos & 0xFFFFFFFE) + 2);
-                            if ((MemPos & 0xFFFFFFFE) >= MemPos)
-                                TmpDataOffset = MemPos;
-                            MemPos = TmpDataOffset;
+                        case (int)VariableTypes.UINT16:
+                            int tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
+                            if ((memPos & 0xFFFFFFFE) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos;
 
-                            for (int i = 0; i < DataSize; ++i)
+                            for (int i = 0; i < count; ++i)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
-                                array.Data[i] = (ushort)(valA + (valB << 8));
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 2), Debug);
+                                array.values[i] = (ushort)(valA + (valB << 8));
                             }
 
-                            MemPos += 2 * ArraySize;
+                            memPos += 2 * arraySize;
                             break;
-                        case (int)AttributeTypes.INT16:
-                            if (Debug)
-                                Console.WriteLine("Array Type: INT16");
-                            TmpDataOffset = (int)((MemPos & 0xFFFFFFFE) + 2);
-                            if ((MemPos & 0xFFFFFFFE) >= MemPos)
-                                TmpDataOffset = MemPos;
-                            MemPos = TmpDataOffset;
+                        case (int)VariableTypes.INT16:
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
+                            if ((memPos & 0xFFFFFFFE) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos;
 
-                            for (int i = 0; i < DataSize; ++i)
+                            for (int i = 0; i < count; ++i)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
-                                array.Data[i] = (short)(valA + (valB << 8));
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 2), Debug);
+                                array.values[i] = (short)(valA + (valB << 8));
                             }
-                            MemPos += 2 * ArraySize;
+                            memPos += 2 * arraySize;
                             break;
                         //INT32
-                        case (int)AttributeTypes.UINT32:
-                            if (Debug)
-                                Console.WriteLine("Array Type: UINT32");
-                            TmpDataOffset = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                TmpDataOffset = MemPos;
-                            MemPos = TmpDataOffset;
+                        case (int)VariableTypes.UINT32:
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos;
 
-                            for (int i = 0; i < DataSize; ++i)
+                            for (int i = 0; i < count; ++i)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
                                 byte valC = reader.ReadByte();
                                 byte valD = reader.ReadByte();
-                                array.Data[i] = (int)(uint)(valA + (valB << 8) + (valC << 16) + (valD << 24));
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 4), Debug);
+                                array.values[i] = (int)(uint)(valA + (valB << 8) + (valC << 16) + (valD << 24));
                             }
-                            MemPos += 4 * ArraySize;
+                            memPos += 4 * arraySize;
                             break;
-                        case (int)AttributeTypes.INT32:
-                            if (Debug)
-                                Console.WriteLine("Array Type: INT32");
-                            TmpDataOffset = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                TmpDataOffset = MemPos;
-                            MemPos = TmpDataOffset;
+                        case (int)VariableTypes.INT32:
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos;
 
-                            for (int i = 0; i < DataSize; ++i)
+                            for (int i = 0; i < count; ++i)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
                                 byte valC = reader.ReadByte();
                                 byte valD = reader.ReadByte();
-                                array.Data[i] = valA + (valB << 8) + (valC << 16) + (valD << 24);
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 4), Debug);
+                                array.values[i] = valA + (valB << 8) + (valC << 16) + (valD << 24);
                             }
-                            MemPos += 4 * ArraySize;
+                            memPos += 4 * arraySize;
                             break;
-                        case (int)AttributeTypes.ENUM:
-                            if (Debug)
-                                Console.WriteLine("Array Type: VAR/ENUM");
-                            TmpDataOffset = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                TmpDataOffset = MemPos;
-                            MemPos = TmpDataOffset;
+                        case (int)VariableTypes.ENUM: // bool
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos;
 
-                            for (int i = 0; i < DataSize; ++i)
+                            for (int i = 0; i < count; ++i)
                             {
                                 byte valA = reader.ReadByte();
                                 byte valB = reader.ReadByte();
                                 byte valC = reader.ReadByte();
                                 byte valD = reader.ReadByte();
-                                array.Data[i] = valA + (valB << 8) + (valC << 16) + (valD << 24);
-                                printValInfo(array.Data[i], (int)(reader.BaseStream.Position - 4), Debug);
+                                array.values[i] = valA + (valB << 8) + (valC << 16) + (valD << 24);
                             }
-                            MemPos += 4 * ArraySize;
+                            memPos += 4 * arraySize;
                             break;
                     }
+                    arrays.Add(array);
                 }
                 else
                 {
-                    int Buffer = 0;
-                    switch (DataType)
+                    ArrayInfo array = new ArrayInfo();
+                    array.type = (byte)type;
+                    array.size = arraySize;
+                    array.valueCount = 0;
+                    array.values = new int[0];
+                    arrays.Add(array);
+
+                    int tmpMemPos = 0;
+                    switch (type)
                     {
                         //INT8
-                        case (int)AttributeTypes.UINT8:
-                        case (int)AttributeTypes.INT8:
-                            MemPos += ArraySize;
+                        case (int)VariableTypes.UINT8:
+                        case (int)VariableTypes.INT8:
+                            memPos += arraySize;
                             break;
                         //IN16
-                        case (int)AttributeTypes.UINT16:
-                        case (int)AttributeTypes.INT16:
-                            Buffer = (int)((MemPos & 0xFFFFFFFE) + 2);
-                            if ((MemPos & 0xFFFFFFFE) >= MemPos)
-                                Buffer = MemPos;
-                            MemPos = Buffer + 2 * ArraySize;
+                        case (int)VariableTypes.UINT16:
+                        case (int)VariableTypes.INT16:
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
+                            if ((memPos & 0xFFFFFFFE) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 2 * arraySize;
                             break;
                         //INT32
-                        case (int)AttributeTypes.UINT32:
-                        case (int)AttributeTypes.INT32:
-                        case (int)AttributeTypes.ENUM:
-                        case (int)AttributeTypes.BOOL:
-                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                Buffer = MemPos;
-                            MemPos = Buffer + 4 * ArraySize;
+                        case (int)VariableTypes.UINT32:
+                        case (int)VariableTypes.INT32:
+                        case 6: //bool
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 4 * arraySize;
                             break;
-                        case (int)AttributeTypes.STRING:
-                        case (int)AttributeTypes.VECTOR2:
-                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                Buffer = MemPos;
-                            MemPos = Buffer + 8 * ArraySize;
+                        case 7: // Pointer
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 4 * arraySize;
                             break;
-                        case (int)AttributeTypes.VECTOR3:
-                            Buffer = (int)((MemPos & 0xFFFFFFFC) + 4);
-                            if ((MemPos & 0xFFFFFFFC) >= MemPos)
-                                Buffer = MemPos;
-                            MemPos = Buffer + 24 * ArraySize;
+                        case 8: // Vector2
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 8 * arraySize;
                             break;
-                        case (int)AttributeTypes.COLOR:
-                            Buffer = (int)((MemPos & 0xFFFFFFFE) + 2);
-                            if ((MemPos & 0xFFFFFFFE) >= MemPos)
-                                Buffer = MemPos;
-                            MemPos = Buffer + 8 * ArraySize;
+                        case 9: // Text
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 8 * arraySize;
+                            break;
+                        case 10: // Animator
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
+                            if ((memPos & 0xFFFFFFFC) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 24 * arraySize;
+                            break;
+                        case 11: // Hitbox
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
+                            if ((memPos & 0xFFFFFFFE) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 8 * arraySize;
+                            break;
+                        case 12: // Unknown
+                            tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
+                            if ((memPos & 0xFFFFFFFE) >= memPos)
+                                tmpMemPos = memPos;
+                            memPos = tmpMemPos + 18 * arraySize;
                             break;
                         default:
                             break;
@@ -238,50 +237,58 @@ namespace RSDKv5
                 }
             }
             reader.Close();
-
-            if (Debug)
-                Console.WriteLine(filename + " Has " + Arrays.Count + " Arrays");
-
         }
 
-        public void Write(Writer writer)
+        public void write(string filename)
         {
-            writer.Write(MAGIC);
+            using (Writer writer = new Writer(filename))
+                write(writer);
+        }
 
-            foreach (ArrayInfo array in Arrays)
+        public void write(System.IO.Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                write(writer);
+        }
+
+        public void write(Writer writer)
+        {
+            writer.Write(signature);
+
+            foreach (ArrayInfo array in arrays)
             {
-                writer.Write(array.Type);
-                writer.Write(array.Size);
+                writer.Write((byte)(array.valueCount > 0 ? (array.type | 0x80) : array.type));
+                writer.Write(array.size);
 
-                if ((array.Type & 0x80) != 0)
+                if (array.valueCount > 0)
                 {
-                    writer.Write(array.DataSize);
+                    writer.Write(array.valueCount);
 
-                    switch (array.Type & 0x7F)
+                    switch (array.type)
                     {
                         //INT8
-                        case (int)AttributeTypes.UINT8:
-                        case (int)AttributeTypes.INT8:
-                            for (int i = 0; i < array.DataSize; ++i)
-                                writer.Write(array.Data[i]);
+                        case (int)VariableTypes.UINT8:
+                        case (int)VariableTypes.INT8:
+                            for (int i = 0; i < array.valueCount; ++i)
+                                writer.Write(array.values[i]);
                             break;
                         //IN16
-                        case (int)AttributeTypes.UINT16:
-                        case (int)AttributeTypes.INT16:
-                            for (int i = 0; i < array.DataSize; ++i)
+                        case (int)VariableTypes.UINT16:
+                        case (int)VariableTypes.INT16:
+                            for (int i = 0; i < array.valueCount; ++i)
                             {
-                                byte[] bytes = BitConverter.GetBytes(array.Data[i]);
+                                byte[] bytes = BitConverter.GetBytes(array.values[i]);
                                 writer.Write(bytes[0]);
                                 writer.Write(bytes[1]);
                             }
                             break;
                         //INT32
-                        case (int)AttributeTypes.UINT32:
-                        case (int)AttributeTypes.INT32:
-                        case (int)AttributeTypes.ENUM:
-                            for (int i = 0; i < array.DataSize; ++i)
+                        case (int)VariableTypes.UINT32:
+                        case (int)VariableTypes.INT32:
+                        case (int)VariableTypes.ENUM: // bool
+                            for (int i = 0; i < array.valueCount; ++i)
                             {
-                                byte[] bytes = BitConverter.GetBytes(array.Data[i]);
+                                byte[] bytes = BitConverter.GetBytes(array.values[i]);
                                 writer.Write(bytes[0]);
                                 writer.Write(bytes[1]);
                                 writer.Write(bytes[2]);
@@ -293,12 +300,6 @@ namespace RSDKv5
             }
 
             writer.Close();
-        }
-
-        private void printValInfo(int data, int pos, bool debug)
-        {
-            if (debug)
-                Console.WriteLine($"Value Info: Value: Type:{AttributeTypes.ENUM}, {data}, Value (Hex) 0x{data.ToString("X")}, Offset: {pos}, Offset (Hex): 0x{pos.ToString("X")}");
         }
     }
 }

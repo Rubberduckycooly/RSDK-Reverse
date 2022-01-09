@@ -1,108 +1,75 @@
 ﻿namespace RSDKv5
 {
-    public class PaletteColor
-    {
-
-        /// <summary>
-        /// Colour Red Value
-        /// </summary>
-        public byte R;
-        /// <summary>
-        /// Colour Green Value
-        /// </summary>
-        public byte G;
-        /// <summary>
-        /// Colour Blue Value
-        /// </summary>
-        public byte B;
-
-        public PaletteColor(byte R = 0, byte G = 0, byte B = 0)
-        {
-            this.R = R;
-            this.G = G;
-            this.B = B;
-        }
-
-        internal PaletteColor(Reader reader)
-        {
-            this.Read(reader);
-        }
-
-        internal void Read(Reader reader)
-        {
-            R = reader.ReadByte();
-            G = reader.ReadByte();
-            B = reader.ReadByte();
-        }
-
-        internal void Write(Writer writer)
-        {
-            writer.Write(R);
-            writer.Write(G);
-            writer.Write(B);
-        }
-    }
-
     public class Palette
     {
         /// <summary>
         /// how many columns in the palette
         /// </summary>
-        public const int MAX_PALETTE_COLUMNS = 0x10;
-        public const int PALETTE_COLUMNS = 0x10;
+        public const int PALETTE_ROWS = 0x10;
         /// <summary>
         /// how many colours per column
         /// </summary>
-        public const int COLORS_PER_COLUMN = 0x10;
-        /// <summary>
-        /// how many colours in total
-        /// </summary>
-        public const int PALETTE_COLORS = 0x100;
+        public const int COLORS_PER_ROW = 0x10;
 
         /// <summary>
         /// our array of colours in the palette
         /// </summary>
-        public PaletteColor[][] Colors = new PaletteColor[MAX_PALETTE_COLUMNS][];
+        public Color[][] colors = new Color[PALETTE_ROWS][];
 
-        public Palette(int pc = 16)
+        bool[] activeRows = new bool[PALETTE_ROWS];
+
+        public Palette(int palColumns = 16)
         {
-            int palColumns = pc;
+            colors = new Color[palColumns][];
+            activeRows = new bool[palColumns];
 
-            Colors = new PaletteColor[palColumns][];
-            for (int i = 0; i < palColumns; i++)
+            for (int c = 0; c < palColumns; c++)
             {
-                Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
-                for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                { Colors[i][j] = new PaletteColor(); }
+                activeRows[c] = false;
+                colors[c] = new Color[COLORS_PER_ROW];
+                for (int r = 0; r < COLORS_PER_ROW; ++r)
+                    colors[c][r] = new Color(0xFF, 0x00, 0xFF); 
             }
         }
 
-        public Palette(Reader reader)
+        public Palette(Reader reader) : this()
+        {
+            read(reader);
+        }
+
+        public void read(Reader reader)
         {
             ushort columns_bitmap = reader.ReadUInt16();
-            for (int i = 0; i < PALETTE_COLUMNS; ++i)
+            for (int r = 0; r < PALETTE_ROWS; ++r)
             {
-                if ((columns_bitmap & (1 << i)) != 0)
+                activeRows[r] = false;
+                if ((columns_bitmap & (1 << r)) != 0)
                 {
-                    Colors[i] = new PaletteColor[COLORS_PER_COLUMN];
-                    for (int j = 0; j < COLORS_PER_COLUMN; ++j)
-                        Colors[i][j] = new PaletteColor(reader);
+                    activeRows[r] = true;
+                    for (int c = 0; c < COLORS_PER_ROW; ++c)
+                        colors[r][c] = new Color(reader, true);
                 }
             }
         }
 
-        public void Write(Writer writer)
+        public void write(Writer writer)
         {
             ushort columns_bitmap = 0;
-            for (int i = 0; i < PALETTE_COLUMNS; ++i)
-                if (Colors[i] != null)
-                    columns_bitmap |= (ushort)(1 << i);
+            for (int r = 0; r < PALETTE_ROWS; ++r)
+                if (activeRows[r])
+                    columns_bitmap |= (ushort)(1 << r);
             writer.Write(columns_bitmap);
 
-            foreach (PaletteColor[] column in Colors)
-                if (column != null)
-                    foreach (PaletteColor color in column)
-                        color.Write(writer);
+            int row = 0;
+            foreach (Color[] column in colors)
+            {
+                if (activeRows[row])
+                {
+                    foreach (Color color in column)
+                        color.write(writer, true);
+                }
+                ++row;
+            }
         }
     }
 }

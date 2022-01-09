@@ -6,315 +6,334 @@ using System.Windows;
 
 namespace RSDKv5
 {
-    public class GameConfig : CommonConfig
+    public class GameConfig
     {
+        public class SceneCategory
+        {
+            public class SceneInfo
+            {
+                /// <summary>
+                /// the name of this scene (used in the dev menu)
+                /// </summary>
+                public string name = "SCENE";
+                /// <summary>
+                /// the folder this scene is located in
+                /// </summary>
+                public string folder = "Folder";
+                /// <summary>
+                /// the scene's ID (e.g. Scene'1' or Scene'A' or Scene'3')
+                /// </summary>
+                public string id = "1";
+                /// <summary>
+                /// the scene's object filter, a collection of bits. For example: mania uses bit 0 for common objects, bit 1 for mania mode objects & bit 2 for encore objects.
+                /// </summary>
+                public byte filter = 0;
+
+                public SceneInfo() { }
+
+                public SceneInfo(Reader reader, bool readFilter = true)
+                {
+                    name    = reader.readRSDKString();
+                    folder  = reader.readRSDKString();
+                    id      = reader.readRSDKString();
+                    if (readFilter)
+                        filter = reader.ReadByte();
+                }
+
+                public void write(Writer writer, bool writeFilter = true)
+                {
+                    writer.writeRSDKString(name);
+                    writer.writeRSDKString(folder);
+                    writer.writeRSDKString(id);
+                    if (writeFilter)
+                        writer.Write(filter);
+                }
+            }
+
+            /// <summary>
+            /// the category name (used for dev menu)
+            /// </summary>
+            public string name = "New Category";
+            /// <summary>
+            /// a list of the scenes in the category
+            /// </summary>
+            public List<SceneInfo> list = new List<SceneInfo>();
+
+            public SceneCategory() { }
+
+            public SceneCategory(Reader reader, bool readFilter = true)
+            {
+                read(reader, readFilter);
+            }
+
+            public void read(Reader reader, bool readFilter = true)
+            {
+                name = reader.readRSDKString();
+
+                list.Clear();
+                byte sceneCount = reader.ReadByte();
+                for (int i = 0; i < sceneCount; ++i)
+                    list.Add(new SceneInfo(reader, readFilter));
+            }
+
+            public void write(Writer writer, bool writeFilter = true)
+            {
+                writer.writeRSDKString(name);
+
+                writer.Write((byte)list.Count);
+                foreach (SceneInfo scene in list)
+                    scene.write(writer, writeFilter);
+            }
+        }
+
+        public class GlobalVariable
+        {
+            /// <summary>
+            /// the offset of the global variable, relative to the start of the struct (in sets of ints, so variable 2 would be offset 1, assuming variable 1 is a single value)
+            /// </summary>
+            public int offset = 0;
+            /// <summary>
+            /// a list of the default values for the global variable
+            /// </summary>
+            public List<int> values = new List<int>();
+
+            public GlobalVariable() { }
+
+            public GlobalVariable(Reader reader)
+            {
+                read(reader);
+            }
+
+            public void read(Reader reader)
+            {
+                offset = reader.ReadInt32();
+                int valueCount = reader.ReadInt32();
+                values.Clear();
+                for (int i = 0; i < valueCount; ++i)
+                    values.Add(reader.ReadInt32());
+            }
+
+            public void write(Writer writer)
+            {
+                writer.Write(offset);
+                writer.Write(values.Count);
+                foreach (int value in values)
+                    writer.Write(value);
+            }
+        }
+
+        public class SoundInfo
+        {
+            /// <summary>
+            /// the path to the sfx
+            /// </summary>
+            public string name = "Folder/SoundFX.wav";
+
+            /// <summary>
+            /// how many instances of the sfx can play at once
+            /// </summary>
+            public byte maxConcurrentPlay = 1;
+
+            public SoundInfo() { }
+
+            public SoundInfo(Reader reader)
+            {
+                read(reader);
+            }
+
+            public void read(Reader reader)
+            {
+                name = reader.readRSDKString();
+                maxConcurrentPlay = reader.ReadByte();
+            }
+
+            public void write(Writer writer)
+            {
+                writer.writeRSDKString(name);
+                writer.Write(maxConcurrentPlay);
+            }
+        }
+
+        /// <summary>
+        /// the signature of the file format
+        /// </summary>
+        private static readonly byte[] signature = new byte[] { (byte)'C', (byte)'F', (byte)'G', 0 };
+
+        /// <summary>
+        /// how many palettes are in the file
+        /// </summary>
+        private const int PALETTES_COUNT = 8;
+
         /// <summary>
         /// the name of the game (also window name)
         /// </summary>
-        public String GameName = "RSDKv5 Game";
+        public string gameTitle = "Retro-Engine";
         /// <summary>
         /// the game's subname (used for dev menu)
         /// </summary>
-        public String GameSubname = "Powered By the Retro Engine!";
+        public string gameSubtitle = "";
         /// <summary>
         /// what version the game is on
         /// </summary>
-        public String Version = "1.06.0";
-        public String FilePath;
-
-        /// <summary>
-        /// is this file a plus file?
-        /// </summary>
-        public bool _scenesHaveModeFilter = true;
+        public string gameVersion = "1.00";
 
         /// <summary>
         /// the starting category to load from
         /// </summary>
-        public byte StartSceneCategoryIndex = 0;
+        public byte startingActiveList = 0;
         /// <summary>
         /// the starting scene to load from
         /// </summary>
-        public ushort StartSceneIndex = 0;
-        public static int CurrentLevelID = 0;
+        public ushort startingListPos = 0;
 
-
-        public void ResetLevelID()
-        {
-            CurrentLevelID = 0;
-        }
-
-
-        public class SceneInfo
-        {
-            /// <summary>
-            /// the name of this scene (used for dev menu)
-            /// </summary>
-            public string Name = "Scene";
-            /// <summary>
-            /// the folder this scene is located in
-            /// </summary>
-            public string Zone = "";
-            /// <summary>
-            /// the SceneID (e.g. Scene1 or SceneA or Scene3)
-            /// </summary>
-            public string SceneID = "";
-            /// <summary>
-            /// what "mode" of the stage is (normal, encore, etc)
-            /// </summary>
-            public byte ModeFilter = 0;
-            /// <summary>
-            /// For GameConfig Position; Used for Auto Booting
-            /// </summary>
-            public int LevelID;
-            /// <summary>
-            /// For GameConfig Position; Used for Auto Booting
-            /// </summary>
-            public int Index;
-
-            public SceneInfo()
-            {
-            }
-
-            public SceneInfo(Reader reader, bool scenesHaveModeFilter, int index, bool levelIDMode = false)
-            {
-                Name = reader.ReadRSDKString();
-                Zone = reader.ReadRSDKString();
-                SceneID = reader.ReadRSDKString();
-                if (levelIDMode)
-                {
-                    LevelID = CurrentLevelID; //For GameConfig Position; Used for Auto Booting
-                }
-                Index = index; //For Getting the Index of Categories
-
-                if (scenesHaveModeFilter) ModeFilter = reader.ReadByte();
-            }
-
-            public string GetFilePath(string DataFolder)
-            {
-                return Path.Combine(DataFolder, "Stages", Zone, "Scene" + SceneID + ".bin");
-            }
-
-            public void Write(Writer writer, bool scenesHaveModeFilter = false)
-            {
-                writer.WriteRSDKString(Name);
-                writer.WriteRSDKString(Zone);
-                writer.WriteRSDKString(SceneID);
-
-                if (scenesHaveModeFilter) writer.Write(ModeFilter);
-            }
-        }
-
-        public class Category
-        {
-            /// <summary>
-            /// the category name (used for dev menu)
-            /// </summary>
-            public string Name = "New Category";
-            /// <summary>
-            /// a list of the scenes in the category
-            /// </summary>
-            public List<SceneInfo> Scenes = new List<SceneInfo>();
-
-            public Category(bool scenemodeFilter = true)
-            {
-                Name = "New Category";
-            }
-
-            public Category(Reader reader, bool scenesHaveModeFilter)
-            {
-                Name = reader.ReadRSDKString();
-
-                byte SceneCount = reader.ReadByte();
-
-                int index = 0;
-                for (int i = 0; i < SceneCount; ++i)
-                {
-                    Scenes.Add(new SceneInfo(reader, scenesHaveModeFilter, index, true));
-                    CurrentLevelID++;
-                    index++;
-                }
-
-            }
-
-            public void Write(Writer writer, bool scenesHaveModeFilter = false)
-            {
-                writer.WriteRSDKString(Name);
-
-                writer.Write((byte)Scenes.Count);
-                foreach (SceneInfo scene in Scenes)
-                    scene.Write(writer, scenesHaveModeFilter);
-            }
-        }
-
-        public class ConfigurableMemoryEntry
-        {
-            /// <summary>
-            /// the index of the memory entry
-            /// </summary>
-            public int Index;
-            /// <summary>
-            /// the data in the memory entry
-            /// </summary>
-            public List<int> Data = new List<int>();
-
-            public ConfigurableMemoryEntry()
-            {
-
-            }
-
-            internal ConfigurableMemoryEntry(Reader reader)
-            {
-                Index = reader.ReadInt32();
-                int Count = reader.ReadInt32();
-                Data = new List<int>();
-                for (int i = 0; i < Count; ++i)
-                {
-                    Data.Add(reader.ReadInt32());
-                }
-            }
-
-            internal void Write(Writer writer)
-            {
-                writer.Write(Index);
-                writer.Write((int)Data.Count);
-                foreach (int val in Data)
-                    writer.Write(val);
-            }
-        }
+        /// <summary>
+        /// a list of all the object names
+        /// </summary>
+        public List<string> objects = new List<string>();
+        /// <summary>
+        /// the palettes in the file
+        /// </summary>
+        public Palette[] palettes = new Palette[PALETTES_COUNT];
+        /// <summary>
+        /// the list of global SoundFX
+        /// </summary>
+        public List<SoundInfo> soundFX = new List<SoundInfo>();
 
         /// <summary>
         /// a list of all the categories
         /// </summary>
-        public List<Category> Categories = new List<Category>();
+        public List<SceneCategory> categories = new List<SceneCategory>();
 
         /// <summary>
-        /// a list of all the config memory data, for use with RSDKConfig's names
+        /// the list of global variable values, see RSDKConfig for names, types & other editor-only data
         /// </summary>
-        public List<ConfigurableMemoryEntry> ConfigMemory = new List<ConfigurableMemoryEntry>();
+        public List<GlobalVariable> globalVariables = new List<GlobalVariable>();
 
         public GameConfig()
         {
-            for (int i = 0; i < Palettes.Length; i++)
-            {
-                Palettes[i] = new Palette();
-            }
+            for (int i = 0; i < palettes.Length; i++)
+                palettes[i] = new Palette();
         }
 
         public GameConfig(string filename)
         {
-            FilePath = filename;
             using (var reader = new Reader(filename))
-                Read(reader);
+                read(reader);
         }
 
         public GameConfig(Stream stream)
         {
             using (var reader = new Reader(stream))
-                Read(reader);
+                read(reader);
         }
 
-        public GameConfig(Reader reader, bool closeReader = false)
+        public GameConfig(Reader reader, bool usePlusFormat = true)
         {
-            ReadConfig(reader, closeReader);
+            read(reader, usePlusFormat);
         }
 
-        public void Read(Reader reader, bool closeReader = false)
+        public void read(Reader reader, bool usePlusFormat = true)
         {
-            ReadConfig(reader, closeReader);
+            // Header
+            if (!reader.readBytes(4).SequenceEqual(signature))
+            {
+                reader.Close();
+                throw new Exception("Invalid GameConfig v5 signature");
+            }
+
+            // General
+            gameTitle = reader.readRSDKString();
+            gameSubtitle = reader.readRSDKString();
+            gameVersion = reader.readRSDKString();
+
+            startingActiveList = reader.ReadByte();
+            startingListPos = reader.ReadUInt16();
+
+            // Objects
+            byte objectCount = reader.ReadByte();
+            objects.Clear();
+            for (int i = 0; i < objectCount; ++i)
+                objects.Add(reader.readRSDKString());
+
+            // Palettes 
+            for (int i = 0; i < PALETTES_COUNT; ++i)
+                palettes[i] = new Palette(reader);
+
+            // SoundFX
+            byte sfxCount = reader.ReadByte();
+            soundFX.Clear();
+            for (int i = 0; i < sfxCount; ++i)
+                soundFX.Add(new SoundInfo(reader));
+
+            // Scenes
+            // total scene count, used by RSDKv5 to allocate scenes before they're read, its managed automatically here
+            ushort totalSceneCount = reader.ReadUInt16();
+            byte categoryCount = reader.ReadByte();
+
+            categories.Clear();
+            for (int i = 0; i < categoryCount; ++i)
+                categories.Add(new SceneCategory(reader, usePlusFormat));
+
+            // Global Variables
+            byte globalVariableCount = reader.ReadByte();
+            globalVariables.Clear();
+            for (int i = 0; i < globalVariableCount; ++i)
+                globalVariables.Add(new GlobalVariable(reader));
+            
+            reader.Close();
         }
 
-
-        public void ReadConfig(Reader reader, bool closeReader = false)
+        public void write(string filename, bool usePlusFormat = true)
         {
-            ReadMagic(reader);
-
-            GameName = reader.ReadRSDKString();
-            GameSubname = reader.ReadRSDKString();
-            Version = reader.ReadRSDKString();
-
-            InterpretVersion();
-
-            StartSceneCategoryIndex = reader.ReadByte();
-            StartSceneIndex = reader.ReadUInt16();
-
-            ReadCommonConfig(reader);
-
-            ushort TotalScenes = reader.ReadUInt16();
-            byte CategoryCount = reader.ReadByte();
-
-            CurrentLevelID = 0;
-            for (int i = 0; i < CategoryCount; ++i)
-            {
-                Categories.Add(new Category(reader, _scenesHaveModeFilter));
-            }
-            CurrentLevelID = 0;
-
-            try
-            {
-                byte config_memory_count = reader.ReadByte();
-
-                for (int i = 0; i < config_memory_count; ++i)
-                    ConfigMemory.Add(new ConfigurableMemoryEntry(reader));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error reading config memory! you potentially have a bad gameconfig!");
-                Console.WriteLine("Error: " + ex.Message);
-            }
-            if (closeReader) reader.Close();
+            using (Writer writer = new Writer(filename))
+                write(writer, usePlusFormat);
         }
 
-        private void InterpretVersion()
-        {
-            if (Version.Contains("1.03."))
-            {
-                _scenesHaveModeFilter = false;
-            }
-        }
-
-        public void Write(string filename)
-        {
-            if (File.Exists(filename))
-            {
-                using (Writer writer = new Writer(filename))
-                    Write(writer);
-            }
-            else
-            {
-                System.Diagnostics.Debug.Print(string.Format("Unable to Save to the following File: {0}", filename));
-            }
-
-        }
-
-        public void Write(Stream stream)
+        public void write(Stream stream, bool usePlusFormat = true)
         {
             using (Writer writer = new Writer(stream))
-                Write(writer);
+                write(writer, usePlusFormat);
         }
 
-        public void Write(Writer writer)
+        public void write(Writer writer, bool usePlusFormat = true)
         {
-            WriteMagic(writer);
+            // Header
+            writer.Write(signature);
 
-            writer.WriteRSDKString(GameName);
-            writer.WriteRSDKString(GameSubname);
-            writer.WriteRSDKString(Version);
+            // General
+            writer.writeRSDKString(gameTitle);
+            writer.writeRSDKString(gameSubtitle);
+            writer.writeRSDKString(gameVersion);
 
-            writer.Write(StartSceneCategoryIndex);
-            writer.Write(StartSceneIndex);
+            writer.Write(startingActiveList);
+            writer.Write(startingListPos);
 
-            WriteCommonConfig(writer);
+            // Objects
+            writer.Write((byte)objects.Count);
+            foreach (string name in objects)
+                writer.writeRSDKString(name);
 
-            writer.Write((ushort)Categories.Select(x => x.Scenes.Count).Sum());
+            // Palettes
+            foreach (Palette palette in palettes)
+                palette.write(writer);
 
-            writer.Write((byte)Categories.Count);
-            foreach (Category cat in Categories)
-                cat.Write(writer, _scenesHaveModeFilter);
+            // SoundFX
+            writer.Write((byte)soundFX.Count);
+            foreach (SoundInfo sfx in soundFX)
+                sfx.write(writer);
 
-            writer.Write((byte)ConfigMemory.Count);
-            foreach (ConfigurableMemoryEntry c in ConfigMemory)
-                c.Write(writer);
+            // Total Scene Count
+            writer.Write((ushort)categories.Select(x => x.list.Count).Sum());
 
+            // Scenes
+            writer.Write((byte)categories.Count);
+            foreach (SceneCategory cat in categories)
+                cat.write(writer, usePlusFormat);
+
+            // Global Variables
+            writer.Write((byte)globalVariables.Count);
+            foreach (GlobalVariable c in globalVariables)
+                c.write(writer);
         }
     }
 }

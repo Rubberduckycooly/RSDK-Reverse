@@ -13,66 +13,37 @@ namespace RSDKv3
             /// <summary>
             /// the directory path
             /// </summary>
-            public string Directory;
+            public string directory = "Folder/";
             /// <summary>
             /// the file offset for the directory
             /// </summary>
-            public int Address;
+            public int startOffset = 0;
 
-            public DirInfo()
-            {
-
-            }
+            public DirInfo() { }
 
             public DirInfo(Reader reader)
             {
-                byte ss = reader.ReadByte();
-
-                char buf = ',';
-                string DecryptedString = "";
-
-                for (int i = 0; i < ss; i++)
-                {
-                    byte b = reader.ReadByte();
-                    int bufInt = (int)b;
-
-                    bufInt ^= 0xFF - ss;
-
-                    buf = (char)bufInt;
-                    DecryptedString = DecryptedString + buf;
-                }
-                Directory = DecryptedString;
-                //Console.WriteLine(Directory);
-                Address = reader.ReadInt32();
+                read(reader);
             }
 
-            public void Write(Writer writer, bool SingleFile = false)
+            public void read(Reader reader)
             {
-                Directory = Directory.Replace('\\', '/');
-                int ss = Directory.Length;
-                writer.Write((byte)ss);
+                directory = "";
+                byte stringLen = reader.ReadByte();
+                for (int i = 0; i < stringLen; i++)
+                    directory += (char)(reader.ReadByte() ^ (0xFF - stringLen));
 
-                string str = Directory;
-
-                for (int i = 0; i < ss; i++)
-                {
-                    int s = str[i];
-                    writer.Write((byte)(s ^ (0xFF - ss)));
-                }
-
-                writer.Write(Address);
-                if (SingleFile) writer.Close();
+                startOffset = reader.ReadInt32();
             }
 
-            public void Write(string dataFolder)
+            public void write(Writer writer)
             {
-                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Directory);
-                if (!di.Exists) di.Create();
-                Writer writer = new Writer(dataFolder);
-                Directory = Directory.Replace('\\', '/');
-                writer.Write(Directory);
-                writer.Write(Address);
-                writer.Close();
+                directory = directory.Replace('\\', '/');
+                writer.Write((byte)directory.Length);
+                for (int i = 0; i < directory.Length; i++)
+                    writer.Write((byte)(directory[i] ^ (0xFF - directory.Length)));
+
+                writer.Write(startOffset);
             }
         }
 
@@ -81,351 +52,262 @@ namespace RSDKv3
             /// <summary>
             /// the filename of the file
             /// </summary>
-            public string FileName;
+            public string fileName = "File.bin";
             /// <summary>
             /// the combined filename and directory of the file
             /// </summary>
-            public string FullFileName;
-            /// <summary>
-            /// how many bytes the file contains
-            /// </summary>
-            public ulong fileSize;
+            public string fullFilename = "Folder/File.bin";
 
             /// <summary>
-            /// an array of bytes in the file
+            /// an array of the bytes in the file, decrypted
             /// </summary>
-            public byte[] Filedata;
+            public byte[] fileData;
 
             /// <summary>
             /// what directory the file is in
             /// </summary>
-            public ushort DirID = 0;
+            public ushort directoryID = 0;
 
-            int decryptKeyZ;
-            int decryptKeyIndexZ;
-            int decryptKeyIndex2;
-            int decryptKeyIndex1;
+            private int eStringNo = 0;
+            private int eNybbleSwap = 0;
+            private int eStringPosB = 0;
+            private int eStringPosA = 0;
 
-            string decryptKey1 = "4RaS9D7KaEbxcp2o5r6t";
-            string decryptKey2 = "3tRaUxLmEaSn";
+            private static readonly string encryptionStringA = "4RaS9D7KaEbxcp2o5r6t";
+            private static readonly string encryptionStringB = "3tRaUxLmEaSn";
 
-            public FileInfo()
-            {
-
-            }
+            public FileInfo() { }
 
             public FileInfo(Reader reader)
             {
-                byte ss = reader.ReadByte();
-
-                char buf = ',';
-                string DecryptedString = "";
-
-                for (int i = 0; i < ss; i++)
-                {
-                    byte b = reader.ReadByte();
-                    int bufInt = b;
-
-                    bufInt ^= 0xFF;
-
-                    buf = (char)bufInt;
-                    DecryptedString = DecryptedString + buf;
-                }
-
-                FileName = DecryptedString;
-
-                //Console.WriteLine(FileName);
-
-                fileSize = reader.ReadUInt32();
-
-                byte[] tmp = reader.ReadBytes(fileSize);
-                int[] outbuf = new int[fileSize];
-
-                for (int i = 0; i < (int)fileSize; i++)
-                {
-                    outbuf[i] = tmp[i];
-                }
-
-                decryptKeyZ = ((int)fileSize & 0x1fc) >> 2;
-                decryptKeyIndex2 = (decryptKeyZ % 9) + 1;
-                decryptKeyIndex1 = (decryptKeyZ % decryptKeyIndex2) + 1;
-
-                decryptKeyIndexZ = 0;
-
-                for (int i = 0; i < (int)fileSize; i++)
-                {
-                    outbuf[i] ^= decryptKey2[decryptKeyIndex2++] ^ decryptKeyZ;
-
-                    if (decryptKeyIndexZ == 1) // swap nibbles
-                        outbuf[i] = (outbuf[i] >> 4) | ((outbuf[i] & 0xf) << 4);
-
-                    outbuf[i] ^= decryptKey1[decryptKeyIndex1++];
-
-                    if ((decryptKeyIndex1 <= 19) || (decryptKeyIndex2 <= 11))
-                    {
-                        if (decryptKeyIndex1 > 19)
-                        {
-                            decryptKeyIndex1 = 1;
-                            decryptKeyIndexZ ^= 1;
-                        }
-                        if (decryptKeyIndex2 > 11)
-                        {
-                            decryptKeyIndex2 = 1;
-                            decryptKeyIndexZ ^= 1;
-                        }
-                    }
-                    else
-                    {
-                        decryptKeyZ++;
-                        decryptKeyZ &= 0x7F;
-
-                        if (decryptKeyIndexZ != 0)
-                        {
-                            decryptKeyIndex1 = (decryptKeyZ % 12) + 6;
-                            decryptKeyIndex2 = (decryptKeyZ % 5) + 4;
-                            decryptKeyIndexZ = 0;
-                        }
-                        else
-                        {
-                            decryptKeyIndexZ = 1;
-                            decryptKeyIndex1 = (decryptKeyZ % 15) + 3;
-                            decryptKeyIndex2 = (decryptKeyZ % 7) + 1;
-                        }
-                    }
-                }
-                Filedata = new byte[outbuf.Length];
-                for (int i = 0; i <outbuf.Length; i++)
-                {
-                    Filedata[i] = (byte)outbuf[i];
-                }
-                
+                read(reader);
             }
 
-            public void Write(Writer writer, bool SingleFile = false)
+            public void read(Reader reader)
             {
-                FileName = FileName.Replace('\\', '/');
-                fileSize = (uint)Filedata.Length;
+                fileName = "";
+                byte stringLen = reader.ReadByte();
+                for (int i = 0; i < stringLen; i++)
+                    fileName += (char)(reader.ReadByte() ^ 0xFF);
 
-                if (SingleFile)
+                uint fileSize = reader.ReadUInt32();
+
+                fileData = decrypt(reader.ReadBytes((int)fileSize), false);
+            }
+
+            public void write(Writer writer, bool standalone = false)
+            {
+                fileName = fileName.Replace('\\', '/');
+                uint fileSize = (uint)fileData.Length;
+
+                if (standalone)
                 {
                     writer.Write(fileSize);
-                    writer.Write(Filedata);
+                    writer.Write(fileData);
                     writer.Close();
                 }
                 else
                 {
-                    byte[] outfbuf = Filedata;
+                    writer.Write((byte)fileName.Length);
+                    for (int i = 0; i < fileName.Length; i++)
+                        writer.Write((byte)(fileName[i] ^ 0xFF));
 
-                    // Encrypt file
-                    decryptKeyZ = (byte)(fileSize & 0x1fc) >> 2;
-                    decryptKeyIndex2 = (decryptKeyZ % 9) + 1;
-                    decryptKeyIndex1 = (decryptKeyZ % decryptKeyIndex2) + 1;
-
-                    decryptKeyIndexZ = 0;
-
-                    for (ulong i = 0; i < fileSize; i++)
-                    {
-                        outfbuf[i] ^= (byte)decryptKey1[decryptKeyIndex1++];
-
-                        if (decryptKeyIndexZ == 1) // swap nibbles
-                            outfbuf[i] = (byte)((outfbuf[i] >> 4) | ((outfbuf[i] & 0xf) << 4));
-
-                        outfbuf[i] ^= (byte)(decryptKey2[decryptKeyIndex2++] ^ decryptKeyZ);
-
-                        if ((decryptKeyIndex1 <= 19) || (decryptKeyIndex2 <= 11))
-                        {
-                            if (decryptKeyIndex1 > 19)
-                            {
-                                decryptKeyIndex1 = 1;
-                                decryptKeyIndexZ ^= 1;
-                            }
-                            if (decryptKeyIndex2 > 11)
-                            {
-                                decryptKeyIndex2 = 1;
-                                decryptKeyIndexZ ^= 1;
-                            }
-                        }
-                        else
-                        {
-                            decryptKeyZ++;
-                            decryptKeyZ &= 0x7F;
-
-                            if (decryptKeyIndexZ != 0)
-                            {
-                                decryptKeyIndex1 = (decryptKeyZ % 12) + 6;
-                                decryptKeyIndex2 = (decryptKeyZ % 5) + 4;
-                                decryptKeyIndexZ = 0;
-                            }
-                            else
-                            {
-                                decryptKeyIndexZ = 1;
-                                decryptKeyIndex1 = (decryptKeyZ % 15) + 3;
-                                decryptKeyIndex2 = (decryptKeyZ % 7) + 1;
-                            }
-                        }
-                    }
-
-                    for (int i = 0; i < FileName.Length; i++)
-                        writer.Write((byte)(FileName[i] ^ (0xFF)));
-
-                    writer.Write((uint)fileSize);
-                    writer.Write(outfbuf);
+                    writer.Write(fileSize);
+                    writer.Write(decrypt(fileData, true));
                 }
             }
 
-            public void Write(string Datadirectory)
+            private byte[] decrypt(byte[] data, bool encrypting)
             {
-                string tmp = FullFileName.Replace(System.IO.Path.GetFileName(FullFileName), "");
-                string fullDir = Datadirectory + "\\" + tmp;
-                System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(fullDir);
-                if (!di.Exists) di.Create();
-                Writer writer = new Writer(fullDir + FileName);
-                writer.Write(Filedata);
-                writer.Close();
+                uint fileSize = (uint)data.Length;
+
+                eStringNo = ((int)fileSize & 0x1FC) >> 2;
+                eStringPosB = (eStringNo % 9) + 1;
+                eStringPosA = (eStringNo % eStringPosB) + 1;
+                eNybbleSwap = 0;
+
+                byte[] outputData = new byte[data.Length];
+
+                for (int i = 0; i < (int)fileSize; i++)
+                {
+                    int encByte = data[i];
+                    if (encrypting)
+                    {
+                        encByte ^= encryptionStringA[eStringPosA++];
+
+                        if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
+                            encByte = (encByte >> 4) | ((encByte & 0xF) << 4);
+
+                        encByte ^= encryptionStringB[eStringPosB++] ^ eStringNo;
+                    }
+                    else
+                    {
+                        encByte ^= encryptionStringB[eStringPosB++] ^ eStringNo;
+
+                        if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
+                            encByte = (encByte >> 4) | ((encByte & 0xF) << 4);
+
+                        encByte ^= encryptionStringA[eStringPosA++];
+                    }
+                    outputData[i] = (byte)encByte;
+
+                    if (eStringPosA <= 19 || eStringPosB <= 11)
+                    {
+                        if (eStringPosA > 19)
+                        {
+                            eStringPosA = 1;
+                            eNybbleSwap ^= 1;
+                        }
+                        if (eStringPosB > 11)
+                        {
+                            eStringPosB = 1;
+                            eNybbleSwap ^= 1;
+                        }
+                    }
+                    else
+                    {
+                        eStringNo++;
+                        eStringNo &= 0x7F;
+
+                        if (eNybbleSwap != 0)
+                        {
+                            eStringPosA = (eStringNo % 12) + 6;
+                            eStringPosB = (eStringNo % 5) + 4;
+                            eNybbleSwap = 0;
+                        }
+                        else
+                        {
+                            eNybbleSwap = 1;
+                            eStringPosA = (eStringNo % 15) + 3;
+                            eStringPosB = (eStringNo % 7) + 1;
+                        }
+                    }
+                }
+                return outputData;
             }
         }
 
         /// <summary>
-        /// the "offset" for file loading I think?
+        /// a list of directories for the data file
         /// </summary>
-        public int headerSize;
-
+        public List<DirInfo> directories = new List<DirInfo>();
         /// <summary>
-        /// a list of directories for the datafile
+        /// the list of files stored in the data file
         /// </summary>
-        public List<DirInfo> Directories = new List<DirInfo>();
-        /// <summary>
-        /// the list of fileinfo data for the file
-        /// </summary>
-        public List<FileInfo> Files = new List<FileInfo>();
-        /** Sequentially, a file description block for every file stored inside the data file. */
+        public List<FileInfo> files = new List<FileInfo>();
 
-        public DataFile()
-        { }
-
-        public DataFile(string filepath) : this(new Reader(filepath))
-        { }
+        public DataFile() { }
+        public DataFile(string filepath) : this(new Reader(filepath)) { }
+        public DataFile(System.IO.Stream stream) : this(new Reader(stream)) { }
 
         public DataFile(Reader reader)
         {
+            read(reader);
+        }
 
-            headerSize = reader.ReadInt32();
-            //Console.WriteLine("Header Size = " + headerSize);
-
+        public void read(Reader reader)
+        {
+            int headerSize = reader.ReadInt32();
             int dircount = reader.ReadUInt16();
-            //Console.WriteLine("Directory Count = " + dircount);
 
-            Directories = new List<DirInfo>();
+            directories.Clear();
+            for (int d = 0; d < dircount; d++)
+                directories.Add(new DirInfo(reader));
 
+            files.Clear();
             for (int d = 0; d < dircount; d++)
             {
-                Directories.Add(new DirInfo(reader));
-            }
-
-            for (int d = 0; d < dircount; d++)
-            {
-                if ((d + 1) < Directories.Count())
+                if ((d + 1) < directories.Count())
                 {
-                    while (reader.Position - headerSize < Directories[d + 1].Address && !reader.IsEof)
+                    while (reader.BaseStream.Position - headerSize < directories[d + 1].startOffset && reader.BaseStream.Position < reader.BaseStream.Length)
                     {
                         FileInfo f = new FileInfo(reader);
-                        f.FullFileName = Directories[d].Directory + f.FileName;
-                        Files.Add(f);
+                        f.fullFilename = directories[d].directory + f.fileName;
+                        files.Add(f);
                     }
                 }
                 else
                 {
-                    while (!reader.IsEof)
+                    while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
                         FileInfo f = new FileInfo(reader);
-                        f.FullFileName = Directories[d].Directory + f.FileName;
-                        Files.Add(f);
+                        f.fullFilename = directories[d].directory + f.fileName;
+                        files.Add(f);
                     }
                 }
             }
             reader.Close();
         }
 
-        public void Write(Writer writer)
+        public void write(string filename)
         {
+            using (Writer writer = new Writer(filename))
+                write(writer);
+        }
 
-            int DirHeaderSize = 0;
+        public void write(System.IO.Stream stream)
+        {
+            using (Writer writer = new Writer(stream))
+                write(writer);
+        }
 
-            writer.Write(DirHeaderSize);
+        public void write(Writer writer)
+        {
+            // Initial File Write
+            int headerSize = 0;
+            writer.Write(headerSize);
+            writer.Write((ushort)directories.Count);
 
-            writer.Write((ushort)Directories.Count);
+            foreach (DirInfo dir in directories)
+                dir.write(writer);
 
-            for (int i = 0; i < Directories.Count; i++)
+            headerSize = (int)writer.BaseStream.Position;
+
+            // var orderedFiles = files.OrderBy(f => f.directoryID).ToList();
+
+            int dirID = 0;
+
+            directories[dirID].startOffset = 0;
+
+            foreach (FileInfo file in files)
             {
-                Directories[i].Write(writer);
-            }
-
-            DirHeaderSize = (int)writer.BaseStream.Position;
-
-            var orderedFiles = Files.OrderBy(f => f.DirID).ToList();
-
-            int Dir = 0;
-
-            Directories[Dir].Address = 0;
-
-            for (int i = 0; i < Files.Count; i++)
-            {
-                if (Files[i].DirID == Dir)
+                if (file.directoryID == dirID)
                 {
-                    Files[i].Write(writer);
+                    file.write(writer);
                 }
                 else
                 {
-                    Dir++;
-                    Directories[Dir].Address = (int)writer.BaseStream.Position - DirHeaderSize;
-                    Files[i].Write(writer);
+                    dirID++;
+                    directories[dirID].startOffset = (int)writer.BaseStream.Position - headerSize;
+                    file.write(writer);
                 }
             }
 
-            writer.BaseStream.Position = 0;
+            // Real File write
+            writer.seek(0, System.IO.SeekOrigin.Begin);
 
-            writer.Write(DirHeaderSize);
+            writer.Write(headerSize);
+            writer.Write((ushort)directories.Count);
 
-            writer.Write((ushort)Directories.Count);
+            foreach (DirInfo dir in directories)
+                dir.write(writer);
 
-            for (int i = 0; i < Directories.Count; i++)
+            dirID = 0;
+
+            foreach (FileInfo file in files)
             {
-                Directories[i].Write(writer);
-            }
-
-            Dir = 0;
-
-            for (int i = 0; i < Files.Count; i++)
-            {
-                if (Files[i].DirID == Dir)
+                if (file.directoryID == dirID)
                 {
-                    Files[i].Write(writer);
+                    file.write(writer);
                 }
                 else
                 {
-                    Dir++;
-                    Files[i].Write(writer);
+                    dirID++;
+                    file.write(writer);
                 }
             }
 
             writer.Close();
         }
-
-        public void WriteFile(int fileID)
-        {
-            Files[fileID].Write("");
-        }
-
-        public void WriteFile(string fileName, string NewFileName)
-        {
-            foreach (FileInfo f in Files)
-            {
-                if (f.FileName == fileName)
-                {
-                    f.Write(NewFileName);
-                }
-            }
-        }
-
     }
 }

@@ -7,22 +7,11 @@ namespace RSDKv5
 {
     public class Reader : BinaryReader
     {
+        public Reader(Stream stream) : base(stream) { }
 
-        public Reader(Stream stream) : base(stream)
-        {
-        }
+        public Reader(string file) : base(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
 
-        public Reader(string file) : base(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read))
-        {
-        }
-
-        public string GetFilename()
-        {
-            var fileStream = BaseStream as FileStream;
-            return fileStream.Name;
-        }
-
-        public byte[] ReadBytes(long count)
+        public byte[] readBytes(long count)
         {
             if (count < 0 || count > Int32.MaxValue)
                 throw new ArgumentOutOfRangeException("requested " + count + " bytes, while only non-negative int32 amount of bytes possible");
@@ -32,7 +21,7 @@ namespace RSDKv5
             return bytes;
         }
 
-        public byte[] ReadBytes(ulong count)
+        public byte[] readBytes(ulong count)
         {
             if (count > Int32.MaxValue)
                 throw new ArgumentOutOfRangeException("requested " + count + " bytes, while only non-negative int32 amount of bytes possible");
@@ -43,75 +32,69 @@ namespace RSDKv5
             return bytes;
         }
 
-        public bool IsEof
+        public bool isEof
         {
             get { return BaseStream.Position >= BaseStream.Length; }
         }
-        
-        public void Seek(long position, SeekOrigin org)
+        public void seek(long position, SeekOrigin org)
         {
             BaseStream.Seek(position, org);
         }
-        
-        public long Pos
+
+        public uint readUInt32BE()
         {
-            get { return BaseStream.Position; }
-        }
-        
-        public long Size
-        {
-            get { return BaseStream.Length; }
-        }
-        
-        public uint ReadUInt32BE()
-        {
-            byte[] bytes = ReadBytes(4);
+            byte[] bytes = readBytes(4);
             Array.Reverse(bytes);
             return BitConverter.ToUInt32(bytes, 0);
         }
 
-        public string ReadRSDKString()
+        public bool readBool32()
         {
-            return new UTF8Encoding().GetString(ReadBytes(this.ReadByte()));
+            return base.ReadInt32() != 0;
         }
 
-        public string ReadRSDKUnicodeString()
+        public string readRSDKString()
         {
-            return new UnicodeEncoding().GetString(ReadBytes(this.ReadUInt16() * 2));
+            return new UTF8Encoding().GetString(readBytes(this.ReadByte())).Replace("\0", "");
         }
 
-        public byte[] ReadCompressed()
+        public string readRSDKUTF16String()
+        {
+            return new UnicodeEncoding().GetString(readBytes(this.ReadUInt16() * 2));
+        }
+
+        public byte[] readCompressed()
         {
             uint compresed_size = this.ReadUInt32();
-            uint uncompressed_size = this.ReadUInt32BE();
+            uint uncompressed_size = this.readUInt32BE();
             using (MemoryStream outMemoryStream = new MemoryStream())
             using (ZOutputStream decompress = new ZOutputStream(outMemoryStream))
             {
-                decompress.Write(this.ReadBytes(compresed_size - 4), 0, (int)compresed_size - 4);
+                decompress.Write(this.readBytes(compresed_size - 4), 0, (int)compresed_size - 4);
                 decompress.finish();
                 return outMemoryStream.ToArray();
             }
         }
 
-        public byte[] ReadCompressedRaw()
+        public byte[] readCompressedRaw()
         {
             using (MemoryStream outMemoryStream = new MemoryStream())
             using (ZOutputStream decompress = new ZOutputStream(outMemoryStream))
             {
-                decompress.Write(ReadBytes(BaseStream.Length), 0, (int)BaseStream.Length);
+                decompress.Write(readBytes(BaseStream.Length), 0, (int)BaseStream.Length);
                 decompress.finish();
                 return outMemoryStream.ToArray();
             }
         }
 
-        public Reader GetCompressedStream()
+        public Reader getCompressedStream()
         {
-            return new Reader(new MemoryStream(this.ReadCompressed()));
+            return new Reader(new MemoryStream(this.readCompressed()));
         }
 
-        public Reader GetCompressedStreamRaw()
+        public Reader getCompressedStreamRaw()
         {
-            return new Reader(new MemoryStream(this.ReadCompressedRaw()));
+            return new Reader(new MemoryStream(this.readCompressedRaw()));
         }
     }
 }
