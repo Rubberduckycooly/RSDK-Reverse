@@ -71,8 +71,8 @@
                 flipY = (flags >> 4) != 0;
                 this.flags = (byte)(flags & 0xF);
                 floorAngle = reader.ReadByte();
-                rWallAngle = reader.ReadByte();
                 lWallAngle = reader.ReadByte();
+                rWallAngle = reader.ReadByte();
                 roofAngle = reader.ReadByte();
 
                 byte[] collision = reader.readBytes(8);
@@ -94,8 +94,8 @@
             {
                 writer.Write(addNibbles(flipY ? (byte)1 : (byte)0, flags));
                 writer.Write(floorAngle);
-                writer.Write(rWallAngle);
                 writer.Write(lWallAngle);
+                writer.Write(rWallAngle);
                 writer.Write(roofAngle);
 
                 byte[] collision = new byte[8];

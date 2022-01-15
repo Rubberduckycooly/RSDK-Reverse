@@ -75,8 +75,8 @@ namespace RSDKv5
 
                 flipY      = reader.ReadBoolean();
                 floorAngle = reader.ReadByte();
-                rWallAngle = reader.ReadByte();
                 lWallAngle = reader.ReadByte();
+                rWallAngle = reader.ReadByte();
                 roofAngle  = reader.ReadByte();
                 flags      = reader.ReadByte();
             }
@@ -90,8 +90,8 @@ namespace RSDKv5
 
                 writer.Write(flipY);
                 writer.Write(floorAngle);
-                writer.Write(rWallAngle);
                 writer.Write(lWallAngle);
+                writer.Write(rWallAngle);
                 writer.Write(roofAngle);
                 writer.Write(flags);
             }
