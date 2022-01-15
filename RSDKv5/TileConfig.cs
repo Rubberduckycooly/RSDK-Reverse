@@ -41,7 +41,7 @@ namespace RSDKv5
             /// <summary>
             /// Angle value when walking on LWall
             /// </summary>
-            public byte lWallAngle = 0x40;
+            public byte lWallAngle = 0xC0;
             /// <summary>
             /// Angle value when walking on the ceiling
             /// </summary>
@@ -49,7 +49,7 @@ namespace RSDKv5
             /// <summary>
             /// Angle value when walking on RWall
             /// </summary>
-            public byte rWallAngle = 0xC0;
+            public byte rWallAngle = 0x40;
 
             public CollisionMask()
             {
