@@ -103,12 +103,20 @@ namespace RSDKv4
                     variables[v] = new VariableInfo();
             }
 
-            public Entity(byte type, byte propertyValue, short xpos, short ypos) : this()
+            public Entity(byte type, byte propertyValue, int xpos, int ypos) : this()
             {
                 this.type = type;
                 this.propertyValue = propertyValue;
                 this.xpos = xpos;
                 this.ypos = ypos;
+            }
+
+            public Entity(byte type, byte propertyValue, float xposF, float yposF) : this()
+            {
+                this.type = type;
+                this.propertyValue = propertyValue;
+                this.xposF = xposF;
+                this.yposF = yposF;
             }
 
             public Entity(Reader reader) : this()
