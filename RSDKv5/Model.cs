@@ -194,9 +194,12 @@ namespace RSDKv5
                     vert.y = reader.ReadSingle();
                     vert.z = reader.ReadSingle();
 
-                    vert.nx = reader.ReadSingle();
-                    vert.ny = reader.ReadSingle();
-                    vert.nz = reader.ReadSingle();
+                    if (hasNormals)
+                    {
+                        vert.nx = reader.ReadSingle();
+                        vert.ny = reader.ReadSingle();
+                        vert.nz = reader.ReadSingle();
+                    }
                     frame.vertices.Add(vert);
                 }
                 frames.Add(frame);
@@ -257,9 +260,12 @@ namespace RSDKv5
                     writer.Write(frames[f].vertices[v].y);
                     writer.Write(frames[f].vertices[v].z);
 
-                    writer.Write(frames[f].vertices[v].nx);
-                    writer.Write(frames[f].vertices[v].ny);
-                    writer.Write(frames[f].vertices[v].nz);
+                    if (hasNormals)
+                    {
+                        writer.Write(frames[f].vertices[v].nx);
+                        writer.Write(frames[f].vertices[v].ny);
+                        writer.Write(frames[f].vertices[v].nz);
+                    }
                 }
             }
             writer.Close();
