@@ -17,17 +17,17 @@ namespace RSDKv5
                 UseFlags,
                 PassedTimeAttackGate,
             }
-            public enum FlagTypes
+            public enum ValueChanges
             {
                 None = 0,
-                InputChange = 1 << 0,
-                PositionChange = 1 << 1,
-                VelocityChange = 1 << 2,
-                GimmickChange = 1 << 3,
-                DirectionChange = 1 << 4,
-                RotationChange = 1 << 5,
-                AnimationChange = 1 << 6,
-                FrameChange = 1 << 7,
+                Input = 1 << 0,
+                Position = 1 << 1,
+                Velocity = 1 << 2,
+                Gimmick = 1 << 3,
+                Direction = 1 << 4,
+                Rotation = 1 << 5,
+                Animation = 1 << 6,
+                Frame = 1 << 7,
             }
             public enum Directions
             {
@@ -38,43 +38,43 @@ namespace RSDKv5
             }
 
             public InfoTypes info = InfoTypes.None;
-            public FlagTypes flags = FlagTypes.None;
+            public ValueChanges changedValues = ValueChanges.None;
             private byte inputs = 0;
 
             public bool upHold
             {
                 get { return (inputs & 0x01) != 0; }
-                set { inputs = (byte)setBit(0, value, inputs); }
+                set { inputs = (byte)SetBit(0, value, inputs); }
             }
 
             public bool downHold
             {
                 get { return (inputs & 0x02) != 0; }
-                set { inputs = (byte)setBit(1, value, inputs); }
+                set { inputs = (byte)SetBit(1, value, inputs); }
             }
 
             public bool leftHold
             {
                 get { return (inputs & 0x04) != 0; }
-                set { inputs = (byte)setBit(2, value, inputs); }
+                set { inputs = (byte)SetBit(2, value, inputs); }
             }
 
             public bool rightHold
             {
                 get { return (inputs & 0x08) != 0; }
-                set { inputs = (byte)setBit(3, value, inputs); }
+                set { inputs = (byte)SetBit(3, value, inputs); }
             }
 
             public bool jumpPress
             {
                 get { return (inputs & 0x10) != 0; }
-                set { inputs = (byte)setBit(4, value, inputs); }
+                set { inputs = (byte)SetBit(4, value, inputs); }
             }
 
             public bool jumpHold
             {
                 get { return (inputs & 0x20) != 0; }
-                set { inputs = (byte)setBit(5, value, inputs); }
+                set { inputs = (byte)SetBit(5, value, inputs); }
             }
 
             public Directions direction = Directions.FlipNone;
@@ -84,51 +84,53 @@ namespace RSDKv5
             public byte anim = 0;
             public byte frame = 0;
 
-            private static int setBit(int pos, bool set, int val)
+            private static int SetBit(int pos, bool set, int val)
             {
                 if (set)
                     val |= 1 << pos;
+
                 if (!set)
                     val &= ~(1 << pos);
+
                 return val;
             }
 
             public ReplayEntry() { }
 
-            public int unpack(Reader reader, bool isPacked)
+            public int Unpack(Reader reader, bool isPacked)
             {
                 int pos = (int)reader.BaseStream.Position;
 
                 info = (InfoTypes)reader.ReadByte();
-                byte flags = reader.ReadByte();
+                byte changedValues = reader.ReadByte();
                 if (isPacked)
                 {
-                    bool flag = info == InfoTypes.StateChange || info == InfoTypes.PassedTimeAttackGate;
+                    bool forceUnpack = info == InfoTypes.StateChange || info == InfoTypes.PassedTimeAttackGate;
 
-                    if ((flags & (byte)FlagTypes.InputChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Input) != 0 || forceUnpack)
                         inputs = reader.ReadByte();
 
-                    if ((flags & (byte)FlagTypes.PositionChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Position) != 0 || forceUnpack)
                     {
                         position.x = reader.ReadInt32();
                         position.y = reader.ReadInt32();
                     }
-                    if ((flags & (byte)FlagTypes.VelocityChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Velocity) != 0 || forceUnpack)
                     {
                         velocity.x = reader.ReadInt32();
                         velocity.y = reader.ReadInt32();
                     }
 
-                    if ((flags & (byte)FlagTypes.RotationChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Rotation) != 0 || forceUnpack)
                         rotation = reader.ReadByte() << 1;
 
-                    if ((flags & (byte)FlagTypes.DirectionChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Direction) != 0 || forceUnpack)
                         direction = (Directions)reader.ReadByte();
 
-                    if ((flags & (byte)FlagTypes.AnimationChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Animation) != 0 || forceUnpack)
                         anim = reader.ReadByte();
 
-                    if ((flags & (byte)FlagTypes.FrameChange) != 0 || flag)
+                    if ((changedValues & (byte)ValueChanges.Frame) != 0 || forceUnpack)
                         frame = reader.ReadByte();
                 }
                 else
@@ -144,47 +146,47 @@ namespace RSDKv5
                     frame = reader.ReadByte();
                 }
 
-                this.flags = (FlagTypes)flags;
+                this.changedValues = (ValueChanges)changedValues;
 
                 return (int)reader.BaseStream.Position - pos;
             }
-            public int pack(Writer writer, bool isPacked)
+            public int Pack(Writer writer, bool isPacked)
             {
                 int pos = (int)writer.BaseStream.Position;
 
                 writer.Write((byte)info);
 
-                bool flag = info == InfoTypes.StateChange || info == InfoTypes.PassedTimeAttackGate;
-                writer.Write((byte)this.flags);
+                writer.Write((byte)this.changedValues);
 
-                byte flags = (byte)this.flags;
+                byte flags = (byte)this.changedValues;
+                bool forcePack = info == InfoTypes.StateChange || info == InfoTypes.PassedTimeAttackGate;
                 if (isPacked)
                 {
-                    if (flag || (flags & (byte)FlagTypes.InputChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Input) != 0)
                         writer.Write(inputs);
 
-                    if (flag || (flags & (byte)FlagTypes.PositionChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Position) != 0)
                     {
                         writer.Write(position.x);
                         writer.Write(position.y);
                     }
 
-                    if (flag || (flags & (byte)FlagTypes.VelocityChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Velocity) != 0)
                     {
                         writer.Write(velocity.x);
                         writer.Write(velocity.y);
                     }
 
-                    if (flag || (flags & (byte)FlagTypes.RotationChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Rotation) != 0)
                         writer.Write((byte)(rotation >> 1));
 
-                    if (flag || (flags & (byte)FlagTypes.DirectionChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Direction) != 0)
                         writer.Write((byte)direction);
 
-                    if (flag || (flags & (byte)FlagTypes.AnimationChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Animation) != 0)
                         writer.Write(anim);
 
-                    if (flag || (flags & (byte)FlagTypes.FrameChange) != 0)
+                    if (forcePack || (flags & (byte)ValueChanges.Frame) != 0)
                         writer.Write(frame);
                 }
                 else
@@ -210,7 +212,7 @@ namespace RSDKv5
         private static readonly uint signature = 0xF6057BED;
 
         // Header
-        public int gameVer = 0;
+        public int gameVer = 6; // 1.06 (also applies to EGS/Origin releases)
         public bool isPacked = false;
         public int startingFrame = 1;
         public int zoneID = 0;
@@ -218,7 +220,7 @@ namespace RSDKv5
         public int characterID = 0;
         public bool isPlusLayout = false;
         public int oscillation = 0;
-        private int unknown = 0;
+        private int unused = 0;
 
         List<ReplayEntry> frames = new List<ReplayEntry>();
 
@@ -229,7 +231,7 @@ namespace RSDKv5
 
         public Replay(Reader reader)
         {
-            Reader creader = reader.getCompressedStreamRaw();
+            Reader creader = reader.GetCompressedStreamRaw();
             reader.Close();
 
             // Signature
@@ -240,43 +242,43 @@ namespace RSDKv5
             }
 
             gameVer = creader.ReadInt32();
-            isPacked = creader.readBool32();
-            bool isNotEmpty = creader.readBool32();
+            isPacked = creader.ReadBool32();
+            bool isNotEmpty = creader.ReadBool32();
             int frameCount = creader.ReadInt32();
             startingFrame = creader.ReadInt32();
             zoneID = creader.ReadInt32();
             act = creader.ReadInt32();
             characterID = creader.ReadInt32();
-            isPlusLayout = creader.readBool32();
+            isPlusLayout = creader.ReadBool32();
             oscillation = creader.ReadInt32();
             int bufferSize = creader.ReadInt32();
             float avgSize = creader.ReadSingle();
-            unknown = creader.ReadInt32();
+            unused = creader.ReadInt32();
 
             frames.Clear();
             for (int f = 0; f < frameCount; ++f)
             {
                 ReplayEntry frame = new ReplayEntry();
-                frame.unpack(creader, isPacked);
+                frame.Unpack(creader, isPacked);
                 frames.Add(frame);
             }
 
             creader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Stream stream)
+        public void Write(Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             using (var stream = new MemoryStream())
             {
@@ -293,7 +295,7 @@ namespace RSDKv5
                         {
                             foreach (ReplayEntry frame in frames)
                             {
-                                int frameSize = frame.pack(fwriter, isPacked);
+                                int frameSize = frame.Pack(fwriter, isPacked);
                                 bufferSize += frameSize;
 
                                 if (frames.Count > 1)
@@ -307,9 +309,11 @@ namespace RSDKv5
                                 {
                                     averageSize = frameSize;
                                 }
+
                                 packedFrameCount++;
                             }
                         }
+
                         frameBuffer = frameStream.ToArray();
                     }
 
@@ -318,26 +322,26 @@ namespace RSDKv5
 
                     cwriter.Write(signature);
                     cwriter.Write(gameVer);
-                    cwriter.writeBool32(isPacked ? true : false);
-                    cwriter.writeBool32(frames.Count >= 1 ? true : false);
+                    cwriter.WriteBool32(isPacked ? true : false);
+                    cwriter.WriteBool32(frames.Count >= 1 ? true : false);
                     cwriter.Write(frames.Count);
                     cwriter.Write(startingFrame);
                     cwriter.Write(zoneID);
                     cwriter.Write(act);
                     cwriter.Write(characterID);
-                    cwriter.writeBool32(isPlusLayout ? true : false);
+                    cwriter.WriteBool32(isPlusLayout ? true : false);
                     cwriter.Write(oscillation);
                     cwriter.Write(bufferSize);
                     cwriter.Write(averageSize);
-                    cwriter.Write(unknown);
+                    cwriter.Write(unused);
 
                     cwriter.Write(frameBuffer);
                 }
-                writer.writeCompressedRaw(stream.ToArray());
+
+                writer.WriteCompressedRaw(stream.ToArray());
             }
 
             writer.Close();
         }
-
     }
 }

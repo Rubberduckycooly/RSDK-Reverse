@@ -79,7 +79,7 @@
   <ItemGroup>
     <Compile Include="Animation.cs" />
     <Compile Include="Color.cs" />
-    <Compile Include="DataFile.cs" />
+    <Compile Include="DataPack.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Gif.cs" />
     <Compile Include="Model.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="RSDKConfig.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="StageConfig.cs" />
-    <Compile Include="StaticObject.cs" />
+    <Compile Include="StaticVariables.cs" />
     <Compile Include="TileConfig.cs" />
     <Compile Include="Writer.cs" />
     <Compile Include="zLib\Adler32.cs" />

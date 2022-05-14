@@ -4,8 +4,24 @@ using System.Linq;
 
 namespace RSDKv5
 {
-    public class StaticObject
+    public class StaticVariables
     {
+        enum StaticVariableTypes
+        {
+            UInt8,
+            UInt16,
+            UInt32,
+            Int8,
+            Int16,
+            Int32,
+            Bool,
+            Pointer,
+            Vector2,
+            String,
+            Animator,
+            Hitbox,
+            Unknown,
+        };
 
         public class ArrayInfo
         {
@@ -26,20 +42,20 @@ namespace RSDKv5
         /// </summary>
         public List<ArrayInfo> arrays = new List<ArrayInfo>();
 
-        public StaticObject() { }
+        public StaticVariables() { }
 
-        public StaticObject(string filename) : this(new Reader(filename)) { }
+        public StaticVariables(string filename) : this(new Reader(filename)) { }
 
-        public StaticObject(System.IO.Stream stream) : this(new Reader(stream)) { }
+        public StaticVariables(System.IO.Stream stream) : this(new Reader(stream)) { }
 
-        public StaticObject(Reader reader)
+        public StaticVariables(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid Static Object v5 signature");
@@ -68,19 +84,20 @@ namespace RSDKv5
                         default:
                             Console.WriteLine($"ERROR: Encountered unexpected array type ({type})!");
                             break;
-                        //INT8
-                        case (int)VariableTypes.UINT8:
+
+                        case (int)StaticVariableTypes.UInt8:
                             for (int i = 0; i < count; ++i)
                                 array.values[i] = reader.ReadByte();
                             memPos += arraySize;
                             break;
-                        case (int)VariableTypes.INT8:
+
+                        case (int)StaticVariableTypes.Int8:
                             for (int i = 0; i < count; ++i)
                                 array.values[i] = reader.ReadSByte();
                             memPos += arraySize;
                             break;
-                        //IN16
-                        case (int)VariableTypes.UINT16:
+
+                        case (int)StaticVariableTypes.UInt16:
                             int tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
@@ -95,7 +112,8 @@ namespace RSDKv5
 
                             memPos += 2 * arraySize;
                             break;
-                        case (int)VariableTypes.INT16:
+
+                        case (int)StaticVariableTypes.Int16:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
@@ -109,8 +127,8 @@ namespace RSDKv5
                             }
                             memPos += 2 * arraySize;
                             break;
-                        //INT32
-                        case (int)VariableTypes.UINT32:
+
+                        case (int)StaticVariableTypes.UInt32:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
@@ -126,7 +144,8 @@ namespace RSDKv5
                             }
                             memPos += 4 * arraySize;
                             break;
-                        case (int)VariableTypes.INT32:
+
+                        case (int)StaticVariableTypes.Int32:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
@@ -142,7 +161,8 @@ namespace RSDKv5
                             }
                             memPos += 4 * arraySize;
                             break;
-                        case (int)VariableTypes.ENUM: // bool
+
+                        case (int)StaticVariableTypes.Bool:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
@@ -170,88 +190,99 @@ namespace RSDKv5
                     array.values = new int[0];
                     arrays.Add(array);
 
+                    // NOTE:
+                    // These values assume 32bit alignment (aka a pointer is 4 bytes)
+                    // so the mem positions won't be accurate for 64-bit compiled static vars (all consoles)
+
                     int tmpMemPos = 0;
                     switch (type)
                     {
-                        //INT8
-                        case (int)VariableTypes.UINT8:
-                        case (int)VariableTypes.INT8:
+                        case (int)StaticVariableTypes.UInt8:
+                        case (int)StaticVariableTypes.Int8:
                             memPos += arraySize;
                             break;
-                        //IN16
-                        case (int)VariableTypes.UINT16:
-                        case (int)VariableTypes.INT16:
+
+                        case (int)StaticVariableTypes.UInt16:
+                        case (int)StaticVariableTypes.Int16:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 2 * arraySize;
                             break;
-                        //INT32
-                        case (int)VariableTypes.UINT32:
-                        case (int)VariableTypes.INT32:
-                        case 6: //bool
+
+                        case (int)StaticVariableTypes.UInt32:
+                        case (int)StaticVariableTypes.Int32:
+                        case (int)StaticVariableTypes.Bool:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 4 * arraySize;
                             break;
-                        case 7: // Pointer
+
+                        case (int)StaticVariableTypes.Pointer:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 4 * arraySize;
                             break;
-                        case 8: // Vector2
+
+                        case (int)StaticVariableTypes.Vector2:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 8 * arraySize;
                             break;
-                        case 9: // Text
+
+                        case (int)StaticVariableTypes.String:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 8 * arraySize;
                             break;
-                        case 10: // Animator
+
+                        case (int)StaticVariableTypes.Animator:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFC) + 4);
                             if ((memPos & 0xFFFFFFFC) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 24 * arraySize;
                             break;
-                        case 11: // Hitbox
+
+                        case (int)StaticVariableTypes.Hitbox:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 8 * arraySize;
                             break;
-                        case 12: // Unknown
+
+                        case (int)StaticVariableTypes.Unknown:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
                             memPos = tmpMemPos + 18 * arraySize;
                             break;
+
                         default:
                             break;
                     }
                 }
             }
+
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(signature);
 
@@ -266,15 +297,14 @@ namespace RSDKv5
 
                     switch (array.type)
                     {
-                        //INT8
-                        case (int)VariableTypes.UINT8:
-                        case (int)VariableTypes.INT8:
+                        case (int)StaticVariableTypes.UInt8:
+                        case (int)StaticVariableTypes.Int8:
                             for (int i = 0; i < array.valueCount; ++i)
                                 writer.Write(array.values[i]);
                             break;
-                        //IN16
-                        case (int)VariableTypes.UINT16:
-                        case (int)VariableTypes.INT16:
+
+                        case (int)StaticVariableTypes.UInt16:
+                        case (int)StaticVariableTypes.Int16:
                             for (int i = 0; i < array.valueCount; ++i)
                             {
                                 byte[] bytes = BitConverter.GetBytes(array.values[i]);
@@ -282,10 +312,10 @@ namespace RSDKv5
                                 writer.Write(bytes[1]);
                             }
                             break;
-                        //INT32
-                        case (int)VariableTypes.UINT32:
-                        case (int)VariableTypes.INT32:
-                        case (int)VariableTypes.ENUM: // bool
+
+                        case (int)StaticVariableTypes.UInt32:
+                        case (int)StaticVariableTypes.Int32:
+                        case (int)StaticVariableTypes.Bool:
                             for (int i = 0; i < array.valueCount; ++i)
                             {
                                 byte[] bytes = BitConverter.GetBytes(array.values[i]);

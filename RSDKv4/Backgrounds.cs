@@ -12,10 +12,12 @@ namespace RSDKv4
             /// E.G: 0x100 == move 1 pixel per 1 pixel of camera movement, 0x80 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
             public short parallaxFactor = 0x100;
+
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
             public byte scrollSpeed = 0;
+
             /// <summary>
             /// determines if the scrollInfo allows deformation or not
             /// </summary>
@@ -58,10 +60,10 @@ namespace RSDKv4
 
             public ScrollInfo(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 // 2 bytes, little-endian, signed
                 parallaxFactor = reader.ReadByte();
@@ -70,7 +72,7 @@ namespace RSDKv4
                 deform = reader.ReadBoolean();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write((byte)(parallaxFactor & 0xFF));
                 writer.Write((byte)(parallaxFactor >> 8));
@@ -182,10 +184,10 @@ namespace RSDKv4
 
             public Layer(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 width = reader.ReadByte();
                 reader.ReadByte(); // Unused
@@ -251,7 +253,7 @@ namespace RSDKv4
                 }
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(width);
                 writer.Write((byte)0);
@@ -276,14 +278,14 @@ namespace RSDKv4
 
                     if (index != l && line > 0)
                     {
-                        rle_write(writer, l, cnt);
+                        WriteRLE(writer, l, cnt);
                         cnt = 0;
                     }
                     l = index;
                     cnt++;
                 }
 
-                rle_write(writer, l, cnt);
+                WriteRLE(writer, l, cnt);
 
                 writer.Write((byte)0xFF);
                 writer.Write((byte)0xFF);
@@ -299,7 +301,7 @@ namespace RSDKv4
 
             }
 
-            private static void rle_write(Writer file, int value, int count)
+            private static void WriteRLE(Writer file, int value, int count)
             {
                 if (count <= 2)
                 {
@@ -323,7 +325,7 @@ namespace RSDKv4
             /// </summary>
             /// <param name="width">The new Width</param>
             /// <param name="height">The new Height</param>
-            public void resize(byte width, byte height)
+            public void Resize(byte width, byte height)
             {
                 // first take a backup of the current dimensions
                 // then update the internal dimensions
@@ -383,10 +385,10 @@ namespace RSDKv4
 
         public Backgrounds(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             byte layerCount = reader.ReadByte();
             byte hScrollCount = reader.ReadByte();
@@ -404,38 +406,38 @@ namespace RSDKv4
                 layers[i] = new Layer();
 
             for (int i = 0; i < layerCount; i++)
-                layers[i].read(reader);
+                layers[i].Read(reader);
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Too Lazy to do this properly, have 8 layers no matter what
             writer.Write((byte)8);
 
             writer.Write((byte)hScroll.Count);
             foreach (ScrollInfo hScrollInfo in hScroll)
-                hScrollInfo.write(writer);
+                hScrollInfo.Write(writer);
 
             writer.Write((byte)vScroll.Count);
             foreach (ScrollInfo vScrollInfo in vScroll)
-                vScrollInfo.write(writer);
+                vScrollInfo.Write(writer);
 
             foreach (Layer layer in layers)
-                layer.write(writer);
+                layer.Write(writer);
 
             writer.Close();
         }

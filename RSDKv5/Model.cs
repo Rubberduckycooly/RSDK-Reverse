@@ -71,24 +71,24 @@ namespace RSDKv5
         /// </summary>
         public bool hasNormals
         {
-            get { return getBit(flags, 0); }
-            set { flags = (byte)setBit(0, value, flags); }
+            get { return GetBit(flags, 0); }
+            set { flags = (byte)SetBit(0, value, flags); }
         }
         /// <summary>
         /// determines if the model uses textures or not (this feature is not implimented in RSDKv5, so its basically useless)
         /// </summary>
         public bool hasTextures
         {
-            get { return getBit(flags, 1); }
-            set { flags = (byte)setBit(1, value, flags); }
+            get { return GetBit(flags, 1); }
+            set { flags = (byte)SetBit(1, value, flags); }
         }
         /// <summary>
-        /// determines if the model uses vertex colours or not
+        /// determines if the model uses vertex colors or not
         /// </summary>
-        public bool hasColours
+        public bool hasColors
         {
-            get { return getBit(flags, 2); }
-            set { flags = (byte)setBit(2, value, flags); }
+            get { return GetBit(flags, 2); }
+            set { flags = (byte)SetBit(2, value, flags); }
         }
         /// <summary>
         /// is it using quads (4) or tris (3)
@@ -99,9 +99,9 @@ namespace RSDKv5
         /// </summary>
         public List<TextureUV> textureUVs = new List<TextureUV>();
         /// <summary>
-        /// a list of all the colours for each face
+        /// a list of all the colors for each face
         /// </summary>
-        public List<Color> colours = new List<Color>();
+        public List<Color> colors = new List<Color>();
         /// <summary>
         /// the list of frames, used to animate the model
         /// </summary>
@@ -111,12 +111,12 @@ namespace RSDKv5
         /// </summary>
         public List<ushort> indices = new List<ushort>();
 
-        private static bool getBit(int b, int pos)
+        private static bool GetBit(int b, int pos)
         {
             return (b & (1 << pos)) != 0;
         }
 
-        private static int setBit(int pos, bool set, int val)
+        private static int SetBit(int pos, bool set, int val)
         {
             if (set)
                 val |= 1 << pos;
@@ -133,12 +133,12 @@ namespace RSDKv5
 
         public Model(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid Model v5 signature");
@@ -150,7 +150,7 @@ namespace RSDKv5
                 throw new Exception("Detected Vertex Type wasn't Tris or Quads! RSDKv5 doesn't support other N-gons!");
 
             ushort vertexCount = reader.ReadUInt16();
-            ushort frameCount  = reader.ReadUInt16();
+            ushort frameCount = reader.ReadUInt16();
 
             textureUVs.Clear();
             if (hasTextures)
@@ -164,17 +164,17 @@ namespace RSDKv5
                 }
             }
 
-            colours.Clear();
-            if (hasColours)
+            colors.Clear();
+            if (hasColors)
             {
                 for (int c = 0; c < vertexCount; ++c)
                 {
-                    Color colour = new Color();
-                    colour.B = reader.ReadByte();
-                    colour.G = reader.ReadByte();
-                    colour.R = reader.ReadByte();
-                    colour.A = reader.ReadByte();
-                    colours.Add(colour);
+                    Color color = new Color();
+                    color.b = reader.ReadByte();
+                    color.g = reader.ReadByte();
+                    color.r = reader.ReadByte();
+                    color.a = reader.ReadByte();
+                    colors.Add(color);
                 }
             }
 
@@ -206,19 +206,19 @@ namespace RSDKv5
             }
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(signature);
             writer.Write(flags);
@@ -237,14 +237,14 @@ namespace RSDKv5
                 }
             }
 
-            if (hasColours)
+            if (hasColors)
             {
                 for (int v = 0; v < vertCount; ++v)
                 {
-                    writer.Write(colours[v].B);
-                    writer.Write(colours[v].G);
-                    writer.Write(colours[v].R);
-                    writer.Write(colours[v].A);
+                    writer.Write(colors[v].b);
+                    writer.Write(colors[v].g);
+                    writer.Write(colors[v].r);
+                    writer.Write(colors[v].a);
                 }
             }
 
@@ -271,7 +271,7 @@ namespace RSDKv5
             writer.Close();
         }
 
-        public void writeAsOBJ(string filename, int exportFrame = -1)
+        public void WriteAsOBJ(string filename, int exportFrame = -1)
         {
             for (int f = (exportFrame < 0 ? 0 : exportFrame); f < frames.Count; ++f)
             {
@@ -281,9 +281,9 @@ namespace RSDKv5
 
                 StringBuilder builder = new StringBuilder();
 
-                writeMTL(streamName.Replace(Path.GetFileName(streamName), Path.GetFileNameWithoutExtension(streamName) + ".mtl"));
+                WriteMTL(streamName.Replace(Path.GetFileName(streamName), Path.GetFileNameWithoutExtension(streamName) + ".mtl"));
 
-                if (hasColours)
+                if (hasColors)
                 {
                     // Link Material
                     builder.AppendLine("mtllib " + Path.GetFileNameWithoutExtension(streamName) + ".mtl");
@@ -315,8 +315,8 @@ namespace RSDKv5
                     List<ushort> verts = new List<ushort>();
                     for (int v = 0; v < faceVertexCount; ++v) verts.Add(indices[i + v]);
 
-                    if (hasColours)
-                        builder.AppendLine($"usemtl RSDKModelv5.Colour.{verts[0]}");
+                    if (hasColors)
+                        builder.AppendLine($"usemtl RSDKModelv5.Color.{verts[0]}");
                     builder.AppendLine(string.Format("f {0} {1} {2}", verts[0] + 1, verts[1] + 1, verts[2] + 1));
                     if (faceVertexCount == 4)
                         builder.AppendLine(string.Format("f {0} {1} {2}", verts[0] + 1, verts[2] + 1, verts[3] + 1));
@@ -327,20 +327,140 @@ namespace RSDKv5
             }
         }
 
-        private void writeMTL(string fileName)
+        private void WriteMTL(string fileName)
         {
             StringBuilder builder = new StringBuilder();
 
             Writer writer = new Writer(fileName);
-            for (int i = 0; i < colours.Count; ++i)
+            for (int i = 0; i < colors.Count; ++i)
             {
-                builder.AppendLine($"newmtl RSDKModelv5.Colour.{i}");
-                builder.AppendLine($"kd {(colours[i].R / 255f)} {(colours[i].G / 255f)} {(colours[i].B / 255f)}");
+                builder.AppendLine($"newmtl RSDKModelv5.Color.{i}");
+                builder.AppendLine($"kd {(colors[i].r / 255f)} {(colors[i].g / 255f)} {(colors[i].b / 255f)}");
                 builder.AppendLine("");
             }
             writer.Write(Encoding.ASCII.GetBytes(builder.ToString()));
             writer.Close();
 
+        }
+
+        public void WriteAsPLY(string filename, int exportFrame, bool binary = false)
+        {
+            for (int f = (exportFrame < 0 ? 0 : exportFrame); f < frames.Count; ++f)
+            {
+                string path = filename;
+                string extLess = path.Replace(Path.GetExtension(path), "");
+                string streamName = extLess + (frames.Count > 1 ? (" Frame " + f + "") : "") + Path.GetExtension(path);
+
+                Writer writer = new Writer(streamName);
+
+                // Header
+                writer.WriteLine("ply");
+                writer.WriteLine($"format {(binary ? "binary_little_endian" : "ascii")} 1.0");
+                writer.WriteLine("comment Created by RSDK-Reverse");
+                writer.WriteLine("element vertex " + frames[f].vertices.Count);
+
+                writer.WriteLine("property float x");
+                writer.WriteLine("property float y");
+                writer.WriteLine("property float z");
+                if (hasNormals)
+                {
+                    writer.WriteLine("property float nx");
+                    writer.WriteLine("property float ny");
+                    writer.WriteLine("property float nz");
+                }
+                if (hasTextures)
+                {
+                    writer.WriteLine("property float u");
+                    writer.WriteLine("property float v");
+                }
+
+                if (hasColors)
+                {
+                    writer.WriteLine("property uint8 red");
+                    writer.WriteLine("property uint8 green");
+                    writer.WriteLine("property uint8 blue");
+                    writer.WriteLine("property uint8 alpha");
+                }
+
+                writer.WriteLine("element face " + (indices.Count / faceVertexCount));
+                writer.WriteLine("property list uint8 uint16 vertex_indices");
+                writer.WriteLine("end_header");
+
+                if (binary)
+                {
+                    for (int v = 0; v < frames[f].vertices.Count; ++v)
+                    {
+                        writer.Write(frames[f].vertices[v].x);
+                        writer.Write(frames[f].vertices[v].y);
+                        writer.Write(frames[f].vertices[v].z);
+
+                        if (hasNormals)
+                        {
+                            writer.Write(frames[f].vertices[v].nx);
+                            writer.Write(frames[f].vertices[v].ny);
+                            writer.Write(frames[f].vertices[v].nz);
+                        }
+
+                        if (hasTextures)
+                        {
+                            writer.Write(textureUVs[v].u);
+                            writer.Write(textureUVs[v].v);
+                        }
+
+                        if (hasColors)
+                        {
+                            writer.Write(colors[v].r);
+                            writer.Write(colors[v].g);
+                            writer.Write(colors[v].b);
+                            writer.Write(colors[v].a);
+                        }
+                    }
+
+                    for (int i = 0; i < indices.Count; i += faceVertexCount)
+                    {
+                        writer.Write(faceVertexCount);
+                        for (int v = 0; v < faceVertexCount; ++v) writer.Write(indices[i + v]);
+                    }
+                }
+                else
+                {
+                    for (int v = 0; v < frames[f].vertices.Count; ++v)
+                    {
+                        string vertex = "";
+
+                        vertex += $"{frames[f].vertices[v].x} {frames[f].vertices[v].y} {frames[f].vertices[v].z}";
+
+                        if (hasNormals)
+                            vertex += $"{frames[f].vertices[v].nx} {frames[f].vertices[v].ny} {frames[f].vertices[v].nz}";
+
+                        if (hasTextures)
+                            vertex += $"{textureUVs[v].u} {textureUVs[v].v}";
+
+                        if (hasColors)
+                            vertex += $"{colors[v].r} {colors[v].g} {colors[v].b} {colors[v].a}";
+
+                        writer.WriteLine(vertex);
+                    }
+
+                    for (int i = 0; i < indices.Count; i += faceVertexCount)
+                    {
+                        string face = "";
+
+                        face += faceVertexCount + " ";
+
+                        for (int v = 0; v < faceVertexCount; ++v)
+                        {
+                            face += indices[i + v];
+                            if (v + 1 < faceVertexCount)
+                                face += " ";
+                        }
+
+                        writer.WriteLine(face);
+                    }
+                }
+
+                writer.Close();
+            }
         }
     }
 }

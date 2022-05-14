@@ -40,7 +40,7 @@
     <Compile Include="Bitmap.cs" />
     <Compile Include="Gif.cs" />
     <Compile Include="TileConfig.cs" />
-    <Compile Include="DataFile.cs" />
+    <Compile Include="DataPack.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Gfx.cs" />
     <Compile Include="Scene.cs" />

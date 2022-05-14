@@ -15,8 +15,11 @@ namespace RSDKv3
 
         public TextFile(System.IO.Stream stream) : this(new Reader(stream)) { }
 
-        public TextFile(Reader reader)
+        public TextFile(Reader reader) { Read(reader); }
+
+        public void Read(Reader reader)
         {
+            rows.Clear();
             List<ushort> rowBuffer = new List<ushort>();
             bool finished = false;
 
@@ -95,19 +98,19 @@ namespace RSDKv3
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             for (int i = 0; i < rows.Count; ++i)
             {

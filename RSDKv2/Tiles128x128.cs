@@ -46,6 +46,50 @@
                 /// the solidity for Collision Path B
                 /// </summary>
                 public Solidities solidityB = Solidities.SolidNone;
+
+                public Tile() { }
+
+                public void Read(Reader reader)
+                {
+                    byte[] tileBytes = new byte[3];
+
+                    reader.Read(tileBytes, 0, tileBytes.Length);
+
+                    tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 6 << 6));
+                    visualPlane = (VisualPlanes)(tileBytes[0] >> 4);
+
+                    tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 4 << 4));
+                    direction = (Directions)(tileBytes[0] >> 2);
+
+                    tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 2 << 2));
+                    tileIndex = (ushort)((tileBytes[0] << 8) + tileBytes[1]);
+
+                    solidityA = (Solidities)(tileBytes[2] >> 4);
+                    solidityB = (Solidities)(tileBytes[2] - (tileBytes[2] >> 4 << 4));
+                }
+
+                public void Write(Writer writer)
+                {
+                    int[] tileBytes = new int[3];
+
+                    tileBytes[0] = 0;
+
+                    tileBytes[0] |= (byte)(tileIndex >> 8); //Put the first bit onto buffer[0]
+                    tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 2 << 2));
+                    tileBytes[0] |= (((int)direction) << 2); //Put the Flip of the tile two bits in
+                    tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 4 << 4));
+                    tileBytes[0] |= ((int)visualPlane) << 4; //Put the Layer of the tile four bits in
+                    tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 6 << 6));
+
+                    tileBytes[1] = (byte)(tileIndex & 0xFF); //Put the rest of the Tile16x16 Value into this buffer
+
+                    tileBytes[2] = (byte)solidityB; //Colision Flag 1 is all bytes before bit 5
+                    tileBytes[2] = tileBytes[2] | (int)solidityA << 4; //Colision Flag 0 is all bytes after bit 4
+
+                    writer.Write((byte)tileBytes[0]);
+                    writer.Write((byte)tileBytes[1]);
+                    writer.Write((byte)tileBytes[2]);
+                }
             }
 
             /// <summary>
@@ -62,7 +106,27 @@
                     for (int x = 0; x < 8; x++)
                         tiles[y][x] = new Tile();
                 }
+            }
+            public void Read(Reader reader)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        tiles[y][x].Read(reader);
+                    }
+                }
+            }
 
+            public void Write(Writer writer)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 8; x++)
+                    {
+                        tiles[y][x].Write(writer);
+                    }
+                }
             }
         }
 
@@ -83,81 +147,34 @@
 
         public Tiles128x128(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            byte[] tileBytes = new byte[3];
-
             for (int c = 0; c < 512; c++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        reader.Read(tileBytes, 0, tileBytes.Length);
+                chunkList[c].Read(reader);
 
-                        tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 6 << 6));
-                        chunkList[c].tiles[y][x].visualPlane = (Block.Tile.VisualPlanes)(tileBytes[0] >> 4);
-
-                        tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 4 << 4));
-                        chunkList[c].tiles[y][x].direction = (Block.Tile.Directions)(tileBytes[0] >> 2);
-
-                        tileBytes[0] = (byte)(tileBytes[0] - (tileBytes[0] >> 2 << 2));
-                        chunkList[c].tiles[y][x].tileIndex = (ushort)((tileBytes[0] << 8) + tileBytes[1]);
-
-                        chunkList[c].tiles[y][x].solidityA = (Block.Tile.Solidities)(tileBytes[2] >> 4);
-                        chunkList[c].tiles[y][x].solidityB = (Block.Tile.Solidities)(tileBytes[2] - (tileBytes[2] >> 4 << 4));
-                    }
-                }
-            }
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            int[] tileBytes = new int[3];
-
             for (int c = 0; c < 512; c++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    for (int x = 0; x < 8; x++)
-                    {
-                        tileBytes[0] = 0;
+                chunkList[c].Write(writer);
 
-                        tileBytes[0] |= (byte)(chunkList[c].tiles[y][x].tileIndex >> 8); //Put the first bit onto buffer[0]
-                        tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 2 << 2));
-                        tileBytes[0] |= (((int)chunkList[c].tiles[y][x].direction) << 2); //Put the Flip of the tile two bits in
-                        tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 4 << 4));
-                        tileBytes[0] |= ((int)chunkList[c].tiles[y][x].visualPlane) << 4; //Put the Layer of the tile four bits in
-                        tileBytes[0] = (byte)(tileBytes[0] + (tileBytes[0] >> 6 << 6));
-
-                        tileBytes[1] = (byte)(chunkList[c].tiles[y][x].tileIndex); //Put the rest of the Tile16x16 Value into this buffer
-
-                        tileBytes[2] = (int)chunkList[c].tiles[y][x].solidityB; //Colision Flag 1 is all bytes before bit 5
-                        tileBytes[2] = tileBytes[2] | (int)chunkList[c].tiles[y][x].solidityA << 4; //Colision Flag 0 is all bytes after bit 4
-
-                        writer.Write((byte)tileBytes[0]);
-                        writer.Write((byte)tileBytes[1]);
-                        writer.Write((byte)tileBytes[2]);
-                    }
-                }
-            }
             writer.Close();
         }
     }

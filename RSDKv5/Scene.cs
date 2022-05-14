@@ -13,11 +13,11 @@ namespace RSDKv5
         /// </summary>
         private byte unknown1 = 3; //usually 2/3/4
         /// <summary>
-        /// Background colour 1
+        /// Background color 1
         /// </summary>
         public Color bgColor1 = new Color(0xFF, 0, 0xFF);
         /// <summary>
-        /// Background colour 2
+        /// Background color 2
         /// </summary>
         public Color bgColor2 = new Color(0, 0xFF, 0);
         /// <summary>
@@ -40,26 +40,26 @@ namespace RSDKv5
 
         public SceneEditorMetadata(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             unknown1 = reader.ReadByte();
             bgColor1 = new Color(reader);
             bgColor2 = new Color(reader);
-            unknownBytes = reader.readBytes(7);
-            libraryName = reader.readRSDKString();
+            unknownBytes = reader.ReadBytes(7);
+            libraryName = reader.ReadStringRSDK();
             unknown2 = reader.ReadByte();
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(unknown1);
-            bgColor1.write(writer);
-            bgColor2.write(writer);
+            bgColor1.Write(writer);
+            bgColor2.Write(writer);
             writer.Write(unknownBytes);
-            writer.writeRSDKString(libraryName);
+            writer.WriteStringRSDK(libraryName);
             writer.Write(unknown2);
         }
     }
@@ -97,20 +97,20 @@ namespace RSDKv5
 
         public NameIdentifier(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            hash = reader.readBytes(16);
+            hash = reader.ReadBytes(16);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(hash);
         }
 
-        public string hashString()
+        public string HashString()
         {
             return BitConverter.ToString(hash).Replace("-", string.Empty).ToLower();
         }
@@ -118,7 +118,7 @@ namespace RSDKv5
         public override string ToString()
         {
             if (name != null) return name;
-            return hashString();
+            return HashString();
         }
     }
     #endregion
@@ -185,10 +185,10 @@ namespace RSDKv5
 
         public ScrollInfo(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             parallaxFactor = reader.ReadInt16();
             scrollSpeed = reader.ReadInt16();
@@ -196,7 +196,7 @@ namespace RSDKv5
             unknown = reader.ReadByte();
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(parallaxFactor);
             writer.Write(scrollSpeed);
@@ -255,7 +255,7 @@ namespace RSDKv5
             public ushort tileIndex
             {
                 get { return (ushort)(tile & 0x3FF); }
-                set 
+                set
                 {
                     uint store = (ushort)(tile >> 10);
                     tile = (ushort)(value | (store << 10));
@@ -267,14 +267,14 @@ namespace RSDKv5
             /// </summary>
             public Directions direction
             {
-                get 
-                { 
-                    return (Directions)((tile >> 10) & 3); 
+                get
+                {
+                    return (Directions)((tile >> 10) & 3);
                 }
                 set
                 {
-                    tile = (ushort)setBit(10, ((int)value & 1) != 0, tile);
-                    tile = (ushort)setBit(11, ((int)value & 2) != 0, tile);
+                    tile = (ushort)SetBit(10, ((int)value & 1) != 0, tile);
+                    tile = (ushort)SetBit(11, ((int)value & 2) != 0, tile);
                 }
             }
 
@@ -289,8 +289,8 @@ namespace RSDKv5
                 }
                 set
                 {
-                    tile = (ushort)setBit(12, ((int)value & 1) != 0, tile);
-                    tile = (ushort)setBit(13, ((int)value & 2) != 0, tile);
+                    tile = (ushort)SetBit(12, ((int)value & 1) != 0, tile);
+                    tile = (ushort)SetBit(13, ((int)value & 2) != 0, tile);
                 }
             }
             /// <summary>
@@ -304,8 +304,8 @@ namespace RSDKv5
                 }
                 set
                 {
-                    tile = (ushort)setBit(14, ((int)value & 1) != 0, tile);
-                    tile = (ushort)setBit(15, ((int)value & 2) != 0, tile);
+                    tile = (ushort)SetBit(14, ((int)value & 1) != 0, tile);
+                    tile = (ushort)SetBit(15, ((int)value & 2) != 0, tile);
                 }
             }
 
@@ -440,14 +440,14 @@ namespace RSDKv5
 
         public SceneLayer(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             visible = reader.ReadBoolean();
 
-            name = reader.readRSDKString();
+            name = reader.ReadStringRSDK();
 
             type = (Types)reader.ReadByte();
             drawOrder = reader.ReadByte();
@@ -464,11 +464,11 @@ namespace RSDKv5
                 scrollInfo.Add(new ScrollInfo(reader));
 
             // Read Line Scroll, its compressed using ZLib compression
-            lineScroll = reader.readCompressed();
+            lineScroll = reader.ReadCompressed();
 
             // Read tile map, its compressed using ZLib compression
             layout = new Tile[height][];
-            using (Reader creader = reader.getCompressedStream())
+            using (Reader creader = reader.GetCompressedStream())
             {
                 for (int y = 0; y < height; ++y)
                 {
@@ -479,11 +479,11 @@ namespace RSDKv5
             }
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(visible);
 
-            writer.writeRSDKString(name);
+            writer.WriteStringRSDK(name);
 
             writer.Write((byte)type);
             writer.Write(drawOrder);
@@ -496,9 +496,9 @@ namespace RSDKv5
 
             writer.Write((ushort)scrollInfo.Count);
             foreach (ScrollInfo info in scrollInfo)
-                info.write(writer);
+                info.Write(writer);
 
-            writer.writeCompressed(lineScroll);
+            writer.WriteCompressed(lineScroll);
 
             using (MemoryStream cmem = new MemoryStream())
             {
@@ -510,7 +510,7 @@ namespace RSDKv5
                             cwriter.Write(layout[y][x]);
                     }
                     cwriter.Close();
-                    writer.writeCompressed(cmem.ToArray());
+                    writer.WriteCompressed(cmem.ToArray());
                 }
             }
         }
@@ -520,7 +520,7 @@ namespace RSDKv5
         /// </summary>
         /// <param name="width">The new Width</param>
         /// <param name="height">The new Height</param>
-        public void resize(ushort width, ushort height)
+        public void Resize(ushort width, ushort height)
         {
             // first take a backup of the current dimensions
             // then update the internal dimensions
@@ -554,12 +554,14 @@ namespace RSDKv5
             }
         }
 
-        private static int setBit(int pos, bool set, int val)
+        private static int SetBit(int pos, bool set, int val)
         {
             if (set)
                 val |= 1 << pos;
+
             if (!set)
                 val &= ~(1 << pos);
+
             return val;
         }
     }
@@ -569,18 +571,18 @@ namespace RSDKv5
     [Serializable]
     public enum VariableTypes
     {
-        UINT8,
-        UINT16,
-        UINT32,
-        INT8,
-        INT16,
-        INT32,
-        ENUM,
-        BOOL,
-        STRING,
-        VECTOR2,
-        UNKNOWN,
-        COLOR,
+        UInt8,
+        UInt16,
+        UInt32,
+        Int8,
+        Int16,
+        Int32,
+        Enum,
+        Bool,
+        String,
+        Vector2,
+        Float, // an assumption, but highly likely
+        Color,
     }
 
     [Serializable]
@@ -590,10 +592,11 @@ namespace RSDKv5
         /// the name of the variable
         /// </summary>
         public NameIdentifier name = new NameIdentifier("variable");
+
         /// <summary>
         /// the type of the variable
         /// </summary>
-        public VariableTypes type = VariableTypes.UINT8;
+        public VariableTypes type = VariableTypes.UInt8;
 
         public VariableInfo() { }
 
@@ -607,10 +610,10 @@ namespace RSDKv5
 
         public VariableInfo(Reader reader, List<string> variableNames = null)
         {
-            read(reader, variableNames);
+            Read(reader, variableNames);
         }
 
-        public void read(Reader reader, List<string> variableNames = null)
+        public void Read(Reader reader, List<string> variableNames = null)
         {
             name = new NameIdentifier(reader);
             type = (VariableTypes)reader.ReadByte();
@@ -618,11 +621,11 @@ namespace RSDKv5
             // if we have possible names, search em
             if (variableNames != null)
             {
-                string hashString = name.hashString();
+                string hashString = name.HashString();
                 foreach (string varName in variableNames)
                 {
                     NameIdentifier currentName = new NameIdentifier(varName);
-                    String currentHashedName = currentName.hashString();
+                    String currentHashedName = currentName.HashString();
                     if (currentHashedName == hashString)
                     {
                         name = currentName;
@@ -632,9 +635,9 @@ namespace RSDKv5
             }
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            name.write(writer);
+            name.Write(writer);
             writer.Write((byte)type);
         }
     }
@@ -692,15 +695,15 @@ namespace RSDKv5
         /// </summary>
         Vector2 value_vector2 = new Vector2();
         /// <summary>
-        /// the unknown type value of the variable
+        /// the float value of the variable
         /// </summary>
-        int value_unknown = 0;
+        float value_float = 0.0f;
         /// <summary>
-        /// the colour value of the variable
+        /// the color value of the variable
         /// </summary>
         Color value_color = new Color(0xFF, 0x00, 0xFF);
 
-        public VariableTypes type = VariableTypes.UINT8;
+        public VariableTypes type = VariableTypes.UInt8;
         #endregion
 
         #region Accessors
@@ -710,41 +713,55 @@ namespace RSDKv5
             {
                 switch (type)
                 {
-                    case VariableTypes.UINT8:
+                    case VariableTypes.UInt8:
                         value_uint8 = 0;
                         break;
-                    case VariableTypes.UINT16:
+
+                    case VariableTypes.UInt16:
                         value_uint16 = 0;
                         break;
-                    case VariableTypes.UINT32:
+
+                    case VariableTypes.UInt32:
                         value_uint32 = 0;
                         break;
-                    case VariableTypes.INT8:
+
+                    case VariableTypes.Int8:
                         value_int8 = 0;
                         break;
-                    case VariableTypes.INT16:
+
+                    case VariableTypes.Int16:
                         value_int16 = 0;
                         break;
-                    case VariableTypes.INT32:
+
+                    case VariableTypes.Int32:
                         value_int32 = 0;
                         break;
-                    case VariableTypes.ENUM:
+
+                    case VariableTypes.Enum:
                         value_enum = 0;
                         break;
-                    case VariableTypes.BOOL:
+
+                    case VariableTypes.Bool:
                         value_bool = false;
                         break;
-                    case VariableTypes.COLOR:
+
+                    case VariableTypes.Color:
                         value_color = Color.EMPTY;
                         break;
-                    case VariableTypes.VECTOR2:
-                    case VariableTypes.UNKNOWN:
+
+                    case VariableTypes.Vector2:
                         value_vector2.x = 0;
                         value_vector2.y = 0;
                         break;
-                    case VariableTypes.STRING:
+
+                    case VariableTypes.Float:
+                        value_float = 0.0f;
+                        break;
+
+                    case VariableTypes.String:
                         value_string = string.Empty;
                         break;
+
                     default:
                         throw new Exception("Unexpected value type.");
 
@@ -753,63 +770,63 @@ namespace RSDKv5
         }
         public byte ValueUInt8
         {
-            get { checkType(VariableTypes.UINT8); return value_uint8; }
-            set { checkType(VariableTypes.UINT8); value_uint8 = value; }
+            get { checkType(VariableTypes.UInt8); return value_uint8; }
+            set { checkType(VariableTypes.UInt8); value_uint8 = value; }
         }
         public ushort ValueUInt16
         {
-            get { checkType(VariableTypes.UINT16); return value_uint16; }
-            set { checkType(VariableTypes.UINT16); value_uint16 = value; }
+            get { checkType(VariableTypes.UInt16); return value_uint16; }
+            set { checkType(VariableTypes.UInt16); value_uint16 = value; }
         }
         public uint ValueUInt32
         {
-            get { checkType(VariableTypes.UINT32); return value_uint32; }
-            set { checkType(VariableTypes.UINT32); value_uint32 = value; }
+            get { checkType(VariableTypes.UInt32); return value_uint32; }
+            set { checkType(VariableTypes.UInt32); value_uint32 = value; }
         }
         public sbyte ValueInt8
         {
-            get { checkType(VariableTypes.INT8); return value_int8; }
-            set { checkType(VariableTypes.INT8); value_int8 = value; }
+            get { checkType(VariableTypes.Int8); return value_int8; }
+            set { checkType(VariableTypes.Int8); value_int8 = value; }
         }
         public short ValueInt16
         {
-            get { checkType(VariableTypes.INT16); return value_int16; }
-            set { checkType(VariableTypes.INT16); value_int16 = value; }
+            get { checkType(VariableTypes.Int16); return value_int16; }
+            set { checkType(VariableTypes.Int16); value_int16 = value; }
         }
         public int ValueInt32
         {
-            get { checkType(VariableTypes.INT32); return value_int32; }
-            set { checkType(VariableTypes.INT32); value_int32 = value; }
+            get { checkType(VariableTypes.Int32); return value_int32; }
+            set { checkType(VariableTypes.Int32); value_int32 = value; }
         }
         public int ValueEnum
         {
-            get { checkType(VariableTypes.ENUM); return value_enum; }
-            set { checkType(VariableTypes.ENUM); value_enum = value; }
+            get { checkType(VariableTypes.Enum); return value_enum; }
+            set { checkType(VariableTypes.Enum); value_enum = value; }
         }
         public bool ValueBool
         {
-            get { checkType(VariableTypes.BOOL); return value_bool; }
-            set { checkType(VariableTypes.BOOL); value_bool = value; }
+            get { checkType(VariableTypes.Bool); return value_bool; }
+            set { checkType(VariableTypes.Bool); value_bool = value; }
         }
         public string ValueString
         {
-            get { checkType(VariableTypes.STRING); return value_string; }
-            set { checkType(VariableTypes.STRING); value_string = value; }
+            get { checkType(VariableTypes.String); return value_string; }
+            set { checkType(VariableTypes.String); value_string = value; }
         }
         public Vector2 ValueVector2
         {
-            get { checkType(VariableTypes.VECTOR2); return value_vector2; }
-            set { checkType(VariableTypes.VECTOR2); value_vector2 = value; }
+            get { checkType(VariableTypes.Vector2); return value_vector2; }
+            set { checkType(VariableTypes.Vector2); value_vector2 = value; }
         }
-        private int ValueUnknown
+        private float ValueFloat
         {
-            get { checkType(VariableTypes.UNKNOWN); return value_unknown; }
-            set { checkType(VariableTypes.UNKNOWN); value_unknown = value; }
+            get { checkType(VariableTypes.Float); return value_float; }
+            set { checkType(VariableTypes.Float); value_float = value; }
         }
         public Color ValueColor
         {
-            get { checkType(VariableTypes.COLOR); return value_color; }
-            set { checkType(VariableTypes.COLOR); value_color = value; }
+            get { checkType(VariableTypes.Color); return value_color; }
+            set { checkType(VariableTypes.Color); value_color = value; }
         }
         #endregion
 
@@ -836,6 +853,7 @@ namespace RSDKv5
             n.value_bool = value_bool;
             n.value_string = value_string;
             n.value_vector2 = value_vector2;
+            n.value_float = value_float;
             n.value_color = value_color;
 
             return n;
@@ -843,94 +861,116 @@ namespace RSDKv5
         public VariableValue(Reader reader, VariableTypes type)
         {
             this.type = type;
-            read(reader);
+            Read(reader);
         }
         #endregion
 
         #region Read/Write
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             switch (type)
             {
-                case VariableTypes.UINT8:
+                case VariableTypes.UInt8:
                     value_uint8 = reader.ReadByte();
                     break;
-                case VariableTypes.UINT16:
+
+                case VariableTypes.UInt16:
                     value_uint16 = reader.ReadUInt16();
                     break;
-                case VariableTypes.UINT32:
+
+                case VariableTypes.UInt32:
                     value_uint32 = reader.ReadUInt32();
                     break;
-                case VariableTypes.INT8:
+
+                case VariableTypes.Int8:
                     value_int8 = reader.ReadSByte();
                     break;
-                case VariableTypes.INT16:
+
+                case VariableTypes.Int16:
                     value_int16 = reader.ReadInt16();
                     break;
-                case VariableTypes.INT32:
+
+                case VariableTypes.Int32:
                     value_int32 = reader.ReadInt32();
                     break;
-                case VariableTypes.ENUM:
+
+                case VariableTypes.Enum:
                     value_enum = reader.ReadInt32();
                     break;
-                case VariableTypes.BOOL:
-                    value_bool = reader.readBool32();
+
+                case VariableTypes.Bool:
+                    value_bool = reader.ReadBool32();
                     break;
-                case VariableTypes.STRING:
-                    value_string = reader.readRSDKUTF16String();
+
+                case VariableTypes.String:
+                    value_string = reader.ReadStringRSDK_UTF16();
                     break;
-                case VariableTypes.VECTOR2:
+
+                case VariableTypes.Vector2:
                     value_vector2.x = reader.ReadInt32();
                     value_vector2.y = reader.ReadInt32();
                     break;
-                case VariableTypes.UNKNOWN:
-                    value_unknown = reader.ReadInt32();
+
+                case VariableTypes.Float:
+                    value_float = reader.ReadSingle();
                     break;
-                case VariableTypes.COLOR:
+
+                case VariableTypes.Color:
                     value_color = new Color(reader);
                     break;
             }
         }
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             switch (type)
             {
-                case VariableTypes.UINT8:
+                case VariableTypes.UInt8:
                     writer.Write(value_uint8);
                     break;
-                case VariableTypes.UINT16:
+
+                case VariableTypes.UInt16:
                     writer.Write(value_uint16);
                     break;
-                case VariableTypes.UINT32:
+
+                case VariableTypes.UInt32:
                     writer.Write(value_uint32);
                     break;
-                case VariableTypes.INT8:
+
+                case VariableTypes.Int8:
                     writer.Write(value_int8);
                     break;
-                case VariableTypes.INT16:
+
+                case VariableTypes.Int16:
                     writer.Write(value_int16);
                     break;
-                case VariableTypes.INT32:
+
+                case VariableTypes.Int32:
                     writer.Write(value_int32);
                     break;
-                case VariableTypes.ENUM:
+
+                case VariableTypes.Enum:
                     writer.Write(value_enum);
                     break;
-                case VariableTypes.BOOL:
-                    writer.writeBool32(value_bool);
+
+                case VariableTypes.Bool:
+                    writer.WriteBool32(value_bool);
                     break;
-                case VariableTypes.STRING:
-                    writer.writeRSDKUTF16String(value_string);
+
+                case VariableTypes.String:
+                    writer.WriteStringRSDK_UTF16(value_string);
                     break;
-                case VariableTypes.VECTOR2:
+
+                case VariableTypes.Vector2:
                     writer.Write(value_vector2.x);
                     writer.Write(value_vector2.y);
                     break;
-                case VariableTypes.UNKNOWN:
-                    writer.Write(value_unknown);
+
+                case VariableTypes.Float:
+                    writer.Write(value_float);
                     break;
-                case VariableTypes.COLOR:
-                    value_color.write(writer);
+
+                case VariableTypes.Color:
+                    value_color.Write(writer);
                     break;
             }
         }
@@ -941,30 +981,42 @@ namespace RSDKv5
         {
             switch (type)
             {
-                case VariableTypes.UINT8:
+                case VariableTypes.UInt8:
                     return value_uint8.ToString();
-                case VariableTypes.UINT16:
+
+                case VariableTypes.UInt16:
                     return value_uint16.ToString();
-                case VariableTypes.UINT32:
+
+                case VariableTypes.UInt32:
                     return value_uint32.ToString();
-                case VariableTypes.INT8:
+
+                case VariableTypes.Int8:
                     return value_int8.ToString();
-                case VariableTypes.INT16:
+
+                case VariableTypes.Int16:
                     return value_int16.ToString();
-                case VariableTypes.INT32:
+
+                case VariableTypes.Int32:
                     return value_int32.ToString();
-                case VariableTypes.ENUM:
+
+                case VariableTypes.Enum:
                     return value_enum.ToString();
-                case VariableTypes.BOOL:
+
+                case VariableTypes.Bool:
                     return value_bool.ToString();
-                case VariableTypes.STRING:
+
+                case VariableTypes.String:
                     return value_string.ToString();
-                case VariableTypes.VECTOR2:
+
+                case VariableTypes.Vector2:
                     return value_vector2.ToString();
-                case VariableTypes.UNKNOWN:
-                    return value_unknown.ToString();
-                case VariableTypes.COLOR:
+
+                case VariableTypes.Float:
+                    return value_float.ToString();
+
+                case VariableTypes.Color:
                     return value_color.ToString();
+
                 default:
                     return "Unhandled Type for ToString()";
             }
@@ -977,30 +1029,42 @@ namespace RSDKv5
                 VariableValue compareValue = (obj as VariableValue);
                 switch (compareValue.type)
                 {
-                    case VariableTypes.UINT8:
+                    case VariableTypes.UInt8:
                         return compareValue.ValueUInt8 == ValueUInt8;
-                    case VariableTypes.UINT16:
+
+                    case VariableTypes.UInt16:
                         return compareValue.ValueUInt16 == ValueUInt16;
-                    case VariableTypes.UINT32:
+
+                    case VariableTypes.UInt32:
                         return compareValue.ValueUInt32 == ValueUInt32;
-                    case VariableTypes.INT8:
+
+                    case VariableTypes.Int8:
                         return compareValue.ValueInt8 == ValueInt8;
-                    case VariableTypes.INT16:
+
+                    case VariableTypes.Int16:
                         return compareValue.ValueInt16 == ValueInt16;
-                    case VariableTypes.INT32:
+
+                    case VariableTypes.Int32:
                         return compareValue.ValueInt32 == ValueInt32;
-                    case VariableTypes.ENUM:
+
+                    case VariableTypes.Enum:
                         return compareValue.ValueEnum == ValueEnum;
-                    case VariableTypes.BOOL:
+
+                    case VariableTypes.Bool:
                         return compareValue.ValueBool == ValueBool;
-                    case VariableTypes.STRING:
+
+                    case VariableTypes.String:
                         return compareValue.ValueString == ValueString;
-                    case VariableTypes.VECTOR2:
+
+                    case VariableTypes.Vector2:
                         return compareValue.ValueVector2.Equals(ValueVector2);
-                    case VariableTypes.UNKNOWN:
-                        return compareValue.ValueUnknown == ValueUnknown;
-                    case VariableTypes.COLOR:
+
+                    case VariableTypes.Float:
+                        return compareValue.ValueFloat == ValueFloat;
+
+                    case VariableTypes.Color:
                         return compareValue.ValueColor.Equals(ValueColor);
+
                     default:
                         break;
                 }
@@ -1040,10 +1104,10 @@ namespace RSDKv5
 
         public SceneObject(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
         {
-            read(reader, objectNames, variableNames);
+            Read(reader, objectNames, variableNames);
         }
 
-        public void read(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
+        public void Read(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
         {
             name = new NameIdentifier(reader);
 
@@ -1058,11 +1122,11 @@ namespace RSDKv5
             // if we have possible names, search em
             if (objectNames != null)
             {
-                string hashString = name.hashString();
+                string hashString = name.HashString();
                 foreach (string varName in objectNames)
                 {
                     NameIdentifier currentName = new NameIdentifier(varName);
-                    string currentHashedName = currentName.hashString();
+                    string currentHashedName = currentName.HashString();
                     if (currentHashedName == hashString)
                     {
                         name = currentName;
@@ -1072,17 +1136,17 @@ namespace RSDKv5
             }
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            name.write(writer);
+            name.Write(writer);
 
             writer.Write((byte)(variables.Count + 1));
             foreach (VariableInfo variable in variables)
-                variable.write(writer);
+                variable.Write(writer);
 
             writer.Write((ushort)entities.Count);
             foreach (SceneEntity entity in entities)
-                entity.write(writer);
+                entity.Write(writer);
         }
     }
 
@@ -1144,14 +1208,14 @@ namespace RSDKv5
 
         public SceneEntity(Reader reader, SceneObject type)
         {
-            read(reader, type);
+            Read(reader, type);
         }
 
-        public void read(Reader reader, SceneObject type)
+        public void Read(Reader reader, SceneObject type)
         {
             this.type = type;
             slotID = reader.ReadUInt16();
-            //a position, made of 8 bytes, 4 for X, 4 for Y
+            //a position, made of 8 bytes, 4 for X, 4 for Y. shifted by 16 bits (0x10000 == 1.0)
             xpos = reader.ReadInt32();
             ypos = reader.ReadInt32();
 
@@ -1159,7 +1223,7 @@ namespace RSDKv5
                 variables.Add(new VariableValue(reader, variable.type));
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(slotID);
 
@@ -1167,7 +1231,7 @@ namespace RSDKv5
             writer.Write(ypos);
 
             foreach (VariableValue variable in variables)
-                variable.write(writer);
+                variable.Write(writer);
         }
     }
     #endregion
@@ -1209,13 +1273,13 @@ namespace RSDKv5
 
         public Scene(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
         {
-            read(reader, objectNames, variableNames);
+            Read(reader, objectNames, variableNames);
         }
 
-        public void read(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
+        public void Read(Reader reader, List<string> objectNames = null, List<string> variableNames = null)
         {
             // Load scene
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid Scene v5 signature");
@@ -1236,41 +1300,41 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Stream stream)
+        public void Write(Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             if (layers.Count >= 8)
             {
                 writer.Close();
-                throw new Exception("Invalid Scene v5 File! Layer Count exeeds maximum of 8!");
+                throw new Exception("Invalid Scene v5 File! Layer Count exceeds maximum of 8!");
             }
 
             // Header
             writer.Write(signature);
 
             // Editor
-            editorMetadata.write(writer);
+            editorMetadata.Write(writer);
 
             // Layers
             writer.Write((byte)layers.Count);
             foreach (SceneLayer layer in layers)
-                layer.write(writer);
+                layer.Write(writer);
 
             // Objects
             writer.Write((byte)objects.Count);
             foreach (SceneObject obj in objects)
-                obj.write(writer);
+                obj.Write(writer);
 
             writer.Close();
         }

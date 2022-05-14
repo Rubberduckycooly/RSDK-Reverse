@@ -74,7 +74,7 @@
     <Compile Include="Backgrounds.cs" />
     <Compile Include="Bitmap.cs" />
     <Compile Include="Bytecode.cs" />
-    <Compile Include="DataFile.cs" />
+    <Compile Include="DataPack.cs" />
     <Compile Include="Gif.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Tiles128x128.cs" />

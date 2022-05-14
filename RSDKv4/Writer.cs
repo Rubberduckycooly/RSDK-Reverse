@@ -9,15 +9,38 @@ namespace RSDKv4
 
         public Writer(string file) : base(File.Open(file, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)) { }
 
-        public void seek(long position, SeekOrigin org)
+        public void Seek(long position, SeekOrigin org)
         {
             BaseStream.Seek(position, org);
         }
 
-        public void writeRSDKString(string val)
+        public void WriteStringRSDK(string str)
         {
-            base.Write((byte)val.Length);
-            base.Write(new UTF8Encoding().GetBytes(val));
+            base.Write((byte)str.Length);
+            base.Write(new UTF8Encoding().GetBytes(str));
+        }
+
+        public void WriteText(string str = "")
+        {
+            for (int i = 0; i < str.Length; ++i) Write((byte)str[i]);
+        }
+
+        public void WriteLine(string str = "", byte eolFormat = 0)
+        {
+            for (int i = 0; i < str.Length; ++i) Write((byte)str[i]);
+
+            switch (eolFormat)
+            {
+                default:
+                case 0: Write((byte)'\n'); break;
+
+                case 1:
+                    Write((byte)'\r');
+                    Write((byte)'\n');
+                    break;
+
+                case 2: Write((byte)'\r'); break;
+            }
         }
     }
 }

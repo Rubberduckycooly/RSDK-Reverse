@@ -8,14 +8,17 @@ namespace RSDKv4
         /// the stageconfig palette (index 96-128)
         /// </summary>
         public Palette stagePalette = new Palette();
+
         /// <summary>
         /// the list of stage-specific objects
         /// </summary>
         public List<GameConfig.ObjectInfo> objects = new List<GameConfig.ObjectInfo>();
+
         /// <summary>
         /// the list of stage-specific SoundFX
         /// </summary>
         public List<GameConfig.SoundInfo> soundFX = new List<GameConfig.SoundInfo>();
+
         /// <summary>
         /// whether or not to load the global objects in this stage
         /// </summary>
@@ -29,16 +32,16 @@ namespace RSDKv4
 
         public StageConfig(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             // General
             loadGlobalObjects = reader.ReadBoolean();
 
             // Palettes
-            stagePalette.read(reader, 2);
+            stagePalette.Read(reader, 2);
 
             // SoundFX
             soundFX.Clear();
@@ -46,13 +49,13 @@ namespace RSDKv4
             for (int i = 0; i < sfxCount; ++i)
             {
                 GameConfig.SoundInfo info = new GameConfig.SoundInfo();
-                info.name = reader.readRSDKString();
+                info.name = reader.ReadStringRSDK();
 
                 soundFX.Add(info);
             }
 
             foreach (GameConfig.SoundInfo info in soundFX)
-                info.path = reader.readRSDKString();
+                info.path = reader.ReadStringRSDK();
 
             // Objects
             objects.Clear();
@@ -60,54 +63,54 @@ namespace RSDKv4
             for (int i = 0; i < objectCount; ++i)
             {
                 GameConfig.ObjectInfo info = new GameConfig.ObjectInfo();
-                info.name = reader.readRSDKString();
+                info.name = reader.ReadStringRSDK();
 
                 objects.Add(info);
             }
 
             foreach (GameConfig.ObjectInfo info in objects)
-                info.script = reader.readRSDKString();
+                info.script = reader.ReadStringRSDK();
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // General
             writer.Write(loadGlobalObjects);
 
             // Palettes
-            stagePalette.write(writer);
+            stagePalette.Write(writer);
 
             // SoundFX
             writer.Write((byte)soundFX.Count);
 
             foreach (GameConfig.SoundInfo info in soundFX)
-                writer.writeRSDKString(info.name);
+                writer.WriteStringRSDK(info.name);
 
             foreach (GameConfig.SoundInfo info in soundFX)
-                writer.writeRSDKString(info.path);
+                writer.WriteStringRSDK(info.path);
 
             // Objects
             writer.Write((byte)objects.Count);
 
             foreach (GameConfig.ObjectInfo info in objects)
-                writer.writeRSDKString(info.name);
+                writer.WriteStringRSDK(info.name);
 
             foreach (GameConfig.ObjectInfo info in objects)
-                writer.writeRSDKString(info.script);
+                writer.WriteStringRSDK(info.script);
 
             writer.Close();
         }

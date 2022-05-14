@@ -2,16 +2,6 @@
 {
     public class TileConfig
     {
-        /// <summary>
-        /// 1024 tiles, always
-        /// </summary>
-        private const int TILES_COUNT = 0x400;
-
-        /// <summary>
-        /// A list of all the mask values
-        /// </summary>
-        public CollisionMask[][] collisionMasks = new CollisionMask[2][];
-
         public class CollisionMask
         {
             public class HeightMask
@@ -20,7 +10,7 @@
 
                 public byte height = 0;
                 public bool solid = false;
-            };
+            }
 
             /// <summary>
             /// collision values for each column
@@ -62,10 +52,10 @@
 
             public CollisionMask(Reader reader) : this()
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 byte flags = reader.ReadByte();
                 flipY = (flags >> 4) != 0;
@@ -75,7 +65,7 @@
                 rWallAngle = reader.ReadByte();
                 roofAngle = reader.ReadByte();
 
-                byte[] collision = reader.readBytes(8);
+                byte[] collision = reader.ReadBytes(8);
 
                 int collisionSolid = reader.ReadByte() << 8;
                 collisionSolid |= reader.ReadByte();
@@ -87,12 +77,12 @@
                 }
 
                 for (int c = 0; c < 16; c++)
-                    heightMasks[c].solid = getBit(collisionSolid, c);
+                    heightMasks[c].solid = GetBit(collisionSolid, c);
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                writer.Write(addNibbles(flipY ? (byte)1 : (byte)0, flags));
+                writer.Write(AddNybbles(flipY ? (byte)1 : (byte)0, flags));
                 writer.Write(floorAngle);
                 writer.Write(lWallAngle);
                 writer.Write(rWallAngle);
@@ -101,7 +91,7 @@
                 byte[] collision = new byte[8];
 
                 for (int c = 0; c < 8; c++)
-                    collision[c] = addNibbles(heightMasks[(c * 2) + 0].height, heightMasks[(c * 2) + 1].height);
+                    collision[c] = AddNybbles(heightMasks[(c * 2) + 0].height, heightMasks[(c * 2) + 1].height);
 
                 int collisionSolid = 0;
                 for (int c = 0; c < 16; c++)
@@ -116,23 +106,28 @@
                 writer.Write((byte)((collisionSolid >> 0) & 0xFF)); // Write Collision Solidity byte 2
             }
 
-            private byte addNibbles(byte a, byte b)
+            private byte AddNybbles(byte a, byte b)
             {
                 return (byte)((a & 0xF) << 4 | (b & 0xF));
             }
 
-            private bool getBit(int b, int pos)
+            private bool GetBit(int b, int pos)
             {
                 return (b & (1 << pos)) != 0;
             }
         }
 
+        /// <summary>
+        /// A list of all the mask values
+        /// </summary>
+        public CollisionMask[][] collisionMasks = new CollisionMask[2][];
+
         public TileConfig()
         {
             for (int p = 0; p < 2; ++p)
             {
-                collisionMasks[p] = new CollisionMask[TILES_COUNT];
-                for (int i = 0; i < TILES_COUNT; ++i)
+                collisionMasks[p] = new CollisionMask[0x400];
+                for (int i = 0; i < 0x400; ++i)
                     collisionMasks[p][i] = new CollisionMask();
             }
         }
@@ -143,43 +138,43 @@
 
         public TileConfig(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             for (int p = 0; p < 2; ++p)
             {
-                collisionMasks[p] = new CollisionMask[TILES_COUNT];
-                for (int i = 0; i < TILES_COUNT; ++i)
-                    collisionMasks[p][i] = new CollisionMask();
+                collisionMasks[p] = new CollisionMask[0x400];
+                for (int c = 0; c < 0x400; ++c)
+                    collisionMasks[p][c] = new CollisionMask();
             }
 
-            for (int i = 0; i < TILES_COUNT; ++i)
+            for (int c = 0; c < 0x400; ++c)
             {
-                collisionMasks[0][i].read(reader);
-                collisionMasks[1][i].read(reader);
+                collisionMasks[0][c].Read(reader);
+                collisionMasks[1][c].Read(reader);
             }
             reader.Close();
         }
 
-
-        public void write(string filename)
+        public void Write(string filename)
         {
-            write(new Writer(filename));
+            Write(new Writer(filename));
         }
 
-        public void write(System.IO.Stream s)
+        public void Write(System.IO.Stream s)
         {
-            write(new Writer(s));
+            Write(new Writer(s));
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            for (int i = 0; i < TILES_COUNT; ++i)
+            for (int c = 0; c < 0x400; ++c)
             {
-                collisionMasks[0][i].write(writer);
-                collisionMasks[1][i].write(writer);
+                collisionMasks[0][c].Write(writer);
+                collisionMasks[1][c].Write(writer);
             }
+
             writer.Close();
         }
 

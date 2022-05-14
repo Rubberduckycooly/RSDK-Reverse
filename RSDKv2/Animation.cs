@@ -120,10 +120,10 @@ namespace RSDKv2
 
                 public Frame(Reader reader)
                 {
-                    read(reader);
+                    Read(reader);
                 }
 
-                public void read(Reader reader)
+                public void Read(Reader reader)
                 {
                     sheet = reader.ReadByte();
                     hitbox = reader.ReadByte();
@@ -135,7 +135,7 @@ namespace RSDKv2
                     pivotY = reader.ReadSByte();
                 }
 
-                public void write(Writer writer)
+                public void Write(Writer writer)
                 {
                     writer.Write(sheet);
                     writer.Write(hitbox);
@@ -177,14 +177,14 @@ namespace RSDKv2
                 set { speed = (byte)(value < 0 ? 0 : value > 1.0 ? 0xF0 : (value * 240)); }
             }
 
-            public AnimationEntry(string name = "New Animation") { this.name = name;  }
+            public AnimationEntry(string name = "New Animation") { this.name = name; }
 
             public AnimationEntry(Reader reader, string name = "New Animation") : this(name)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 short frameCount = reader.ReadByte();
                 speed = reader.ReadByte();
@@ -194,14 +194,14 @@ namespace RSDKv2
                     frames.Add(new Frame(reader));
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write((byte)frames.Count);
                 writer.Write(speed);
                 writer.Write(loopIndex);
 
                 foreach (Frame frame in frames)
-                    frame.write(writer);
+                    frame.Write(writer);
             }
         }
 
@@ -234,10 +234,10 @@ namespace RSDKv2
 
             public Hitbox(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 for (int h = 0; h < (int)HitboxIDs.Count; h++)
                 {
@@ -248,7 +248,7 @@ namespace RSDKv2
                 }
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 for (int h = 0; h < (int)HitboxIDs.Count; h++)
                 {
@@ -290,10 +290,10 @@ namespace RSDKv2
 
         public Animation(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             unknown = reader.ReadBytes(5);
 
@@ -316,35 +316,35 @@ namespace RSDKv2
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            writer.Write(unknown); //No idea what these are
+            writer.Write(unknown); // No idea what these are
 
             // SpriteSheets
             for (int s = 0; s < 4; ++s)
-                writer.writeRSDKString(spriteSheets[s]);
+                writer.WriteStringRSDK(spriteSheets[s]);
 
             // Animations
             writer.Write((byte)animations.Count);
             foreach (AnimationEntry anim in animations)
-                anim.write(writer);
+                anim.Write(writer);
 
             // Hitboxes
             writer.Write((byte)hitboxes.Count);
             foreach (Hitbox hitbox in hitboxes)
-                hitbox.write(writer);
+                hitbox.Write(writer);
 
             writer.Close();
         }

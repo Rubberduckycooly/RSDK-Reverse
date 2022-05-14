@@ -8,14 +8,17 @@ namespace RSDKv2
         /// the stageconfig palette (index 96-128)
         /// </summary>
         public Palette stagePalette = new Palette();
+
         /// <summary>
         /// the list of stage-specific objects scripts
         /// </summary>
         public List<string> objects = new List<string>();
+
         /// <summary>
         /// the list of stage-specific SoundFX paths
         /// </summary>
         public List<string> soundFX = new List<string>();
+
         /// <summary>
         /// whether or not to load the global objects in this stage
         /// </summary>
@@ -29,67 +32,65 @@ namespace RSDKv2
 
         public StageConfig(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             // General
             loadGlobalObjects = reader.ReadBoolean();
 
             // Palettes
-            stagePalette.read(reader, 2);
+            stagePalette.Read(reader, 2);
 
             // Objects
             objects.Clear();
             byte objectCount = reader.ReadByte();
             for (int i = 0; i < objectCount; ++i)
-                objects.Add(reader.readRSDKString());
+                objects.Add(reader.ReadStringRSDK());
 
             // SoundFX
             soundFX.Clear();
             byte sfxCount = reader.ReadByte();
             for (int i = 0; i < sfxCount; ++i)
-                soundFX.Add(reader.readRSDKString());
+                soundFX.Add(reader.ReadStringRSDK());
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // General
             writer.Write(loadGlobalObjects);
 
             // Palettes
-            stagePalette.write(writer);
+            stagePalette.Write(writer);
 
             // Objects
             writer.Write((byte)objects.Count);
 
             foreach (string script in objects)
-                writer.writeRSDKString(script);
+                writer.WriteStringRSDK(script);
 
             // SoundFX
             writer.Write((byte)soundFX.Count);
 
             foreach (string path in soundFX)
-                writer.writeRSDKString(path);
+                writer.WriteStringRSDK(path);
 
             writer.Close();
-
         }
-
     }
 }

@@ -10,13 +10,16 @@ namespace RSDKv2
 
         public Reader(string file) : base(File.Open(file, FileMode.Open, FileAccess.Read, FileShare.Read)) { }
 
-        public byte[] readBytes(long count)
+        public byte[] ReadBytes(long count)
         {
             if (count < 0 || count > Int32.MaxValue)
-                throw new ArgumentOutOfRangeException("requested " + count + " bytes, while only non-negative int32 amount of bytes possible");
+                throw new ArgumentOutOfRangeException($"requested {count} bytes, while only non-negative int32 amount of bytes possible");
+
             byte[] bytes = base.ReadBytes((int)count);
+
             if (bytes.Length < count)
-                throw new EndOfStreamException("requested " + count + " bytes, but got only " + bytes.Length + " bytes");
+                throw new EndOfStreamException($"requested {count} bytes, but got only {bytes.Length} bytes");
+
             return bytes;
         }
 
@@ -25,11 +28,11 @@ namespace RSDKv2
             get { return BaseStream.Position >= BaseStream.Length; }
         }
 
-        public string readRSDKString()
+        public string ReadStringRSDK()
         {
-            return new UTF8Encoding().GetString(readBytes(this.ReadByte()));
+            return new UTF8Encoding().GetString(ReadBytes(this.ReadByte()));
         }
-        public void seek(long position, SeekOrigin org)
+        public void Seek(long position, SeekOrigin org)
         {
             BaseStream.Seek(position, org);
         }

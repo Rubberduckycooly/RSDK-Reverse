@@ -31,6 +31,7 @@ namespace RSDKv1
             /// the filepath to the script
             /// </summary>
             public string script = "Folder/Script.rsf";
+
             /// <summary>
             /// the spritesheet ID for the object
             /// </summary>
@@ -43,18 +44,22 @@ namespace RSDKv1
         /// the stageconfig palette (index 96-128)
         /// </summary>
         public Palette stagePalette = new Palette();
+
         /// <summary>
         /// a list of sheets to add to the global list
         /// </summary>
         public List<string> spriteSheets = new List<string>();
+
         /// <summary>
         /// the list of stage objects
         /// </summary>
         public List<ObjectInfo> objects = new List<ObjectInfo>();
+
         /// <summary>
         /// the list of the stage music tracks
         /// </summary>
         public List<string> musicTracks = new List<string>();
+
         /// <summary>
         /// the list of stage-specific SoundFX
         /// </summary>
@@ -68,19 +73,19 @@ namespace RSDKv1
 
         public StageConfig(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             // Palettes
-            stagePalette.read(reader, 2);
+            stagePalette.Read(reader, 2);
 
             // SpriteSheets
             byte sheetCount = reader.ReadByte();
             spriteSheets.Clear();
             for (int i = 0; i < sheetCount; ++i)
-                spriteSheets.Add(reader.readRSDKString());
+                spriteSheets.Add(reader.ReadStringRSDK());
 
             // Objects
             byte objectCount = reader.ReadByte();
@@ -88,7 +93,7 @@ namespace RSDKv1
             for (int i = 0; i < objectCount; ++i)
             {
                 ObjectInfo info = new ObjectInfo();
-                info.script = reader.readRSDKString();
+                info.script = reader.ReadStringRSDK();
                 objects.Add(info);
             }
 
@@ -99,38 +104,38 @@ namespace RSDKv1
             byte sfxCount = reader.ReadByte();
             soundFX.Clear();
             for (int i = 0; i < sfxCount; ++i)
-                soundFX.Add(reader.readRSDKString());
+                soundFX.Add(reader.ReadStringRSDK());
 
             // Music
             byte trackCount = reader.ReadByte();
             musicTracks.Clear();
             for (int i = 0; i < trackCount; ++i)
-                musicTracks.Add(reader.readRSDKString());
+                musicTracks.Add(reader.ReadStringRSDK());
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Palettes
-            stagePalette.write(writer);
+            stagePalette.Write(writer);
 
             // SpriteSheets
             writer.Write((byte)spriteSheets.Count);
             foreach (string sheet in spriteSheets)
-                writer.writeRSDKString(sheet);
+                writer.WriteStringRSDK(sheet);
 
             // Objects
             writer.Write((byte)objects.Count);
@@ -143,12 +148,12 @@ namespace RSDKv1
             // SoundFX
             writer.Write((byte)soundFX.Count);
             foreach (string path in soundFX)
-                writer.writeRSDKString(path);
+                writer.WriteStringRSDK(path);
 
             // Music
             writer.Write((byte)musicTracks.Count);
             foreach (string track in musicTracks)
-                writer.writeRSDKString(track);
+                writer.WriteStringRSDK(track);
 
             writer.Close();
         }

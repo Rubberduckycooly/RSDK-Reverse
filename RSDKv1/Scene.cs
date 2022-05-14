@@ -38,13 +38,14 @@ namespace RSDKv1
 
             public Entity(Reader reader) : this()
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 // Entity type, 1 byte, unsigned
                 type = reader.ReadByte();
+
                 // Property value, 1 byte, unsigned
                 propertyValue = reader.ReadByte();
 
@@ -57,7 +58,7 @@ namespace RSDKv1
                 ypos |= reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(type);
                 writer.Write(propertyValue);
@@ -98,7 +99,7 @@ namespace RSDKv1
         }
 
         /// <summary>
-        /// the Stage Name (what the titlecard displays)
+        /// the Stage Name (what the TitleCard displays)
         /// </summary>
         public string title = "Stage";
 
@@ -111,6 +112,7 @@ namespace RSDKv1
         /// the starting Music ID for the stage
         /// </summary>
         public TrackIDs initialMusicID = TrackIDs.StageTrack1;
+
         /// <summary>
         /// the initial background ID
         /// </summary>
@@ -120,6 +122,7 @@ namespace RSDKv1
         /// player's Spawn Xpos
         /// </summary>
         public short playerSpawnX;
+
         /// <summary>
         /// player's Spawn Ypos
         /// </summary>
@@ -134,6 +137,7 @@ namespace RSDKv1
         /// stage width (in chunks)
         /// </summary>
         public byte width;
+
         /// <summary>
         /// stage height (in chunks)
         /// </summary>
@@ -156,10 +160,10 @@ namespace RSDKv1
 
         public Scene(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             var fileStream = reader.BaseStream as FileStream;
             string filename = fileStream.Name;
@@ -169,9 +173,10 @@ namespace RSDKv1
             // Tile Layout Loading
             width = reader.ReadByte();
             height = reader.ReadByte();
+
             layout = new byte[height][];
-            for (int i = 0; i < height; i++)
-                layout[i] = new byte[width];
+            for (int y = 0; y < height; y++)
+                layout[y] = new byte[width];
 
             // Read map data from the map file
             for (int y = 0; y < height; y++)
@@ -182,7 +187,7 @@ namespace RSDKv1
             reader.Close();
 
             // Object Layout Loading
-            title = ITMreader.readRSDKString();
+            title = ITMreader.ReadStringRSDK();
 
             initialMusicID = (TrackIDs)ITMreader.ReadByte();
             initialBackgroundID = (BackgroundIDs)ITMreader.ReadByte();
@@ -196,25 +201,25 @@ namespace RSDKv1
             entityCount |= ITMreader.ReadByte();
 
             entities.Clear();
-            for (int i = 0; i < entityCount; i++)
+            for (int e = 0; e < entityCount; e++)
                 entities.Add(new Entity(ITMreader));
 
             ITMreader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Stream stream)
+        public void Write(Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             var fileStream = writer.BaseStream as FileStream;
             string filename = fileStream.Name;
@@ -237,7 +242,7 @@ namespace RSDKv1
             Writer ITMwriter = new Writer(Path.GetDirectoryName(filename) + "\\" + Path.GetFileNameWithoutExtension(filename) + ".itm");
 
             // Save zone name
-            ITMwriter.writeRSDKString(title);
+            ITMwriter.WriteStringRSDK(title);
 
             // Write the Stage Init Data
             ITMwriter.Write((byte)initialMusicID);
@@ -253,7 +258,7 @@ namespace RSDKv1
 
             // Write entities
             foreach (Entity entity in entities)
-                entity.write(ITMwriter);
+                entity.Write(ITMwriter);
 
             ITMwriter.Close();
         }
@@ -263,7 +268,7 @@ namespace RSDKv1
         /// </summary>
         /// <param name="width">The new Width</param>
         /// <param name="height">The new Height</param>
-        public void resize(byte width, byte height)
+        public void Resize(byte width, byte height)
         {
             // first take a backup of the current dimensions
             // then update the internal dimensions
@@ -278,13 +283,13 @@ namespace RSDKv1
             // fill the extended tile arrays with "empty" values
 
             // if we're actaully getting shorter, do nothing!
-            for (byte i = oldHeight; i < this.height; i++)
+            for (byte y = oldHeight; y < this.height; y++)
             {
                 // first create arrays child arrays to the old width
                 // a little inefficient, but at least they'll all be equal sized
-                layout[i] = new byte[oldWidth];
-                for (int j = 0; j < oldWidth; ++j)
-                    layout[i][j] = 0; // fill the new ones with blanks
+                layout[y] = new byte[oldWidth];
+                for (int x = 0; x < oldWidth; ++x)
+                    layout[y][x] = 0; // fill the new ones with blanks
             }
 
             for (byte y = 0; y < this.height; y++)

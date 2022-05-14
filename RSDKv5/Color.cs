@@ -7,51 +7,54 @@ namespace RSDKv5
     public class Color
     {
         /// <summary>
-        /// Colour Red Value
+        /// Color Red Value
         /// </summary>
-        public byte R = 0x00;
+        public byte r = 0x00;
+
         /// <summary>
-        /// Colour Green Value
+        /// Color Green Value
         /// </summary>
-        public byte G = 0x00;
+        public byte g = 0x00;
+
         /// <summary>
-        /// Colour Blue Value
+        /// Color Blue Value
         /// </summary>
-        public byte B = 0x00;
+        public byte b = 0x00;
+        
         /// <summary>
-        /// Colour Alpha Value
+        /// Color Alpha Value
         /// </summary>
-        public byte A = 0xFF;
+        public byte a = 0xFF;
 
         public static Color EMPTY = new Color(0, 0, 0, 0);
 
         public Color(byte R = 0x00, byte G = 0x00, byte B = 0x00, byte A = 0xFF)
         {
-            this.R = R;
-            this.G = G;
-            this.B = B;
-            this.A = A;
+            this.r = R;
+            this.g = G;
+            this.b = B;
+            this.a = A;
         }
 
         public Color(Reader reader, bool paletteClr = false) : this()
         {
-            read(reader, paletteClr);
+            Read(reader, paletteClr);
         }
 
-        public void read(Reader reader, bool paletteClr = false)
+        public void Read(Reader reader, bool paletteClr = false)
         {
             if (paletteClr)
             {
-                R = reader.ReadByte();
-                G = reader.ReadByte();
-                B = reader.ReadByte();
+                r = reader.ReadByte();
+                g = reader.ReadByte();
+                b = reader.ReadByte();
             }
             else
             {
-                B = reader.ReadByte();
-                G = reader.ReadByte();
-                R = reader.ReadByte();
-                A = reader.ReadByte();
+                b = reader.ReadByte();
+                g = reader.ReadByte();
+                r = reader.ReadByte();
+                a = reader.ReadByte();
             }
         }
 
@@ -62,53 +65,53 @@ namespace RSDKv5
                 Color compareValue = (Color)obj;
                 bool isEqual = true;
 
-                if (isEqual && compareValue.R == this.R) isEqual = true;
+                if (isEqual && compareValue.r == this.r) isEqual = true;
                 else if (!isEqual) isEqual = false;
 
-                if (isEqual && compareValue.G == this.G) isEqual = true;
+                if (isEqual && compareValue.g == this.g) isEqual = true;
                 else if (!isEqual) isEqual = false;
 
-                if (isEqual && compareValue.B == this.B) isEqual = true;
+                if (isEqual && compareValue.b == this.b) isEqual = true;
                 else if (!isEqual) isEqual = false;
 
-                if (isEqual && compareValue.A == this.A) isEqual = true;
+                if (isEqual && compareValue.a == this.a) isEqual = true;
                 else if (!isEqual) isEqual = false;
 
                 return isEqual;
             }
-            else return false;
+
+            return false;
         }
 
-        public SystemColor toSystemColors()
+        public SystemColor ToSystemColor()
         {
-            SystemColor returnColor = SystemColor.FromArgb(R, G, B);
-            return returnColor;
+            return SystemColor.FromArgb(r, g, b);
         }
 
-        public Color fromSystemColor(SystemColor color)
+        public Color FromSystemColor(SystemColor color)
         {
-            Color returnColor = new Color();
-            returnColor.R = color.R;
-            returnColor.A = color.A;
-            returnColor.B = color.B;
-            returnColor.G = color.G;
-            return returnColor;
+            Color sysColor = new Color();
+            sysColor.r = color.R;
+            sysColor.a = color.A;
+            sysColor.b = color.B;
+            sysColor.g = color.G;
+            return sysColor;
         }
 
-        public void write(Writer writer, bool paletteClr = false)
+        public void Write(Writer writer, bool paletteClr = false)
         {
             if (paletteClr)
             {
-                writer.Write(R);
-                writer.Write(G);
-                writer.Write(B);
+                writer.Write(r);
+                writer.Write(g);
+                writer.Write(b);
             }
             else
             {
-                writer.Write(B);
-                writer.Write(G);
-                writer.Write(R);
-                writer.Write(A);
+                writer.Write(b);
+                writer.Write(g);
+                writer.Write(r);
+                writer.Write(a);
             }
         }
     }

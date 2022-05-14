@@ -33,18 +33,25 @@ namespace RSDKv5
 
                 public SceneInfo(Reader reader, bool readFilter = true)
                 {
-                    name    = reader.readRSDKString();
-                    folder  = reader.readRSDKString();
-                    id      = reader.readRSDKString();
+                    Read(reader, readFilter);
+                }
+
+                public void Read(Reader reader, bool readFilter = true)
+                {
+                    name = reader.ReadStringRSDK();
+                    folder = reader.ReadStringRSDK();
+                    id = reader.ReadStringRSDK();
+
                     if (readFilter)
                         filter = reader.ReadByte();
                 }
 
-                public void write(Writer writer, bool writeFilter = true)
+                public void Write(Writer writer, bool writeFilter = true)
                 {
-                    writer.writeRSDKString(name);
-                    writer.writeRSDKString(folder);
-                    writer.writeRSDKString(id);
+                    writer.WriteStringRSDK(name);
+                    writer.WriteStringRSDK(folder);
+                    writer.WriteStringRSDK(id);
+
                     if (writeFilter)
                         writer.Write(filter);
                 }
@@ -63,12 +70,12 @@ namespace RSDKv5
 
             public SceneCategory(Reader reader, bool readFilter = true)
             {
-                read(reader, readFilter);
+                Read(reader, readFilter);
             }
 
-            public void read(Reader reader, bool readFilter = true)
+            public void Read(Reader reader, bool readFilter = true)
             {
-                name = reader.readRSDKString();
+                name = reader.ReadStringRSDK();
 
                 list.Clear();
                 byte sceneCount = reader.ReadByte();
@@ -76,13 +83,13 @@ namespace RSDKv5
                     list.Add(new SceneInfo(reader, readFilter));
             }
 
-            public void write(Writer writer, bool writeFilter = true)
+            public void Write(Writer writer, bool writeFilter = true)
             {
-                writer.writeRSDKString(name);
+                writer.WriteStringRSDK(name);
 
                 writer.Write((byte)list.Count);
                 foreach (SceneInfo scene in list)
-                    scene.write(writer, writeFilter);
+                    scene.Write(writer, writeFilter);
             }
         }
 
@@ -101,21 +108,23 @@ namespace RSDKv5
 
             public GlobalVariable(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 offset = reader.ReadInt32();
-                int valueCount = reader.ReadInt32();
+
                 values.Clear();
+                int valueCount = reader.ReadInt32();
                 for (int i = 0; i < valueCount; ++i)
                     values.Add(reader.ReadInt32());
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(offset);
+
                 writer.Write(values.Count);
                 foreach (int value in values)
                     writer.Write(value);
@@ -138,18 +147,18 @@ namespace RSDKv5
 
             public SoundInfo(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                name = reader.readRSDKString();
+                name = reader.ReadStringRSDK();
                 maxConcurrentPlay = reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                writer.writeRSDKString(name);
+                writer.WriteStringRSDK(name);
                 writer.Write(maxConcurrentPlay);
             }
         }
@@ -158,11 +167,6 @@ namespace RSDKv5
         /// the signature of the file format
         /// </summary>
         private static readonly byte[] signature = new byte[] { (byte)'C', (byte)'F', (byte)'G', 0 };
-
-        /// <summary>
-        /// how many palettes are in the file
-        /// </summary>
-        private const int PALETTES_COUNT = 8;
 
         /// <summary>
         /// the name of the game (also window name)
@@ -193,7 +197,7 @@ namespace RSDKv5
         /// <summary>
         /// the palettes in the file
         /// </summary>
-        public Palette[] palettes = new Palette[PALETTES_COUNT];
+        public Palette[] palettes = new Palette[8];
         /// <summary>
         /// the list of global SoundFX
         /// </summary>
@@ -218,33 +222,33 @@ namespace RSDKv5
         public GameConfig(string filename)
         {
             using (var reader = new Reader(filename))
-                read(reader);
+                Read(reader);
         }
 
         public GameConfig(Stream stream)
         {
             using (var reader = new Reader(stream))
-                read(reader);
+                Read(reader);
         }
 
         public GameConfig(Reader reader, bool usePlusFormat = true)
         {
-            read(reader, usePlusFormat);
+            Read(reader, usePlusFormat);
         }
 
-        public void read(Reader reader, bool usePlusFormat = true)
+        public void Read(Reader reader, bool usePlusFormat = true)
         {
             // Header
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid GameConfig v5 signature");
             }
 
             // General
-            gameTitle = reader.readRSDKString();
-            gameSubtitle = reader.readRSDKString();
-            gameVersion = reader.readRSDKString();
+            gameTitle = reader.ReadStringRSDK();
+            gameSubtitle = reader.ReadStringRSDK();
+            gameVersion = reader.ReadStringRSDK();
 
             startingActiveList = reader.ReadByte();
             startingListPos = reader.ReadUInt16();
@@ -253,10 +257,10 @@ namespace RSDKv5
             byte objectCount = reader.ReadByte();
             objects.Clear();
             for (int i = 0; i < objectCount; ++i)
-                objects.Add(reader.readRSDKString());
+                objects.Add(reader.ReadStringRSDK());
 
             // Palettes 
-            for (int i = 0; i < PALETTES_COUNT; ++i)
+            for (int i = 0; i < 8; ++i)
                 palettes[i] = new Palette(reader);
 
             // SoundFX
@@ -268,6 +272,7 @@ namespace RSDKv5
             // Scenes
             // total scene count, used by RSDKv5 to allocate scenes before they're read, its managed automatically here
             ushort totalSceneCount = reader.ReadUInt16();
+
             byte categoryCount = reader.ReadByte();
 
             categories.Clear();
@@ -279,31 +284,31 @@ namespace RSDKv5
             globalVariables.Clear();
             for (int i = 0; i < globalVariableCount; ++i)
                 globalVariables.Add(new GlobalVariable(reader));
-            
+
             reader.Close();
         }
 
-        public void write(string filename, bool usePlusFormat = true)
+        public void Write(string filename, bool usePlusFormat = true)
         {
             using (Writer writer = new Writer(filename))
-                write(writer, usePlusFormat);
+                Write(writer, usePlusFormat);
         }
 
-        public void write(Stream stream, bool usePlusFormat = true)
+        public void Write(Stream stream, bool usePlusFormat = true)
         {
             using (Writer writer = new Writer(stream))
-                write(writer, usePlusFormat);
+                Write(writer, usePlusFormat);
         }
 
-        public void write(Writer writer, bool usePlusFormat = true)
+        public void Write(Writer writer, bool usePlusFormat = true)
         {
             // Header
             writer.Write(signature);
 
             // General
-            writer.writeRSDKString(gameTitle);
-            writer.writeRSDKString(gameSubtitle);
-            writer.writeRSDKString(gameVersion);
+            writer.WriteStringRSDK(gameTitle);
+            writer.WriteStringRSDK(gameSubtitle);
+            writer.WriteStringRSDK(gameVersion);
 
             writer.Write(startingActiveList);
             writer.Write(startingListPos);
@@ -311,16 +316,16 @@ namespace RSDKv5
             // Objects
             writer.Write((byte)objects.Count);
             foreach (string name in objects)
-                writer.writeRSDKString(name);
+                writer.WriteStringRSDK(name);
 
             // Palettes
             foreach (Palette palette in palettes)
-                palette.write(writer);
+                palette.Write(writer);
 
             // SoundFX
             writer.Write((byte)soundFX.Count);
             foreach (SoundInfo sfx in soundFX)
-                sfx.write(writer);
+                sfx.Write(writer);
 
             // Total Scene Count
             writer.Write((ushort)categories.Select(x => x.list.Count).Sum());
@@ -328,12 +333,12 @@ namespace RSDKv5
             // Scenes
             writer.Write((byte)categories.Count);
             foreach (SceneCategory cat in categories)
-                cat.write(writer, usePlusFormat);
+                cat.Write(writer, usePlusFormat);
 
             // Global Variables
             writer.Write((byte)globalVariables.Count);
             foreach (GlobalVariable c in globalVariables)
-                c.write(writer);
+                c.Write(writer);
         }
     }
 }

@@ -1,119 +1,150 @@
-﻿using System;
-
+﻿using SystemColor = System.Drawing.Color;
 
 namespace RSDKv1
 {
-
     public class Palette
     {
         public class Color
         {
             /// <summary>
-            /// Colour Red Value
+            /// Color Red Value
             /// </summary>
-            public byte R = 0x00;
-            /// <summary>
-            /// Colour Green Value
-            /// </summary>
-            public byte G = 0x00;
-            /// <summary>
-            /// Colour Blue Value
-            /// </summary>
-            public byte B = 0x00;
+            public byte r;
 
-            public Color(byte R = 0, byte G = 0, byte B = 0)
+            /// <summary>
+            /// Color Green Value
+            /// </summary>
+            public byte g;
+
+            /// <summary>
+            /// Color Blue Value
+            /// </summary>
+            public byte b;
+
+            public Color(byte r = 0, byte g = 0, byte b = 0)
             {
-                this.R = R;
-                this.G = G;
-                this.B = B;
+                this.r = r;
+                this.g = g;
+                this.b = b;
             }
 
             public Color(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                R = reader.ReadByte();
-                G = reader.ReadByte();
-                B = reader.ReadByte();
+                r = reader.ReadByte();
+                g = reader.ReadByte();
+                b = reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                writer.Write(R);
-                writer.Write(G);
-                writer.Write(B);
+                writer.Write(r);
+                writer.Write(g);
+                writer.Write(b);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is Color)
+                {
+                    Color compareValue = (Color)obj;
+                    bool isEqual = true;
+
+                    if (isEqual && compareValue.r == this.r) isEqual = true;
+                    else if (!isEqual) isEqual = false;
+
+                    if (isEqual && compareValue.g == this.g) isEqual = true;
+                    else if (!isEqual) isEqual = false;
+
+                    if (isEqual && compareValue.b == this.b) isEqual = true;
+                    else if (!isEqual) isEqual = false;
+
+                    return isEqual;
+                }
+
+                return false;
+            }
+
+            public SystemColor ToSystemColor()
+            {
+                return SystemColor.FromArgb(r, g, b);
+            }
+
+            public Color FromSystemColor(SystemColor color)
+            {
+                Color sysColor = new Color();
+                sysColor.r = color.R;
+                sysColor.b = color.B;
+                sysColor.g = color.G;
+                return sysColor;
             }
         }
 
         /// <summary>
-        /// how many colours for each row (always 16)
+        /// an array of the colors
         /// </summary>
-        public int COLORS_PER_ROW = 0x10;
-
-        /// <summary>
-        /// an array of the colours
-        /// </summary>
-        public Palette.Color[][] colors;
+        public Color[][] colors;
 
         public Palette(int rows = 2)
         {
             int palRows = rows;
 
-            colors = new Palette.Color[palRows][];
+            colors = new Color[palRows][];
             for (int r = 0; r < palRows; r++)
             {
-                colors[r] = new Palette.Color[COLORS_PER_ROW];
-                for (int c = 0; c < COLORS_PER_ROW; ++c)
-                    colors[r][c] = new Palette.Color();
+                colors[r] = new Color[16];
+                for (int c = 0; c < 16; ++c)
+                    colors[r][c] = new Color();
             }
         }
 
         public Palette(Reader r)
         {
-            read(r, 2);
+            Read(r, 2);
         }
 
         public Palette(Reader r, int rows = 2)
         {
-            read(r, rows);
+            Read(r, rows);
         }
 
-        public void read(Reader reader, int rows = 2)
+        public void Read(Reader reader, int rows = 2)
         {
-            int palColumns = rows > 0 ? rows : (((int)reader.BaseStream.Length / 8) / 6);
+            int palRows = rows > 0 ? rows : (((int)reader.BaseStream.Length / 8) / 6);
 
-            colors = new Palette.Color[palColumns][];
-            for (int r = 0; r < palColumns; r++)
+            colors = new Color[palRows][];
+            for (int r = 0; r < palRows; r++)
             {
-                colors[r] = new Palette.Color[COLORS_PER_ROW];
-                for (int c = 0; c < COLORS_PER_ROW; ++c)
-                    colors[r][c] = new Palette.Color(reader);
+                colors[r] = new Color[16];
+                for (int c = 0; c < 16; ++c)
+                    colors[r][c] = new Color(reader);
             }
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
-            foreach (Palette.Color[] row in colors)
+            foreach (Color[] row in colors)
             {
                 if (row != null)
                 {
-                    foreach (Palette.Color color in row)
-                        color.write(writer);
+                    foreach (Color color in row)
+                        color.Write(writer);
                 }
             }
         }

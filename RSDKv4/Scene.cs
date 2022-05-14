@@ -41,21 +41,21 @@ namespace RSDKv4
             };
 
             public static List<string> variableTypes = new List<string>()  {
-                "int",
+                "int32",
                 "uint8",
-                "int",
-                "int",
-                "uint8",
-                "uint8",
+                "int32",
+                "int32",
                 "uint8",
                 "uint8",
-                "int",
                 "uint8",
                 "uint8",
-                "int",
-                "int",
-                "int",
-                "int"
+                "int32",
+                "uint8",
+                "uint8",
+                "int32",
+                "int32",
+                "int32",
+                "int32"
             };
 
             /// <summary>
@@ -121,15 +121,15 @@ namespace RSDKv4
 
             public Entity(Reader reader) : this()
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 //Variable flags, 2 bytes, unsigned
-                ushort flags = reader.ReadUInt16();
-                for (int i = 0; i < 15; i++)
-                    variables[i].active = (flags & (1 << i)) != 0;
+                ushort activeVariables = reader.ReadUInt16();
+                for (int v = 0; v < 15; v++)
+                    variables[v].active = (activeVariables & (1 << v)) != 0;
 
                 // entity type, 1 byte, unsigned
                 type = reader.ReadByte();
@@ -141,29 +141,27 @@ namespace RSDKv4
                 xpos = reader.ReadInt32();
                 ypos = reader.ReadInt32();
 
-                for (int i = 0; i < 15; i++)
+                for (int v = 0; v < 15; v++)
                 {
-                    if (variables[i].active)
+                    if (variables[v].active)
                     {
-                        if (variableTypes[i] == "uint8")
-                            variables[i].value = reader.ReadByte();
+                        if (variableTypes[v] == "uint8")
+                            variables[v].value = reader.ReadByte();
                         else
-                            variables[i].value = reader.ReadInt32();
+                            variables[v].value = reader.ReadInt32();
                     }
                 }
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                int flags = 0;
-                for (int i = 0; i < 15; i++)
+                int activeVariables = 0;
+                for (int v = 0; v < 15; v++)
                 {
-                    if (variables[i].active)
-                        flags |= 1 << i;
-                    else
-                        flags &= ~(1 << i);
+                    if (variables[v].active)
+                        activeVariables |= 1 << v;
                 }
-                writer.Write((ushort)flags);
+                writer.Write((ushort)activeVariables);
 
                 writer.Write(type);
                 writer.Write(propertyValue);
@@ -171,14 +169,14 @@ namespace RSDKv4
                 writer.Write(xpos);
                 writer.Write(ypos);
 
-                for (int i = 0; i < 15; i++)
+                for (int v = 0; v < 15; v++)
                 {
-                    if (variables[i].active)
+                    if (variables[v].active)
                     {
-                        if (variableTypes[i] == "uint8")
-                            writer.Write((byte)variables[i].value);
+                        if (variableTypes[v] == "uint8")
+                            writer.Write((byte)variables[v].value);
                         else
-                            writer.Write(variables[i].value);
+                            writer.Write(variables[v].value);
                     }
                 }
             }
@@ -204,11 +202,10 @@ namespace RSDKv4
             AfterLayer0,
             AfterLayer1,
             AfterLayer2,
-            AfterLayer3,
         }
 
         /// <summary>
-        /// the stage's name (what the titlecard displays)
+        /// the stage's name (what the TitleCard displays)
         /// </summary>
         public string title = "STAGE";
 
@@ -234,9 +231,9 @@ namespace RSDKv4
         /// </summary>
         public ActiveLayers activeLayer3 = ActiveLayers.Foreground;
         /// <summary>
-        /// Determines what layers should draw using high visual plane, in an example of 2, active layers 2 & 3 would use high plane tiles, while 0 & 1 would use low plane
+        /// Determines what layers should draw using high visual plane, in an example of "AfterLayer1", active layers 2 & 3 would use high plane tiles, while 0 & 1 would use low plane
         /// </summary>
-        public LayerMidpoints layerMidpoint = LayerMidpoints.AfterLayer2;
+        public LayerMidpoints layerMidpoint = LayerMidpoints.AfterLayer1;
 
         /// <summary>
         /// the list of entities in the stage
@@ -269,12 +266,12 @@ namespace RSDKv4
 
         public Scene(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            title = reader.readRSDKString();
+            title = reader.ReadStringRSDK();
 
             activeLayer0  = (ActiveLayers)reader.ReadByte();
             activeLayer1  = (ActiveLayers)reader.ReadByte();
@@ -292,8 +289,8 @@ namespace RSDKv4
             reader.ReadByte(); // Unused
 
             layout = new ushort[height][];
-            for (int i = 0; i < height; i++)
-                layout[i] = new ushort[width];
+            for (int y = 0; y < height; y++)
+                layout[y] = new ushort[width];
 
             for (int y = 0; y < height; y++)
             {
@@ -319,22 +316,22 @@ namespace RSDKv4
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Write zone name		
-            writer.writeRSDKString(title);
+            writer.WriteStringRSDK(title);
 
             // Write the active layers & midpoint
             writer.Write((byte)activeLayer0);
@@ -352,12 +349,12 @@ namespace RSDKv4
             writer.Write((byte)0);
 
             // Write tile layout
-            for (int h = 0; h < height; h++)
+            for (int y = 0; y < height; y++)
             {
-                for (int w = 0; w < width; w++)
+                for (int x = 0; x < width; x++)
                 {
-                    writer.Write((byte)(layout[h][w] & 0xFF));
-                    writer.Write((byte)(layout[h][w] >> 8));
+                    writer.Write((byte)(layout[y][x] & 0xFF));
+                    writer.Write((byte)(layout[y][x] >> 8));
                 }
             }
 
@@ -368,7 +365,7 @@ namespace RSDKv4
 
             // Write entities
             foreach (Entity entity in entities)
-                entity.write(writer);
+                entity.Write(writer);
 
             writer.Close();
 
@@ -379,7 +376,7 @@ namespace RSDKv4
         /// </summary>
         /// <param name="width">The new Width</param>
         /// <param name="height">The new Height</param>
-        public void resize(byte width, byte height)
+        public void Resize(byte width, byte height)
         {
             // first take a backup of the current dimensions
             // then update the internal dimensions
@@ -394,13 +391,13 @@ namespace RSDKv4
             // fill the extended tile arrays with "empty" values
 
             // if we're actaully getting shorter, do nothing!
-            for (byte i = oldHeight; i < this.height; i++)
+            for (byte y = oldHeight; y < this.height; y++)
             {
                 // first create arrays child arrays to the old width
                 // a little inefficient, but at least they'll all be equal sized
-                layout[i] = new ushort[oldWidth];
-                for (int j = 0; j < oldWidth; ++j)
-                    layout[i][j] = 0; // fill the new ones with blanks
+                layout[y] = new ushort[oldWidth];
+                for (int x = 0; x < oldWidth; ++x)
+                    layout[y][x] = 0; // fill the new ones with blanks
             }
 
             for (byte y = 0; y < this.height; y++)

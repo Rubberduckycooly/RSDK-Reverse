@@ -32,17 +32,17 @@ namespace RSDKv5
 
             public Variable(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 name    = reader.ReadString();
                 type    = reader.ReadString();
                 value   = reader.ReadString();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(name);
                 writer.Write(type);
@@ -65,16 +65,16 @@ namespace RSDKv5
 
             public Constant(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 name    = reader.ReadString();
                 value   = reader.ReadString();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(name);
                 writer.Write(value);
@@ -98,10 +98,10 @@ namespace RSDKv5
 
         public RSDKConfig(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             // Variables
             byte varCount = reader.ReadByte();
@@ -118,29 +118,29 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Variables
             writer.Write((byte)variables.Count);
             foreach (Variable variable in variables)
-                variable.write(writer);
+                variable.Write(writer);
 
             // Constants
             writer.Write((byte)constants.Count);
             foreach (Constant constant in constants)
-                constant.write(writer);
+                constant.Write(writer);
 
             writer.Close();
         }

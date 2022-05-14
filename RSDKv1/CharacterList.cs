@@ -32,30 +32,35 @@ namespace RSDKv1
 
             public PlayerInfo(StreamReader reader)
             {
-                displayName = readString(reader);
-                playerName  = readString(reader);
-                hasP2       = readString(reader) == "2";
-                player1Anim = readString(reader);
-                player2Anim = readString(reader);
+                Read(reader);
+            }
+
+            public void Read(StreamReader reader)
+            {
+                displayName = ReadString(reader);
+                playerName = ReadString(reader);
+                hasP2 = ReadString(reader) == "2";
+                player1Anim = ReadString(reader);
+                player2Anim = ReadString(reader);
                 if (!hasP2)
                     player2Anim = "NULL";
 
                 reader.ReadLine();
             }
 
-            public void write(StreamWriter writer)
+            public void Write(StreamWriter writer)
             {
-                writeString(writer, displayName);
-                writeString(writer, playerName);
-                writeString(writer, hasP2 ? "2" : "1");
-                writeString(writer, player1Anim);
-                writeString(writer, hasP2 ? player2Anim : "NULL");
+                WriteString(writer, displayName);
+                WriteString(writer, playerName);
+                WriteString(writer, hasP2 ? "2" : "1");
+                WriteString(writer, player1Anim);
+                WriteString(writer, hasP2 ? player2Anim : "NULL");
 
                 writer.Write('\r');
                 writer.Write('\n');
             }
 
-            private string readString(StreamReader reader)
+            private string ReadString(StreamReader reader)
             {
                 string str = "";
 
@@ -71,7 +76,7 @@ namespace RSDKv1
                 return str;
             }
 
-            private void writeString(StreamWriter writer, string str)
+            private void WriteString(StreamWriter writer, string str)
             {
                 for (int i = 0; i < str.Length; i++)
                     writer.Write(str[i]);
@@ -89,33 +94,34 @@ namespace RSDKv1
 
         public CharacterList(StreamReader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(StreamReader reader)
+        public void Read(StreamReader reader)
         {
             players.Clear();
             while (!reader.EndOfStream)
                 players.Add(new PlayerInfo(reader));
+
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (StreamWriter writer = new StreamWriter(File.OpenWrite(filename)))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (StreamWriter writer = new StreamWriter(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(StreamWriter writer)
+        public void Write(StreamWriter writer)
         {
             foreach (PlayerInfo player in players)
-                player.write(writer);
+                player.Write(writer);
 
             writer.Close();
         }

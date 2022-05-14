@@ -9,7 +9,6 @@ namespace RSDKv4
 {
     public class Model
     {
-        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'3', (byte)'D', 0 };
 
         public class Vertex
         {
@@ -57,6 +56,8 @@ namespace RSDKv4
             public Frame() { }
         };
 
+        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'3', (byte)'D', 0 };
+
         /// <summary>
         /// the list of frames, used to animate the model
         /// </summary>
@@ -78,12 +79,12 @@ namespace RSDKv4
 
         public Model(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid Model v4 signature");
@@ -130,19 +131,19 @@ namespace RSDKv4
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(signature);
 
@@ -176,7 +177,7 @@ namespace RSDKv4
             writer.Close();
         }
 
-        public void writeAsOBJ(string filename, int exportFrame = -1)
+        public void WriteAsOBJ(string filename, int exportFrame = -1)
         {
             for (int f = (exportFrame < 0 ? 0 : exportFrame); f < frames.Count; ++f)
             {
@@ -216,6 +217,96 @@ namespace RSDKv4
                 }
 
                 File.WriteAllText(streamName, builder.ToString());
+            }
+        }
+
+        public void WriteAsPLY(string filename, int exportFrame, bool binary = false)
+        {
+            for (int f = (exportFrame < 0 ? 0 : exportFrame); f < frames.Count; ++f)
+            {
+                string path = filename;
+                string extLess = path.Replace(Path.GetExtension(path), "");
+                string streamName = extLess + (frames.Count > 1 ? (" Frame " + f + "") : "") + Path.GetExtension(path);
+
+                Writer writer = new Writer(streamName);
+
+                // Header
+                writer.WriteLine("ply");
+                writer.WriteLine($"format {(binary ? "binary_little_endian" : "ascii")} 1.0");
+                writer.WriteLine("comment Created by RSDK-Reverse");
+                writer.WriteLine("element vertex " + frames[f].vertices.Count);
+
+                writer.WriteLine("property float x");
+                writer.WriteLine("property float y");
+                writer.WriteLine("property float z");
+
+                writer.WriteLine("property float nx");
+                writer.WriteLine("property float ny");
+                writer.WriteLine("property float nz");
+
+
+                writer.WriteLine("property float u");
+                writer.WriteLine("property float v");
+
+                writer.WriteLine("element face " + (indices.Count / 3));
+                writer.WriteLine("property list uint8 uint16 vertex_indices");
+                writer.WriteLine("end_header");
+
+                if (binary)
+                {
+                    for (int v = 0; v < frames[f].vertices.Count; ++v)
+                    {
+                        writer.Write(frames[f].vertices[v].x);
+                        writer.Write(frames[f].vertices[v].y);
+                        writer.Write(frames[f].vertices[v].z);
+
+                        writer.Write(frames[f].vertices[v].nx);
+                        writer.Write(frames[f].vertices[v].ny);
+                        writer.Write(frames[f].vertices[v].nz);
+
+                        writer.Write(textureUVs[v].u);
+                        writer.Write(textureUVs[v].v);
+                    }
+
+                    for (int i = 0; i < indices.Count; i += 3)
+                    {
+                        writer.Write(3);
+                        for (int v = 0; v < 3; ++v) writer.Write(indices[i + v]);
+                    }
+                }
+                else
+                {
+                    for (int v = 0; v < frames[f].vertices.Count; ++v)
+                    {
+                        string vertex = "";
+
+                        vertex += $"{frames[f].vertices[v].x} {frames[f].vertices[v].y} {frames[f].vertices[v].z}";
+
+                        vertex += $"{frames[f].vertices[v].nx} {frames[f].vertices[v].ny} {frames[f].vertices[v].nz}";
+
+                        vertex += $"{textureUVs[v].u} {textureUVs[v].v}";
+
+                        writer.WriteLine(vertex);
+                    }
+
+                    for (int i = 0; i < indices.Count; i += 3)
+                    {
+                        string face = "";
+
+                        face += "3 ";
+
+                        for (int v = 0; v < 3; ++v)
+                        {
+                            face += indices[i + v];
+                            if (v + 1 < 3)
+                                face += " ";
+                        }
+
+                        writer.WriteLine(face);
+                    }
+                }
+
+                writer.Close();
             }
         }
     }

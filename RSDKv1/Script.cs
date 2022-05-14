@@ -18,7 +18,7 @@ namespace RSDKv1
                 this.name = name;
                 this.paramCount = paramCount;
             }
-        } 
+        }
 
         static string[] variableList = new string[]
         {
@@ -91,7 +91,7 @@ namespace RSDKv1
             "Player.MovesetType",       // 0x42
             "Object.EntityNo",          // 0x43
             "EarthquakeY",              // 0x44
-        };   
+        };
 
         static FunctionInfo[] opcodeList = new FunctionInfo[]
         {
@@ -253,11 +253,11 @@ namespace RSDKv1
             /// <summary>
             /// the case number, E.G: case 6: would have a caseNum of 6 
             /// </summary>
-            public int caseNum       = 0;
+            public int caseNum = 0;
             /// <summary>
             /// the line this case is on, relative to the start of the sub (with empty lines removed)
             /// </summary>
-            public int lineID        = 0;
+            public int lineID = 0;
 
             public SwitchCaseInfo() { }
         }
@@ -317,27 +317,22 @@ namespace RSDKv1
             /// <summary>
             /// the size of the scriptCode as bytecode (in bytes)
             /// </summary>
-            public int scriptCodeLength 
-            { 
-                get 
+            public int scriptCodeLength
+            {
+                get
                 {
                     return scriptCode.Take(scriptCode.Count).Sum(x => x.size);
-                } 
+                }
             }
 
             public ScriptSub() { }
         }
 
-        /// <summary>
-        /// How Many Subs per Script
-        /// </summary>
-        private const byte subCount = 5;
-
-        public ScriptSub[] subs = new ScriptSub[subCount];
+        public ScriptSub[] subs = new ScriptSub[5];
 
         public Script()
         {
-            for (int i = 0; i < subCount; ++i)
+            for (int i = 0; i < 5; ++i)
                 subs[i] = new ScriptSub();
         }
 
@@ -345,10 +340,10 @@ namespace RSDKv1
 
         public Script(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             foreach (ScriptSub sub in subs)
             {
@@ -399,7 +394,7 @@ namespace RSDKv1
                             if (paramType != 0)
                             {
                                 param.isVariable = true;
-                                
+
                                 param.value = reader.ReadByte();
 
                                 int arrayIndex = reader.ReadByte();
@@ -542,19 +537,19 @@ namespace RSDKv1
 
             reader.Close();
         }
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             foreach (ScriptSub sub in subs)
             {
@@ -683,6 +678,7 @@ namespace RSDKv1
                     }
                 }
             }
+
             writer.Close();
         }
 

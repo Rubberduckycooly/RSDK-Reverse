@@ -20,9 +20,9 @@ namespace RSDKv3
 
             public FontCharacter() { }
 
-            public FontCharacter(Reader reader) { read(reader); }
+            public FontCharacter(Reader reader) { Read(reader); }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 id = reader.ReadByte();
                 id |= reader.ReadByte() << 8;
@@ -66,7 +66,7 @@ namespace RSDKv3
                 unused2 = reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 byte[] bytes = BitConverter.GetBytes(id);
                 writer.Write(bytes[0]);
@@ -117,10 +117,10 @@ namespace RSDKv3
 
         public TextFont(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             while (reader.BaseStream.Position + 20 <= reader.BaseStream.Length)
                 characters.Add(new FontCharacter(reader));
@@ -128,22 +128,22 @@ namespace RSDKv3
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             foreach (FontCharacter character in characters)
-                character.write(writer);
+                character.Write(writer);
 
             writer.Close();
         }

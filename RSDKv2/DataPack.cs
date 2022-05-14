@@ -6,49 +6,49 @@ using System.Threading.Tasks;
 
 namespace RSDKv2
 {
-    public class DataFile
+    public class DataPack
     {
-        public class DirInfo
+        public class Directory
         {
             /// <summary>
             /// the directory path
             /// </summary>
-            public string directory = "Folder/";
+            public string name = "Folder/";
             /// <summary>
             /// the file offset for the directory
             /// </summary>
-            public int startOffset = 0;
+            public int offset = 0;
 
-            public DirInfo() { }
+            public Directory() { }
 
-            public DirInfo(Reader reader)
+            public Directory(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                directory = reader.readRSDKString();
-                startOffset = reader.ReadInt32();
+                name = reader.ReadStringRSDK();
+                offset = reader.ReadInt32();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                writer.writeRSDKString(directory);
-                writer.Write(startOffset);
+                writer.WriteStringRSDK(name);
+                writer.Write(offset);
             }
         }
 
-        public class FileInfo
+        public class File
         {
             /// <summary>
             /// the filename of the file
             /// </summary>
-            public string fileName = "File.bin";
+            public string name = "File.bin";
             /// <summary>
             /// the combined filename and directory of the file
             /// </summary>
-            public string fullFilename = "Folder/File.bin";
+            public string fullName = "Folder/File.bin";
 
             /// <summary>
             /// is the file bitflipped?
@@ -58,25 +58,25 @@ namespace RSDKv2
             /// <summary>
             /// an array of the bytes in the file, decrypted
             /// </summary>
-            public byte[] fileData;
+            public byte[] data;
 
             /// <summary>
             /// what directory the file is in
             /// </summary>
             public byte directoryID = 0;
 
-            public FileInfo() { }
+            public File() { }
 
-            public FileInfo(Reader reader)
+            public File(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                fileName = reader.ReadString();
+                name = reader.ReadString();
 
-                string ext = System.IO.Path.GetExtension(fileName);
+                string ext = System.IO.Path.GetExtension(name);
                 if (ext == ".ogg" || ext == ".wav")
                     encrypted = false;
                 else
@@ -84,37 +84,37 @@ namespace RSDKv2
 
                 if (!encrypted)
                 {
-                    fileData = reader.ReadBytes((int)reader.ReadUInt32());
+                    data = reader.ReadBytes((int)reader.ReadUInt32());
                 }
                 else if (encrypted)
                 {
-                    fileData = reader.ReadBytes((int)reader.ReadUInt32());
-                    for (int i = 0; i < fileData.Length; i++)
-                        fileData[i] = (byte)~fileData[i];
+                    data = reader.ReadBytes((int)reader.ReadUInt32());
+                    for (int i = 0; i < data.Length; i++)
+                        data[i] = (byte)~data[i];
                 }
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                fileName = fileName.Replace('\\', '/');
-                writer.Write(fileName);
+                name = name.Replace('\\', '/');
+                writer.Write(name);
 
-                string ext = System.IO.Path.GetExtension(fileName);
+                string ext = System.IO.Path.GetExtension(name);
                 if (ext == ".ogg" || ext == ".wav")
                     encrypted = false;
                 else
                     encrypted = true;
 
-                writer.Write((uint)fileData.Length);
+                writer.Write((uint)data.Length);
                 if (!encrypted)
                 {
-                    writer.Write(fileData);
+                    writer.Write(data);
                 }
                 else if (encrypted)
                 {
-                    byte[] encryptedBytes = new byte[fileData.Length];
-                    for (int i = 0; i < fileData.Length; i++)
-                        encryptedBytes[i] = (byte)~fileData[i];
+                    byte[] encryptedBytes = new byte[data.Length];
+                    for (int i = 0; i < data.Length; i++)
+                        encryptedBytes[i] = (byte)~data[i];
                     writer.Write(encryptedBytes);
                 }
             }
@@ -123,40 +123,40 @@ namespace RSDKv2
         /// <summary>
         /// a list of directories for the data file
         /// </summary>
-        public List<DirInfo> directories = new List<DirInfo>();
+        public List<Directory> directories = new List<Directory>();
         /// <summary>
         /// the list of files stored in the data file
         /// </summary>
-        public List<FileInfo> files = new List<FileInfo>();
+        public List<File> files = new List<File>();
 
-        public DataFile() { }
+        public DataPack() { }
 
-        public DataFile(string filepath) : this(new Reader(filepath)) { }
-        public DataFile(System.IO.Stream stream) : this(new Reader(stream)) { }
+        public DataPack(string filepath) : this(new Reader(filepath)) { }
+        public DataPack(System.IO.Stream stream) : this(new Reader(stream)) { }
 
-        public DataFile(Reader reader)
+        public DataPack(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             int headerSize = reader.ReadInt32();
             int dircount = reader.ReadByte();
 
             directories.Clear();
             for (int d = 0; d < dircount; d++)
-                directories.Add(new DirInfo(reader));
+                directories.Add(new Directory(reader));
 
             files.Clear();
             for (int d = 0; d < dircount; d++)
             {
                 if ((d + 1) < directories.Count())
                 {
-                    while (reader.BaseStream.Position - headerSize < directories[d + 1].startOffset && reader.BaseStream.Position < reader.BaseStream.Length)
+                    while (reader.BaseStream.Position - headerSize < directories[d + 1].offset && reader.BaseStream.Position < reader.BaseStream.Length)
                     {
-                        FileInfo f = new FileInfo(reader);
-                        f.fullFilename = directories[d].directory + f.fileName;
+                        File f = new File(reader);
+                        f.fullName = directories[d].name + f.name;
                         files.Add(f);
                     }
                 }
@@ -164,8 +164,8 @@ namespace RSDKv2
                 {
                     while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
-                        FileInfo f = new FileInfo(reader);
-                        f.fullFilename = directories[d].directory + f.fileName;
+                        File f = new File(reader);
+                        f.fullName = directories[d].name + f.name;
                         files.Add(f);
                     }
                 }
@@ -173,69 +173,69 @@ namespace RSDKv2
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Initial File Write
             int headerSize = 0;
             writer.Write(headerSize);
             writer.Write((byte)directories.Count);
 
-            foreach (DirInfo dir in directories)
-                dir.write(writer);
+            foreach (Directory dir in directories)
+                dir.Write(writer);
 
             headerSize = (int)writer.BaseStream.Position;
 
             int dirID = 0;
 
-            directories[dirID].startOffset = 0;
+            directories[dirID].offset = 0;
 
-            foreach (FileInfo file in files)
+            foreach (File file in files)
             {
                 if (file.directoryID == dirID)
                 {
-                    file.write(writer);
+                    file.Write(writer);
                 }
                 else
                 {
                     dirID++;
-                    directories[dirID].startOffset = (int)writer.BaseStream.Position - headerSize;
-                    file.write(writer);
+                    directories[dirID].offset = (int)writer.BaseStream.Position - headerSize;
+                    file.Write(writer);
                 }
             }
 
             // Real File write
-            writer.seek(0, System.IO.SeekOrigin.Begin);
+            writer.Seek(0, System.IO.SeekOrigin.Begin);
 
             writer.Write(headerSize);
             writer.Write((byte)directories.Count);
 
-            foreach (DirInfo dir in directories)
-                dir.write(writer);
+            foreach (Directory dir in directories)
+                dir.Write(writer);
 
             dirID = 0;
 
-            foreach (FileInfo file in files)
+            foreach (File file in files)
             {
                 if (file.directoryID == dirID)
                 {
-                    file.write(writer);
+                    file.Write(writer);
                 }
                 else
                 {
                     dirID++;
-                    file.write(writer);
+                    file.Write(writer);
                 }
             }
 

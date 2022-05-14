@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RSDKv1
 {
@@ -12,14 +8,17 @@ namespace RSDKv1
         /// the width of the image
         /// </summary>
         public int width = 0;
+
         /// <summary>
         /// the height of the image
         /// </summary>
         public int height = 0;
+
         /// <summary>
         /// the Image's palette
         /// </summary>
         public Palette.Color[] palette = new Palette.Color[0x100];
+
         /// <summary>
         /// the pixel indices of the image 
         /// </summary>
@@ -37,15 +36,15 @@ namespace RSDKv1
 
         public Bitmap(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             reader.ReadInt16(); // "BM"
             reader.ReadInt32(); // totalFileSize
             reader.ReadInt32(); // Unused
             int pixelPos = reader.ReadInt32();
-            reader.seek(14 + 4, System.IO.SeekOrigin.Begin);
+            reader.Seek(14 + 4, System.IO.SeekOrigin.Begin);
 
             width = reader.ReadByte();
             width |= reader.ReadByte() << 8;
@@ -63,15 +62,15 @@ namespace RSDKv1
                 throw new Exception("RSDK-Formatted Bitmap files must be indexed!");
 
             reader.BaseStream.Position += 4 * sizeof(int);
-            int clrCount = reader.ReadInt32(); // how many colours used
+            int colorCount = reader.ReadInt32(); // how many colors used
 
-            reader.seek(14 + 40, System.IO.SeekOrigin.Begin);
+            reader.Seek(14 + 40, System.IO.SeekOrigin.Begin);
 
-            for (int c = 0; c < clrCount; c++)
+            for (int c = 0; c < colorCount; c++)
             {
-                palette[c].B = reader.ReadByte();
-                palette[c].G = reader.ReadByte();
-                palette[c].R = reader.ReadByte();
+                palette[c].b = reader.ReadByte();
+                palette[c].g = reader.ReadByte();
+                palette[c].r = reader.ReadByte();
                 reader.ReadByte(); // unused
             }
 
@@ -80,7 +79,7 @@ namespace RSDKv1
                 throw new Exception("RSDK-Formatted Bitmap files must end with the pixel data!");
 
             // This is how RSDK does it but there's a small chance it could maybe be wrong
-            reader.seek(expectedPixelPos, System.IO.SeekOrigin.Begin);
+            reader.Seek(expectedPixelPos, System.IO.SeekOrigin.Begin);
 
             pixels = new byte[width * height];
             int gfxPos = width * (height - 1);
@@ -94,17 +93,17 @@ namespace RSDKv1
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
-            write(new Writer(filename));
+            Write(new Writer(filename));
         }
 
-        public void write(System.IO.Stream s)
+        public void Write(System.IO.Stream s)
         {
-            write(new Writer(s));
+            Write(new Writer(s));
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             uint fileSize = (uint)(14 + 40 + (0x100 * 4) + (width * height));
             uint pixelPos = (uint)(14 + 40 + (0x100 * 4));
@@ -120,20 +119,20 @@ namespace RSDKv1
             writer.Write(40);           // header size
             writer.Write(width);
             writer.Write(height);
-            writer.Write((ushort)1);    // colour planes, 1, always
+            writer.Write((ushort)1);    // color planes, 1, always
             writer.Write((ushort)8);    // BPP, always 8
             writer.Write(0);            // compression, none, never
             writer.Write(0);            // image size, can be 0, we dont care about it
             writer.Write(0);            // pixels per meter on x axis, we dont care
             writer.Write(0);            // pixels per meter on y axis, we dont care
             writer.Write(0x100);        // palette size
-            writer.Write(0);            // important colours, we dont care, so use 0
+            writer.Write(0);            // important s, we dont care, so use 0
 
             for (int c = 0; c < 0x100; c++)
             {
-                writer.Write(palette[c].B);
-                writer.Write(palette[c].G);
-                writer.Write(palette[c].R);
+                writer.Write(palette[c].b);
+                writer.Write(palette[c].g);
+                writer.Write(palette[c].r);
                 writer.Write((byte)0xFF); // unused
             }
 
@@ -146,7 +145,7 @@ namespace RSDKv1
             writer.Close();
         }
 
-        public System.Drawing.Image toImage()
+        public System.Drawing.Image ToImage()
         {
             // Create image
             System.Drawing.Bitmap img = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
@@ -154,7 +153,7 @@ namespace RSDKv1
             System.Drawing.Imaging.ColorPalette cpal = img.Palette;
 
             for (int i = 0; i < 0x100; i++)
-                cpal.Entries[i] = System.Drawing.Color.FromArgb(255, palette[i].R, palette[i].G, palette[i].B);
+                cpal.Entries[i] = System.Drawing.Color.FromArgb(255, palette[i].r, palette[i].g, palette[i].b);
 
             img.Palette = cpal;
 
@@ -166,30 +165,7 @@ namespace RSDKv1
             return img;
         }
 
-        public Gfx toGfx()
-        {
-            // Create image
-            Gfx img = new Gfx();
-            img.width = (ushort)width;
-            img.height = (ushort)height;
-
-            for (int i = 0; i < 0xFF; i++)
-            {
-                img.palette[i].R = palette[i].R;
-                img.palette[i].G = palette[i].G;
-                img.palette[i].B = palette[i].B;
-            }
-            img.palette[0xFF].R = 0xFF;
-            img.palette[0xFF].G = 0x00;
-            img.palette[0xFF].B = 0xFF;
-
-            img.pixels = new byte[width * height];
-            Array.Copy(pixels, img.pixels, pixels.Length);
-
-            return img;
-        }
-
-        public void fromImage(System.Drawing.Bitmap img)
+        public void FromImage(System.Drawing.Bitmap img)
         {
             // Create image
             width = (ushort)img.Width;
@@ -197,35 +173,15 @@ namespace RSDKv1
 
             for (int i = 0; i < 0x100; i++)
             {
-                palette[i].R = img.Palette.Entries[i].R;
-                palette[i].G = img.Palette.Entries[i].G;
-                palette[i].B = img.Palette.Entries[i].B;
+                palette[i].r = img.Palette.Entries[i].R;
+                palette[i].g = img.Palette.Entries[i].G;
+                palette[i].b = img.Palette.Entries[i].B;
             }
             pixels = new byte[width * height];
 
             System.Drawing.Imaging.BitmapData imgData = img.LockBits(new System.Drawing.Rectangle(0, 0, width, height), System.Drawing.Imaging.ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
             System.Runtime.InteropServices.Marshal.Copy(imgData.Scan0, pixels, 0, pixels.Length);
             img.UnlockBits(imgData);
-        }
-
-        public void fromImage(Gfx img)
-        {
-            // Create image
-            width = img.width;
-            height = img.height;
-
-            for (int i = 0; i < 0xFF; i++)
-            {
-                palette[i].R = img.palette[i].R;
-                palette[i].G = img.palette[i].G;
-                palette[i].B = img.palette[i].B;
-            }
-            palette[0xFF].R = 0x00;
-            palette[0xFF].G = 0x00;
-            palette[0xFF].B = 0x00;
-
-            pixels = new byte[width * height];
-            Array.Copy(img.pixels, pixels, pixels.Length);
         }
     }
 }

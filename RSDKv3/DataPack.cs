@@ -6,124 +6,125 @@ using System.Threading.Tasks;
 
 namespace RSDKv3
 {
-    public class DataFile
+    public class DataPack
     {
-        public class DirInfo
+        public class Directory
         {
             /// <summary>
             /// the directory path
             /// </summary>
-            public string directory = "Folder/";
+            public string name = "Folder/";
+
             /// <summary>
             /// the file offset for the directory
             /// </summary>
-            public int startOffset = 0;
+            public int offset = 0;
 
-            public DirInfo() { }
+            public Directory() { }
 
-            public DirInfo(Reader reader)
+            public Directory(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                directory = "";
+                name = "";
                 byte stringLen = reader.ReadByte();
                 for (int i = 0; i < stringLen; i++)
-                    directory += (char)(reader.ReadByte() ^ (0xFF - stringLen));
+                    name += (char)(reader.ReadByte() ^ (0xFF - stringLen));
 
-                startOffset = reader.ReadInt32();
+                offset = reader.ReadInt32();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                directory = directory.Replace('\\', '/');
-                writer.Write((byte)directory.Length);
-                for (int i = 0; i < directory.Length; i++)
-                    writer.Write((byte)(directory[i] ^ (0xFF - directory.Length)));
+                name = name.Replace('\\', '/');
+                writer.Write((byte)name.Length);
+                for (int i = 0; i < name.Length; i++)
+                    writer.Write((byte)(name[i] ^ (0xFF - name.Length)));
 
-                writer.Write(startOffset);
+                writer.Write(offset);
             }
         }
 
-        public class FileInfo
+        public class File
         {
             /// <summary>
             /// the filename of the file
             /// </summary>
-            public string fileName = "File.bin";
+            public string name = "File.bin";
             /// <summary>
             /// the combined filename and directory of the file
             /// </summary>
-            public string fullFilename = "Folder/File.bin";
+            public string fullName = "Folder/File.bin";
 
             /// <summary>
             /// an array of the bytes in the file, decrypted
             /// </summary>
-            public byte[] fileData;
+            public byte[] data;
 
             /// <summary>
             /// what directory the file is in
             /// </summary>
             public ushort directoryID = 0;
 
-            private int eStringNo = 0;
+            private int eKeyNo = 0;
+            private int eKeyPosB = 0;
+            private int eKeyPosA = 0;
             private int eNybbleSwap = 0;
-            private int eStringPosB = 0;
-            private int eStringPosA = 0;
 
-            private static readonly string encryptionStringA = "4RaS9D7KaEbxcp2o5r6t";
-            private static readonly string encryptionStringB = "3tRaUxLmEaSn";
+            private static readonly string encryptionKeyA = "4RaS9D7KaEbxcp2o5r6t";
+            private static readonly string encryptionKeyB = "3tRaUxLmEaSn";
 
-            public FileInfo() { }
+            public File() { }
 
-            public FileInfo(Reader reader)
+            public File(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                fileName = "";
+                name = "";
                 byte stringLen = reader.ReadByte();
                 for (int i = 0; i < stringLen; i++)
-                    fileName += (char)(reader.ReadByte() ^ 0xFF);
+                    name += (char)(reader.ReadByte() ^ 0xFF);
 
                 uint fileSize = reader.ReadUInt32();
 
-                fileData = decrypt(reader.ReadBytes((int)fileSize), false);
+                data = Decrypt(reader.ReadBytes((int)fileSize), false);
             }
 
-            public void write(Writer writer, bool standalone = false)
+            public void Write(Writer writer, bool standalone = false)
             {
-                fileName = fileName.Replace('\\', '/');
-                uint fileSize = (uint)fileData.Length;
+                name = name.Replace('\\', '/');
+                uint fileSize = (uint)data.Length;
 
                 if (standalone)
                 {
                     writer.Write(fileSize);
-                    writer.Write(fileData);
+                    writer.Write(data);
                     writer.Close();
                 }
                 else
                 {
-                    writer.Write((byte)fileName.Length);
-                    for (int i = 0; i < fileName.Length; i++)
-                        writer.Write((byte)(fileName[i] ^ 0xFF));
+                    writer.Write((byte)name.Length);
+                    for (int i = 0; i < name.Length; i++)
+                        writer.Write((byte)(name[i] ^ 0xFF));
 
                     writer.Write(fileSize);
-                    writer.Write(decrypt(fileData, true));
+                    writer.Write(Decrypt(data, true));
                 }
             }
 
-            private byte[] decrypt(byte[] data, bool encrypting)
+            private byte[] Decrypt(byte[] data, bool encrypting)
             {
                 uint fileSize = (uint)data.Length;
 
-                eStringNo = ((int)fileSize & 0x1FC) >> 2;
-                eStringPosB = (eStringNo % 9) + 1;
-                eStringPosA = (eStringNo % eStringPosB) + 1;
+                eKeyNo = ((int)fileSize & 0x1FC) >> 2;
+                eKeyPosB = (eKeyNo % 9) + 1;
+                eKeyPosA = (eKeyNo % eKeyPosB) + 1;
                 eNybbleSwap = 0;
 
                 byte[] outputData = new byte[data.Length];
@@ -133,53 +134,53 @@ namespace RSDKv3
                     int encByte = data[i];
                     if (encrypting)
                     {
-                        encByte ^= encryptionStringA[eStringPosA++];
+                        encByte ^= encryptionKeyA[eKeyPosA++];
 
                         if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
                             encByte = (encByte >> 4) | ((encByte & 0xF) << 4);
 
-                        encByte ^= encryptionStringB[eStringPosB++] ^ eStringNo;
+                        encByte ^= encryptionKeyB[eKeyPosB++] ^ eKeyNo;
                     }
                     else
                     {
-                        encByte ^= encryptionStringB[eStringPosB++] ^ eStringNo;
+                        encByte ^= encryptionKeyB[eKeyPosB++] ^ eKeyNo;
 
                         if (eNybbleSwap == 1)   // swap nibbles: 0xAB <-> 0xBA
                             encByte = (encByte >> 4) | ((encByte & 0xF) << 4);
 
-                        encByte ^= encryptionStringA[eStringPosA++];
+                        encByte ^= encryptionKeyA[eKeyPosA++];
                     }
                     outputData[i] = (byte)encByte;
 
-                    if (eStringPosA <= 19 || eStringPosB <= 11)
+                    if (eKeyPosA <= 19 || eKeyPosB <= 11)
                     {
-                        if (eStringPosA > 19)
+                        if (eKeyPosA > 19)
                         {
-                            eStringPosA = 1;
+                            eKeyPosA = 1;
                             eNybbleSwap ^= 1;
                         }
-                        if (eStringPosB > 11)
+                        if (eKeyPosB > 11)
                         {
-                            eStringPosB = 1;
+                            eKeyPosB = 1;
                             eNybbleSwap ^= 1;
                         }
                     }
                     else
                     {
-                        eStringNo++;
-                        eStringNo &= 0x7F;
+                        eKeyNo++;
+                        eKeyNo &= 0x7F;
 
                         if (eNybbleSwap != 0)
                         {
-                            eStringPosA = (eStringNo % 12) + 6;
-                            eStringPosB = (eStringNo % 5) + 4;
+                            eKeyPosA = (eKeyNo % 12) + 6;
+                            eKeyPosB = (eKeyNo % 5) + 4;
                             eNybbleSwap = 0;
                         }
                         else
                         {
                             eNybbleSwap = 1;
-                            eStringPosA = (eStringNo % 15) + 3;
-                            eStringPosB = (eStringNo % 7) + 1;
+                            eKeyPosA = (eKeyNo % 15) + 3;
+                            eKeyPosB = (eKeyNo % 7) + 1;
                         }
                     }
                 }
@@ -190,39 +191,39 @@ namespace RSDKv3
         /// <summary>
         /// a list of directories for the data file
         /// </summary>
-        public List<DirInfo> directories = new List<DirInfo>();
+        public List<Directory> directories = new List<Directory>();
         /// <summary>
         /// the list of files stored in the data file
         /// </summary>
-        public List<FileInfo> files = new List<FileInfo>();
+        public List<File> files = new List<File>();
 
-        public DataFile() { }
-        public DataFile(string filepath) : this(new Reader(filepath)) { }
-        public DataFile(System.IO.Stream stream) : this(new Reader(stream)) { }
+        public DataPack() { }
+        public DataPack(string filepath) : this(new Reader(filepath)) { }
+        public DataPack(System.IO.Stream stream) : this(new Reader(stream)) { }
 
-        public DataFile(Reader reader)
+        public DataPack(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             int headerSize = reader.ReadInt32();
             int dircount = reader.ReadUInt16();
 
             directories.Clear();
             for (int d = 0; d < dircount; d++)
-                directories.Add(new DirInfo(reader));
+                directories.Add(new Directory(reader));
 
             files.Clear();
             for (int d = 0; d < dircount; d++)
             {
                 if ((d + 1) < directories.Count())
                 {
-                    while (reader.BaseStream.Position - headerSize < directories[d + 1].startOffset && reader.BaseStream.Position < reader.BaseStream.Length)
+                    while (reader.BaseStream.Position - headerSize < directories[d + 1].offset && reader.BaseStream.Position < reader.BaseStream.Length)
                     {
-                        FileInfo f = new FileInfo(reader);
-                        f.fullFilename = directories[d].directory + f.fileName;
+                        File f = new File(reader);
+                        f.fullName = directories[d].name + f.name;
                         files.Add(f);
                     }
                 }
@@ -230,8 +231,8 @@ namespace RSDKv3
                 {
                     while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
-                        FileInfo f = new FileInfo(reader);
-                        f.fullFilename = directories[d].directory + f.fileName;
+                        File f = new File(reader);
+                        f.fullName = directories[d].name + f.name;
                         files.Add(f);
                     }
                 }
@@ -239,27 +240,27 @@ namespace RSDKv3
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Initial File Write
             int headerSize = 0;
             writer.Write(headerSize);
             writer.Write((ushort)directories.Count);
 
-            foreach (DirInfo dir in directories)
-                dir.write(writer);
+            foreach (Directory dir in directories)
+                dir.Write(writer);
 
             headerSize = (int)writer.BaseStream.Position;
 
@@ -267,43 +268,43 @@ namespace RSDKv3
 
             int dirID = 0;
 
-            directories[dirID].startOffset = 0;
+            directories[dirID].offset = 0;
 
-            foreach (FileInfo file in files)
+            foreach (File file in files)
             {
                 if (file.directoryID == dirID)
                 {
-                    file.write(writer);
+                    file.Write(writer);
                 }
                 else
                 {
                     dirID++;
-                    directories[dirID].startOffset = (int)writer.BaseStream.Position - headerSize;
-                    file.write(writer);
+                    directories[dirID].offset = (int)writer.BaseStream.Position - headerSize;
+                    file.Write(writer);
                 }
             }
 
             // Real File write
-            writer.seek(0, System.IO.SeekOrigin.Begin);
+            writer.Seek(0, System.IO.SeekOrigin.Begin);
 
             writer.Write(headerSize);
             writer.Write((ushort)directories.Count);
 
-            foreach (DirInfo dir in directories)
-                dir.write(writer);
+            foreach (Directory dir in directories)
+                dir.Write(writer);
 
             dirID = 0;
 
-            foreach (FileInfo file in files)
+            foreach (File file in files)
             {
                 if (file.directoryID == dirID)
                 {
-                    file.write(writer);
+                    file.Write(writer);
                 }
                 else
                 {
                     dirID++;
-                    file.write(writer);
+                    file.Write(writer);
                 }
             }
 

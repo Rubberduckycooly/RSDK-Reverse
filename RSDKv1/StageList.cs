@@ -14,14 +14,17 @@ namespace RSDKv1
             /// the stage name
             /// </summary>
             public string name = "STAGE";
+
             /// <summary>
             /// the folder of the stage
             /// </summary>
             public string folder = "Folder";
+
             /// <summary>
-            /// the stage's identifier (E.G Act1 or Act2)
+            /// the stage's identifier (E.G Act'1' or Act'2')
             /// </summary>
             public string id = "1";
+
             /// <summary>
             /// Determines if the stage is highlighted on the menu
             /// </summary>
@@ -31,26 +34,31 @@ namespace RSDKv1
 
             public StageInfo(StreamReader reader)
             {
-                name = readString(reader);
-                folder = readString(reader);
-                id = readString(reader);
-                highlighted = readString(reader) != "0";
+                Read(reader);
+            }
+
+            public void Read(StreamReader reader)
+            {
+                name = ReadString(reader);
+                folder = ReadString(reader);
+                id = ReadString(reader);
+                highlighted = ReadString(reader) != "0";
 
                 reader.ReadLine();
             }
 
-            public void write(StreamWriter writer)
+            public void Write(StreamWriter writer)
             {
-                writeString(writer, name);
-                writeString(writer, folder);
-                writeString(writer, id);
-                writeString(writer, highlighted ? "1" : "0");
+                WriteString(writer, name);
+                WriteString(writer, folder);
+                WriteString(writer, id);
+                WriteString(writer, highlighted ? "1" : "0");
 
                 writer.Write('\r');
                 writer.Write('\n');
             }
 
-            private string readString(StreamReader reader)
+            private string ReadString(StreamReader reader)
             {
                 string str = "";
 
@@ -66,10 +74,11 @@ namespace RSDKv1
                 return str;
             }
 
-            private void writeString(StreamWriter writer, string str)
+            private void WriteString(StreamWriter writer, string str)
             {
                 for (int i = 0; i < str.Length; i++)
                     writer.Write(str[i]);
+
                 writer.Write('^');
             }
 
@@ -83,33 +92,34 @@ namespace RSDKv1
 
         public StageList(StreamReader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(StreamReader reader)
+        public void Read(StreamReader reader)
         {
             list.Clear();
             while (!reader.EndOfStream)
                 list.Add(new StageInfo(reader));
+
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (StreamWriter writer = new StreamWriter(File.OpenWrite(filename)))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (StreamWriter writer = new StreamWriter(stream))
-                write(stream);
+                Write(stream);
         }
 
-        public void write(StreamWriter writer)
+        public void Write(StreamWriter writer)
         {
-            foreach(StageInfo stage in list)
-                stage.write(writer);
+            foreach (StageInfo stage in list)
+                stage.Write(writer);
 
             writer.Close();
         }

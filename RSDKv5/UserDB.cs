@@ -22,10 +22,10 @@ namespace RSDKv5
             public TimeStamp() { }
             public TimeStamp(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 tm_sec = reader.ReadInt32();
                 tm_min = reader.ReadInt32();
@@ -38,7 +38,7 @@ namespace RSDKv5
                 tm_isdst = reader.ReadInt32();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(tm_sec);
                 writer.Write(tm_min);
@@ -51,7 +51,7 @@ namespace RSDKv5
                 writer.Write(tm_isdst);
             }
 
-            public string toString()
+            public override string ToString()
             {
                 return $"{tm_mday}/{tm_mon}/{tm_year + 1900} at {tm_hour}:{tm_min}:{String.Format("{0:00}", tm_sec)}";
             }
@@ -77,15 +77,15 @@ namespace RSDKv5
 
             public TableColumn() { }
 
-            public TableColumn(Reader reader) { read(reader); }
+            public TableColumn(Reader reader) { Read(reader); }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 type = (Types)reader.ReadByte();
-                name = System.Text.Encoding.Default.GetString(reader.readBytes(0x10)).Replace("\0", "");
+                name = System.Text.Encoding.Default.GetString(reader.ReadBytes(0x10)).Replace("\0", "");
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write((byte)type);
 
@@ -108,25 +108,25 @@ namespace RSDKv5
 
             public TableRow(Reader reader, UserDB db)
             {
-                read(reader, db);
+                Read(reader, db);
             }
 
-            public void read(Reader reader, UserDB db)
+            public void Read(Reader reader, UserDB db)
             {
                 uuid = reader.ReadUInt32();
-                createDate.read(reader);
-                modifyDate.read(reader);
+                createDate.Read(reader);
+                modifyDate.Read(reader);
 
                 entries.Clear();
                 for (int v = 0; v < db.columns.Count; ++v)
-                    entries.Add(reader.readBytes(reader.ReadByte()));
+                    entries.Add(reader.ReadBytes(reader.ReadByte()));
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(uuid);
-                createDate.write(writer);
-                modifyDate.write(writer);
+                createDate.Write(writer);
+                modifyDate.Write(writer);
 
                 foreach (byte[] entry in entries)
                 {
@@ -141,7 +141,14 @@ namespace RSDKv5
         /// </summary>
         private static readonly uint signature = 0x80074B1E;
 
+        /// <summary>
+        /// column definitions
+        /// </summary>
         public List<TableColumn> columns = new List<TableColumn>();
+
+        /// <summary>
+        /// entry rows
+        /// </summary>
         public List<TableRow> rows = new List<TableRow>();
 
         public UserDB() { }
@@ -151,12 +158,12 @@ namespace RSDKv5
 
         public UserDB(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            Reader creader = reader.getCompressedStreamRaw();
+            Reader creader = reader.GetCompressedStreamRaw();
             reader.Close();
 
             uint sig = creader.ReadUInt32();
@@ -181,19 +188,19 @@ namespace RSDKv5
             creader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Stream stream)
+        public void Write(Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             using (var stream = new MemoryStream())
             {
@@ -213,16 +220,17 @@ namespace RSDKv5
                         cwriter.Write((byte)columns.Count);
 
                         for (int i = 0; i < columns.Count; i++)
-                            columns[i].write(cwriter);
+                            columns[i].Write(cwriter);
 
                         for (int i = 0; i < rows.Count; i++)
-                            rows[i].write(cwriter);
+                            rows[i].Write(cwriter);
 
                         if (loop == 1)
-                            cwriter.seek(4, SeekOrigin.Begin);
+                            cwriter.Seek(4, SeekOrigin.Begin);
                     }
                 }
-                writer.writeCompressedRaw(stream.ToArray());
+
+                writer.WriteCompressedRaw(stream.ToArray());
             }
 
             writer.Close();

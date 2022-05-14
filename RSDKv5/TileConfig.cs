@@ -59,29 +59,29 @@ namespace RSDKv5
 
             public CollisionMask(Reader reader) : this()
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
-                byte[] collision = reader.readBytes(16);
-                bool[] collisionSolid = reader.readBytes(16).Select(x => x != 0).ToArray();
+                byte[] collision = reader.ReadBytes(16);
+                bool[] collisionSolid = reader.ReadBytes(16).Select(x => x != 0).ToArray();
 
                 for (int c = 0; c < 16; c++)
                 {
                     heightMasks[c].height = collision[c];
-                    heightMasks[c].solid  = collisionSolid[c];
+                    heightMasks[c].solid = collisionSolid[c];
                 }
 
-                flipY      = reader.ReadBoolean();
+                flipY = reader.ReadBoolean();
                 floorAngle = reader.ReadByte();
                 lWallAngle = reader.ReadByte();
                 rWallAngle = reader.ReadByte();
-                roofAngle  = reader.ReadByte();
-                flags      = reader.ReadByte();
+                roofAngle = reader.ReadByte();
+                flags = reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 for (int c = 0; c < 16; c++)
                     writer.Write(heightMasks[c].height);
@@ -103,11 +103,6 @@ namespace RSDKv5
         private static readonly byte[] signature = new byte[] { (byte)'T', (byte)'I', (byte)'L', 0 };
 
         /// <summary>
-        /// how many tiles we can store values for (1024)
-        /// </summary>
-        private const int TILES_COUNT = 0x400;
-
-        /// <summary>
         /// A list of all the mask values
         /// </summary>
         public CollisionMask[][] collisionMasks = new CollisionMask[2][];
@@ -116,8 +111,8 @@ namespace RSDKv5
         {
             for (int p = 0; p < 2; ++p)
             {
-                collisionMasks[p] = new CollisionMask[TILES_COUNT];
-                for (int i = 0; i < TILES_COUNT; ++i)
+                collisionMasks[p] = new CollisionMask[0x400];
+                for (int i = 0; i < 0x400; ++i)
                     collisionMasks[p][i] = new CollisionMask();
             }
         }
@@ -128,51 +123,54 @@ namespace RSDKv5
 
         public TileConfig(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid TileConfig signature");
             }
 
-            using (Reader creader = reader.getCompressedStream())
+            using (Reader creader = reader.GetCompressedStream())
             {
-                for (int i = 0; i < TILES_COUNT; ++i)
-                    collisionMasks[0][i].read(creader);
-                for (int i = 0; i < TILES_COUNT; ++i)
-                    collisionMasks[1][i].read(creader);
+                for (int i = 0; i < 0x400; ++i)
+                    collisionMasks[0][i].Read(creader);
+
+                for (int i = 0; i < 0x400; ++i)
+                    collisionMasks[1][i].Read(creader);
             }
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
-            write(new Writer(filename));
+            Write(new Writer(filename));
         }
 
-        public void write(Stream s)
+        public void Write(Stream s)
         {
-            write(new Writer(s));
+            Write(new Writer(s));
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write(signature);
             using (var stream = new MemoryStream())
             {
                 using (var cwriter = new Writer(stream))
                 {
-                    for (int i = 0; i < TILES_COUNT; ++i)
-                        collisionMasks[0][i].write(cwriter);
-                    for (int i = 0; i < TILES_COUNT; ++i)
-                        collisionMasks[1][i].write(cwriter);
+                    for (int i = 0; i < 0x400; ++i)
+                        collisionMasks[0][i].Write(cwriter);
+                    for (int i = 0; i < 0x400; ++i)
+                        collisionMasks[1][i].Write(cwriter);
                 }
-                writer.writeCompressed(stream.ToArray());
+
+                writer.WriteCompressed(stream.ToArray());
             }
+
             writer.Close();
         }
     }

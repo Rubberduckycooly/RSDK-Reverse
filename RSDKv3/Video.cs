@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace RSDKv3
 {
@@ -16,11 +13,12 @@ namespace RSDKv3
         /// <summary>
         /// How Wide the frames are (in pixels)
         /// </summary>
-        public ushort width;
+        public ushort width = 0;
+
         /// <summary>
         /// how Tall the frames are (in pixels)
         /// </summary>
-        public ushort height;
+        public ushort height = 0;
 
         public Video() { }
 
@@ -30,10 +28,10 @@ namespace RSDKv3
 
         public Video(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             ushort frameCount = reader.ReadUInt16();
             width = reader.ReadUInt16();
@@ -48,7 +46,7 @@ namespace RSDKv3
                 Gif frame = new Gif();
                 frame.width = width;
                 frame.height = height;
-                frame.read(reader, true, 0x80);
+                frame.Read(reader, true, 0x80);
 
                 frames.Add(frame);
 
@@ -59,19 +57,19 @@ namespace RSDKv3
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream reader)
+        public void Write(System.IO.Stream reader)
         {
             using (Writer writer = new Writer(reader))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             writer.Write((ushort)frames.Count);
             writer.Write(width);
@@ -83,7 +81,7 @@ namespace RSDKv3
                 using (var gifStream = new System.IO.MemoryStream())
                 {
                     Writer swriter = new Writer(gifStream);
-                    frame.write(swriter, true, true);
+                    frame.Write(swriter, true, true);
                     gifData = gifStream.ToArray();
                 }
 
@@ -94,7 +92,7 @@ namespace RSDKv3
             writer.Close();
         }
 
-        public void import(string inputFolder)
+        public void Import(string inputFolder)
         {
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(inputFolder);
             if (!dir.Exists)
@@ -122,11 +120,11 @@ namespace RSDKv3
             }
         }
 
-        public void export(string outputFolder)
+        public void Export(string outputFolder)
         {
             int frameID = 0;
             foreach (Gif frame in frames)
-                frame.write(outputFolder + $"Frame {(frameID++).ToString().PadLeft(6, '0')}.gif");
+                frame.Write(outputFolder + $"Frame {(frameID++).ToString().PadLeft(6, '0')}.gif");
         }
     }
 }

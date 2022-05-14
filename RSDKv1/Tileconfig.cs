@@ -3,11 +3,6 @@
     public class TileConfig
     {
         /// <summary>
-        /// 1024 tiles, always
-        /// </summary>
-        private const int TILES_COUNT = 0x400;
-
-        /// <summary>
         /// A list of all the mask values
         /// </summary>
         public CollisionMask[][] collisionMasks = new CollisionMask[2][];
@@ -74,8 +69,8 @@
         {
             for (int p = 0; p < 2; ++p)
             {
-                collisionMasks[p] = new CollisionMask[TILES_COUNT];
-                for (int i = 0; i < TILES_COUNT; ++i)
+                collisionMasks[p] = new CollisionMask[0x400];
+                for (int i = 0; i < 0x400; ++i)
                     collisionMasks[p][i] = new CollisionMask();
             }
         }
@@ -86,12 +81,12 @@
 
         public TileConfig(Reader reader, bool dcVer = false) : this()
         {
-            read(reader, dcVer);
+            Read(reader, dcVer);
         }
 
-        public void read(Reader reader, bool dcVer = false)
+        public void Read(Reader reader, bool dcVer = false)
         {
-            for (int c = 0; c < TILES_COUNT; ++c)
+            for (int c = 0; c < 0x400; ++c)
             {
                 if (!dcVer)
                 {
@@ -102,13 +97,13 @@
 
                 for (int p = 0; p < 2; ++p)
                 {
-                    for (int f = 0; f < (int)CollisionSides.Max; ++f)
+                    for (int d = 0; d < (int)CollisionSides.Max; ++d)
                     {
-                        for (int i = 0; i < 16; ++i)
+                        for (int m = 0; m < 16; ++m)
                         {
-                            byte buffer = reader.ReadByte();
-                            collisionMasks[p][c].heightMasks[f][i].height = (byte)((buffer & 0xF0) >> 4);
-                            collisionMasks[p][c].heightMasks[f][i].solid = (CollisionMask.HeightMask.Solidities)(buffer & 0x0F);
+                            byte info = reader.ReadByte();
+                            collisionMasks[p][c].heightMasks[d][m].height = (byte)((info & 0xF0) >> 4);
+                            collisionMasks[p][c].heightMasks[d][m].solid = (CollisionMask.HeightMask.Solidities)(info & 0x0F);
                         }
                     }
                 }
@@ -117,38 +112,39 @@
             reader.Close();
         }
 
-        public void write(string filename, bool DCver = false)
+        public void Write(string filename, bool DCver = false)
         {
             using (Writer writer = new Writer(filename))
-                write(writer, DCver);
+                Write(writer, DCver);
         }
 
-        public void write(System.IO.Stream stream, bool DCver = false)
+        public void Write(System.IO.Stream stream, bool DCver = false)
         {
             using (Writer writer = new Writer(stream))
-                write(writer, DCver);
+                Write(writer, DCver);
         }
 
-        public void write(Writer writer, bool dcVer = false)
+        public void Write(Writer writer, bool dcVer = false)
         {
-            for (int c = 0; c < TILES_COUNT; ++c)
+            for (int c = 0; c < 0x400; ++c)
             {
                 if (!dcVer)
-                    writer.Write(addNibbles((byte)collisionMasks[0][c].collisionMode, (byte)collisionMasks[1][c].collisionMode));
+                    writer.Write(addNybbles((byte)collisionMasks[0][c].collisionMode, (byte)collisionMasks[1][c].collisionMode));
 
                 for (int p = 0; p < 2; ++p)
                 {
-                    for (int f = 0; f < (int)CollisionSides.Max; ++f)
+                    for (int d = 0; d < (int)CollisionSides.Max; ++d)
                     {
-                        for (int i = 0; i < 16; ++i)
-                            writer.Write(addNibbles(collisionMasks[p][c].heightMasks[f][i].height, (byte)collisionMasks[p][c].heightMasks[f][i].solid));
+                        for (int m = 0; m < 16; ++m)
+                            writer.Write(addNybbles(collisionMasks[p][c].heightMasks[d][m].height, (byte)collisionMasks[p][c].heightMasks[d][m].solid));
                     }
                 }
             }
+
             writer.Close();
         }
 
-        private byte addNibbles(byte a, byte b)
+        private byte addNybbles(byte a, byte b)
         {
             return (byte)((a & 0xF) << 4 | (b & 0xF));
         }

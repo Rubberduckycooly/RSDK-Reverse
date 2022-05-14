@@ -12,10 +12,12 @@ namespace RSDKv2
             /// E.G: 0x80 == move 1 pixel per 1 pixel of camera movement, 0x40 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
             public byte parallaxFactor = 0x80;
+
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
             public byte scrollSpeed = 0;
+
             /// <summary>
             /// determines if the scrollInfo allows deformation or not
             /// </summary>
@@ -58,10 +60,10 @@ namespace RSDKv2
 
             public ScrollInfo(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 // 1 byte, unsigned
                 parallaxFactor = reader.ReadByte();
@@ -69,7 +71,7 @@ namespace RSDKv2
                 deform = reader.ReadBoolean();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(parallaxFactor);
                 writer.Write(scrollSpeed);
@@ -111,10 +113,12 @@ namespace RSDKv2
             /// Layer Width
             /// </summary>
             public byte width = 0;
+
             /// <summary>
             /// Layer Height
             /// </summary>
             public byte height = 0;
+
             /// <summary>
             /// determines layer type
             /// </summary>
@@ -124,10 +128,12 @@ namespace RSDKv2
             /// E.G: 0x40 == move 1 pixel per 1 pixel of camera movement, 0x20 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
             public byte parallaxFactor = 0x80;
+
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
             public byte scrollSpeed = 0;
+
             /// <summary>
             /// a list of Line positions
             /// </summary>
@@ -179,10 +185,10 @@ namespace RSDKv2
 
             public Layer(Reader reader)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 width = reader.ReadByte();
                 height = reader.ReadByte();
@@ -209,8 +215,8 @@ namespace RSDKv2
                             int cnt = buf[2] - 1;
                             for (int c = 0; c < cnt; ++c)
                             {
-                                if (pos < lineScroll.Length) 
-                                    lineScroll[pos++] = val; 
+                                if (pos < lineScroll.Length)
+                                    lineScroll[pos++] = val;
                             }
                         }
                         else
@@ -224,18 +230,18 @@ namespace RSDKv2
                 }
 
                 layout = new byte[height][];
-                for (int m = 0; m < height; m++)
-                    layout[m] = new byte[width];
+                for (int y = 0; y < height; y++)
+                    layout[y] = new byte[width];
 
                 for (int y = 0; y < height; y++)
                 {
-                    //128x128 Block number is 8-bit in RSDKv2
+                    //128x128 Block number is 8-bit in Sonic Nexus
                     for (int x = 0; x < width; x++)
                         layout[y][x] = reader.ReadByte();
                 }
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(width);
                 writer.Write(height);
@@ -255,26 +261,26 @@ namespace RSDKv2
 
                     if (index != l && line > 0)
                     {
-                        rle_write(writer, l, cnt);
+                        WriteRLE(writer, l, cnt);
                         cnt = 0;
                     }
                     l = index;
                     cnt++;
                 }
 
-                rle_write(writer, l, cnt);
+                WriteRLE(writer, l, cnt);
 
                 writer.Write((byte)0xFF);
                 writer.Write((byte)0xFF);
 
-                for (int h = 0; h < height; h++)
+                for (int y = 0; y < height; y++)
                 {
-                    for (int w = 0; w < width; w++)
-                        writer.Write(layout[h][w]);
+                    for (int x = 0; x < width; x++)
+                        writer.Write(layout[y][x]);
                 }
             }
 
-            private static void rle_write(Writer file, int value, int count)
+            private static void WriteRLE(Writer file, int value, int count)
             {
                 if (count <= 2)
                 {
@@ -298,7 +304,7 @@ namespace RSDKv2
             /// </summary>
             /// <param name="width">The new Width</param>
             /// <param name="height">The new Height</param>
-            public void resize(byte width, byte height)
+            public void Resize(byte width, byte height)
             {
                 // first take a backup of the current dimensions
                 // then update the internal dimensions
@@ -314,13 +320,13 @@ namespace RSDKv2
                 // fill the extended tile arrays with "empty" values
 
                 // if we're actaully getting shorter, do nothing!
-                for (byte i = oldHeight; i < this.height; i++)
+                for (byte y = oldHeight; y < this.height; y++)
                 {
                     // first create arrays child arrays to the old width
                     // a little inefficient, but at least they'll all be equal sized
-                    layout[i] = new byte[oldWidth];
-                    for (int j = 0; j < oldWidth; ++j)
-                        layout[i][j] = 0; // fill the new ones with blanks
+                    layout[y] = new byte[oldWidth];
+                    for (int x = 0; x < oldWidth; ++x)
+                        layout[y][x] = 0; // fill the new ones with blanks
                 }
 
                 for (byte y = 0; y < this.height; y++)
@@ -338,10 +344,12 @@ namespace RSDKv2
         /// A list of Horizontal Line Scroll Values
         /// </summary>
         public List<ScrollInfo> hScroll = new List<ScrollInfo>();
+
         /// <summary>
         /// A list of Vertical Line Scroll Values
         /// </summary>
         public List<ScrollInfo> vScroll = new List<ScrollInfo>();
+
         /// <summary>
         /// A list of Background layers
         /// </summary>
@@ -359,10 +367,10 @@ namespace RSDKv2
 
         public Backgrounds(Reader reader) : this()
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
             byte layerCount = reader.ReadByte();
             byte hScrollCount = reader.ReadByte();
@@ -380,38 +388,38 @@ namespace RSDKv2
                 layers[i] = new Layer();
 
             for (int i = 0; i < layerCount; i++)
-                layers[i].read(reader);
+                layers[i].Read(reader);
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Too Lazy to do this properly, have 8 layers no matter what
             writer.Write((byte)8);
 
             writer.Write((byte)hScroll.Count);
             foreach (ScrollInfo hScrollInfo in hScroll)
-                hScrollInfo.write(writer);
+                hScrollInfo.Write(writer);
 
             writer.Write((byte)vScroll.Count);
             foreach (ScrollInfo vScrollInfo in vScroll)
-                vScrollInfo.write(writer);
+                vScrollInfo.Write(writer);
 
             foreach (Layer layer in layers)
-                layer.write(writer);
+                layer.Write(writer);
 
             writer.Close();
         }

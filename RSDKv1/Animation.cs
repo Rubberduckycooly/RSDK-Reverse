@@ -117,10 +117,10 @@ namespace RSDKv1
 
                 public Frame(Reader reader)
                 {
-                    read(reader);
+                    Read(reader);
                 }
 
-                public void read(Reader reader)
+                public void Read(Reader reader)
                 {
                     sprX = reader.ReadByte();
                     sprY = reader.ReadByte();
@@ -128,16 +128,16 @@ namespace RSDKv1
                     height = reader.ReadByte();
                     sheet = reader.ReadByte();
 
-                    hitbox.left = readSByte(reader);
-                    hitbox.top = readSByte(reader);
-                    hitbox.right = readSByte(reader);
-                    hitbox.bottom = readSByte(reader);
+                    hitbox.left = ReadInt8(reader);
+                    hitbox.top = ReadInt8(reader);
+                    hitbox.right = ReadInt8(reader);
+                    hitbox.bottom = ReadInt8(reader);
 
                     pivotX = (sbyte)-reader.ReadByte();
                     pivotY = (sbyte)-reader.ReadByte();
                 }
 
-                public void write(Writer writer)
+                public void Write(Writer writer)
                 {
                     writer.Write(sprX);
                     writer.Write(sprY);
@@ -145,16 +145,16 @@ namespace RSDKv1
                     writer.Write(height);
                     writer.Write(sheet);
 
-                    writeSByte(writer, hitbox.left);
-                    writeSByte(writer, hitbox.top);
-                    writeSByte(writer, hitbox.right);
-                    writeSByte(writer, hitbox.bottom);
+                    WriteInt8(writer, hitbox.left);
+                    WriteInt8(writer, hitbox.top);
+                    WriteInt8(writer, hitbox.right);
+                    WriteInt8(writer, hitbox.bottom);
 
                     writer.Write((byte)-pivotX);
                     writer.Write((byte)-pivotY);
                 }
 
-                private sbyte readSByte(Reader reader)
+                private sbyte ReadInt8(Reader reader)
                 {
                     int val = reader.ReadByte();
                     if (val >= 0x80)
@@ -162,7 +162,7 @@ namespace RSDKv1
                     else
                         return (sbyte)val;
                 }
-                private void writeSByte(Writer writer, int val)
+                private void WriteInt8(Writer writer, int val)
                 {
                     if (val < 0)
                         writer.Write((byte)(0x80 - val));
@@ -176,14 +176,17 @@ namespace RSDKv1
             /// the name of the animation
             /// </summary>
             public string name { get; private set; }
+
             /// <summary>
             /// a list of frames in the animation
             /// </summary>
             public List<Frame> frames = new List<Frame>();
+
             /// <summary>
             /// the speed of the animation
             /// </summary>
             public byte speed = 0;
+
             /// <summary>
             /// what frame to loop from
             /// </summary>
@@ -204,10 +207,10 @@ namespace RSDKv1
 
             public AnimationEntry(Reader reader, string name = "New Animation") : this(name)
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 short frameCount = reader.ReadByte();
                 speed = reader.ReadByte();
@@ -218,14 +221,14 @@ namespace RSDKv1
                     frames.Add(new Frame(reader));
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write((byte)frames.Count);
                 writer.Write(speed);
                 writer.Write(loopIndex);
 
                 foreach (Frame frame in frames)
-                    frame.write(writer);
+                    frame.Write(writer);
             }
         }
 
@@ -233,6 +236,7 @@ namespace RSDKv1
         /// Unknown Value, no clue what it does, not used in-engine
         /// </summary>
         private byte unknown = 0;
+
         /// <summary>
         /// What moveset to give the player
         /// </summary>
@@ -242,6 +246,7 @@ namespace RSDKv1
         /// a list of all the spritesheets to be loaded, each sheet path is relative to "Data/Characters/"
         /// </summary>
         public string[] spriteSheets = new string[3];
+
         /// <summary>
         /// the list of Animations in the file
         /// </summary>
@@ -249,8 +254,8 @@ namespace RSDKv1
 
         public Animation()
         {
-            for (int i = 0; i < 3; ++i)
-                spriteSheets[i] = "<NULL>";
+            for (int s = 0; s < 3; ++s)
+                spriteSheets[s] = "<NULL>";
         }
 
         public Animation(string filename) : this(new Reader(filename)) { }
@@ -259,10 +264,10 @@ namespace RSDKv1
 
         public Animation(Reader reader, bool dcVer = false) : this()
         {
-            read(reader, dcVer);
+            Read(reader, dcVer);
         }
 
-        public void read(Reader reader, bool dcVer = false)
+        public void Read(Reader reader, bool dcVer = false)
         {
             unknown = reader.ReadByte();
             playerType = (PlayerIDs)reader.ReadByte();
@@ -270,7 +275,7 @@ namespace RSDKv1
 
             // SpriteSheets
             for (int s = 0; s < (dcVer ? 2 : 3); ++s)
-                spriteSheets[s] = reader.readRSDKString();
+                spriteSheets[s] = reader.ReadStringRSDK();
 
             // Animations
             animations.Clear();
@@ -280,31 +285,31 @@ namespace RSDKv1
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer, bool dcVer = false)
+        public void Write(Writer writer, bool dcVer = false)
         {
-            writer.Write(unknown); //No idea what this is
+            writer.Write(unknown); // No idea what this is
             writer.Write((byte)playerType);
             writer.Write((byte)animations.Count);
 
             // SpriteSheets
             for (int s = 0; s < (dcVer ? 2 : 3); ++s)
-                writer.writeRSDKString(spriteSheets[s]);
+                writer.WriteStringRSDK(spriteSheets[s]);
 
             // Animations
             foreach (AnimationEntry anim in animations)
-                anim.write(writer);
+                anim.Write(writer);
 
             writer.Close();
         }

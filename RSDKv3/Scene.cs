@@ -37,13 +37,14 @@ namespace RSDKv3
 
             public Entity(Reader reader) : this()
             {
-                read(reader);
+                Read(reader);
             }
 
-            public void read(Reader reader)
+            public void Read(Reader reader)
             {
                 // entity type, 1 byte, unsigned
                 type = reader.ReadByte();
+
                 // Property value, 1 byte, unsigned
                 propertyValue = reader.ReadByte();
 
@@ -56,7 +57,7 @@ namespace RSDKv3
                 ypos |= reader.ReadByte();
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
                 writer.Write(type);
                 writer.Write(propertyValue);
@@ -88,11 +89,10 @@ namespace RSDKv3
             AfterLayer0,
             AfterLayer1,
             AfterLayer2,
-            AfterLayer3,
         }
 
         /// <summary>
-        /// the Stage Name (what the titlecard displays)
+        /// the Stage Name (what the TitleCard displays)
         /// </summary>
         public string title = "STAGE";
 
@@ -105,27 +105,32 @@ namespace RSDKv3
         /// Active Layer 0
         /// </summary>
         public ActiveLayers activeLayer0 = ActiveLayers.Background1;
+
         /// <summary>
         /// Active Layer 1
         /// </summary>
         public ActiveLayers activeLayer1 = ActiveLayers.None;
+
         /// <summary>
         /// Active Layer 2
         /// </summary>
         public ActiveLayers activeLayer2 = ActiveLayers.Foreground;
+
         /// <summary>
         /// Active Layer 3
         /// </summary>
         public ActiveLayers activeLayer3 = ActiveLayers.Foreground;
+
         /// <summary>
-        /// Determines what layers should draw using high visual plane, in an example of 2, active layers 2 & 3 would use high plane tiles, while 0 & 1 would use low plane
+        /// Determines what layers should draw using high visual plane, in an example of "AfterLayer1", active layers 2 & 3 would use high plane tiles, while 0 & 1 would use low plane
         /// </summary>
-        public LayerMidpoints layerMidpoint = LayerMidpoints.AfterLayer2;
+        public LayerMidpoints layerMidpoint = LayerMidpoints.AfterLayer1;
 
         /// <summary>
         /// the list of entities in the stage
         /// </summary>
         public List<Entity> entities = new List<Entity>();
+
         /// <summary>
         /// a list of names for each Object Type
         /// </summary>
@@ -135,6 +140,7 @@ namespace RSDKv3
         /// stage width (in chunks)
         /// </summary>
         public byte width = 0;
+
         /// <summary>
         /// stage height (in chunks)
         /// </summary>
@@ -157,17 +163,17 @@ namespace RSDKv3
 
         public Scene(Reader reader)
         {
-            read(reader);
+            Read(reader);
         }
 
-        public void read(Reader reader)
+        public void Read(Reader reader)
         {
-            title = reader.readRSDKString();
+            title = reader.ReadStringRSDK();
 
-            activeLayer0  = (ActiveLayers)reader.ReadByte();
-            activeLayer1  = (ActiveLayers)reader.ReadByte();
-            activeLayer2  = (ActiveLayers)reader.ReadByte();
-            activeLayer3  = (ActiveLayers)reader.ReadByte();
+            activeLayer0 = (ActiveLayers)reader.ReadByte();
+            activeLayer1 = (ActiveLayers)reader.ReadByte();
+            activeLayer2 = (ActiveLayers)reader.ReadByte();
+            activeLayer3 = (ActiveLayers)reader.ReadByte();
             layerMidpoint = (LayerMidpoints)reader.ReadByte();
 
             // Map width/height in 128 pixel units
@@ -177,8 +183,8 @@ namespace RSDKv3
             height = reader.ReadByte();
 
             layout = new ushort[height][];
-            for (int i = 0; i < height; i++)
-                layout[i] = new ushort[width];
+            for (int y = 0; y < height; y++)
+                layout[y] = new ushort[width];
 
             for (int y = 0; y < height; y++)
             {
@@ -195,8 +201,8 @@ namespace RSDKv3
             int objectTypeCount = reader.ReadByte();
 
             objectTypeNames.Clear();
-            for (int n = 0; n < objectTypeCount; n++)
-                objectTypeNames.Add(reader.readRSDKString());
+            for (int o = 0; o < objectTypeCount; o++)
+                objectTypeNames.Add(reader.ReadStringRSDK());
 
             // Read entities
 
@@ -204,28 +210,28 @@ namespace RSDKv3
             int entityCount = reader.ReadByte() << 8;
             entityCount |= reader.ReadByte();
 
-            for (int n = 0; n < entityCount; n++)
+            for (int e = 0; e < entityCount; e++)
                 entities.Add(new Entity(reader));
 
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Write zone name		
-            writer.writeRSDKString(title);
+            writer.WriteStringRSDK(title);
 
             // Write the active layers & midpoint
             writer.Write((byte)activeLayer0);
@@ -239,12 +245,12 @@ namespace RSDKv3
             writer.Write(height);
 
             // Write tile layout
-            for (int h = 0; h < height; h++)
+            for (int y = 0; y < height; y++)
             {
-                for (int w = 0; w < width; w++)
+                for (int x = 0; x < width; x++)
                 {
-                    writer.Write((byte)(layout[h][w] >> 8));
-                    writer.Write((byte)(layout[h][w] & 0xff));
+                    writer.Write((byte)(layout[y][x] >> 8));
+                    writer.Write((byte)(layout[y][x] & 0xff));
                 }
             }
 
@@ -254,7 +260,7 @@ namespace RSDKv3
             // Write object type names
             // Ignore first object type (Blank Object), it is not stored.
             foreach (string typeName in objectTypeNames)
-                writer.writeRSDKString(typeName);
+                writer.WriteStringRSDK(typeName);
 
             // Write number of entities
             writer.Write((byte)(entities.Count >> 8));
@@ -262,7 +268,7 @@ namespace RSDKv3
 
             // Write entities
             foreach (Entity entity in entities)
-                entity.write(writer);
+                entity.Write(writer);
 
             writer.Close();
         }
@@ -272,7 +278,7 @@ namespace RSDKv3
         /// </summary>
         /// <param name="width">The new Width</param>
         /// <param name="height">The new Height</param>
-        public void resize(byte width, byte height)
+        public void Resize(byte width, byte height)
         {
             // first take a backup of the current dimensions
             // then update the internal dimensions
@@ -287,13 +293,13 @@ namespace RSDKv3
             // fill the extended tile arrays with "empty" values
 
             // if we're actaully getting shorter, do nothing!
-            for (byte i = oldHeight; i < this.height; i++)
+            for (byte y = oldHeight; y < this.height; y++)
             {
                 // first create arrays child arrays to the old width
                 // a little inefficient, but at least they'll all be equal sized
-                layout[i] = new ushort[oldWidth];
-                for (int j = 0; j < oldWidth; ++j)
-                    layout[i][j] = 0; // fill the new ones with blanks
+                layout[y] = new ushort[oldWidth];
+                for (int x = 0; x < oldWidth; ++x)
+                    layout[y][x] = 0; // fill the new ones with blanks
             }
 
             for (byte y = 0; y < this.height; y++)

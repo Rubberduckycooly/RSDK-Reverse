@@ -12,8 +12,8 @@ namespace RSDKv4
         {
             public FunctionScript() { }
 
-            public int scriptCodePos;
-            public int jumpTablePos;
+            public int scriptCodePos = 0x3FFFF;
+            public int jumpTablePos  = 0x3FFFF;
         };
 
         public class ScriptInfo
@@ -30,6 +30,14 @@ namespace RSDKv4
             public int jumpTablePos_startup  = 0x3FFFF;
         };
 
+        private class DataInfo
+        {
+            public List<int> data = new List<int>();
+            public bool readInt = false;
+
+            public DataInfo() { }
+        }
+
         public int[] scriptCode = new int[0x40000];
         public int scriptCodeLength = 0;
         public int[] jumpTable = new int[0x4000];
@@ -39,6 +47,11 @@ namespace RSDKv4
         List<FunctionScript> functionList = new List<FunctionScript>();
 
         public Bytecode(Reader reader)
+        {
+            Read(reader);
+        }
+
+        public void Read(Reader reader)
         {
             int scriptCodePos = 0;
             int jumpTablePos = 0;
@@ -115,15 +128,7 @@ namespace RSDKv4
             jumpTableLength = jumpTablePos;
         }
 
-        private class DataInfo
-        {
-            public List<int> data = new List<int>();
-            public bool readInt = false;
-
-            public DataInfo() { }
-        }
-
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             List<DataInfo> dataInfo = new List<DataInfo>();
 
@@ -248,6 +253,5 @@ namespace RSDKv4
 
             writer.Close();
         }
-
     }
 }

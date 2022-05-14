@@ -79,10 +79,10 @@ namespace RSDKv5
 
                 public Frame(Reader reader, Animation anim = null)
                 {
-                    read(reader, anim);
+                    Read(reader, anim);
                 }
 
-                public void read(Reader reader, Animation anim = null)
+                public void Read(Reader reader, Animation anim = null)
                 {
                     sheet = reader.ReadByte();
                     duration = reader.ReadUInt16();
@@ -105,7 +105,7 @@ namespace RSDKv5
                     }
                 }
 
-                public void write(Writer writer)
+                public void Write(Writer writer)
                 {
                     writer.Write(sheet);
                     writer.Write(duration);
@@ -132,9 +132,9 @@ namespace RSDKv5
                 None,
                 Full,
                 Snap_45Deg,
+                Snap_90Deg,
+                Snap_180Deg,
                 StaticRotation,
-                Snap_180,
-                Snap_90,
             }
 
             /// <summary>
@@ -162,12 +162,12 @@ namespace RSDKv5
 
             public AnimationEntry(Reader reader, Animation anim = null)
             {
-                read(reader, anim);
+                Read(reader, anim);
             }
 
-            public void read(Reader reader, Animation anim = null)
+            public void Read(Reader reader, Animation anim = null)
             {
-                name = reader.readRSDKString();
+                name = reader.ReadStringRSDK();
                 short frameCount = reader.ReadInt16();
                 speed = reader.ReadInt16();
                 loopIndex = reader.ReadByte();
@@ -178,16 +178,16 @@ namespace RSDKv5
                     frames.Add(new Frame(reader, anim));
             }
 
-            public void write(Writer writer)
+            public void Write(Writer writer)
             {
-                writer.writeRSDKString(name);
+                writer.WriteStringRSDK(name);
                 writer.Write((short)frames.Count);
                 writer.Write(speed);
                 writer.Write(loopIndex);
                 writer.Write((byte)rotationStyle);
 
                 foreach (Frame frame in frames)
-                    frame.write(writer);
+                    frame.Write(writer);
             }
         }
 
@@ -226,7 +226,7 @@ namespace RSDKv5
         public Animation(Reader reader)
         {
             // Header
-            if (!reader.readBytes(4).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid Animation v5 signature");
@@ -239,13 +239,13 @@ namespace RSDKv5
             int spriteSheetCount = reader.ReadByte();
             spriteSheets.Clear();
             for (int s = 0; s < spriteSheetCount; ++s)
-                spriteSheets.Add(reader.readRSDKString());
+                spriteSheets.Add(reader.ReadStringRSDK());
 
             // Hitboxes
             int hitboxTypeCount = reader.ReadByte();
             hitboxTypes.Clear();
             for (int h = 0; h < hitboxTypeCount; ++h)
-                hitboxTypes.Add(reader.readRSDKString());
+                hitboxTypes.Add(reader.ReadStringRSDK());
 
             // Animations
             int animationCount = reader.ReadInt16();
@@ -256,19 +256,19 @@ namespace RSDKv5
             reader.Close();
         }
 
-        public void write(string filename)
+        public void Write(string filename)
         {
             using (Writer writer = new Writer(filename))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(System.IO.Stream stream)
+        public void Write(System.IO.Stream stream)
         {
             using (Writer writer = new Writer(stream))
-                write(writer);
+                Write(writer);
         }
 
-        public void write(Writer writer)
+        public void Write(Writer writer)
         {
             // Header
             writer.Write(signature);
@@ -277,17 +277,17 @@ namespace RSDKv5
             // SpriteSheets
             writer.Write((byte)spriteSheets.Count);
             foreach (string sheet in spriteSheets)
-                writer.writeRSDKString(sheet);
+                writer.WriteStringRSDK(sheet);
 
             // Hitboxes
             writer.Write((byte)hitboxTypes.Count);
             foreach (string type in hitboxTypes)
-                writer.writeRSDKString(type);
+                writer.WriteStringRSDK(type);
 
             // Animations
             writer.Write((ushort)animations.Count);
             foreach (AnimationEntry anim in animations)
-                anim.write(writer);
+                anim.Write(writer);
 
             writer.Close();
         }

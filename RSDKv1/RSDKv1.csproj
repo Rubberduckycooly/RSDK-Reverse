@@ -39,7 +39,7 @@
     <Compile Include="Animation.cs" />
     <Compile Include="Backgrounds.cs" />
     <Compile Include="Bitmap.cs" />
-    <Compile Include="DataFile.cs" />
+    <Compile Include="DataPack.cs" />
     <Compile Include="Gfx.cs" />
     <Compile Include="Scene.cs" />
     <Compile Include="CharacterList.cs" />
