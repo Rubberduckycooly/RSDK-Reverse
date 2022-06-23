@@ -393,7 +393,9 @@ namespace RSDKv4
             }
         }
 
-        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'B' };
+        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K' };
+
+        private byte version = (byte)'B';
 
         public List<File> files = new List<File>();
 
@@ -409,11 +411,14 @@ namespace RSDKv4
 
         public void Read(Reader reader, List<string> fileNames = null)
         {
-            if (!reader.ReadBytes(6).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid DataFile v4 signature");
             }
+
+            reader.ReadByte(); // 'v'
+            version = reader.ReadByte();
 
             ushort fileCount = reader.ReadUInt16();
             files.Clear();
@@ -441,6 +446,9 @@ namespace RSDKv4
             // write a bunch of blanks
 
             writer.Write(signature);
+            writer.Write('v');
+            writer.Write(version);
+
             writer.Write((ushort)files.Count); // write the header
 
             foreach (File f in files)  // write each file's header
@@ -458,6 +466,9 @@ namespace RSDKv4
             writer.Seek(0, SeekOrigin.Begin); // jump back to the start of the file
 
             writer.Write(signature);
+            writer.Write('v');
+            writer.Write(version);
+
             writer.Write((ushort)files.Count); // re-write our header
 
             foreach (File f in files) // for each file

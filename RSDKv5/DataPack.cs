@@ -407,7 +407,9 @@ namespace RSDKv5
 
         }
 
-        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K', (byte)'v', (byte)'5' };
+        public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K' };
+
+        private byte version = (byte)'5';
 
         public List<File> files = new List<File>();
 
@@ -422,11 +424,14 @@ namespace RSDKv5
 
         public void Read(Reader reader, List<string> fileNames = null)
         {
-            if (!reader.ReadBytes(6).SequenceEqual(signature))
+            if (!reader.ReadBytes(4).SequenceEqual(signature))
             {
                 reader.Close();
                 throw new Exception("Invalid DataFile v5 signature");
             }
+
+            reader.ReadByte(); // 'v'
+            version = reader.ReadByte();
 
             ushort fileCount = reader.ReadUInt16();
             for (int f = 0; f < fileCount; f++)
@@ -453,6 +458,9 @@ namespace RSDKv5
             // write a bunch of blanks
 
             writer.Write(signature);
+            writer.Write('v');
+            writer.Write(version);
+
             writer.Write((ushort)files.Count);
 
             foreach (File f in files)     // write each file's header
@@ -470,6 +478,9 @@ namespace RSDKv5
             writer.Seek(0, SeekOrigin.Begin); // jump back to the start of the file
 
             writer.Write(signature);
+            writer.Write('v');
+            writer.Write(version);
+
             writer.Write((ushort)files.Count); // re-write our header
 
             foreach (File f in files) // for each file

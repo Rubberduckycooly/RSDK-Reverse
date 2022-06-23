@@ -20,7 +20,7 @@ namespace RSDKv5
             String,
             Animator,
             Hitbox,
-            Unknown,
+            SpriteFrame,
         };
 
         public class ArrayInfo
@@ -254,7 +254,7 @@ namespace RSDKv5
                             memPos = tmpMemPos + 8 * arraySize;
                             break;
 
-                        case (int)StaticVariableTypes.Unknown:
+                        case (int)StaticVariableTypes.SpriteFrame:
                             tmpMemPos = (int)((memPos & 0xFFFFFFFE) + 2);
                             if ((memPos & 0xFFFFFFFE) >= memPos)
                                 tmpMemPos = memPos;
