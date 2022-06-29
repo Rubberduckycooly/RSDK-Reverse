@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -356,7 +356,10 @@ namespace RSDKv5
 
             private ExtensionTypes GetExtensionFromData()
             {
-                byte[] header = new byte[5];
+                if (data.Length < 4)
+                    return ExtensionTypes.Unknown;
+
+                byte[] header = new byte[4];
 
                 for (int i = 0; i < header.Length; i++)
                     header[i] = data[i];
@@ -409,7 +412,7 @@ namespace RSDKv5
 
         public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K' };
 
-        private byte version = (byte)'5';
+        public byte version = (byte)'5';
 
         public List<File> files = new List<File>();
 
