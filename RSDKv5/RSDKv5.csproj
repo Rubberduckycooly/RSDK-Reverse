@@ -82,6 +82,7 @@
     <Compile Include="DataPack.cs" />
     <Compile Include="GameConfig.cs" />
     <Compile Include="Gif.cs" />
+    <Compile Include="MD5Hasher.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

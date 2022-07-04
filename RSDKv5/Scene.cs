@@ -82,10 +82,7 @@ namespace RSDKv5
 
         public NameIdentifier(string name)
         {
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                hash = md5.ComputeHash(new System.Text.ASCIIEncoding().GetBytes(name));
-            }
+            hash = MD5Hasher.GetHash(new System.Text.ASCIIEncoding().GetBytes(name));
             this.name = name;
             usingHash = false;
         }

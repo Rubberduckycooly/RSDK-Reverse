@@ -67,12 +67,12 @@ namespace RSDKv5
 
             public File() { }
 
-            public File(Reader reader, List<string> fileNames = null, int fileID = 0)
+            public File(Reader reader, List<NameIdentifier> fileNames = null, int fileID = 0)
             {
                 Read(reader, fileNames, fileID);
             }
 
-            public void Read(Reader reader, List<string> fileNames = null, int fileID = 0)
+            public void Read(Reader reader, List<NameIdentifier> fileNames = null, int fileID = 0)
             {
                 for (int y = 0; y < 16; y += 4)
                 {
@@ -83,33 +83,29 @@ namespace RSDKv5
                 }
                 name.usingHash = true;
 
-                var md5 = MD5.Create();
-
                 name.name = (fileID + 1) + ".bin"; //Make a base name
 
-                for (int i = 0; fileNames != null && i < fileNames.Count; i++)
-                {
-                    // Mania Hashes all Strings at Lower Case
-                    string fp = fileNames[i].ToLower();
-
-                    bool match = true;
-
-                    for (int z = 0; z < 16; z++)
+                if (fileNames != null)
+                    foreach (var fn in fileNames)
                     {
-                        if (CalculateMD5Hash(fp)[z] != name.hash[z])
+                        bool match = true;
+
+                        for (int z = 0; z < 16; z++)
                         {
-                            match = false;
+                            if (fn.hash[z] != name.hash[z])
+                            {
+                                match = false;
+                                break;
+                            }
+                        }
+
+                        if (match)
+                        {
+                            name = fn;
                             break;
                         }
-                    }
 
-                    if (match)
-                    {
-                        name = new NameIdentifier(fileNames[i]);
-                        break;
                     }
-
-                }
 
                 uint fileOffset = reader.ReadUInt32();
                 uint tmp = reader.ReadUInt32();
@@ -214,8 +210,6 @@ namespace RSDKv5
                             break;
                     }
                 }
-
-                md5.Dispose();
             }
 
             public void WriteFileHeader(Writer writer, uint offset = 0)
@@ -245,10 +239,7 @@ namespace RSDKv5
 
             private byte[] CalculateMD5Hash(string input)
             {
-                byte[] hash;
-                using (var md5 = MD5.Create())
-                    hash = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
-                return hash;
+                return MD5Hasher.GetHash(Encoding.ASCII.GetBytes(input));
             }
 
             private void GenerateKeys(string fileName, uint fileSize)
@@ -356,7 +347,10 @@ namespace RSDKv5
 
             private ExtensionTypes GetExtensionFromData()
             {
-                byte[] header = new byte[5];
+                if (data.Length < 4)
+                    return ExtensionTypes.Unknown;
+
+                byte[] header = new byte[4];
 
                 for (int i = 0; i < header.Length; i++)
                     header[i] = data[i];
@@ -409,7 +403,7 @@ namespace RSDKv5
 
         public static readonly byte[] signature = new byte[] { (byte)'R', (byte)'S', (byte)'D', (byte)'K' };
 
-        private byte version = (byte)'5';
+        public byte version = (byte)'5';
 
         public List<File> files = new List<File>();
 
@@ -433,9 +427,14 @@ namespace RSDKv5
             reader.ReadByte(); // 'v'
             version = reader.ReadByte();
 
+            List<NameIdentifier> names = new List<NameIdentifier>();
+            if (fileNames != null)
+                foreach (var fn in fileNames)
+                    names.Add(new NameIdentifier(fn.ToLowerInvariant()) { name = fn });
+
             ushort fileCount = reader.ReadUInt16();
             for (int f = 0; f < fileCount; f++)
-                files.Add(new File(reader, fileNames, f));
+                files.Add(new File(reader, names, f));
 
             reader.Close();
         }
