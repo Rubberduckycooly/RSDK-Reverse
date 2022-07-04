@@ -237,12 +237,9 @@ namespace RSDKv5
                     writer.Write(data);
             }
 
-            private byte[] CalculateMD5Hash(string input)
-            {
-                return MD5Hasher.GetHash(Encoding.ASCII.GetBytes(input));
-            }
+			private byte[] CalculateMD5Hash(string input) => MD5Hasher.GetHash(Encoding.ASCII.GetBytes(input));
 
-            private void GenerateKeys(string fileName, uint fileSize)
+			private void GenerateKeys(string fileName, uint fileSize)
             {
                 string filenameUpper = fileName.ToUpper();
                 byte[] md5Buf = md5Buf = CalculateMD5Hash(filenameUpper);

@@ -76,6 +76,7 @@
     <Compile Include="Bytecode.cs" />
     <Compile Include="DataPack.cs" />
     <Compile Include="Gif.cs" />
+    <Compile Include="MD5Hasher.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Tiles128x128.cs" />
     <Compile Include="TileConfig.cs" />
