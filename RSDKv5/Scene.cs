@@ -153,7 +153,7 @@ namespace RSDKv5
             }
             set
             {
-                parallaxFactor = (byte)(value * 256.0f);
+                parallaxFactor = (short)(value * 256.0f);
             }
         }
 
@@ -169,7 +169,7 @@ namespace RSDKv5
             }
             set
             {
-                scrollSpeed = (byte)(value * 256.0f);
+                scrollSpeed = (short)(value * 256.0f);
             }
         }
 
@@ -397,7 +397,7 @@ namespace RSDKv5
             }
             set
             {
-                parallaxFactor = (byte)(value * 256.0f);
+                parallaxFactor = (short)(value * 256.0f);
             }
         }
 
@@ -413,7 +413,7 @@ namespace RSDKv5
             }
             set
             {
-                scrollSpeed = (byte)(value * 256.0f);
+                scrollSpeed = (short)(value * 256.0f);
             }
         }
 

@@ -16,7 +16,7 @@ namespace RSDKv3
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
-            public byte scrollSpeed = 0;
+            public sbyte scrollSpeed = 0;
 
             /// <summary>
             /// determines if the scrollInfo allows deformation or not
@@ -36,7 +36,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    parallaxFactor = (byte)(value * 256.0f);
+                    parallaxFactor = (short)(value * 256.0f);
                 }
             }
 
@@ -52,7 +52,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    scrollSpeed = (byte)(value * 64.0f);
+                    scrollSpeed = (sbyte)(value * 64.0f);
                 }
             }
 
@@ -68,7 +68,7 @@ namespace RSDKv3
                 // 2 bytes, big-endian, unsigned
                 parallaxFactor = (short)(reader.ReadByte() << 8);
                 parallaxFactor |= reader.ReadByte();
-                scrollSpeed = reader.ReadByte();
+                scrollSpeed = reader.ReadSByte();
                 deform = reader.ReadBoolean();
             }
 
@@ -135,7 +135,7 @@ namespace RSDKv3
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public byte scrollSpeed = 0;
+            public sbyte scrollSpeed = 0;
 
             /// <summary>
             /// a list of Line positions
@@ -155,7 +155,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    parallaxFactor = (byte)(value * 256.0f);
+                    parallaxFactor = (short)(value * 256.0f);
                 }
             }
 
@@ -171,7 +171,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    scrollSpeed = (byte)(value * 64.0f);
+                    scrollSpeed = (sbyte)(value * 64.0f);
                 }
             }
 
@@ -199,7 +199,7 @@ namespace RSDKv3
 
                 parallaxFactor = (short)(reader.ReadByte() << 8);
                 parallaxFactor |= reader.ReadByte();
-                scrollSpeed = reader.ReadByte();
+                scrollSpeed = reader.ReadSByte();
 
                 lineScroll = new byte[height * 128];
 
