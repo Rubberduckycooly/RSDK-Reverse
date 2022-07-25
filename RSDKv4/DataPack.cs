@@ -166,7 +166,7 @@ namespace RSDKv4
                 reader.BaseStream.Position = fileOffset;
 
                 // Decrypt File if Encrypted
-                if (encrypted && !name.usingHash)
+                if (encrypted)
                     data = Decrypt(reader.ReadBytes(fileSize), false);
                 else
                     data = reader.ReadBytes(fileSize);
@@ -226,7 +226,7 @@ namespace RSDKv4
 
             public void WriteFileData(Writer writer)
             {
-                if (encrypted && !name.usingHash)
+                if (encrypted)
                     writer.Write(Decrypt(data, true));
                 else
                     writer.Write(data);
