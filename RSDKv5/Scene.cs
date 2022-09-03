@@ -153,7 +153,7 @@ namespace RSDKv5
             }
             set
             {
-                parallaxFactor = (byte)(value * 256.0f);
+                parallaxFactor = (short)(value * 256.0f);
             }
         }
 
@@ -169,7 +169,7 @@ namespace RSDKv5
             }
             set
             {
-                scrollSpeed = (byte)(value * 256.0f);
+                scrollSpeed = (short)(value * 256.0f);
             }
         }
 
@@ -354,11 +354,11 @@ namespace RSDKv5
         /// <summary>
         /// the layer's width (in tiles)
         /// </summary>
-        private ushort width = 0;
+        public ushort width { get; private set; }
         /// <summary>
         /// the layer's height (in tiles)
         /// </summary>
-        private ushort height = 0;
+        public ushort height { get; private set; }
 
         /// <summary>
         /// the Speed of the layer when the player is moving
@@ -397,7 +397,7 @@ namespace RSDKv5
             }
             set
             {
-                parallaxFactor = (byte)(value * 256.0f);
+                parallaxFactor = (short)(value * 256.0f);
             }
         }
 
@@ -413,7 +413,7 @@ namespace RSDKv5
             }
             set
             {
-                scrollSpeed = (byte)(value * 256.0f);
+                scrollSpeed = (short)(value * 256.0f);
             }
         }
 
