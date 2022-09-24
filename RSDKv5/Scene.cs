@@ -354,11 +354,11 @@ namespace RSDKv5
         /// <summary>
         /// the layer's width (in tiles)
         /// </summary>
-        private ushort width = 0;
+        public ushort width { get; private set; }
         /// <summary>
         /// the layer's height (in tiles)
         /// </summary>
-        private ushort height = 0;
+        public ushort height { get; private set; }
 
         /// <summary>
         /// the Speed of the layer when the player is moving
@@ -815,7 +815,7 @@ namespace RSDKv5
             get { checkType(VariableTypes.Vector2); return value_vector2; }
             set { checkType(VariableTypes.Vector2); value_vector2 = value; }
         }
-        private float ValueFloat
+        public float ValueFloat
         {
             get { checkType(VariableTypes.Float); return value_float; }
             set { checkType(VariableTypes.Float); value_float = value; }
@@ -1311,7 +1311,7 @@ namespace RSDKv5
 
         public void Write(Writer writer)
         {
-            if (layers.Count >= 8)
+            if (layers.Count > 8)
             {
                 writer.Close();
                 throw new Exception("Invalid Scene v5 File! Layer Count exceeds maximum of 8!");

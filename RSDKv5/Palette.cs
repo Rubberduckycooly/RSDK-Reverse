@@ -7,7 +7,7 @@
         /// </summary>
         public Color[][] colors = new Color[16][];
 
-        bool[] activeRows = new bool[16];
+        public bool[] activeRows = new bool[16];
 
         public Palette(int palColumns = 16)
         {
