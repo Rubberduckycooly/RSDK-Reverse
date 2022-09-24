@@ -11,7 +11,7 @@ namespace RSDKv3
             /// how fast the line moves while the player is moving, relative to 0x100.
             /// E.G: 0x100 == move 1 pixel per 1 pixel of camera movement, 0x80 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
-            public short parallaxFactor = 0x100;
+            public ushort parallaxFactor = 0x100;
 
             /// <summary>
             /// How fast the line moves without the player moving
@@ -36,7 +36,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    parallaxFactor = (byte)(value * 256.0f);
+                    parallaxFactor = (ushort)(value * 256.0f);
                 }
             }
 
@@ -66,7 +66,7 @@ namespace RSDKv3
             public void Read(Reader reader)
             {
                 // 2 bytes, big-endian, unsigned
-                parallaxFactor = (short)(reader.ReadByte() << 8);
+                parallaxFactor = (ushort)(reader.ReadByte() << 8);
                 parallaxFactor |= reader.ReadByte();
                 scrollSpeed = reader.ReadByte();
                 deform = reader.ReadBoolean();
@@ -130,7 +130,7 @@ namespace RSDKv3
             /// how fast the Layer moves while the player is moving, relative to 0x100.
             /// E.G: 0x100 == move 1 pixel per 1 pixel of camera movement, 0x80 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
-            public short parallaxFactor = 0x100;
+            public ushort parallaxFactor = 0x100;
 
             /// <summary>
             /// how fast the layer moves while the player isn't moving
@@ -155,7 +155,7 @@ namespace RSDKv3
                 }
                 set
                 {
-                    parallaxFactor = (byte)(value * 256.0f);
+                    parallaxFactor = (ushort)(value * 256.0f);
                 }
             }
 
@@ -197,7 +197,7 @@ namespace RSDKv3
                 height = reader.ReadByte();
                 type = (LayerTypes)reader.ReadByte();
 
-                parallaxFactor = (short)(reader.ReadByte() << 8);
+                parallaxFactor = (ushort)(reader.ReadByte() << 8);
                 parallaxFactor |= reader.ReadByte();
                 scrollSpeed = reader.ReadByte();
 
