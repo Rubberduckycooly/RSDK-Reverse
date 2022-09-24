@@ -11,12 +11,12 @@ namespace RSDKv4
             /// how fast the line moves while the player is moving, relative to 0x100.
             /// E.G: 0x100 == move 1 pixel per 1 pixel of camera movement, 0x80 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
-            public short parallaxFactor = 0x100;
+            public ushort parallaxFactor = 0x100;
 
             /// <summary>
             /// How fast the line moves without the player moving
             /// </summary>
-            public sbyte scrollSpeed = 0;
+            public byte scrollSpeed = 0;
 
             /// <summary>
             /// determines if the scrollInfo allows deformation or not
@@ -36,7 +36,7 @@ namespace RSDKv4
                 }
                 set
                 {
-                    parallaxFactor = (short)(value * 256.0f);
+                    parallaxFactor = (ushort)(value * 256.0f);
                 }
             }
 
@@ -52,7 +52,7 @@ namespace RSDKv4
                 }
                 set
                 {
-                    scrollSpeed = (sbyte)(value * 64.0f);
+                    scrollSpeed = (byte)(value * 64.0f);
                 }
             }
 
@@ -67,8 +67,8 @@ namespace RSDKv4
             {
                 // 2 bytes, little-endian, signed
                 parallaxFactor = reader.ReadByte();
-                parallaxFactor |= (short)(reader.ReadByte() << 8);
-                scrollSpeed = reader.ReadSByte();
+                parallaxFactor |= (ushort)(reader.ReadByte() << 8);
+                scrollSpeed = reader.ReadByte();
                 deform = reader.ReadBoolean();
             }
 
@@ -127,11 +127,11 @@ namespace RSDKv4
             /// how fast the Layer moves while the player is moving, relative to 0x100.
             /// E.G: 0x100 == move 1 pixel per 1 pixel of camera movement, 0x80 = 1 pixel every 2 pixels of camera movement, etc
             /// </summary>
-            public short parallaxFactor = 0x100;
+            public ushort parallaxFactor = 0x100;
             /// <summary>
             /// how fast the layer moves while the player isn't moving
             /// </summary>
-            public sbyte scrollSpeed = 0;
+            public byte scrollSpeed = 0;
 
             /// <summary>
             /// indexes to HLine values
@@ -151,7 +151,7 @@ namespace RSDKv4
                 }
                 set
                 {
-                    parallaxFactor = (short)(value * 256.0f);
+                    parallaxFactor = (ushort)(value * 256.0f);
                 }
             }
 
@@ -167,7 +167,7 @@ namespace RSDKv4
                 }
                 set
                 {
-                    scrollSpeed = (sbyte)(value * 64.0f);
+                    scrollSpeed = (byte)(value * 64.0f);
                 }
             }
 
@@ -199,8 +199,8 @@ namespace RSDKv4
 
                 // 2 bytes, little-endian, signed
                 parallaxFactor = reader.ReadByte();
-                parallaxFactor |= (short)(reader.ReadByte() << 8);
-                scrollSpeed = reader.ReadSByte();
+                parallaxFactor |= (ushort)(reader.ReadByte() << 8);
+                scrollSpeed = reader.ReadByte();
 
                 lineScroll = new byte[height * 128];
 
